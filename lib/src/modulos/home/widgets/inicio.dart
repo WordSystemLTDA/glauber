@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 
 class Inicio extends StatefulWidget {
   const Inicio({super.key});
@@ -13,17 +13,6 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
   List<String> categorias = ['todas', 'prova de laço'];
 
   late TabController _categoriaController;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _categoriaController = TabController(
-      initialIndex: 0,
-      length: categorias.length,
-      vsync: this,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,7 +51,7 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
         const SizedBox(
           height: 10,
         ),
-        Container(
+        SizedBox(
           height: 50,
           child: Padding(
             padding: const EdgeInsets.all(10),
@@ -73,7 +62,7 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
                   .map((e) => Tab(
                           child: Text(
                         e,
-                        style: const TextStyle(fontSize: 16, color: Colors.black),
+                        style: const TextStyle(fontSize: 16),
                       )))
                   .toList(),
             ),
@@ -123,6 +112,16 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
           ),
         )
       ]),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _categoriaController = TabController(
+      initialIndex: 0,
+      length: categorias.length,
+      vsync: this,
     );
   }
 }

@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/conexao_banco.dart/conexao_banco.dart';
+import 'package:glauber/src/compartilhado/conexao_banco/conexao_banco.dart';
 
-class Cadastrar extends StatefulWidget {
-  const Cadastrar({super.key});
+class PaginaCadastro extends StatefulWidget {
+  const PaginaCadastro({super.key});
 
   @override
-  State<Cadastrar> createState() => _CadastrarState();
+  State<PaginaCadastro> createState() => _PaginaCadastroState();
 }
 
-class _CadastrarState extends State<Cadastrar> {
+class _PaginaCadastroState extends State<PaginaCadastro> {
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
@@ -62,7 +62,7 @@ class _CadastrarState extends State<Cadastrar> {
                       obscureText: ocultarSenha,
                       controller: _senhaController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: 'Senha',
                         suffixIcon: IconButton(
                           onPressed: () {

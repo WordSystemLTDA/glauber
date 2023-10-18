@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PagamentosInscricao extends StatefulWidget {
@@ -12,8 +11,6 @@ class _PagamentosInscricaoState extends State<PagamentosInscricao> {
   bool? concorda = false;
   int metodoPagamento = 1;
 
-  // int segmentedControlGroupValue = 0;
-  // final Map<int, Widget> myTabs = const <int, Widget>{0: Text("Item 1"), 1: Text("Item 2")};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +53,8 @@ class _PagamentosInscricaoState extends State<PagamentosInscricao> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text('Total a pagar: '),
-                    ElevatedButton(onPressed: () {}, child: Text('Concluir')),
+                    const Text('Total a pagar: '),
+                    ElevatedButton(onPressed: () {}, child: const Text('Concluir')),
                   ]),
                 ),
                 const SizedBox(width: 10)

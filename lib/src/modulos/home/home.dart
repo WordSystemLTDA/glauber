@@ -21,6 +21,7 @@ class _HomeState extends State<Home> {
     const Perfil(),
   ];
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -34,11 +35,7 @@ class _HomeState extends State<Home> {
             setState(() => page_index = index);
           },
           destinations: const [
-            NavigationDestination(
-                icon: Icon(
-                  Icons.home,
-                ),
-                label: 'início'),
+            NavigationDestination(icon: Icon(Icons.home), label: 'início'),
             NavigationDestination(icon: Icon(Icons.search), label: 'buscar'),
             NavigationDestination(icon: Icon(Icons.airplane_ticket), label: 'compras'),
             NavigationDestination(icon: Icon(Icons.person), label: 'perfil')
@@ -74,6 +71,7 @@ class _HomeState extends State<Home> {
                   setState(() {
                     page_index = 1;
                   });
+
                   Navigator.pop(context);
                 },
                 leading: const Icon(Icons.search),
