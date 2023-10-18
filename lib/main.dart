@@ -5,6 +5,7 @@ import 'package:glauber/src/modulos/home/home.dart';
 import 'package:glauber/src/modulos/login/login.dart';
 import 'package:glauber/src/modulos/cadastrar/cadastrar.dart';
 import 'package:glauber/src/modulos/selecionar_ingresso/selecionar_ingresso.dart';
+import 'package:glauber/src/modulos/pagamentos_inscricao/pagamentos_inscricao.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,18 +14,20 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'glauber',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
-      initialRoute: '/home',
+      initialRoute: '/login',
       routes: {
         '/home': (context) => Home(),
         '/login': (context) => Login(),
         '/cadastrar': (context) => Cadastrar(),
         '/selecionar_ingresso': (context) => SelecionarIngresso(),
+        '/pagamentos_inscricao': (context) => PagamentosInscricao(),
       },
     );
   }

@@ -11,6 +11,7 @@ class Inicio extends StatefulWidget {
 class _InicioState extends State<Inicio> with TickerProviderStateMixin {
   int categorias_index = 0;
   List<String> categorias = ['todas', 'prova de laço'];
+
   late TabController _categoriaController;
   @override
   void initState() {
@@ -45,12 +46,12 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
                   },
                   child: Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(color: Colors.amber),
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: const BoxDecoration(color: Colors.amber),
                       child: Center(
                         child: Text(
                           'texto $i',
-                          style: TextStyle(fontSize: 16.0),
+                          style: const TextStyle(fontSize: 16.0),
                         ),
                       )),
                 );
@@ -64,7 +65,7 @@ class _InicioState extends State<Inicio> with TickerProviderStateMixin {
         Container(
           height: 50,
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TabBar(
               controller: _categoriaController,
               isScrollable: true,

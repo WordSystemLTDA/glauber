@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:glauber/src/compartilhado/conexao_banco.dart/conexao_banco.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -50,9 +52,28 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       String email = _emailController.text;
                       String senha = _senhaController.text;
-                      if (email == 'admin' && senha == '123') {
-                        Navigator.pushReplacementNamed(context, '/home');
-                      }
+                      final dio = Dio();
+                      final resposta = dio.post(ConexaoBanco().urlLogin(), data: {
+                        'email': email,
+                        'senha': senha,
+                      });
+                      resposta.then((value) {
+                        if (value.data == 'usuario_permitido') {
+                          Navigator.pushReplacementNamed(context, '/home');
+                        } else if (value.data == 'usuario_negado') {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            showCloseIcon: true,
+                            backgroundColor: Colors.red,
+                            content: Text('Email ou senha incorreto!'),
+                          ));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            showCloseIcon: true,
+                            backgroundColor: Colors.red,
+                            content: Text('Ocorreu um erro!'),
+                          ));
+                        }
+                      });
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(12),

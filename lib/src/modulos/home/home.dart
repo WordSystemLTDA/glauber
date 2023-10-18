@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:glauber/src/modulos/home/widgets/buscar.dart';
 import 'package:glauber/src/modulos/home/widgets/compras.dart';
@@ -17,16 +15,16 @@ class _HomeState extends State<Home> {
   int page_index = 0;
 
   final pages = [
-    Inicio(),
-    Buscar(),
-    Compras(),
-    Perfil(),
+    const Inicio(),
+    const Buscar(),
+    const Compras(),
+    const Perfil(),
   ];
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LOGO'),
+        title: const Text('LOGO'),
         centerTitle: true,
       ),
       body: pages[page_index],
@@ -49,12 +47,12 @@ class _HomeState extends State<Home> {
         child: ListView(
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.deepPurple),
+              decoration: const BoxDecoration(color: Colors.deepPurple),
               child: Center(
                 child: Container(
                   width: 50,
                   height: 50,
-                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                 ),
               ),
             ),
@@ -66,9 +64,9 @@ class _HomeState extends State<Home> {
                   });
                   Navigator.pop(context);
                 },
-                leading: Icon(Icons.home),
-                title: Text('Início'),
-                trailing: Icon(Icons.arrow_forward),
+                leading: const Icon(Icons.home),
+                title: const Text('Início'),
+                trailing: const Icon(Icons.arrow_forward),
               ),
               const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
               ListTile(
@@ -78,9 +76,9 @@ class _HomeState extends State<Home> {
                   });
                   Navigator.pop(context);
                 },
-                leading: Icon(Icons.search),
-                title: Text('Buscar'),
-                trailing: Icon(Icons.arrow_forward),
+                leading: const Icon(Icons.search),
+                title: const Text('Buscar'),
+                trailing: const Icon(Icons.arrow_forward),
               ),
               const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
               ListTile(
@@ -90,9 +88,9 @@ class _HomeState extends State<Home> {
                   });
                   Navigator.pop(context);
                 },
-                leading: Icon(Icons.airplane_ticket),
-                title: Text('Compras'),
-                trailing: Icon(Icons.arrow_forward),
+                leading: const Icon(Icons.airplane_ticket),
+                title: const Text('Compras'),
+                trailing: const Icon(Icons.arrow_forward),
               ),
               const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
               ListTile(
@@ -102,15 +100,15 @@ class _HomeState extends State<Home> {
                   });
                   Navigator.pop(context);
                 },
-                leading: Icon(Icons.person),
-                title: Text('Perfil'),
-                trailing: Icon(Icons.arrow_forward),
+                leading: const Icon(Icons.person),
+                title: const Text('Perfil'),
+                trailing: const Icon(Icons.arrow_forward),
               ),
               const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
               ListTile(
                 onTap: () {},
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
                 // trailing: Icon(Icons),
               ),
               const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
