@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:glauber/src/modulos/home/widgets/buscar.dart';
 import 'package:glauber/src/modulos/home/widgets/compras.dart';
@@ -26,12 +28,6 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('LOGO'),
         centerTitle: true,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.menu),
-          )
-        ],
       ),
       body: pages[page_index],
       bottomNavigationBar: NavigationBar(
@@ -49,6 +45,80 @@ class _HomeState extends State<Home> {
             NavigationDestination(icon: Icon(Icons.airplane_ticket), label: 'compras'),
             NavigationDestination(icon: Icon(Icons.person), label: 'perfil')
           ]),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.deepPurple),
+              child: Center(
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                ),
+              ),
+            ),
+            Column(children: [
+              ListTile(
+                onTap: () {
+                  setState(() {
+                    page_index = 0;
+                  });
+                  Navigator.pop(context);
+                },
+                leading: Icon(Icons.home),
+                title: Text('Início'),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+              const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
+              ListTile(
+                onTap: () {
+                  setState(() {
+                    page_index = 1;
+                  });
+                  Navigator.pop(context);
+                },
+                leading: Icon(Icons.search),
+                title: Text('Buscar'),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+              const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
+              ListTile(
+                onTap: () {
+                  setState(() {
+                    page_index = 2;
+                  });
+                  Navigator.pop(context);
+                },
+                leading: Icon(Icons.airplane_ticket),
+                title: Text('Compras'),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+              const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
+              ListTile(
+                onTap: () {
+                  setState(() {
+                    page_index = 3;
+                  });
+                  Navigator.pop(context);
+                },
+                leading: Icon(Icons.person),
+                title: Text('Perfil'),
+                trailing: Icon(Icons.arrow_forward),
+              ),
+              const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
+              ListTile(
+                onTap: () {},
+                leading: Icon(Icons.logout),
+                title: Text('Logout'),
+                // trailing: Icon(Icons),
+              ),
+              const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
+            ])
+          ],
+        ),
+      ),
+      endDrawerEnableOpenDragGesture: false,
     );
   }
 }

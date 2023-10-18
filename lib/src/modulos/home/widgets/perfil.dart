@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 
 class Perfil extends StatefulWidget {
@@ -11,11 +9,11 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   List<dynamic> itemsPerfil = [
-    {'titulo': 'Avaliar app', 'icone': 'Icons.star'},
-    {'titulo': 'Notificações', 'icone': 'Icons.notifications'},
-    {'titulo': 'Dúvida', 'icone': 'Icons.branding_watermark'},
-    {'titulo': 'Ajuda', 'icone': 'Icons.help'},
-    {'titulo': 'Suporte', 'icone': 'Icons.branding_watermark'},
+    {'titulo': 'Avaliar app', 'icone': Icons.star},
+    {'titulo': 'Notificações', 'icone': Icons.notifications},
+    {'titulo': 'Dúvida', 'icone': Icons.branding_watermark},
+    {'titulo': 'Ajuda', 'icone': Icons.help},
+    {'titulo': 'Suporte', 'icone': Icons.branding_watermark},
   ];
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,8 @@ class _PerfilState extends State<Perfil> {
           itemCount: itemsPerfil.length,
           itemBuilder: (context, index) {
             return ListTile(
-              leading: Icon(itemsPerfil[index]['icone'].jsify()),
+              onTap: () {},
+              leading: Icon(itemsPerfil[index]['icone']),
               title: Text(itemsPerfil[index]['titulo'].toString()),
               trailing: Icon(Icons.arrow_forward),
             );
