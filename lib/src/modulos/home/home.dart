@@ -29,16 +29,17 @@ class _HomeState extends State<Home> {
         centerTitle: true,
       ),
       body: pages[page_index],
-      bottomNavigationBar: NavigationBar(
-          selectedIndex: page_index,
-          onDestinationSelected: (index) {
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: page_index,
+          onTap: (index) {
             setState(() => page_index = index);
           },
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home), label: 'início'),
-            NavigationDestination(icon: Icon(Icons.search), label: 'buscar'),
-            NavigationDestination(icon: Icon(Icons.airplane_ticket), label: 'compras'),
-            NavigationDestination(icon: Icon(Icons.person), label: 'perfil')
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'início'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'buscar'),
+            BottomNavigationBarItem(icon: Icon(Icons.airplane_ticket), label: 'compras'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'perfil')
           ]),
       endDrawer: Drawer(
         child: ListView(
