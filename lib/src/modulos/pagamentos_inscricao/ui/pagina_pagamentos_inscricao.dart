@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PagamentosInscricao extends StatefulWidget {
-  const PagamentosInscricao({super.key});
+class PaginaPagamentosInscricao extends StatefulWidget {
+  const PaginaPagamentosInscricao({super.key});
 
   @override
-  State<PagamentosInscricao> createState() => _PagamentosInscricaoState();
+  State<PaginaPagamentosInscricao> createState() => _PaginaPagamentosInscricaoState();
 }
 
-class _PagamentosInscricaoState extends State<PagamentosInscricao> {
+class _PaginaPagamentosInscricaoState extends State<PaginaPagamentosInscricao> {
   bool? concorda = false;
   int metodoPagamento = 1;
 
@@ -63,30 +63,33 @@ class _PagamentosInscricaoState extends State<PagamentosInscricao> {
             Row(
               children: [
                 Checkbox(
-                    value: concorda,
-                    onChanged: (novoValor) {
-                      setState(() {
-                        concorda = novoValor;
-                      });
-                    }),
+                  value: concorda,
+                  onChanged: (novoValor) {
+                    setState(() {
+                      concorda = novoValor;
+                    });
+                  },
+                ),
                 const Text('Li e concordo com os '),
                 InkWell(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const Dialog(
-                              child: SizedBox(
-                                height: 230,
-                                width: 300,
-                              ),
-                            );
-                          });
-                    },
-                    child: const Text(
-                      'Termos de uso',
-                      style: TextStyle(color: Colors.red),
-                    ))
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Dialog(
+                          child: SizedBox(
+                            height: 230,
+                            width: 300,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Text(
+                    'Termos de uso',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
               ],
             ),
           ]),

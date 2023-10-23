@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/conexao_banco/conexao_banco.dart';
+import 'package:glauber/src/compartilhado/conexoes_banco.dart';
 
 class PaginaCadastro extends StatefulWidget {
   const PaginaCadastro({super.key});
@@ -138,7 +138,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     } else {
                       final dio = Dio();
                       final resposta = dio.post(
-                        ConexaoBanco().urlCadastrar(),
+                        ConexoesBanco().urlCadastrar(),
                         data: {
                           'nome': nome,
                           'email': email,
@@ -146,7 +146,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         },
                       );
                       resposta.then((value) {
-                        print(value.data);
                         if (value.data == 'usuario_criado') {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

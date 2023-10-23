@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/home/widgets/ticket_dialog.dart';
 
-class Compras extends StatefulWidget {
-  const Compras({super.key});
+class PaginaCompras extends StatefulWidget {
+  const PaginaCompras({super.key});
 
   @override
-  State<Compras> createState() => _ComprasState();
+  State<PaginaCompras> createState() => _PaginaComprasState();
 }
 
-class _ComprasState extends State<Compras> {
+class _PaginaComprasState extends State<PaginaCompras> {
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -19,11 +18,12 @@ class _ComprasState extends State<Compras> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const TicketDialog();
-                      });
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (context) {
+                  //     return const TicketDialog();
+                  //   },
+                  // );
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(10),

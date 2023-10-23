@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Buscar extends StatefulWidget {
-  const Buscar({super.key});
+class PaginaBuscar extends StatefulWidget {
+  const PaginaBuscar({super.key});
 
   @override
-  State<Buscar> createState() => _BuscarState();
+  State<PaginaBuscar> createState() => _PaginaBuscarState();
 }
 
-class _BuscarState extends State<Buscar> {
+class _PaginaBuscarState extends State<PaginaBuscar> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -26,7 +26,7 @@ class _BuscarState extends State<Buscar> {
             hintText: 'Pesquisar...',
             suffixIcon: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
               // iconSize: 59,
             ),
           ),

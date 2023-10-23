@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SelecionarIngresso extends StatefulWidget {
-  const SelecionarIngresso({super.key});
+class PaginaSelecionarIngresso extends StatefulWidget {
+  const PaginaSelecionarIngresso({super.key});
 
   @override
-  State<SelecionarIngresso> createState() => _SelecionarIngressoState();
+  State<PaginaSelecionarIngresso> createState() => _PaginaSelecionarIngressoState();
 }
 
-class _SelecionarIngressoState extends State<SelecionarIngresso> {
+class _PaginaSelecionarIngressoState extends State<PaginaSelecionarIngresso> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +22,36 @@ class _SelecionarIngressoState extends State<SelecionarIngresso> {
                   width: double.infinity,
                   height: 300,
                   fit: BoxFit.cover,
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 300,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        end: const Alignment(0.0, -0.6),
+                        begin: const Alignment(0.0, 0),
+                        colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                      ),
+                    ),
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'evento',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
                 ),
                 Positioned(
                   top: 50,

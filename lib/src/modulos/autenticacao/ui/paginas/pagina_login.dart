@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/conexao_banco/conexao_banco.dart';
+import 'package:glauber/src/compartilhado/conexoes_banco.dart';
 
 class PaginaLogin extends StatefulWidget {
   const PaginaLogin({super.key});
@@ -50,14 +50,13 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   String email = _emailController.text;
                   String senha = _senhaController.text;
                   final dio = Dio();
-                  final resposta = dio.post(ConexaoBanco().urlLogin(), data: {
+                  final resposta = dio.post(ConexoesBanco().urlLogin(), data: {
                     'email': email,
                     'senha': senha,
                   });
                   resposta.then((value) {
-                    print(value);
                     if (value.data == 'usuario_permitido') {
-                      Navigator.pushReplacementNamed(context, '/home');
+                      Navigator.pushReplacementNamed(context, '/inicio');
                     } else if (value.data == 'usuario_negado') {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         showCloseIcon: true,

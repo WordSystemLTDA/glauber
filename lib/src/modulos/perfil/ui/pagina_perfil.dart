@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+class PaginaPerfil extends StatefulWidget {
+  const PaginaPerfil({super.key});
 
   @override
-  State<Perfil> createState() => _PerfilState();
+  State<PaginaPerfil> createState() => _PaginaPerfilState();
 }
 
-class _PerfilState extends State<Perfil> {
+class _PaginaPerfilState extends State<PaginaPerfil> {
   List<dynamic> itemsPerfil = [
     {'titulo': 'Avaliar app', 'icone': Icons.star},
     {'titulo': 'Notificações', 'icone': Icons.notifications},
@@ -18,7 +18,7 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: ListView.builder(
           itemCount: itemsPerfil.length,
           itemBuilder: (context, index) {
@@ -26,7 +26,7 @@ class _PerfilState extends State<Perfil> {
               onTap: () {},
               leading: Icon(itemsPerfil[index]['icone']),
               title: Text(itemsPerfil[index]['titulo'].toString()),
-              trailing: Icon(Icons.arrow_forward),
+              trailing: const Icon(Icons.arrow_forward),
             );
           },
         ));
