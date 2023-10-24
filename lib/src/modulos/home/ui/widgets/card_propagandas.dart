@@ -17,7 +17,7 @@ class _CardPropagandasState extends State<CardPropagandas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/selecionar_ingresso');
+            // Navigator.pushNamed(context, '/selecionar_ingresso');
           },
           child: Stack(
             children: [
@@ -41,20 +41,23 @@ class _CardPropagandasState extends State<CardPropagandas> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'opa',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Propaganda",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
+                      SizedBox(height: 5),
+                    ],
+                  ),
                 ),
               ),
             ],

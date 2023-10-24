@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class CardEventos extends StatefulWidget {
   final dynamic evento;
-  const CardEventos({super.key, required this.evento});
+  final bool? aparecerInformacoes;
+  const CardEventos({super.key, required this.evento, this.aparecerInformacoes});
 
   @override
   State<CardEventos> createState() => _CardEventosState();
@@ -12,56 +13,75 @@ class _CardEventosState extends State<CardEventos> {
   @override
   Widget build(BuildContext context) {
     var evento = widget.evento;
+    var aparecerInformacoes = widget.aparecerInformacoes ?? false;
 
     return SizedBox(
       height: 220,
       child: Card(
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, '/selecionar_ingresso');
-          },
-          child: Stack(
-            children: [
-              Image.network(
-                'https://www.tenhomaisdiscosqueamigos.com/wp-content/uploads/2016/07/lollapalooza-brasil-2017.png',
-                width: double.infinity,
+        child: Stack(
+          children: [
+            Image.network(
+              'https://i0.wp.com/surgiu.com.br/wp-content/uploads/2022/06/prova-do-laco.jpeg?resize=1024%2C1024&ssl=1',
+              width: double.infinity,
+              height: 220,
+              fit: BoxFit.cover,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
                 height: 220,
-                fit: BoxFit.cover,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 220,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      end: const Alignment(0.0, -0.6),
-                      begin: const Alignment(0.0, 0),
-                      colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
-                    ),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    end: const Alignment(0.0, -0.6),
+                    begin: const Alignment(0.0, 0),
+                    colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (aparecerInformacoes)
+                      const Text(
+                        'My Lounge',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 225, 225, 225),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    if (aparecerInformacoes)
+                      const Text(
+                        'Astorga',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 225, 225, 225),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     Text(
                       evento,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

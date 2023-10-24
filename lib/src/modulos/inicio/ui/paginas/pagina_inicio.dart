@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/buscar/ui/pagina_buscar.dart';
-import 'package:glauber/src/modulos/compras/ui/pagina_compras.dart';
-import 'package:glauber/src/modulos/home/ui/pagina_home.dart';
-import 'package:glauber/src/modulos/perfil/ui/pagina_perfil.dart';
+import 'package:glauber/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
+import 'package:glauber/src/modulos/compras/ui/paginas/pagina_compras.dart';
+import 'package:glauber/src/modulos/home/ui/paginas/pagina_home.dart';
+import 'package:glauber/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 
 class PaginaInicio extends StatefulWidget {
   const PaginaInicio({super.key});
