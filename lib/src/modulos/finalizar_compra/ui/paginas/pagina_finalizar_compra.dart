@@ -2,14 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
 
-class PaginaPagamentosInscricao extends StatefulWidget {
-  const PaginaPagamentosInscricao({super.key});
+class PaginaFinalizarCompra extends StatefulWidget {
+  const PaginaFinalizarCompra({super.key});
 
   @override
-  State<PaginaPagamentosInscricao> createState() => _PaginaPagamentosInscricaoState();
+  State<PaginaFinalizarCompra> createState() => _PaginaFinalizarCompraState();
 }
 
-class _PaginaPagamentosInscricaoState extends State<PaginaPagamentosInscricao> {
+class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   bool concorda = false;
   int metodoPagamento = 1;
 

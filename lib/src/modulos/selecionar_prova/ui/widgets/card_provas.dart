@@ -18,7 +18,7 @@ class _CardProvasState extends State<CardProvas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/pagamentos_inscricao');
+            Navigator.pushNamed(context, '/finalizar_compra');
           },
           borderRadius: BorderRadius.circular(5),
           child: Row(

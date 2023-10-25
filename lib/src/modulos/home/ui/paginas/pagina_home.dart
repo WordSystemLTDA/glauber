@@ -22,9 +22,10 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 10),
+          // Carrosel de Eventos
           SizedBox(
             height: 220,
-            child: CarouselSlider(
+            child: CarouselSlider.builder(
               options: CarouselOptions(
                 height: 220.0,
                 autoPlay: true,
@@ -34,26 +35,16 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin {
                 enlargeCenterPage: true,
                 enlargeStrategy: CenterPageEnlargeStrategy.height,
               ),
-              items: const [
-                CardEventos(
-                  evento: 'Evento 1',
+              itemCount: 2,
+              itemBuilder: (context, index, realIndex) {
+                return CardEventos(
+                  evento: 'Evento ${index.toString()}',
                   aparecerInformacoes: true,
-                ),
-                CardEventos(
-                  evento: 'Evento 2',
-                  aparecerInformacoes: true,
-                ),
-                CardEventos(
-                  evento: 'Evento 3',
-                  aparecerInformacoes: true,
-                ),
-                CardEventos(
-                  evento: 'Evento 4',
-                  aparecerInformacoes: true,
-                ),
-              ],
+                );
+              },
             ),
           ),
+          // Categorias
           Align(
             alignment: Alignment.centerLeft,
             child: SizedBox(
@@ -70,10 +61,11 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin {
               ),
             ),
           ),
+          // Carrosel de Propagandas
           const SizedBox(height: 10),
           SizedBox(
             height: 100,
-            child: CarouselSlider(
+            child: CarouselSlider.builder(
               options: CarouselOptions(
                 height: 100.0,
                 autoPlay: true,
@@ -81,14 +73,14 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin {
                 pauseAutoPlayOnTouch: true,
                 autoPlayInterval: const Duration(seconds: 20),
               ),
-              items: const [
-                CardPropagandas(),
-                CardPropagandas(),
-                CardPropagandas(),
-              ],
+              itemCount: 2,
+              itemBuilder: (context, index, realIndex) {
+                return const CardPropagandas();
+              },
             ),
           ),
           const SizedBox(height: 10),
+          // Lista de eventos
           Flexible(
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

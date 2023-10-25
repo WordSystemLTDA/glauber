@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/selecionar_ingresso/ui/widgets/card_provas.dart';
+import 'package:glauber/src/modulos/selecionar_prova/ui/widgets/card_provas.dart';
 
-class PaginaSelecionarIngresso extends StatefulWidget {
-  const PaginaSelecionarIngresso({super.key});
+class PaginaSelecionarProva extends StatefulWidget {
+  const PaginaSelecionarProva({super.key});
 
   @override
-  State<PaginaSelecionarIngresso> createState() => _PaginaSelecionarIngressoState();
+  State<PaginaSelecionarProva> createState() => _PaginaSelecionarProvaState();
 }
 
-class _PaginaSelecionarIngressoState extends State<PaginaSelecionarIngresso> {
+class _PaginaSelecionarProvaState extends State<PaginaSelecionarProva> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provider/provider.dart';
 
 class PaginaSplash extends StatefulWidget {
   const PaginaSplash({super.key});
@@ -33,7 +35,14 @@ class _PaginaSplashState extends State<PaginaSplash> {
   }
 
   void verificarLogin() async {
-    Navigator.pushReplacementNamed(context, '/inicio');
-    // Navigator.pushReplacementNamed(context, '/autenticacao/login');
+    final autenticacaoServico = context.read<AutenticacaoServico>();
+
+    autenticacaoServico.verificar().then((logado) async {
+      if (logado) {
+        Navigator.pushReplacementNamed(context, '/inicio');
+      } else {
+        Navigator.pushReplacementNamed(context, '/autenticacao/login');
+      }
+    });
   }
 }
