@@ -22,16 +22,16 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
   }
 
   void cadastrar(nome, email, senha) async {
-    value = Carregando();
+    value = Cadastrando();
 
     _autenticacaoServico.cadastrar(nome, email, senha).then((valores) {
       if (valores[0]) {
-        value = Autenticado();
+        value = Cadastrado();
       } else {
-        value = AutenticacaoErro(erro: Exception('Erro ao tentar cadastrar!'));
+        value = ErroAoCadastrar(erro: Exception('Erro ao tentar cadastrar!'));
       }
     }).onError((error, stackTrace) {
-      value = AutenticacaoErro(erro: Exception(error));
+      value = ErroAoCadastrar(erro: Exception(error));
     });
   }
 }

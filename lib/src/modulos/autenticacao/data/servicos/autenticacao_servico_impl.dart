@@ -18,23 +18,19 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       "senha": senha,
     };
 
-    await client.post(url: url, body: jsonEncode(campos))!.then((response) async {
-      Map result = jsonDecode(response.data);
-      bool sucesso = result['sucesso'];
-      dynamic dados = result['resultado'];
+    var response = await client.post(url: url, body: jsonEncode(campos));
 
-      if (response.statusCode == 200 && sucesso == true) {
-        await UsuarioProvider.setUsuario(jsonEncode(dados));
+    Map result = jsonDecode(response.data);
+    bool sucesso = result['sucesso'];
+    dynamic dados = result['resultado'];
 
-        return sucesso;
-      } else {
-        return false;
-      }
-    }).onError((error, stackTrace) {
+    if (response.statusCode == 200 && sucesso == true) {
+      await UsuarioProvider.setUsuario(jsonEncode(dados));
+
+      return sucesso;
+    } else {
       return false;
-    });
-
-    return false;
+    }
   }
 
   @override
@@ -47,21 +43,17 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       "senha": senha,
     };
 
-    await client.post(url: url, body: jsonEncode(campos))!.then((response) async {
-      Map result = jsonDecode(response.data);
-      bool sucesso = result['sucesso'];
-      dynamic mensagem = result['mensagem'];
+    var response = await client.post(url: url, body: jsonEncode(campos));
 
-      if (response.statusCode == 200) {
-        return [sucesso, mensagem];
-      } else {
-        return [false, 'Erro ao tentar inserir'];
-      }
-    }).onError((error, stackTrace) {
+    Map result = jsonDecode(response.data);
+    bool sucesso = result['sucesso'];
+    dynamic mensagem = result['mensagem'];
+
+    if (response.statusCode == 200) {
+      return [sucesso, mensagem];
+    } else {
       return [false, 'Erro ao tentar inserir'];
-    });
-
-    return [false, 'Erro ao tentar inserir'];
+    }
   }
 
   @override
@@ -74,30 +66,26 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       return false;
     }
 
-    var empresa = usuarioProvider['empresa'];
     var email = usuarioProvider['email'];
     var senha = usuarioProvider['senha'];
 
     var campos = {
       "email": email,
       "senha": senha,
-      "empresa": empresa,
     };
 
-    await client.post(url: url, body: jsonEncode(campos))!.then((response) async {
-      Map result = jsonDecode(response.data);
-      bool sucesso = result['sucesso'];
-      dynamic dados = result['resultado'];
+    var response = await client.post(url: url, body: jsonEncode(campos));
 
-      if (response.statusCode == 200 && sucesso == true) {
-        await UsuarioProvider.setUsuario(jsonEncode(dados));
+    Map result = jsonDecode(response.data);
+    bool sucesso = result['sucesso'];
+    dynamic dados = result['resultado'];
 
-        return sucesso;
-      } else {
-        return false;
-      }
-    });
+    if (response.statusCode == 200 && sucesso == true) {
+      await UsuarioProvider.setUsuario(jsonEncode(dados));
 
-    return false;
+      return sucesso;
+    } else {
+      return false;
+    }
   }
 }
