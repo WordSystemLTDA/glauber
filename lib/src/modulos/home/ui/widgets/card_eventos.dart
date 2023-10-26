@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 class CardEventos extends StatefulWidget {
-  final dynamic evento;
+  final EventoModelo evento;
   final bool? aparecerInformacoes;
   const CardEventos({super.key, required this.evento, this.aparecerInformacoes});
 
@@ -73,7 +74,7 @@ class _CardEventosState extends State<CardEventos> {
                           ),
                         ),
                       Text(
-                        evento,
+                        evento.nomeEvento,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

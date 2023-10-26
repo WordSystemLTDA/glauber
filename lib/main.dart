@@ -7,6 +7,9 @@ import 'package:glauber/src/essencial/usuario_provider.dart';
 import 'package:glauber/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:glauber/src/modulos/home/data/servicos/home_servico_impl.dart';
+import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
+import 'package:glauber/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -20,6 +23,9 @@ void main() async {
       // Autenticação
       Provider<AutenticacaoServico>(create: (context) => AutenticacaoServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => AutenticacaoStore(context.read())),
+      // Home
+      Provider<HomeServico>(create: (context) => HomeServicoImpl(context.read())),
+      ChangeNotifierProvider(create: (context) => HomeStore(context.read())),
     ],
     child: const AppWidget(),
   );
