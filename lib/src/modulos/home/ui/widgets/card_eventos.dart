@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:glauber/src/modulos/provas/ui/paginas/pagina_provas.dart';
 
 class CardEventos extends StatefulWidget {
   final EventoModelo evento;
@@ -23,12 +24,19 @@ class _CardEventosState extends State<CardEventos> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/selecionar_prova');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PaginaProvas(
+                  idEvento: evento.id,
+                ),
+              ),
+            );
           },
           child: Stack(
             children: [
               Image.network(
-                'https://i0.wp.com/surgiu.com.br/wp-content/uploads/2022/06/prova-do-laco.jpeg?resize=1024%2C1024&ssl=1',
+                evento.foto,
                 width: double.infinity,
                 height: 220,
                 fit: BoxFit.cover,

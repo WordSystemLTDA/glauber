@@ -12,7 +12,6 @@ class HomeStore extends ValueNotifier<HomeEstado> {
 
     var resposta = await _homeServico.listar();
 
-    print(resposta);
     if (resposta.sucesso) {
       value = Carregado(eventos: resposta.eventos, propagandas: resposta.propagandas);
     } else {

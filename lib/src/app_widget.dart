@@ -4,7 +4,6 @@ import 'package:glauber/src/modulos/autenticacao/ui/paginas/pagina_cadastro.dart
 import 'package:glauber/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:glauber/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
-import 'package:glauber/src/modulos/selecionar_prova/ui/paginas/pagina_selecionar_prova.dart';
 import 'package:glauber/src/modulos/splash/ui/paginas/pagina_splash.dart';
 
 class AppWidget extends StatelessWidget {
@@ -23,7 +22,6 @@ class AppWidget extends StatelessWidget {
         '/inicio': (context) => const PaginaInicio(),
         '/autenticacao/login': (context) => const PaginaLogin(),
         '/autenticacao/cadastrar': (context) => const PaginaCadastro(),
-        '/selecionar_prova': (context) => const PaginaSelecionarProva(),
         '/finalizar_compra': (context) => const PaginaFinalizarCompra(),
       },
     );

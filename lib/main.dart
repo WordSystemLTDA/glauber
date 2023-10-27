@@ -10,6 +10,9 @@ import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_s
 import 'package:glauber/src/modulos/home/data/servicos/home_servico_impl.dart';
 import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:glauber/src/modulos/home/interator/stores/home_store.dart';
+import 'package:glauber/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
+import 'package:glauber/src/modulos/provas/interator/servicos/prova_servico.dart';
+import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -26,6 +29,9 @@ void main() async {
       // Home
       Provider<HomeServico>(create: (context) => HomeServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => HomeStore(context.read())),
+      // Provas
+      Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
+      ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
     ],
     child: const AppWidget(),
   );

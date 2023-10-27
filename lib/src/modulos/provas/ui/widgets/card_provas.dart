@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
+import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class CardProvas extends StatefulWidget {
-  const CardProvas({super.key});
+  final ProvaModelo prova;
+  const CardProvas({super.key, required this.prova});
 
   @override
   State<CardProvas> createState() => _CardProvasState();
@@ -11,6 +13,8 @@ class CardProvas extends StatefulWidget {
 class _CardProvasState extends State<CardProvas> {
   @override
   Widget build(BuildContext context) {
+    var prova = widget.prova;
+
     return SizedBox(
       height: 130,
       child: Card(
@@ -40,13 +44,13 @@ class _CardProvasState extends State<CardProvas> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Prova de Laço',
-                      style: TextStyle(fontSize: 18),
+                    Text(
+                      prova.nomeProva,
+                      style: const TextStyle(fontSize: 18),
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      Utils.coverterEmReal.format(100.0),
+                      Utils.coverterEmReal.format(double.parse(prova.valor)),
                       style: const TextStyle(fontSize: 18, color: Colors.green),
                     ),
                   ],

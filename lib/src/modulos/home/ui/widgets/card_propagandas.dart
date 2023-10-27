@@ -17,7 +17,7 @@ class _CardPropagandasState extends State<CardPropagandas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            // Navigator.pushNamed(context, '/selecionar_prova');
+            // Navigator.pushNamed(context, '/provas');
           },
           child: Stack(
             children: [
