@@ -19,13 +19,17 @@ class HomeServicoImpl implements HomeServico {
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];
 
-    List<EventoModelo> eventos = List<EventoModelo>.from(jsonData['eventos'].map((elemento) {
-      return EventoModelo.fromMap(elemento);
-    }));
+    List<EventoModelo> eventos = jsonData['eventos'] != null
+        ? List<EventoModelo>.from(jsonData['eventos'].map((elemento) {
+            return EventoModelo.fromMap(elemento);
+          }))
+        : [];
 
     List<EventoModelo> propagandas = List<EventoModelo>.from(jsonData['propagandas'].map((elemento) {
       return EventoModelo.fromMap(elemento);
     }));
+
+    print(jsonData);
 
     if (response.statusCode == 200 && sucesso == true) {
       return HomeModelo(sucesso: sucesso, eventos: eventos, propagandas: propagandas);

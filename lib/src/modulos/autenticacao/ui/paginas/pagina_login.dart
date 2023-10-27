@@ -24,15 +24,17 @@ class _PaginaLoginState extends State<PaginaLogin> {
       builder: (context, value, _) {
         return Scaffold(
           body: SafeArea(
-            child: Padding(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
                     controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(hintText: 'E-mail'),
                   ),
+                  const SizedBox(height: 20),
                   TextField(
                     obscureText: ocultarSenha,
                     controller: _senhaController,
