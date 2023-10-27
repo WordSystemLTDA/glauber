@@ -28,7 +28,7 @@ class _CardEventosState extends State<CardEventos> {
           child: Stack(
             children: [
               Image.network(
-                'https://i0.wp.com/surgiu.com.br/wp-content/uploads/2022/06/prova-do-laco.jpeg?resize=1024%2C1024&ssl=1',
+                evento.foto,
                 width: double.infinity,
                 height: 220,
                 fit: BoxFit.cover,

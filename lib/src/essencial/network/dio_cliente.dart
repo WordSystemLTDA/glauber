@@ -5,7 +5,7 @@ import 'package:glauber/src/essencial/config.dart';
 import 'package:glauber/src/essencial/network/http_cliente.dart';
 
 class DioClient implements IHttpClient {
-  final dio = Dio(BaseOptions(baseUrl: ConexoesBanco.apiUrl));
+  final dio = Dio(BaseOptions(baseUrl: Config.apiUrl));
 
   @override
   Future? get({required String url, Map<String, String>? headers}) async {
