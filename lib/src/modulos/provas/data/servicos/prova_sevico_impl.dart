@@ -15,6 +15,8 @@ class ProvaServicoImpl implements ProvaServico {
   Future<ProvaRetornoModelo> listar(String idEvento) async {
     var url = 'provas/listar.php?id_evento=$idEvento';
 
+    print(url);
+
     var response = await client.get(url: url);
 
     var jsonData = jsonDecode(response.data);

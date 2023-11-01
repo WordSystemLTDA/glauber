@@ -7,6 +7,9 @@ import 'package:glauber/src/essencial/usuario_provider.dart';
 import 'package:glauber/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:glauber/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
+import 'package:glauber/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
+import 'package:glauber/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
 import 'package:glauber/src/modulos/home/data/servicos/home_servico_impl.dart';
 import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:glauber/src/modulos/home/interator/stores/home_store.dart';
@@ -32,6 +35,9 @@ void main() async {
       // Provas
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
+      // Finalizar Compra
+      Provider<FinalizarCompraServico>(create: (context) => FinalizarCompraServicoImpl(context.read())),
+      ChangeNotifierProvider(create: (context) => FinalizarCompraStore(context.read())),
     ],
     child: const AppWidget(),
   );

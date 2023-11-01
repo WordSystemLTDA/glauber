@@ -5,13 +5,11 @@ class ProvaModelo {
   final String id;
   final String nomeProva;
   final String valor;
-  final String foto;
 
   ProvaModelo({
     required this.id,
     required this.nomeProva,
     required this.valor,
-    required this.foto,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,7 +17,6 @@ class ProvaModelo {
       'id': id,
       'nomeProva': nomeProva,
       'valor': valor,
-      'foto': foto,
     };
   }
 
@@ -28,7 +25,6 @@ class ProvaModelo {
       id: map['id'] as String,
       nomeProva: map['nomeProva'] as String,
       valor: map['valor'] as String,
-      foto: map['foto'] as String,
     );
   }
 
