@@ -9,6 +9,7 @@ ThemeData get darkTheme => ThemeData(
         centerTitle: true,
         backgroundColor: _darkColorScheme.primaryContainer,
       ),
+      cardColor: Colors.white,
       inputDecorationTheme: _inputDecorationTheme,
       dropdownMenuTheme: DropdownMenuThemeData(
         inputDecorationTheme: _inputDecorationTheme,
@@ -19,13 +20,19 @@ ThemeData get darkTheme => ThemeData(
 ThemeData get lightTheme => ThemeData(
       useMaterial3: true,
       colorScheme: _lightColorScheme,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         centerTitle: true,
-        backgroundColor: _lightColorScheme.primaryContainer,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: _lightColorScheme.primary,
         foregroundColor: _lightColorScheme.onPrimary,
+      ),
+      cardTheme: const CardTheme(
+        color: Colors.white,
+        elevation: 2,
+        surfaceTintColor: Colors.white,
       ),
       inputDecorationTheme: _inputDecorationTheme,
       dropdownMenuTheme: DropdownMenuThemeData(

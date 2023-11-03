@@ -7,9 +7,14 @@ class PaginaBuscar extends StatefulWidget {
   State<PaginaBuscar> createState() => _PaginaBuscarState();
 }
 
-class _PaginaBuscarState extends State<PaginaBuscar> {
+class _PaginaBuscarState extends State<PaginaBuscar> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return const Column(
       children: [
         Padding(

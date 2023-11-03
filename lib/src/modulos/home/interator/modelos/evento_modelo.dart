@@ -3,17 +3,27 @@ import 'dart:convert';
 
 class EventoModelo {
   final String id;
+  final String idEmpresa;
   final String nomeEvento;
   final String dataEvento;
   final String horaInicio;
   final String horaTermino;
   final String foto;
 
-  EventoModelo({required this.id, required this.nomeEvento, required this.dataEvento, required this.horaInicio, required this.horaTermino, required this.foto});
+  EventoModelo({
+    required this.id,
+    required this.idEmpresa,
+    required this.nomeEvento,
+    required this.dataEvento,
+    required this.horaInicio,
+    required this.horaTermino,
+    required this.foto,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'idEmpresa': idEmpresa,
       'nomeEvento': nomeEvento,
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
@@ -25,6 +35,7 @@ class EventoModelo {
   factory EventoModelo.fromMap(Map<String, dynamic> map) {
     return EventoModelo(
       id: map['id'] as String,
+      idEmpresa: map['idEmpresa'] as String,
       nomeEvento: map['nomeEvento'] as String,
       dataEvento: map['dataEvento'] as String,
       horaInicio: map['horaInicio'] as String,

@@ -8,25 +8,15 @@ class FinalizarCompraStore extends ValueNotifier<FinalizarCompraEstado> {
 
   FinalizarCompraStore(this._servico) : super(FinalizarCompraEstadoInicial());
 
-  void inserir() async {
+  void inserir(FinalizarCompraModelo dados) async {
     value = Carregando();
 
-    bool sucesso = await _servico.inserir(FinalizarCompraModelo(
-      idProva: "1",
-      idFormaPagamento: "1",
-      valorIngresso: "10",
-      valorTaxa: "0",
-      valorDesconto: "0",
-      valorTotal: "10",
-      txid: "",
-      codigoPix: "codigoPIX",
-      tipoDeVenda: "Venda",
-    ));
+    var (sucesso, mensagem) = await _servico.inserir(dados);
 
     if (sucesso) {
-      value = CompraRealizada();
+      value = CompraRealizadaComSucesso();
     } else {
-      value = ErroAoTentarComprar(erro: Exception('Erro ao tentar comprar.'));
+      value = ErroAoTentarComprar(erro: Exception(mensagem));
     }
   }
 }

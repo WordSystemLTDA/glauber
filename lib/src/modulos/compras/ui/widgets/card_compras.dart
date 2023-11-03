@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
 
 class CardCompras extends StatefulWidget {
-  const CardCompras({super.key});
+  final ComprasModelo item;
+  const CardCompras({super.key, required this.item});
 
   @override
   State<CardCompras> createState() => _CardComprasState();
@@ -12,6 +14,8 @@ class _CardComprasState extends State<CardCompras> {
 
   @override
   Widget build(BuildContext context) {
+    var item = widget.item;
+
     return SizedBox(
       height: tamanhoCard,
       child: Card(
@@ -34,18 +38,18 @@ class _CardComprasState extends State<CardCompras> {
                   thickness: 5,
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('#51233 - Zé neto e Cristiano'),
-                      SizedBox(height: 10),
-                      Text('Prova de Laço'),
-                      SizedBox(height: 10),
-                      Row(
+                      Text("#${item.id} - Zé neto e Cristiano"),
+                      const SizedBox(height: 10),
+                      Text("Prova de Laço ${item.valorTotal}"),
+                      const SizedBox(height: 10),
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [Text('11/10/2023'), Text('14:48 PM'), Text('Pendente')],
                       )
@@ -68,7 +72,7 @@ class _CardComprasState extends State<CardCompras> {
                           onPressed: () {},
                           icon: const Icon(
                             Icons.telegram,
-                            size: 35,
+                            size: 30,
                             color: Colors.green,
                           ),
                         ),
@@ -76,7 +80,7 @@ class _CardComprasState extends State<CardCompras> {
                           onPressed: () {},
                           icon: const Icon(
                             Icons.qr_code_scanner,
-                            size: 35,
+                            size: 30,
                           ),
                         ),
                       ],

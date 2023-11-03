@@ -13,26 +13,44 @@ class PaginaInicio extends StatefulWidget {
 
 class _PaginaInicioState extends State<PaginaInicio> {
   int pageIndex = 0;
-
-  final pages = [
-    const PaginaHome(),
-    const PaginaBuscar(),
-    const PaginaCompras(),
-    const PaginaPerfil(),
-  ];
+  final PageController pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('LOGO'),
-        centerTitle: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0, 0),
+              blurRadius: 10.0,
+            )
+          ]),
+          child: AppBar(
+            elevation: 0.0,
+            title: const Text("LOGO"),
+          ),
+        ),
       ),
-      body: pages[pageIndex],
+
+      // body: pages[pageIndex],
+      body: PageView(
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
+          PaginaHome(),
+          PaginaBuscar(),
+          PaginaCompras(),
+          PaginaPerfil(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: pageIndex,
         onTap: (index) {
           setState(() => pageIndex = index);
+          pageController.jumpToPage(index);
         },
         type: BottomNavigationBarType.fixed,
         items: const [

@@ -17,18 +17,18 @@ class _PaginaProvasState extends State<PaginaProvas> {
   Widget build(BuildContext context) {
     var provasStore = context.read<ProvasStore>();
 
-    return ValueListenableBuilder<ProvasEstado>(
-      valueListenable: provasStore,
-      builder: (context, state, _) {
-        if (state is ProvasCarregando) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    return Scaffold(
+      body: ValueListenableBuilder<ProvasEstado>(
+        valueListenable: provasStore,
+        builder: (context, state, _) {
+          if (state is ProvasCarregando) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-        if (state is ProvasCarregado) {
-          return Scaffold(
-            body: Column(
+          if (state is ProvasCarregado) {
+            return Column(
               children: [
                 SizedBox(
                   height: 300,
@@ -120,34 +120,53 @@ class _PaginaProvasState extends State<PaginaProvas> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Escolha sua Prova',
-                      style: TextStyle(fontSize: 16),
+                if (state.provas.isNotEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Escolha sua Prova',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: state.provas.length,
-                    itemBuilder: (context, index) {
-                      var prova = state.provas[index];
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        provasStore.listar(widget.idEvento);
+                      },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(10),
+                        itemCount: state.provas.length,
+                        itemBuilder: (context, index) {
+                          var prova = state.provas[index];
 
-                      return CardProvas(prova: prova);
-                    },
+                          return CardProvas(prova: prova, idEvento: widget.idEvento);
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
+                if (state.provas.isEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Não há provas para esse evento.',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
               ],
-            ),
-          );
-        }
+            );
+          }
 
-        return const Text('Erro');
-      },
+          return const Text('Erro ao listar Provas.');
+        },
+      ),
     );
   }
 

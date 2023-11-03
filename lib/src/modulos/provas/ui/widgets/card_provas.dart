@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
+import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class CardProvas extends StatefulWidget {
   final ProvaModelo prova;
-  const CardProvas({super.key, required this.prova});
+  final String idEvento;
+  const CardProvas({super.key, required this.prova, required this.idEvento});
 
   @override
   State<CardProvas> createState() => _CardProvasState();
@@ -22,7 +24,11 @@ class _CardProvasState extends State<CardProvas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/finalizar_compra');
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return PaginaFinalizarCompra(idProva: prova.id, idEvento: widget.idEvento);
+              },
+            ));
           },
           borderRadius: BorderRadius.circular(5),
           child: Row(

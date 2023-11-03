@@ -7,7 +7,7 @@ class PaginaPerfil extends StatefulWidget {
   State<PaginaPerfil> createState() => _PaginaPerfilState();
 }
 
-class _PaginaPerfilState extends State<PaginaPerfil> {
+class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClientMixin {
   List<dynamic> itemsPerfil = [
     {'titulo': 'Editar dados', 'icone': Icons.edit_outlined},
     {'titulo': 'Avaliar APP', 'icone': Icons.star_outline},
@@ -21,8 +21,14 @@ class _PaginaPerfilState extends State<PaginaPerfil> {
     {'titulo': 'Exclur Conta', 'icone': Icons.delete_outline},
     {'titulo': 'Sair', 'icone': Icons.logout_outlined},
   ];
+
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,

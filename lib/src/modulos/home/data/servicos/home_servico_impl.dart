@@ -29,8 +29,6 @@ class HomeServicoImpl implements HomeServico {
       return EventoModelo.fromMap(elemento);
     }));
 
-    print(jsonData);
-
     if (response.statusCode == 200 && sucesso == true) {
       return HomeModelo(sucesso: sucesso, eventos: eventos, propagandas: propagandas);
     } else {

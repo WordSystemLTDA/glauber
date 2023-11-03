@@ -2,22 +2,20 @@ import 'dart:convert';
 
 import 'package:glauber/src/essencial/network/http_cliente.dart';
 import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/finalizar_compra_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
+import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:glauber/src/modulos/compras/interator/servicos/compras_servico.dart';
 
-class FinalizarCompraServicoImpl implements FinalizarCompraServico {
+class ComprasServicoImpl implements ComprasServico {
   final IHttpClient client;
 
-  FinalizarCompraServicoImpl(this.client);
+  ComprasServicoImpl(this.client);
 
   @override
-  Future<(bool, String)> inserir(FinalizarCompraModelo dados) async {
-    var url = 'vendas/inserir.php';
-
+  Future<List<ComprasModelo>> listar() async {
+    var url = 'compras/listar.php';
     var usuarioProvider = UsuarioProvider.getUsuario();
 
     var campos = {
-      ...dados.toMap(),
       'id_cliente': usuarioProvider.id,
     };
 
@@ -25,12 +23,13 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
 
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];
-    String mensagem = jsonData['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return (sucesso, mensagem);
+      return List<ComprasModelo>.from(jsonData['dados'].map((elemento) {
+        return ComprasModelo.fromMap(elemento);
+      }));
     } else {
-      return (false, mensagem);
+      return [];
     }
   }
 }

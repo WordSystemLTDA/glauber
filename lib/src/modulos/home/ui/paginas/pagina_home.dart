@@ -13,14 +13,18 @@ class PaginaHome extends StatefulWidget {
   State<PaginaHome> createState() => _PaginaHomeState();
 }
 
-class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin {
+class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   int categoriasIndex = 0;
   List<String> categorias = ['Todas', 'Provas de Laços', 'Outros', 'Outros', 'Outros'];
 
   late TabController _categoriaController;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     HomeStore homeStore = context.read<HomeStore>();
 
     return ValueListenableBuilder<HomeEstado>(

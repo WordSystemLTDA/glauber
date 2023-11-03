@@ -62,16 +62,13 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     var usuarioProvider = UsuarioProvider.getUsuario();
 
-    if (usuarioProvider.isEmpty) {
+    if (usuarioProvider.toMap().isEmpty) {
       return false;
     }
 
-    var email = usuarioProvider['email'];
-    var senha = usuarioProvider['senha'];
-
     var campos = {
-      "email": email,
-      "senha": senha,
+      "email": usuarioProvider.email,
+      "senha": usuarioProvider.senha,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
