@@ -15,7 +15,7 @@ class AppWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
-      // themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       initialRoute: '/',
       routes: {
         '/': (context) => const PaginaSplash(),

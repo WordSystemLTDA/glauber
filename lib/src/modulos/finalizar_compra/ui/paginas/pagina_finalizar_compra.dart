@@ -150,19 +150,19 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Taxa Admin.',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            "+ ${Utils.coverterEmReal.format(5)}",
-                            style: const TextStyle(fontSize: 16, color: Colors.green),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     const Text(
+                      //       'Taxa Admin.',
+                      //       style: TextStyle(fontSize: 16),
+                      //     ),
+                      //     Text(
+                      //       "+ ${Utils.coverterEmReal.format(5)}",
+                      //       style: const TextStyle(fontSize: 16, color: Colors.green),
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(height: 30),
                       Row(
                         children: [
