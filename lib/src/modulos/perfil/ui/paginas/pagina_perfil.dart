@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/essencial/usuario_provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
   const PaginaPerfil({super.key});
@@ -9,17 +10,85 @@ class PaginaPerfil extends StatefulWidget {
 
 class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClientMixin {
   List<dynamic> itemsPerfil = [
-    {'titulo': 'Editar dados', 'icone': Icons.edit_outlined},
-    {'titulo': 'Avaliar APP', 'icone': Icons.star_outline},
-    {'titulo': 'Notificações', 'icone': Icons.notifications_outlined},
-    {'titulo': 'Dúvida', 'icone': Icons.tungsten_outlined},
-    {'titulo': 'Ajuda', 'icone': Icons.help_outline},
-    {'titulo': 'Suporte', 'icone': Icons.support_agent_outlined},
-    {'titulo': 'Atualização', 'icone': Icons.system_update_outlined},
-    {'titulo': 'Sugestões', 'icone': Icons.send_outlined},
-    {'titulo': 'Compartilhar App', 'icone': Icons.share_outlined},
-    {'titulo': 'Exclur Conta', 'icone': Icons.delete_outline},
-    {'titulo': 'Sair', 'icone': Icons.logout_outlined},
+    {
+      'titulo': const Text('Editar dados'),
+      'icone': const Icon(Icons.edit_outlined),
+    },
+    {
+      'titulo': const Text('Avaliar APP'),
+      'icone': const Icon(Icons.star_outline),
+    },
+    {
+      'titulo': const Text('Notificações'),
+      'icone': const Icon(Icons.notifications_outlined),
+    },
+    {
+      'titulo': const Text('Dúvida'),
+      'icone': const Icon(Icons.tungsten_outlined),
+    },
+    {
+      'titulo': const Text('Ajuda'),
+      'icone': const Icon(Icons.help_outline),
+    },
+    {
+      'titulo': const Text('Suporte'),
+      'icone': const Icon(Icons.support_agent_outlined),
+    },
+    {
+      'titulo': const Text('Atualização'),
+      'icone': const Icon(Icons.system_update_outlined),
+    },
+    {
+      'titulo': const Text('Sugestões'),
+      'icone': const Icon(Icons.send_outlined),
+    },
+    {
+      'titulo': const Text('Compartilhar App'),
+      'icone': const Icon(Icons.share_outlined),
+    },
+    {
+      'titulo': const Text('Exclur Conta'),
+      'icone': const Icon(Icons.delete_outline),
+    },
+    {
+      'titulo': const Text('Sair', style: TextStyle(color: Colors.red)),
+      'icone': const Icon(Icons.logout_outlined, color: Colors.red),
+      'funcao': (context) {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Sair'),
+              content: const SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text("Deseja realmente sair?"),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Sair'),
+                  onPressed: () async {
+                    UsuarioProvider.removerUsuario().then((sucesso) {
+                      if (sucesso) {
+                        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                      }
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    },
   ];
 
   @override
@@ -44,9 +113,9 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
               },
               itemBuilder: (context, index) {
                 return ListTile(
-                  onTap: () {},
-                  leading: Icon(itemsPerfil[index]['icone']),
-                  title: Text(itemsPerfil[index]['titulo'].toString()),
+                  onTap: () => itemsPerfil[index]['funcao'](context),
+                  leading: itemsPerfil[index]['icone'],
+                  title: itemsPerfil[index]['titulo'],
                   trailing: const Icon(Icons.arrow_forward_ios_rounded),
                 );
               },

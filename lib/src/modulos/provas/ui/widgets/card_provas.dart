@@ -18,7 +18,7 @@ class _CardProvasState extends State<CardProvas> {
     var prova = widget.prova;
 
     return SizedBox(
-      height: 130,
+      height: 120,
       child: Card(
         margin: const EdgeInsets.only(bottom: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),

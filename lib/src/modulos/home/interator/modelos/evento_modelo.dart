@@ -9,6 +9,8 @@ class EventoModelo {
   final String horaInicio;
   final String horaTermino;
   final String foto;
+  final String nomeCidade;
+  final String nomeEmpresa;
 
   EventoModelo({
     required this.id,
@@ -18,6 +20,8 @@ class EventoModelo {
     required this.horaInicio,
     required this.horaTermino,
     required this.foto,
+    required this.nomeCidade,
+    required this.nomeEmpresa,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +33,8 @@ class EventoModelo {
       'horaInicio': horaInicio,
       'horaTermino': horaTermino,
       'foto': foto,
+      'nomeCidade': nomeCidade,
+      'nomeEmpresa': nomeEmpresa,
     };
   }
 
@@ -41,6 +47,8 @@ class EventoModelo {
       horaInicio: map['horaInicio'] as String,
       horaTermino: map['horaTermino'] as String,
       foto: map['foto'] as String,
+      nomeCidade: map['nomeCidade'] as String,
+      nomeEmpresa: map['nomeEmpresa'] as String,
     );
   }
 

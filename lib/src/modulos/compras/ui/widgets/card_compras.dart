@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
 import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:glauber/src/modulos/compras/ui/widgets/dashed_line.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CardCompras extends StatefulWidget {
@@ -13,12 +14,18 @@ class CardCompras extends StatefulWidget {
 }
 
 class _CardComprasState extends State<CardCompras> {
-  double tamanhoCard = 130;
+  double tamanhoCard = 120;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var item = widget.item;
+
+    var dataInicioFiltrado = DateTime.parse(
+      DateFormat('yyyy-MM-dd HH:mm:ss').format(
+        DateFormat('yyyy-MM-dd HH:mm:ss').parse("${item.dataEvento} ${item.horaInicio}"),
+      ),
+    );
 
     return SizedBox(
       height: tamanhoCard,
@@ -58,7 +65,7 @@ class _CardComprasState extends State<CardCompras> {
                               children: [
                                 const Text('Valor ingresso'),
                                 Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorTotal)),
+                                  Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
                                   style: const TextStyle(color: Colors.green),
                                 ),
                               ],
@@ -69,7 +76,7 @@ class _CardComprasState extends State<CardCompras> {
                               children: [
                                 const Text('Valor taxa'),
                                 Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorTotal)),
+                                  Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
                                   style: const TextStyle(color: Colors.green),
                                 ),
                               ],
@@ -80,7 +87,7 @@ class _CardComprasState extends State<CardCompras> {
                               children: [
                                 const Text('Valor desconto'),
                                 Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorTotal)),
+                                  Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
                                   style: const TextStyle(color: Colors.green),
                                 ),
                               ],
@@ -107,12 +114,12 @@ class _CardComprasState extends State<CardCompras> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('10/07/2023'),
-                            Text('14:22 PM'),
-                            Text('Liberado'),
+                            Text(item.dataCompra),
+                            Text(item.horaCompra),
+                            Text(item.status),
                           ],
                         ),
                       ],
@@ -186,6 +193,7 @@ class _CardComprasState extends State<CardCompras> {
                               context: context,
                               builder: (context) {
                                 return Dialog(
+                                  insetPadding: const EdgeInsets.symmetric(horizontal: 20),
                                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                                   backgroundColor: Colors.white,
                                   shadowColor: Colors.white,
@@ -199,6 +207,7 @@ class _CardComprasState extends State<CardCompras> {
                                         size: 220.0,
                                         gapless: false,
                                       ),
+                                      const SizedBox(height: 20),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -231,13 +240,13 @@ class _CardComprasState extends State<CardCompras> {
                                         padding: const EdgeInsets.symmetric(vertical: 15),
                                         child: CustomPaint(
                                           painter: DashedPathPainter(
-                                            originalPath: Path()..lineTo(width - 85, 0),
+                                            originalPath: Path()..lineTo(width - 40, 0),
                                             pathColor: Colors.grey,
                                             strokeWidth: 2.0,
                                             dashGapLength: 10.0,
                                             dashLength: 10.0,
                                           ),
-                                          size: Size(width - 85, 2.0),
+                                          size: Size(width - 40, 2.0),
                                         ),
                                       ),
                                       Padding(
@@ -251,28 +260,31 @@ class _CardComprasState extends State<CardCompras> {
                                           ],
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('Data'),
-                                                Text(
-                                                  '31 de julho, 2023',
-                                                  style: TextStyle(color: Colors.grey),
+                                                const Text('Data'),
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: Text(
+                                                    DateFormat.yMMMMEEEEd('pt_BR').format(DateTime.parse(item.dataEvento)),
+                                                    style: const TextStyle(color: Colors.grey),
+                                                  ),
                                                 ),
                                               ],
                                             ),
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
-                                                Text('Hora Inicio'),
+                                                const Text('Hora Inicio'),
                                                 Text(
-                                                  '21:00 PM',
-                                                  style: TextStyle(color: Colors.grey),
+                                                  DateFormat.jm('pt_BR').format(dataInicioFiltrado),
+                                                  style: const TextStyle(color: Colors.grey),
                                                 ),
                                               ],
                                             ),
@@ -311,33 +323,39 @@ class _CardComprasState extends State<CardCompras> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              style: ButtonStyle(
-                                                backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
-                                                foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(5.0),
+                                            SizedBox(
+                                              width: 140,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
+                                                  foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
+                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(5.0),
+                                                    ),
                                                   ),
                                                 ),
+                                                child: const Text('Fechar'),
                                               ),
-                                              child: const Text('Fechar'),
                                             ),
-                                            ElevatedButton(
-                                              onPressed: () {},
-                                              style: ButtonStyle(
-                                                backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                                                foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(5.0),
+                                            SizedBox(
+                                              width: 160,
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                style: ButtonStyle(
+                                                  backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                                                  foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(5.0),
+                                                    ),
                                                   ),
                                                 ),
+                                                child: const Text('Baixar Ingresso'),
                                               ),
-                                              child: const Text('Baixar Ingresso'),
                                             ),
                                           ],
                                         ),

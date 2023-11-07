@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
 import 'package:glauber/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class PaginaSucessoCompra extends StatefulWidget {
-  const PaginaSucessoCompra({super.key});
+  final DadosRetornoCompraModelo dados;
+  const PaginaSucessoCompra({super.key, required this.dados});
 
   @override
   State<PaginaSucessoCompra> createState() => _PaginaSucessoCompraState();
@@ -13,6 +16,8 @@ class PaginaSucessoCompra extends StatefulWidget {
 class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
   @override
   Widget build(BuildContext context) {
+    var dados = widget.dados;
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -33,14 +38,23 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
               ),
             ),
             QrImageView(
-              data: '123iop12j93ij12890h89whe8912gh98312890389012h38912h938123',
+              data: dados.codigoPix,
               size: 250,
             ),
             const SizedBox(height: 10),
             SizedBox(
-              width: 250,
+              width: 280,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    showCloseIcon: true,
+                    content: Text(
+                      'Código PIX copiado',
+                      textAlign: TextAlign.center,
+                    ),
+                  ));
+                  Clipboard.setData(ClipboardData(text: dados.codigoPix));
+                },
                 style: ButtonStyle(
                   backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 224, 224, 224)),
                   foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),

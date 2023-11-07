@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class FinalizarCompraModelo {
+class FormularioCompraModelo {
   final String idProva;
   final String idEmpresa;
   final String idFormaPagamento;
@@ -11,7 +11,7 @@ class FinalizarCompraModelo {
   final String valorTotal;
   final String tipoDeVenda;
 
-  FinalizarCompraModelo({
+  FormularioCompraModelo({
     required this.idProva,
     required this.idEmpresa,
     required this.idFormaPagamento,
@@ -35,8 +35,8 @@ class FinalizarCompraModelo {
     };
   }
 
-  factory FinalizarCompraModelo.fromMap(Map<String, dynamic> map) {
-    return FinalizarCompraModelo(
+  factory FormularioCompraModelo.fromMap(Map<String, dynamic> map) {
+    return FormularioCompraModelo(
       idProva: map['idProva'] as String,
       idEmpresa: map['idEmpresa'] as String,
       idFormaPagamento: map['idFormaPagamento'] as String,
@@ -50,5 +50,5 @@ class FinalizarCompraModelo {
 
   String toJson() => json.encode(toMap());
 
-  factory FinalizarCompraModelo.fromJson(String source) => FinalizarCompraModelo.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory FormularioCompraModelo.fromJson(String source) => FormularioCompraModelo.fromMap(json.decode(source) as Map<String, dynamic>);
 }

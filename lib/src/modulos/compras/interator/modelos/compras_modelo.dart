@@ -14,6 +14,10 @@ class ComprasModelo {
   final String horaCompra;
   final String pago;
   final String nomeProva;
+  final String nomeEvento;
+  final String dataEvento;
+  final String horaInicio;
+  final String horaTermino;
 
   ComprasModelo({
     required this.id,
@@ -28,6 +32,10 @@ class ComprasModelo {
     required this.horaCompra,
     required this.pago,
     required this.nomeProva,
+    required this.nomeEvento,
+    required this.dataEvento,
+    required this.horaInicio,
+    required this.horaTermino,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +52,10 @@ class ComprasModelo {
       'horaCompra': horaCompra,
       'pago': pago,
       'nomeProva': nomeProva,
+      'nomeEvento': nomeEvento,
+      'dataEvento': dataEvento,
+      'horaInicio': horaInicio,
+      'horaTermino': horaTermino,
     };
   }
 
@@ -61,6 +73,10 @@ class ComprasModelo {
       horaCompra: map['horaCompra'] as String,
       pago: map['pago'] as String,
       nomeProva: map['nomeProva'] as String,
+      nomeEvento: map['nomeEvento'] as String,
+      dataEvento: map['dataEvento'] as String,
+      horaInicio: map['horaInicio'] as String,
+      horaTermino: map['horaTermino'] as String,
     );
   }
 

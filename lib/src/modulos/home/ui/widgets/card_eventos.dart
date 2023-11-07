@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:glauber/src/modulos/provas/ui/paginas/pagina_provas.dart';
@@ -35,11 +36,19 @@ class _CardEventosState extends State<CardEventos> {
           },
           child: Stack(
             children: [
-              Image.network(
-                evento.foto,
+              CachedNetworkImage(
+                imageUrl: evento.foto,
                 width: double.infinity,
                 height: 220,
                 fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(value: downloadProgress.progress),
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -64,18 +73,18 @@ class _CardEventosState extends State<CardEventos> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (aparecerInformacoes)
-                        const Text(
-                          'My Lounge',
-                          style: TextStyle(
+                        Text(
+                          evento.nomeEmpresa,
+                          style: const TextStyle(
                             color: Color.fromARGB(255, 225, 225, 225),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       if (aparecerInformacoes)
-                        const Text(
-                          'Astorga',
-                          style: TextStyle(
+                        Text(
+                          evento.nomeCidade,
+                          style: const TextStyle(
                             color: Color.fromARGB(255, 225, 225, 225),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

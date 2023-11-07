@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:glauber/src/modulos/provas/interator/estados/provas_estado.dart';
 import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:glauber/src/modulos/provas/ui/widgets/card_provas.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PaginaProvas extends StatefulWidget {
@@ -34,11 +36,19 @@ class _PaginaProvasState extends State<PaginaProvas> {
                   height: 300,
                   child: Stack(
                     children: [
-                      Image.network(
-                        state.evento!.foto,
+                      CachedNetworkImage(
+                        imageUrl: state.evento!.foto,
                         width: double.infinity,
                         height: 300,
                         fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                          child: SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: CircularProgressIndicator(value: downloadProgress.progress),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
@@ -64,7 +74,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             children: [
                               // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
                               Text(state.evento!.nomeEvento, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20)),
-                              Text(state.evento!.dataEvento, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                              Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(state.evento!.dataEvento)), style: const TextStyle(color: Colors.white, fontSize: 14)),
                               const SizedBox(height: 5),
                             ],
                           ),

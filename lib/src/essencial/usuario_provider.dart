@@ -9,7 +9,6 @@ class UsuarioProvider {
   static Future init() async => _preferences = await SharedPreferences.getInstance();
 
   static Future<bool> setUsuario(String usuario) async {
-    _preferences.reload();
     return await _preferences.setString('usuario', usuario);
   }
 

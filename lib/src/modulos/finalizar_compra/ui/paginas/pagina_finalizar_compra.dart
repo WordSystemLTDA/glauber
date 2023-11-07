@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
 import 'package:glauber/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
 import 'package:glauber/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/finalizar_compra_modelo.dart';
+import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
 import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
 import 'package:glauber/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
 import 'package:glauber/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
@@ -40,7 +40,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           if (mounted) {
             Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) {
-                return const PaginaSucessoCompra();
+                return PaginaSucessoCompra(dados: state.dados);
               },
             ));
           }
@@ -52,7 +52,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   void salvar(ListarInformacoesModelo dados) {
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
     finalizarCompraStore.inserir(
-      FinalizarCompraModelo(
+      FormularioCompraModelo(
         idProva: widget.idProva,
         idEmpresa: dados.evento.idEmpresa,
         idFormaPagamento: metodoPagamento.toString(),
@@ -210,7 +210,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                             salvar(state.dados);
                                           },
                                           child: stateFinalizarCompra is Carregando
-                                              ? const CircularProgressIndicator()
+                                              ? const CircularProgressIndicator(color: Colors.white)
                                               : const Text(
                                                   'Concluir',
                                                   style: TextStyle(fontSize: 16),

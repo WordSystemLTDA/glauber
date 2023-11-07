@@ -27,7 +27,23 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       valueListenable: autenticacaoStore,
       builder: (context, state, _) {
         return Scaffold(
-          appBar: AppBar(elevation: 0, title: const Text('Cadastrar-se'), centerTitle: true),
+          // appBar: AppBar(elevation: 0, title: const Text('Cadastrar-se'), centerTitle: true),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: Container(
+              decoration: const BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(0, 0),
+                  blurRadius: 10.0,
+                )
+              ]),
+              child: AppBar(
+                elevation: 0.0,
+                title: const Text("Cadastrar-se"),
+              ),
+            ),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(30),
             child: ListView(
@@ -44,14 +60,14 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   controller: _nomeController,
                   decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 const Text('E-mail'),
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: joao@gmail.com'),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -111,7 +127,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

@@ -13,6 +13,7 @@ class ComprasServicoImpl implements ComprasServico {
   @override
   Future<List<ComprasModelo>> listar() async {
     var url = 'compras/listar.php';
+    UsuarioProvider.atualizar();
     var usuarioProvider = UsuarioProvider.getUsuario();
 
     var campos = {
