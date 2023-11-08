@@ -56,7 +56,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
-          BottomNavigationBarItem(icon: Icon(Icons.airplane_ticket), label: 'Compras'),
+          BottomNavigationBarItem(icon: Icon(Icons.airplane_ticket), label: 'Inscrições'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil')
         ],
       ),

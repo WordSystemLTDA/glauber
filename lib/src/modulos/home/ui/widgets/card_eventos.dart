@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:glauber/src/modulos/provas/ui/paginas/pagina_provas.dart';
+import 'package:intl/intl.dart';
 
 class CardEventos extends StatefulWidget {
   final EventoModelo evento;
@@ -28,9 +29,7 @@ class _CardEventosState extends State<CardEventos> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PaginaProvas(
-                  idEvento: evento.id,
-                ),
+                builder: (context) => PaginaProvas(idEvento: evento.id),
               ),
             );
           },
@@ -68,37 +67,45 @@ class _CardEventosState extends State<CardEventos> {
                 padding: const EdgeInsets.only(left: 10),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (aparecerInformacoes)
-                        Text(
-                          evento.nomeEmpresa,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (aparecerInformacoes)
+                            Text(
+                              evento.nomeCidade,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 225, 225, 225),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          Text(
+                            evento.nomeEvento,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5, right: 10),
+                        child: Text(
+                          DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
                           style: const TextStyle(
                             color: Color.fromARGB(255, 225, 225, 225),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
-                        ),
-                      if (aparecerInformacoes)
-                        Text(
-                          evento.nomeCidade,
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 225, 225, 225),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      Text(
-                        evento.nomeEvento,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 5),
                     ],
                   ),
                 ),

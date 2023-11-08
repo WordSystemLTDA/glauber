@@ -1,26 +1,34 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/dados_provas_modelo.dart';
+import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class ListarInformacoesModelo {
-  final ProvaModelo prova;
+  final DadosProvasModelo prova;
   final EventoModelo evento;
+  final List<PagamentosModelo> pagamentos;
 
-  ListarInformacoesModelo({required this.prova, required this.evento});
+  ListarInformacoesModelo({required this.prova, required this.evento, required this.pagamentos});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'prova': prova.toMap(),
       'evento': evento.toMap(),
+      'pagamentos': pagamentos.map((x) => x.toMap()).toList(),
     };
   }
 
   factory ListarInformacoesModelo.fromMap(Map<String, dynamic> map) {
     return ListarInformacoesModelo(
-      prova: ProvaModelo.fromMap(map['prova'] as Map<String, dynamic>),
+      prova: DadosProvasModelo.fromMap(map['prova'] as Map<String, dynamic>),
       evento: EventoModelo.fromMap(map['evento'] as Map<String, dynamic>),
+      pagamentos: List<PagamentosModelo>.from(
+        (map['pagamentos'] as List<dynamic>).map<PagamentosModelo>(
+          (x) => PagamentosModelo.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 

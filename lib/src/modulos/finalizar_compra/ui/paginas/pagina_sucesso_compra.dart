@@ -38,7 +38,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
               ),
             ),
             QrImageView(
-              data: dados.codigoPix,
+              data: dados.codigoPix!,
               size: 250,
             ),
             const SizedBox(height: 10),
@@ -53,7 +53,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                       textAlign: TextAlign.center,
                     ),
                   ));
-                  Clipboard.setData(ClipboardData(text: dados.codigoPix));
+                  Clipboard.setData(ClipboardData(text: dados.codigoPix!));
                 },
                 style: ButtonStyle(
                   backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 224, 224, 224)),

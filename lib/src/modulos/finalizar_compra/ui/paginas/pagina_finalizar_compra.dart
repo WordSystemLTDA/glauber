@@ -8,12 +8,13 @@ import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/listar_in
 import 'package:glauber/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
 import 'package:glauber/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
 import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
+import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
 
 class PaginaFinalizarCompra extends StatefulWidget {
-  final String idProva;
+  final List<ProvaModelo> provas;
   final String idEvento;
-  const PaginaFinalizarCompra({super.key, required this.idProva, required this.idEvento});
+  const PaginaFinalizarCompra({super.key, required this.idEvento, required this.provas});
 
   @override
   State<PaginaFinalizarCompra> createState() => _PaginaFinalizarCompraState();
@@ -21,7 +22,7 @@ class PaginaFinalizarCompra extends StatefulWidget {
 
 class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   bool concorda = false;
-  int metodoPagamento = 0;
+  String metodoPagamento = "0";
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var finalizarCompraStore = context.read<FinalizarCompraStore>();
       var listarInformacoesStore = context.read<ListarInformacoesStore>();
 
-      listarInformacoesStore.listarInformacoes(widget.idProva, widget.idEvento);
+      listarInformacoesStore.listarInformacoes(widget.provas, widget.idEvento);
 
       finalizarCompraStore.addListener(() {
         FinalizarCompraEstado state = finalizarCompraStore.value;
@@ -53,9 +54,11 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
     finalizarCompraStore.inserir(
       FormularioCompraModelo(
-        idProva: widget.idProva,
+        provas: widget.provas,
+        idEvento: widget.idEvento,
+        idProva: widget.provas[0].id,
         idEmpresa: dados.evento.idEmpresa,
-        idFormaPagamento: metodoPagamento.toString(),
+        idFormaPagamento: metodoPagamento,
         valorIngresso: dados.prova.valor,
         valorTaxa: "0",
         valorDesconto: "0",
@@ -115,20 +118,21 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                       SizedBox(
                         width: width,
                         child: SegmentedButton(
-                          segments: const [
-                            ButtonSegment(
-                              value: 1,
-                              label: Text(
-                                'Mercado Pago',
-                                overflow: TextOverflow.ellipsis,
+                          segments: [
+                            for (var i = 0; i < state.dados.pagamentos.length; i++)
+                              ButtonSegment(
+                                value: state.dados.pagamentos[i].id,
+                                label: Text(
+                                  state.dados.pagamentos[i].nome,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
                           ],
                           selected: {metodoPagamento},
                           showSelectedIcon: false,
-                          onSelectionChanged: (novoValor) {
+                          onSelectionChanged: (pagamento) {
                             setState(() {
-                              metodoPagamento = novoValor.first;
+                              metodoPagamento = pagamento.first;
                             });
                           },
                         ),
@@ -145,7 +149,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            Utils.coverterEmReal.format(double.parse(state.dados.prova.valor)),
+                            Utils.coverterEmReal.format(double.parse(state.dados.prova.valor.toString())),
                             style: const TextStyle(fontSize: 16, color: Colors.green),
                           ),
                         ],
@@ -177,7 +181,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      Utils.coverterEmReal.format(double.parse(state.dados.prova.valor)),
+                                      Utils.coverterEmReal.format(double.parse(state.dados.prova.valor.toString())),
                                       style: const TextStyle(fontSize: 16, color: Colors.green),
                                     ),
                                   ],

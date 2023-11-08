@@ -30,11 +30,11 @@ class RetornoCompraModelo {
 }
 
 class DadosRetornoCompraModelo {
-  final String txid;
-  final String codigoPix;
-  final String idProva;
-  final String idEmpresa;
-  final String idCompra;
+  final String? txid;
+  final String? codigoPix;
+  final String? idProva;
+  final String? idEmpresa;
+  final String? idCompra;
 
   DadosRetornoCompraModelo({required this.txid, required this.codigoPix, required this.idProva, required this.idEmpresa, required this.idCompra});
 
@@ -50,11 +50,11 @@ class DadosRetornoCompraModelo {
 
   factory DadosRetornoCompraModelo.fromMap(Map<String, dynamic> map) {
     return DadosRetornoCompraModelo(
-      txid: map['txid'] as String,
-      codigoPix: map['codigoPix'] as String,
-      idProva: map['idProva'] as String,
-      idEmpresa: map['idEmpresa'] as String,
-      idCompra: map['idCompra'] as String,
+      txid: map['txid'] != null ? map['txid'] as String : null,
+      codigoPix: map['codigoPix'] != null ? map['codigoPix'] as String : null,
+      idProva: map['idProva'] != null ? map['idProva'] as String : null,
+      idEmpresa: map['idEmpresa'] != null ? map['idEmpresa'] as String : null,
+      idCompra: map['idCompra'] != null ? map['idCompra'] as String : null,
     );
   }
 

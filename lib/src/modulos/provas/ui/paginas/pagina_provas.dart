@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:glauber/src/compartilhado/uteis.dart';
+import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:glauber/src/modulos/provas/interator/estados/provas_estado.dart';
+import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:glauber/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:intl/intl.dart';
@@ -15,11 +18,54 @@ class PaginaProvas extends StatefulWidget {
 }
 
 class _PaginaProvasState extends State<PaginaProvas> {
+  List<ProvaModelo> provasCarrinho = [];
+  List<double> valoresProvasCarrinho = [];
+
+  void adicionarNoCarrinho(prova) {
+    if (provasCarrinho.contains(prova)) {
+      setState(() {
+        provasCarrinho.remove(prova);
+        valoresProvasCarrinho.remove(double.parse(prova.valor));
+      });
+    } else {
+      setState(() {
+        provasCarrinho.add(prova);
+        valoresProvasCarrinho.add(double.parse(prova.valor));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var provasStore = context.read<ProvasStore>();
 
+    double valorTotal = valoresProvasCarrinho.fold(0, (previousValue, element) => previousValue + element);
+
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: provasCarrinho.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return PaginaFinalizarCompra(provas: provasCarrinho, idEvento: widget.idEvento);
+                  },
+                ));
+              },
+              label: Row(
+                children: [
+                  Text("${provasCarrinho.length.toString()} Itens"),
+                  const SizedBox(width: 10),
+                  Text(
+                    Utils.coverterEmReal.format(valorTotal),
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.arrow_forward_ios_outlined),
+                ],
+              ),
+            )
+          : Container(),
       body: ValueListenableBuilder<ProvasEstado>(
         valueListenable: provasStore,
         builder: (context, state, _) {
@@ -152,7 +198,13 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         itemBuilder: (context, index) {
                           var prova = state.provas[index];
 
-                          return CardProvas(prova: prova, idEvento: widget.idEvento);
+                          return CardProvas(
+                            prova: prova,
+                            idEvento: widget.idEvento,
+                            aoClicarNaProva: (prova) {
+                              adicionarNoCarrinho(prova);
+                            },
+                          );
                         },
                       ),
                     ),
