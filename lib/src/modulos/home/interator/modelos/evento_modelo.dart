@@ -11,6 +11,7 @@ class EventoModelo {
   final String foto;
   final String nomeCidade;
   final String nomeEmpresa;
+  final String liberacaoDeCompra;
 
   EventoModelo({
     required this.id,
@@ -22,6 +23,7 @@ class EventoModelo {
     required this.foto,
     required this.nomeCidade,
     required this.nomeEmpresa,
+    required this.liberacaoDeCompra,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +37,7 @@ class EventoModelo {
       'foto': foto,
       'nomeCidade': nomeCidade,
       'nomeEmpresa': nomeEmpresa,
+      'liberacaoDeCompra': liberacaoDeCompra,
     };
   }
 
@@ -49,6 +52,7 @@ class EventoModelo {
       foto: map['foto'] as String,
       nomeCidade: map['nomeCidade'] as String,
       nomeEmpresa: map['nomeEmpresa'] as String,
+      liberacaoDeCompra: map['liberacaoDeCompra'] as String,
     );
   }
 

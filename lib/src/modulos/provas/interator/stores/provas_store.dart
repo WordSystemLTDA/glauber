@@ -13,7 +13,7 @@ class ProvasStore extends ValueNotifier<ProvasEstado> {
     var resposta = await _provaServico.listar(idEvento);
 
     if (resposta.sucesso) {
-      value = ProvasCarregado(provas: resposta.provas, evento: resposta.evento);
+      value = ProvasCarregado(provas: resposta.provas, evento: resposta.evento, nomesCabeceira: resposta.nomesCabeceira);
     } else {
       value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
     }

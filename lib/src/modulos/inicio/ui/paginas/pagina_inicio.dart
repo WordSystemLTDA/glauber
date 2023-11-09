@@ -34,8 +34,6 @@ class _PaginaInicioState extends State<PaginaInicio> {
           ),
         ),
       ),
-
-      // body: pages[pageIndex],
       body: PageView(
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),

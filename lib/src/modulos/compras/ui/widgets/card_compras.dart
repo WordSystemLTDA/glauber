@@ -122,6 +122,30 @@ class _CardComprasState extends State<CardCompras> {
                             Text(item.status),
                           ],
                         ),
+                        Flexible(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(top: 20),
+                            itemCount: item.provas.length,
+                            itemBuilder: (context, index) {
+                              var provas = item.provas[index];
+
+                              return Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(provas.nomeCabeceira),
+                                      Text(provas.nomeProva),
+                                      Text(provas.total),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),

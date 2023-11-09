@@ -22,7 +22,7 @@ class _CardPropagandasState extends State<CardPropagandas> {
           child: Stack(
             children: [
               Image.network(
-                'https://static.wixstatic.com/media/11062b_521aef9283304ce89dd2e4d8c48d841e~mv2.jpg/v1/fill/w_640,h_172,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/11062b_521aef9283304ce89dd2e4d8c48d841e~mv2.jpg',
+                'https://lh3.googleusercontent.com/p/AF1QipOo4kxjmXxQ0HW2TxQ177AFo3MwbxabQAMptjdu=w1080-h608-p-no-v0',
                 width: double.infinity,
                 height: 100,
                 fit: BoxFit.cover,

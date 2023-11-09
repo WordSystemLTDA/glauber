@@ -190,14 +190,14 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                   valueListenable: finalizarCompraStore,
                                   builder: (context, stateFinalizarCompra, _) {
                                     return AbsorbPointer(
-                                      absorbing: !concorda || metodoPagamento == 0 || stateFinalizarCompra is Carregando,
+                                      absorbing: !concorda || metodoPagamento == '0' || stateFinalizarCompra is Carregando,
                                       child: SizedBox(
                                         width: 150,
                                         height: 50,
                                         child: ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor: MaterialStateProperty.all(
-                                              (!concorda || metodoPagamento == 0 || stateFinalizarCompra is Carregando) ? Colors.grey : Colors.green,
+                                              (!concorda || metodoPagamento == '0' || stateFinalizarCompra is Carregando) ? Colors.grey : Colors.green,
                                             ),
                                             foregroundColor: MaterialStateProperty.all(Colors.white),
                                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
 import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
+import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:glauber/src/modulos/provas/interator/estados/provas_estado.dart';
 import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
@@ -21,16 +22,36 @@ class _PaginaProvasState extends State<PaginaProvas> {
   List<ProvaModelo> provasCarrinho = [];
   List<double> valoresProvasCarrinho = [];
 
-  void adicionarNoCarrinho(prova) {
-    if (provasCarrinho.contains(prova)) {
+  void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento) {
+    // Irá permitir escolher so um pacote por prova
+    if (evento.liberacaoDeCompra == '1') {
+      var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
+
       setState(() {
-        provasCarrinho.remove(prova);
-        valoresProvasCarrinho.remove(double.parse(prova.valor));
+        if (valoresDuplicados.isNotEmpty) {
+          valoresProvasCarrinho.remove(double.parse(valoresDuplicados.firstOrNull!.valor));
+          provasCarrinho.remove(valoresDuplicados.first);
+        }
+
+        if (provasCarrinho.contains(prova)) {
+          provasCarrinho.remove(prova);
+          valoresProvasCarrinho.remove(double.parse(prova.valor));
+        } else {
+          provasCarrinho.add(prova);
+          valoresProvasCarrinho.add(double.parse(prova.valor));
+        }
       });
-    } else {
+
+      // Poderá escolher multiplos pacotes por prova
+    } else if (evento.liberacaoDeCompra == '2') {
       setState(() {
-        provasCarrinho.add(prova);
-        valoresProvasCarrinho.add(double.parse(prova.valor));
+        if (provasCarrinho.contains(prova)) {
+          provasCarrinho.remove(prova);
+          valoresProvasCarrinho.remove(double.parse(prova.valor));
+        } else {
+          provasCarrinho.add(prova);
+          valoresProvasCarrinho.add(double.parse(prova.valor));
+        }
       });
     }
   }
@@ -200,9 +221,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
 
                           return CardProvas(
                             prova: prova,
+                            evento: state.evento!,
+                            nomesCabeceira: state.nomesCabeceira!,
                             idEvento: widget.idEvento,
+                            provasCarrinho: provasCarrinho,
                             aoClicarNaProva: (prova) {
-                              adicionarNoCarrinho(prova);
+                              adicionarNoCarrinho(prova, state.evento!);
                             },
                           );
                         },

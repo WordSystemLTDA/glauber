@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:glauber/src/modulos/compras/interator/modelos/provas_compras_modelo.dart';
+
 class ComprasModelo {
   final String id;
   final String valorIngresso;
@@ -18,6 +20,7 @@ class ComprasModelo {
   final String dataEvento;
   final String horaInicio;
   final String horaTermino;
+  final List<ProvasComprasModelo> provas;
 
   ComprasModelo({
     required this.id,
@@ -36,6 +39,7 @@ class ComprasModelo {
     required this.dataEvento,
     required this.horaInicio,
     required this.horaTermino,
+    required this.provas,
   });
 
   Map<String, dynamic> toMap() {
@@ -56,6 +60,7 @@ class ComprasModelo {
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
       'horaTermino': horaTermino,
+      'provas': provas.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -77,6 +82,11 @@ class ComprasModelo {
       dataEvento: map['dataEvento'] as String,
       horaInicio: map['horaInicio'] as String,
       horaTermino: map['horaTermino'] as String,
+      provas: List<ProvasComprasModelo>.from(
+        (map['provas'] as List<dynamic>).map<ProvasComprasModelo>(
+          (x) => ProvasComprasModelo.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 

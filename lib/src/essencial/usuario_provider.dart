@@ -24,7 +24,7 @@ class UsuarioProvider {
     _preferences.reload();
     return _preferences.getString('usuario') != null
         ? DadosModelo.fromMap(jsonDecode(_preferences.getString('usuario') ?? ''))
-        : DadosModelo(id: '', email: '', senha: '', nome: '');
+        : DadosModelo(id: '', email: '', senha: '', nome: '', primeiroAcesso: '');
     // return DadosModelo(id: '', email: '', senha: '', nome: '');
   }
 }
@@ -34,8 +34,9 @@ class DadosModelo {
   final String? email;
   final String? senha;
   final String? nome;
+  final String? primeiroAcesso;
 
-  DadosModelo({required this.id, required this.email, required this.senha, required this.nome});
+  DadosModelo({required this.id, required this.email, required this.senha, required this.nome, required this.primeiroAcesso});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -43,6 +44,7 @@ class DadosModelo {
       'email': email,
       'senha': senha,
       'nome': nome,
+      'primeiroAcesso': primeiroAcesso,
     };
   }
 
@@ -52,6 +54,7 @@ class DadosModelo {
       email: map['email'] != null ? map['email'] as String : null,
       senha: map['senha'] != null ? map['senha'] as String : null,
       nome: map['nome'] != null ? map['nome'] as String : null,
+      primeiroAcesso: map['primeiroAcesso'] != null ? map['primeiroAcesso'] as String : null,
     );
   }
 
