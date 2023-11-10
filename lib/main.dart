@@ -46,7 +46,6 @@ void main() async {
       Provider<ListarInformacoesServico>(create: (context) => ListarInformacoesServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => FinalizarCompraStore(context.read())),
       ChangeNotifierProvider(create: (context) => ListarInformacoesStore(context.read())),
-
       // Compras
       Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ComprasStore(context.read())),

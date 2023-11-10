@@ -28,14 +28,15 @@ class _PaginaProvasState extends State<PaginaProvas> {
       var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
 
       setState(() {
-        if (valoresDuplicados.isNotEmpty) {
-          valoresProvasCarrinho.remove(double.parse(valoresDuplicados.firstOrNull!.valor));
-          provasCarrinho.remove(valoresDuplicados.first);
-        }
-
         if (provasCarrinho.contains(prova)) {
           provasCarrinho.remove(prova);
           valoresProvasCarrinho.remove(double.parse(prova.valor));
+        } else if (valoresDuplicados.isNotEmpty) {
+          valoresProvasCarrinho.remove(double.parse(valoresDuplicados.firstOrNull!.valor));
+          provasCarrinho.remove(valoresDuplicados.first);
+
+          provasCarrinho.add(prova);
+          valoresProvasCarrinho.add(double.parse(prova.valor));
         } else {
           provasCarrinho.add(prova);
           valoresProvasCarrinho.add(double.parse(prova.valor));

@@ -12,7 +12,10 @@ class PaginaCadastro extends StatefulWidget {
 
 class _PaginaCadastroState extends State<PaginaCadastro> {
   final _nomeController = TextEditingController();
+  final _apelidoController = TextEditingController();
   final _emailController = TextEditingController();
+  final _hcCabeceiraController = TextEditingController();
+  final _hcPiseiroController = TextEditingController();
   final _senhaController = TextEditingController();
   final _confirmarSenhaController = TextEditingController();
 
@@ -27,7 +30,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       valueListenable: autenticacaoStore,
       builder: (context, state, _) {
         return Scaffold(
-          // appBar: AppBar(elevation: 0, title: const Text('Cadastrar-se'), centerTitle: true),
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: Container(
@@ -48,16 +50,17 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
             padding: const EdgeInsets.all(30),
             child: ListView(
               children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Nome completo'),
-                    Text('0/40'),
-                  ],
-                ),
+                const Text('Nome completo'),
                 const SizedBox(height: 5),
                 TextField(
                   controller: _nomeController,
+                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
+                ),
+                const SizedBox(height: 10),
+                const Text('Apelido'),
+                const SizedBox(height: 5),
+                TextField(
+                  controller: _apelidoController,
                   decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
                 ),
                 const SizedBox(height: 10),
@@ -128,14 +131,33 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   ],
                 ),
                 const SizedBox(height: 10),
+                const Text('H.C Cabeceira'),
+                const SizedBox(height: 5),
+                TextField(
+                  controller: _hcCabeceiraController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu H.C'),
+                ),
+                const SizedBox(height: 10),
+                const Text('H.C Piseiro'),
+                const SizedBox(height: 5),
+                TextField(
+                  controller: _hcPiseiroController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu H.C'),
+                ),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       String nome = _nomeController.text;
+                      String apelido = _apelidoController.text;
                       String email = _emailController.text;
                       String senha = _senhaController.text;
                       String confirmar = _confirmarSenhaController.text;
+                      String hcCabeceira = _hcCabeceiraController.text;
+                      String hcPiseiro = _hcPiseiroController.text;
 
                       if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -151,7 +173,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                             content: Text('Campos de senha precisam ser iguais!'),
                           ));
                         } else {
-                          autenticacaoStore.cadastrar(nome, email, senha);
+                          autenticacaoStore.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro);
                         }
                       }
                     },

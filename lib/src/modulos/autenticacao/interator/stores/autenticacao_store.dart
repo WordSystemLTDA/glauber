@@ -21,10 +21,10 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     });
   }
 
-  void cadastrar(nome, email, senha) async {
+  void cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro) async {
     value = Cadastrando();
 
-    _autenticacaoServico.cadastrar(nome, email, senha).then((valores) {
+    _autenticacaoServico.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro).then((valores) {
       if (valores[0]) {
         value = Cadastrado();
       } else {

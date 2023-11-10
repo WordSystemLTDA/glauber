@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:glauber/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
 import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:glauber/src/modulos/compras/ui/widgets/dashed_line.dart';
@@ -106,11 +108,11 @@ class _CardComprasState extends State<CardCompras> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Pista Simples'),
-                            Text('Online'),
+                            Text(item.nomeProva),
+                            const Text('Online'),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -138,7 +140,10 @@ class _CardComprasState extends State<CardCompras> {
                                     children: [
                                       Text(provas.nomeCabeceira),
                                       Text(provas.nomeProva),
-                                      Text(provas.total),
+                                      Text(
+                                        Utils.coverterEmReal.format(double.parse(provas.total)),
+                                        style: const TextStyle(color: Colors.green),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -204,11 +209,13 @@ class _CardComprasState extends State<CardCompras> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.telegram,
-                            size: 30,
+                          onPressed: () {
+                            FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
+                          },
+                          icon: const FaIcon(
+                            FontAwesomeIcons.whatsapp,
                             color: Colors.green,
+                            size: 30,
                           ),
                         ),
                         IconButton(
@@ -259,7 +266,7 @@ class _CardComprasState extends State<CardCompras> {
                                         ],
                                       ),
                                       const SizedBox(height: 10),
-                                      const Text('Pista Simples'),
+                                      Text(item.nomeProva),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 15),
                                         child: CustomPaint(

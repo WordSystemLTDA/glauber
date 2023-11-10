@@ -20,6 +20,7 @@ class ComprasModelo {
   final String dataEvento;
   final String horaInicio;
   final String horaTermino;
+  final String numeroCelular;
   final List<ProvasComprasModelo> provas;
 
   ComprasModelo({
@@ -39,6 +40,7 @@ class ComprasModelo {
     required this.dataEvento,
     required this.horaInicio,
     required this.horaTermino,
+    required this.numeroCelular,
     required this.provas,
   });
 
@@ -60,6 +62,7 @@ class ComprasModelo {
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
       'horaTermino': horaTermino,
+      'numeroCelular': numeroCelular,
       'provas': provas.map((x) => x.toMap()).toList(),
     };
   }
@@ -82,6 +85,7 @@ class ComprasModelo {
       dataEvento: map['dataEvento'] as String,
       horaInicio: map['horaInicio'] as String,
       horaTermino: map['horaTermino'] as String,
+      numeroCelular: map['numeroCelular'] as String,
       provas: List<ProvasComprasModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvasComprasModelo>(
           (x) => ProvasComprasModelo.fromMap(x as Map<String, dynamic>),

@@ -19,9 +19,6 @@ class ProvaModelo extends Equatable {
     this.idCabeceira,
   });
 
-  @override
-  List<Object?> get props => [id, nomeProva, valor, idCabeceira];
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
@@ -45,4 +42,7 @@ class ProvaModelo extends Equatable {
   String toJson() => json.encode(toMap());
 
   factory ProvaModelo.fromJson(String source) => ProvaModelo.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  List<Object?> get props => [id, nomeProva, valor, jaComprou, idCabeceira];
 }

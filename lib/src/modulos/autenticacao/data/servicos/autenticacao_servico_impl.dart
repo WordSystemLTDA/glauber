@@ -34,13 +34,16 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<List<dynamic>> cadastrar(String nome, String email, String senha) async {
+  Future<List<dynamic>> cadastrar(String nome, String apelido, String email, String senha, String hcCabeceira, String hcPiseiro) async {
     var url = 'autenticacao/cadastrar.php';
 
     var campos = {
       "nome": nome,
+      "apelido": apelido,
       "email": email,
       "senha": senha,
+      "hcCabeceira": hcCabeceira,
+      "hcPiseiro": hcPiseiro,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

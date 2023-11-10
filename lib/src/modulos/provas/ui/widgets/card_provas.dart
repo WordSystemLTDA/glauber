@@ -34,7 +34,7 @@ class _CardProvasState extends State<CardProvas> {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Não é possível comprar novamente essa Prova.'),
+          content: Text('Você já comprou essa prova.'),
           showCloseIcon: true,
           backgroundColor: Colors.red,
         ));
