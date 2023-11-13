@@ -19,6 +19,8 @@ import 'package:glauber/src/modulos/finalizar_compra/interator/stores/listar_inf
 import 'package:glauber/src/modulos/home/data/servicos/home_servico_impl.dart';
 import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:glauber/src/modulos/home/interator/stores/home_store.dart';
+import 'package:glauber/src/modulos/inicio/data/servicos/mudar_senha_servico_impl.dart';
+import 'package:glauber/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 import 'package:glauber/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
 import 'package:glauber/src/modulos/provas/interator/servicos/prova_servico.dart';
 import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
@@ -32,6 +34,8 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (context) => ThemeController()),
       Provider<IHttpClient>(create: (context) => DioClient()),
+      // Inicio
+      Provider<MudarSenhaServico>(create: (context) => MudarSenhaServicoImpl(context.read())),
       // Autenticação
       Provider<AutenticacaoServico>(create: (context) => AutenticacaoServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => AutenticacaoStore(context.read())),

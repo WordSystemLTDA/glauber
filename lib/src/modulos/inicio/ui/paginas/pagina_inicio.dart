@@ -3,7 +3,9 @@ import 'package:glauber/src/essencial/usuario_provider.dart';
 import 'package:glauber/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:glauber/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:glauber/src/modulos/home/ui/paginas/pagina_home.dart';
+import 'package:glauber/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 import 'package:glauber/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
+import 'package:provider/provider.dart';
 
 class PaginaInicio extends StatefulWidget {
   const PaginaInicio({super.key});
@@ -15,6 +17,7 @@ class PaginaInicio extends StatefulWidget {
 class _PaginaInicioState extends State<PaginaInicio> {
   int pageIndex = 0;
   final PageController pageController = PageController(initialPage: 0);
+  TextEditingController novaSenha = TextEditingController();
 
   @override
   void initState() {
@@ -24,6 +27,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
 
   void verificar() {
     var usuarioProvider = UsuarioProvider.getUsuario();
+    var mudarSenhaServico = context.read<MudarSenhaServico>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted && usuarioProvider.primeiroAcesso == 'Não') {
@@ -38,14 +42,15 @@ class _PaginaInicioState extends State<PaginaInicio> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Mudar senha',
+                      'Mudar Senha',
                       style: TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 10),
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'Senha'),
+                    TextField(
+                      controller: novaSenha,
+                      decoration: const InputDecoration(hintText: 'Nova senha'),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -57,7 +62,26 @@ class _PaginaInicioState extends State<PaginaInicio> {
                         ),
                         const SizedBox(width: 10),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            mudarSenhaServico.mudarSenha(novaSenha.text).then((sucesso) {
+                              if (sucesso) {
+                                Navigator.pop(context);
+
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    content: Text('Sua senha foi mudada com sucesso.'),
+                                    showCloseIcon: true,
+                                    backgroundColor: Colors.green,
+                                  ));
+                                }
+                              }
+                            });
+                          },
+                          style: const ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
+                            foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+                          ),
                           child: const Text('Salvar'),
                         ),
                       ],

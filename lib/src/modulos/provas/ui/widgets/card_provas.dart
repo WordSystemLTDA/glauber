@@ -173,6 +173,11 @@ class _CardProvasState extends State<CardProvas> {
                             child: Center(
                               child: Text(
                                 item.nome,
+                                style: TextStyle(
+                                    color: widget.provasCarrinho
+                                            .contains(ProvaModelo(id: prova.id, jaComprou: false, nomeProva: prova.nomeProva, valor: prova.valor, idCabeceira: item.id))
+                                        ? Colors.white
+                                        : Colors.black),
                                 textAlign: TextAlign.center,
                               ),
                             ),

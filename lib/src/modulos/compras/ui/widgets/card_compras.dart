@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:glauber/src/compartilhado/constantes/funcoes_global.dart';
@@ -5,7 +8,9 @@ import 'package:glauber/src/compartilhado/uteis.dart';
 import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:glauber/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CardCompras extends StatefulWidget {
   final ComprasModelo item;
@@ -17,6 +22,25 @@ class CardCompras extends StatefulWidget {
 
 class _CardComprasState extends State<CardCompras> {
   double tamanhoCard = 120;
+
+  late StateSetter _setState;
+
+  // Track the progress of a downloaded file here.
+  double progress = 0;
+
+  // Track if the PDF was downloaded here.
+  bool baixandoPDF = false;
+
+  void updateProgress(done, total) {
+    progress = done / total;
+    _setState(() {
+      if (progress >= 1) {
+        baixandoPDF = false;
+      } else {
+        // progressString = 'Download progress: ' + (progress * 100).toStringAsFixed(0) + '% done.';
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -229,169 +253,211 @@ class _CardComprasState extends State<CardCompras> {
                                   backgroundColor: Colors.white,
                                   shadowColor: Colors.white,
                                   surfaceTintColor: Colors.white,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(height: 15),
-                                      QrImageView(
-                                        data: item.codigoQr,
-                                        size: 220.0,
-                                        gapless: false,
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                  child: StatefulBuilder(
+                                    builder: (context, setStateDialog) {
+                                      _setState = setStateDialog;
+
+                                      return Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
+                                          const SizedBox(height: 15),
+                                          QrImageView(
+                                            data: item.codigoQr,
+                                            size: 220.0,
+                                            gapless: false,
+                                          ),
+                                          const SizedBox(height: 20),
                                           Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              const Icon(
-                                                Icons.person,
-                                                size: 20,
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Text(item.idCliente),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Row(
-                                            children: [
-                                              const Icon(
-                                                Icons.airplane_ticket,
-                                                size: 20,
-                                              ),
-                                              const SizedBox(width: 5),
-                                              Text(item.id),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(item.nomeProva),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 15),
-                                        child: CustomPaint(
-                                          painter: DashedPathPainter(
-                                            originalPath: Path()..lineTo(width - 40, 0),
-                                            pathColor: Colors.grey,
-                                            strokeWidth: 2.0,
-                                            dashGapLength: 10.0,
-                                            dashLength: 10.0,
-                                          ),
-                                          size: Size(width - 40, 2.0),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              item.nomeProva,
-                                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                const Text('Data'),
-                                                SizedBox(
-                                                  width: 200,
-                                                  child: Text(
-                                                    DateFormat.yMMMMEEEEd('pt_BR').format(DateTime.parse(item.dataEvento)),
-                                                    style: const TextStyle(color: Colors.grey),
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.person,
+                                                    size: 20,
                                                   ),
+                                                  const SizedBox(width: 5),
+                                                  Text(item.idCliente),
+                                                ],
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.airplane_ticket,
+                                                    size: 20,
+                                                  ),
+                                                  const SizedBox(width: 5),
+                                                  Text(item.id),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(item.nomeProva),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 15),
+                                            child: CustomPaint(
+                                              painter: DashedPathPainter(
+                                                originalPath: Path()..lineTo(width - 40, 0),
+                                                pathColor: Colors.grey,
+                                                strokeWidth: 2.0,
+                                                dashGapLength: 10.0,
+                                                dashLength: 10.0,
+                                              ),
+                                              size: Size(width - 40, 2.0),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  item.nomeProva,
+                                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                                                 ),
                                               ],
                                             ),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                const Text('Hora Inicio'),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Text('Data'),
+                                                    SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        DateFormat.yMMMMEEEEd('pt_BR').format(DateTime.parse(item.dataEvento)),
+                                                        style: const TextStyle(color: Colors.grey),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: [
+                                                    const Text('Hora Inicio'),
+                                                    Text(
+                                                      DateFormat.jm('pt_BR').format(dataInicioFiltrado),
+                                                      style: const TextStyle(color: Colors.grey),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.schedule,
+                                                      color: Colors.grey,
+                                                      size: 20,
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    Text(
+                                                      '18:00:00',
+                                                      style: TextStyle(color: Colors.grey),
+                                                    ),
+                                                  ],
+                                                ),
                                                 Text(
-                                                  DateFormat.jm('pt_BR').format(dataInicioFiltrado),
+                                                  item.status,
                                                   style: const TextStyle(color: Colors.grey),
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Icon(
-                                                  Icons.schedule,
-                                                  color: Colors.grey,
-                                                  size: 20,
+                                                SizedBox(
+                                                  width: 140,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    style: ButtonStyle(
+                                                      backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
+                                                      foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
+                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(5.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: const Text('Fechar'),
+                                                  ),
                                                 ),
-                                                SizedBox(width: 5),
-                                                Text(
-                                                  '18:00:00',
-                                                  style: TextStyle(color: Colors.grey),
+                                                SizedBox(
+                                                  width: 160,
+                                                  child: ElevatedButton(
+                                                    onPressed: () async {
+                                                      setStateDialog(() {
+                                                        baixandoPDF = true;
+                                                      });
+
+                                                      var tempDir = await getTemporaryDirectory();
+                                                      var savePath = '${tempDir.path}/inscricao.pdf';
+
+                                                      Response response = await Dio().get(
+                                                        'http://192.168.2.114/sistema/api_glauber/geracao_pdf/gerar_pdf.php',
+                                                        onReceiveProgress: updateProgress,
+                                                        options: Options(
+                                                          responseType: ResponseType.bytes,
+                                                          followRedirects: false,
+                                                          validateStatus: (status) {
+                                                            return status! < 500;
+                                                          },
+                                                        ),
+                                                      );
+
+                                                      var file = File(savePath).openSync(mode: FileMode.write);
+                                                      file.writeFromSync(response.data);
+                                                      await file.close();
+
+                                                      final result = await Share.shareXFiles([XFile(file.path)], text: 'PDF Inscrição');
+
+                                                      print(result.status);
+                                                    },
+                                                    style: ButtonStyle(
+                                                      backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                                                      foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(5.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: baixandoPDF
+                                                        ? const SizedBox(
+                                                            width: 20,
+                                                            height: 20,
+                                                            child: CircularProgressIndicator(
+                                                              color: Colors.white,
+                                                              strokeWidth: 1,
+                                                            ),
+                                                          )
+                                                        : const Text('Baixar Ingresso'),
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                            Text(
-                                              item.status,
-                                              style: const TextStyle(color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 140,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
-                                                  foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
-                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(5.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: const Text('Fechar'),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 160,
-                                              child: ElevatedButton(
-                                                onPressed: () {},
-                                                style: ButtonStyle(
-                                                  backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                                                  foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(5.0),
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: const Text('Baixar Ingresso'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                          )
+                                        ],
+                                      );
+                                    },
                                   ),
                                 );
                               },
