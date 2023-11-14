@@ -8,10 +8,10 @@ class DioClient implements IHttpClient {
   final dio = Dio(BaseOptions(baseUrl: ConstantesGlobal.apiUrl));
 
   @override
-  Future? get({required String url, Map<String, String>? headers}) async {
+  Future? get({required String url, Options? options}) async {
     final response = await dio.get(
       url,
-      options: Options(headers: headers),
+      options: options,
     );
 
     return response;

@@ -47,7 +47,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'icone': const Icon(Icons.share_outlined),
     },
     {
-      'titulo': const Text('Exclur Conta'),
+      'titulo': const Text('Excluir Conta'),
       'icone': const Icon(Icons.delete_outline),
     },
     {

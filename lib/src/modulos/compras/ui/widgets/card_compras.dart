@@ -1,16 +1,13 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:glauber/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:glauber/src/compartilhado/uteis.dart';
 import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:glauber/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:glauber/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share_plus/share_plus.dart';
 
 class CardCompras extends StatefulWidget {
   final ComprasModelo item;
@@ -408,28 +405,15 @@ class _CardComprasState extends State<CardCompras> {
                                                         baixandoPDF = true;
                                                       });
 
-                                                      var tempDir = await getTemporaryDirectory();
-                                                      var savePath = '${tempDir.path}/inscricao.pdf';
+                                                      var comprasServico = context.read<ComprasServico>();
 
-                                                      Response response = await Dio().get(
-                                                        'http://192.168.2.114/sistema/api_glauber/geracao_pdf/gerar_pdf.php',
-                                                        onReceiveProgress: updateProgress,
-                                                        options: Options(
-                                                          responseType: ResponseType.bytes,
-                                                          followRedirects: false,
-                                                          validateStatus: (status) {
-                                                            return status! < 500;
-                                                          },
-                                                        ),
-                                                      );
-
-                                                      var file = File(savePath).openSync(mode: FileMode.write);
-                                                      file.writeFromSync(response.data);
-                                                      await file.close();
-
-                                                      final result = await Share.shareXFiles([XFile(file.path)], text: 'PDF Inscrição');
-
-                                                      print(result.status);
+                                                      comprasServico.baixarPDF(item.id).then((sucesso) {
+                                                        if (sucesso) {
+                                                          setStateDialog(() {
+                                                            baixandoPDF = false;
+                                                          });
+                                                        }
+                                                      });
                                                     },
                                                     style: ButtonStyle(
                                                       backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),

@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:glauber/src/essencial/network/http_cliente.dart';
 import 'package:glauber/src/essencial/usuario_provider.dart';
 import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:glauber/src/modulos/compras/interator/servicos/compras_servico.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ComprasServicoImpl implements ComprasServico {
   final IHttpClient client;
@@ -32,5 +36,32 @@ class ComprasServicoImpl implements ComprasServico {
     } else {
       return [];
     }
+  }
+
+  @override
+  Future<bool> baixarPDF(String idVenda) async {
+    var tempDir = await getTemporaryDirectory();
+    var savePath = '${tempDir.path}/inscricao.pdf';
+
+    var url = 'geracao_pdf/gerar_pdf.php?id_venda=$idVenda';
+
+    Response response = await client.get(
+      url: url,
+      options: Options(
+        responseType: ResponseType.bytes,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+
+    var file = File(savePath).openSync(mode: FileMode.write);
+    file.writeFromSync(response.data);
+    await file.close();
+
+    await Share.shareXFiles([XFile(file.path)], text: 'PDF Inscrição');
+
+    return true;
   }
 }

@@ -2,4 +2,5 @@ import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dar
 
 abstract interface class ComprasServico {
   Future<List<ComprasModelo>> listar();
+  Future<bool> baixarPDF(String idVenda);
 }

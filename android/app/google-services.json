@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "558343760209",
+    "project_id": "provasdelaco",
+    "storage_bucket": "provasdelaco.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558343760209:android:5ec2d882a0083648800b70",
+        "android_client_info": {
+          "package_name": "com.provadelaco.glauber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCttqpQ_-pKp-Wqcqmog8A_koxL93xty2A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

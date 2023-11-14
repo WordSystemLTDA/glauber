@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:glauber/src/compartilhado/firebase/notification_service.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +33,17 @@ class _PaginaSplashState extends State<PaginaSplash> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       verificarLogin();
+      initializeFirebaseMessaging();
+      checkForNotifications();
     });
+  }
+
+  initializeFirebaseMessaging() async {
+    await Provider.of<FirebaseMessagingService>(context, listen: false).initialize();
+  }
+
+  checkForNotifications() async {
+    await Provider.of<NotificationService>(context, listen: false).checkForNotifications();
   }
 
   void verificarLogin() async {

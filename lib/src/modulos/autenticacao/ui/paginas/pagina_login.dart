@@ -3,6 +3,7 @@ import 'package:glauber/src/essencial/usuario_provider.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class PaginaLogin extends StatefulWidget {
   const PaginaLogin({super.key});
@@ -16,179 +17,189 @@ class _PaginaLoginState extends State<PaginaLogin> {
   final _senhaController = TextEditingController();
   bool ocultarSenha = true;
 
+  void entrarComEmail() async {
+    final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+
+    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.email);
+  }
+
+  void entrarComGoogle() async {
+    final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+
+    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.google);
+  }
+
+  void entrarComApple() async {
+    final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+
+    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.apple);
+  }
+
   @override
   Widget build(BuildContext context) {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
 
     return ValueListenableBuilder<AutenticacaoEstado>(
       valueListenable: autenticacaoStore,
-      builder: (context, value, _) {
-        return Scaffold(
-          body: SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(hintText: 'E-mail'),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      obscureText: ocultarSenha,
-                      controller: _senhaController,
-                      decoration: InputDecoration(
-                        hintText: 'Senha',
-                        suffix: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              ocultarSenha = !ocultarSenha;
-                            });
-                          },
-                          icon: ocultarSenha ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
+      builder: (context, state, _) {
+        return Stack(
+          children: [
+            Scaffold(
+              body: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(hintText: 'E-mail'),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                        const SizedBox(height: 20),
+                        TextField(
+                          obscureText: ocultarSenha,
+                          controller: _senhaController,
+                          decoration: InputDecoration(
+                            hintText: 'Senha',
+                            suffix: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  ocultarSenha = !ocultarSenha;
+                                });
+                              },
+                              icon: ocultarSenha ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          autenticacaoStore.entrar(_emailController.text, _senhaController.text);
-                        },
-                        child: const Text(
-                          'Entrar',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                              child: SizedBox(
-                                width: 300,
-                                height: 230,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('E-mail'),
-                                      const SizedBox(height: 10),
-                                      const TextField(
-                                        decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        child: const Text('Recuperar'),
-                                      )
-                                    ],
-                                  ),
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
                               ),
-                            );
-                          },
-                        );
-                      },
-                      title: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Esqueceu sua senha? ',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          Text(
-                            'Clique aqui',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 14,
+                            ),
+                            onPressed: () {
+                              entrarComEmail();
+                            },
+                            child: const Text(
+                              'Entrar',
+                              style: TextStyle(fontSize: 18),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 70,
-                      child: Card(
-                        elevation: 5,
-                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: InkWell(
-                          onTap: () {},
-                          borderRadius: const BorderRadius.all(Radius.circular(5)),
-                          child: const Row(
+                        ),
+                        ListTile(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  child: SizedBox(
+                                    width: 300,
+                                    height: 230,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('E-mail'),
+                                          const SizedBox(height: 10),
+                                          const TextField(
+                                            decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            child: const Text('Recuperar'),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          title: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.all(20.0),
-                                child: Icon(Icons.g_translate_outlined),
+                              Text(
+                                'Esqueceu sua senha? ',
+                                style: TextStyle(fontSize: 14),
                               ),
-                              Text('Entrar com o Google'),
+                              Text(
+                                'Clique aqui',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 70,
-                      child: Card(
-                        elevation: 5,
-                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: InkWell(
-                          onTap: () {},
-                          borderRadius: const BorderRadius.all(Radius.circular(5)),
-                          child: const Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                        const SizedBox(height: 20),
+                        SignInButton(
+                          Buttons.GoogleDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                          text: 'Entrar com o Google',
+                          onPressed: () {
+                            entrarComGoogle();
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        SignInButton(
+                          Buttons.AppleDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          text: 'Entrar com a Apple',
+                          onPressed: () async {
+                            entrarComApple();
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        ListTile(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                          },
+                          title: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.all(20.0),
-                                child: Icon(Icons.facebook_outlined),
+                              Text(
+                                'Não está cadastrado? ',
+                                style: TextStyle(fontSize: 14),
                               ),
-                              Text('Entrar com o Facebook'),
+                              Text('Cadastre-se', style: TextStyle(color: Colors.blue, fontSize: 14)),
                             ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                      },
-                      title: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Não está cadastrado? ',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          Text('Cadastra-se', style: TextStyle(color: Colors.blue, fontSize: 14)),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
+            if (state is Carregando)
+              const Opacity(
+                opacity: 0.8,
+                child: ModalBarrier(dismissible: false, color: Colors.black),
+              ),
+            if (state is Carregando)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
         );
       },
     );

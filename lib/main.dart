@@ -1,5 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:glauber/firebase_options.dart';
 import 'package:glauber/src/app_widget.dart';
+import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:glauber/src/compartilhado/firebase/notification_service.dart';
 import 'package:glauber/src/compartilhado/theme/theme_controller.dart';
 import 'package:glauber/src/essencial/network/dio_cliente.dart';
 import 'package:glauber/src/essencial/network/http_cliente.dart';
@@ -30,8 +34,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UsuarioProvider.init();
 
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   final app = MultiProvider(
     providers: [
+      Provider<NotificationService>(create: (context) => NotificationService()),
+      Provider<FirebaseMessagingService>(create: (context) => FirebaseMessagingService(context.read())),
       ChangeNotifierProvider(create: (context) => ThemeController()),
       Provider<IHttpClient>(create: (context) => DioClient()),
       // Inicio

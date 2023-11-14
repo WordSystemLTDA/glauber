@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
+
 abstract interface class IHttpClient {
   Future? get({
     required String url,
-    Map<String, String>? headers,
+    Options? options,
   }) {
     return null;
   }
