@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:glauber/src/essencial/usuario_provider.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
@@ -19,20 +22,26 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
   void entrarComEmail() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.email);
+    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.email, tokenNotificacao);
   }
 
   void entrarComGoogle() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.google);
+    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.google, tokenNotificacao);
   }
 
   void entrarComApple() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.apple);
+    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.apple, tokenNotificacao);
   }
 
   @override
@@ -157,17 +166,19 @@ class _PaginaLoginState extends State<PaginaLogin> {
                           },
                         ),
                         const SizedBox(height: 10),
-                        SignInButton(
-                          Buttons.AppleDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+                        if (Platform.isIOS) ...[
+                          SignInButton(
+                            Buttons.AppleDark,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                            text: 'Entrar com a Apple',
+                            onPressed: () async {
+                              entrarComApple();
+                            },
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                          text: 'Entrar com a Apple',
-                          onPressed: () async {
-                            entrarComApple();
-                          },
-                        ),
+                        ],
                         const SizedBox(height: 20),
                         ListTile(
                           onTap: () {
@@ -191,13 +202,15 @@ class _PaginaLoginState extends State<PaginaLogin> {
               ),
             ),
             if (state is Carregando)
-              const Opacity(
-                opacity: 0.8,
-                child: ModalBarrier(dismissible: false, color: Colors.black),
-              ),
-            if (state is Carregando)
-              const Center(
-                child: CircularProgressIndicator(),
+              Opacity(
+                opacity: 0.5,
+                child: Container(
+                  color: Colors.black,
+                  alignment: Alignment.center,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               ),
           ],
         );

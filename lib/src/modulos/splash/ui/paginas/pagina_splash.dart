@@ -48,8 +48,10 @@ class _PaginaSplashState extends State<PaginaSplash> {
 
   void verificarLogin() async {
     final autenticacaoServico = context.read<AutenticacaoServico>();
+    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoServico.verificar().then((logado) async {
+    autenticacaoServico.verificar(tokenNotificacao).then((logado) async {
       if (logado) {
         Navigator.pushReplacementNamed(context, '/inicio');
       } else {

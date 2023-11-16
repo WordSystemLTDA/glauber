@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:glauber/src/essencial/usuario_provider.dart';
+import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provider/provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
   const PaginaPerfil({super.key});
@@ -76,9 +79,16 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                 TextButton(
                   child: const Text('Sair'),
                   onPressed: () async {
-                    UsuarioProvider.removerUsuario().then((sucesso) {
-                      if (sucesso) {
-                        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                    final autenticacaoServico = context.read<AutenticacaoServico>();
+                    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                    autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
+                      if (sucessoAoExcluirToken) {
+                        UsuarioProvider.removerUsuario().then((sucessoAoSair) {
+                          if (sucessoAoSair) {
+                            Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                          }
+                        });
                       }
                     });
                   },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:glauber/src/essencial/usuario_provider.dart';
+import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:glauber/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:glauber/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:glauber/src/modulos/home/ui/paginas/pagina_home.dart';
@@ -30,7 +32,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
     var mudarSenhaServico = context.read<MudarSenhaServico>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted && usuarioProvider.primeiroAcesso == 'Não') {
+      if (mounted && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'normal') {
         showDialog(
           context: context,
           builder: (context) {
@@ -140,15 +142,15 @@ class _PaginaInicioState extends State<PaginaInicio> {
         ],
       ),
       endDrawer: Drawer(
+        width: 200,
         child: ListView(
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.deepPurple),
               child: Center(
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  radius: 35,
+                  child: Text(UsuarioProvider.getUsuario().nome!),
                 ),
               ),
             ),
@@ -204,9 +206,53 @@ class _PaginaInicioState extends State<PaginaInicio> {
                 ),
                 const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
                 ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Logout'),
+                  onTap: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Sair'),
+                          content: const SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text("Deseja realmente sair?"),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancelar'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Sair'),
+                              onPressed: () async {
+                                final autenticacaoServico = context.read<AutenticacaoServico>();
+                                final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                                String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                                autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
+                                  if (sucessoAoExcluirToken) {
+                                    UsuarioProvider.removerUsuario().then((sucessoAoSair) {
+                                      if (sucessoAoSair) {
+                                        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                                      }
+                                    });
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  leading: const Icon(Icons.logout, color: Colors.red),
+                  title: const Text(
+                    'Sair',
+                    style: TextStyle(color: Colors.red),
+                  ),
                   // trailing: Icon(Icons),
                 ),
                 const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),

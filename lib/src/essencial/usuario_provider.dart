@@ -9,6 +9,7 @@ class UsuarioProvider {
   static Future init() async => _preferences = await SharedPreferences.getInstance();
 
   static Future<bool> setUsuario(String usuario) async {
+    _preferences.reload();
     return await _preferences.setString('usuario', usuario);
   }
 
@@ -24,8 +25,7 @@ class UsuarioProvider {
     _preferences.reload();
     return _preferences.getString('usuario') != null
         ? DadosModelo.fromMap(jsonDecode(_preferences.getString('usuario') ?? ''))
-        : DadosModelo(id: '', email: '', senha: '', nome: '', primeiroAcesso: '');
-    // return DadosModelo(id: '', email: '', senha: '', nome: '');
+        : DadosModelo(id: '', email: '', senha: '', nome: '', tipo: 'normal', token: '', primeiroAcesso: '');
   }
 }
 
@@ -34,9 +34,19 @@ class DadosModelo {
   final String? email;
   final String? senha;
   final String? nome;
+  final String? token;
+  final String? tipo;
   final String? primeiroAcesso;
 
-  DadosModelo({required this.id, required this.email, required this.senha, required this.nome, required this.primeiroAcesso});
+  DadosModelo({
+    required this.id,
+    required this.email,
+    required this.senha,
+    required this.nome,
+    required this.token,
+    required this.tipo,
+    required this.primeiroAcesso,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -44,6 +54,8 @@ class DadosModelo {
       'email': email,
       'senha': senha,
       'nome': nome,
+      'token': token,
+      'tipo': tipo,
       'primeiroAcesso': primeiroAcesso,
     };
   }
@@ -54,6 +66,8 @@ class DadosModelo {
       email: map['email'] != null ? map['email'] as String : null,
       senha: map['senha'] != null ? map['senha'] as String : null,
       nome: map['nome'] != null ? map['nome'] as String : null,
+      token: map['token'] != null ? map['token'] as String : null,
+      tipo: map['tipo'] != null ? map['tipo'] as String : null,
       primeiroAcesso: map['primeiroAcesso'] != null ? map['primeiroAcesso'] as String : null,
     );
   }

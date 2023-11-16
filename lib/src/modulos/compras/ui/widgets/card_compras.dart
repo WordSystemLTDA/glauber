@@ -132,7 +132,7 @@ class _CardComprasState extends State<CardCompras> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(item.nomeProva),
+                            Text(item.nomeEvento),
                             const Text('Online'),
                           ],
                         ),
@@ -204,7 +204,7 @@ class _CardComprasState extends State<CardCompras> {
                     children: [
                       Text("#${item.id} - Nome Empresa"),
                       const SizedBox(height: 10),
-                      Text(item.nomeProva),
+                      Text(item.nomeEvento),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,7 +291,7 @@ class _CardComprasState extends State<CardCompras> {
                                             ],
                                           ),
                                           const SizedBox(height: 10),
-                                          Text(item.nomeProva),
+                                          Text(item.nomeEvento),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 15),
                                             child: CustomPaint(
@@ -310,7 +310,7 @@ class _CardComprasState extends State<CardCompras> {
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  item.nomeProva,
+                                                  item.nomeEvento,
                                                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                                                 ),
                                               ],

@@ -15,7 +15,6 @@ class FirebaseMessagingService {
     );
 
     _onMessage();
-    getDeviceFirebaseToken();
   }
 
   Future<String?> getDeviceFirebaseToken() async {

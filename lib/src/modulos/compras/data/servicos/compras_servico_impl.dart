@@ -41,7 +41,7 @@ class ComprasServicoImpl implements ComprasServico {
   @override
   Future<bool> baixarPDF(String idVenda) async {
     var tempDir = await getTemporaryDirectory();
-    var savePath = '${tempDir.path}/inscricao.pdf';
+    var savePath = '${tempDir.path}/inscricao$idVenda.pdf';
 
     var url = 'geracao_pdf/gerar_pdf.php?id_venda=$idVenda';
 
@@ -60,7 +60,7 @@ class ComprasServicoImpl implements ComprasServico {
     file.writeFromSync(response.data);
     await file.close();
 
-    await Share.shareXFiles([XFile(file.path)], text: 'PDF Inscrição');
+    await Share.shareXFiles([XFile(file.path)], subject: 'PDF da inscrição');
 
     return true;
   }

@@ -11,11 +11,11 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
   AutenticacaoStore(this._autenticacaoServico) : super(AutenticacaoEstadoInicial());
 
-  void entrar(email, senha, TiposLogin tipo) async {
+  void entrar(email, senha, TiposLogin tipo, String? tokenNotificacao) async {
     value = Carregando();
 
     if (tipo == TiposLogin.email) {
-      _autenticacaoServico.entrar(email, senha).then((sucesso) {
+      _autenticacaoServico.entrar(email, senha, tokenNotificacao).then((sucesso) {
         if (sucesso) {
           value = Autenticado();
         } else {
@@ -34,10 +34,15 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
       await googleSignIn.signIn().then((usuario) {
         if (usuario != null) {
-          print(usuario.displayName);
-          print(usuario.email);
-          print(usuario.photoUrl);
-          value = Autenticado();
+          _autenticacaoServico.entrarSocial(usuario, tipo, tokenNotificacao).then((sucesso) {
+            if (sucesso) {
+              value = Autenticado();
+            } else {
+              value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
+            }
+          }).onError((error, stackTrace) {
+            value = AutenticacaoErro(erro: Exception(error));
+          });
         } else {
           value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
         }
@@ -51,10 +56,17 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
-      ).then((value) {
-        print(value);
+      ).then((usuario) {
+        _autenticacaoServico.entrarSocial(usuario, tipo, tokenNotificacao).then((sucesso) {
+          if (sucesso) {
+            value = Autenticado();
+          } else {
+            value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
+          }
+        }).onError((error, stackTrace) {
+          value = AutenticacaoErro(erro: Exception(error));
+        });
       }).onError((error, stackTrace) {
-        print(error);
         value = AutenticacaoErro(erro: Exception(error));
       });
     }
@@ -63,11 +75,13 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
   void cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro) async {
     value = Cadastrando();
 
-    _autenticacaoServico.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro).then((valores) {
-      if (valores[0]) {
+    _autenticacaoServico.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro).then((resposta) {
+      var (sucesso, mensagem) = resposta;
+
+      if (sucesso) {
         value = Cadastrado();
       } else {
-        value = ErroAoCadastrar(erro: Exception('Erro ao tentar cadastrar!'));
+        value = ErroAoCadastrar(erro: Exception(mensagem));
       }
     }).onError((error, stackTrace) {
       value = ErroAoCadastrar(erro: Exception(error));
