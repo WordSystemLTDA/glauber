@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provider/provider.dart';
 
 class PaginaCadastro extends StatefulWidget {

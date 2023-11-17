@@ -9,7 +9,6 @@ class UsuarioProvider {
   static Future init() async => _preferences = await SharedPreferences.getInstance();
 
   static Future<bool> setUsuario(String usuario) async {
-    _preferences.reload();
     return await _preferences.setString('usuario', usuario);
   }
 
@@ -21,11 +20,15 @@ class UsuarioProvider {
     return await _preferences.remove('usuario');
   }
 
-  static DadosModelo getUsuario() {
-    _preferences.reload();
-    return _preferences.getString('usuario') != null
-        ? DadosModelo.fromMap(jsonDecode(_preferences.getString('usuario') ?? ''))
-        : DadosModelo(id: '', email: '', senha: '', nome: '', tipo: 'normal', token: '', primeiroAcesso: '');
+  static DadosModelo? getUsuario() {
+    atualizar();
+    String? usuario = _preferences.getString('usuario');
+
+    if (usuario != null) {
+      return DadosModelo.fromMap(jsonDecode(_preferences.getString('usuario') ?? ''));
+    }
+
+    return null;
   }
 }
 

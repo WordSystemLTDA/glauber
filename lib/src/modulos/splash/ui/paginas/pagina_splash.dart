@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:glauber/src/compartilhado/firebase/notification_service.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provider/provider.dart';
 
 class PaginaSplash extends StatefulWidget {
@@ -52,10 +53,12 @@ class _PaginaSplashState extends State<PaginaSplash> {
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
     autenticacaoServico.verificar(tokenNotificacao).then((logado) async {
-      if (logado) {
+      var usuario = UsuarioProvider.getUsuario();
+
+      if (logado && usuario != null) {
         Navigator.pushReplacementNamed(context, '/inicio');
       } else {
-        Navigator.pushReplacementNamed(context, '/autenticacao/login');
+        Navigator.pushReplacementNamed(context, '/inicio');
       }
     });
   }

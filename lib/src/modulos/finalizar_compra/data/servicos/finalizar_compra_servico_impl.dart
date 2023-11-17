@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
 
 class FinalizarCompraServicoImpl implements FinalizarCompraServico {
   final IHttpClient client;
@@ -19,7 +19,7 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
 
     var campos = {
       ...dados.toMap(),
-      'id_cliente': usuarioProvider.id,
+      'id_cliente': usuarioProvider!.id,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

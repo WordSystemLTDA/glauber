@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
 
 class FirebaseMessagingService {
   final NotificationService _notificationService;

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/provas/ui/paginas/pagina_provas.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:intl/intl.dart';
 
 class CardEventos extends StatefulWidget {

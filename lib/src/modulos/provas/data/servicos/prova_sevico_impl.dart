@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_retorno_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/servicos/prova_servico.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_retorno_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 
 class ProvaServicoImpl implements ProvaServico {
   final IHttpClient client;
@@ -16,7 +16,7 @@ class ProvaServicoImpl implements ProvaServico {
   @override
   Future<ProvaRetornoModelo> listar(String idEvento) async {
     var usuarioProvider = UsuarioProvider.getUsuario();
-    var idCliente = usuarioProvider.id;
+    var idCliente = usuarioProvider != null ? usuarioProvider.id : 0;
 
     var url = 'provas/listar.php?id_evento=$idEvento&id_cliente=$idCliente';
 

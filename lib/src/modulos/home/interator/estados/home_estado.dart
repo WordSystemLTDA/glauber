@@ -1,4 +1,4 @@
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 sealed class HomeEstado {
   final List<EventoModelo> eventos;

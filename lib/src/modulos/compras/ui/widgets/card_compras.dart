@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:glauber/src/compartilhado/constantes/funcoes_global.dart';
-import 'package:glauber/src/compartilhado/uteis.dart';
-import 'package:glauber/src/modulos/compras/interator/modelos/compras_modelo.dart';
-import 'package:glauber/src/modulos/compras/interator/servicos/compras_servico.dart';
-import 'package:glauber/src/modulos/compras/ui/widgets/dashed_line.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
+import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
+import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';

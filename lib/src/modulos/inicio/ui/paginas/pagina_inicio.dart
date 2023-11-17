@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:glauber/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
-import 'package:glauber/src/modulos/compras/ui/paginas/pagina_compras.dart';
-import 'package:glauber/src/modulos/home/ui/paginas/pagina_home.dart';
-import 'package:glauber/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
-import 'package:glauber/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
+import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
+import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
+import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
+import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
+import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
+import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInicio extends StatefulWidget {
@@ -32,7 +34,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
     var mudarSenhaServico = context.read<MudarSenhaServico>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'normal') {
+      if (mounted && usuarioProvider != null && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'normal') {
         showDialog(
           context: context,
           builder: (context) {
@@ -98,113 +100,107 @@ class _PaginaInicioState extends State<PaginaInicio> {
     });
   }
 
+  var nomeUsuario = (UsuarioProvider.getUsuario() != null && UsuarioProvider.getUsuario()!.nome!.isNotEmpty)
+      ? "${UsuarioProvider.getUsuario()!.nome![0].toUpperCase()}${UsuarioProvider.getUsuario()!.nome![1].toUpperCase()}"
+      : 'N/A';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Container(
-          decoration: const BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0, 0),
-              blurRadius: 10.0,
-            )
-          ]),
-          child: AppBar(
-            elevation: 0.0,
-            title: const Text("LOGO"),
+      floatingActionButton: Visibility(
+        visible: UsuarioProvider.getUsuario() == null,
+        child: SizedBox(
+          width: 120,
+          child: FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return const PaginaLogin();
+                },
+              ));
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            backgroundColor: Colors.red,
+            label: const Text(
+              'Entrar',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ),
       ),
-      body: PageView(
-        controller: pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          PaginaHome(),
-          PaginaBuscar(),
-          PaginaCompras(),
-          PaginaPerfil(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: pageIndex,
-        onTap: (index) {
-          setState(() => pageIndex = index);
-          pageController.jumpToPage(index);
-        },
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
-          BottomNavigationBarItem(icon: Icon(Icons.airplane_ticket), label: 'Inscrições'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil')
-        ],
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       endDrawer: Drawer(
         width: 200,
         child: ListView(
           children: [
-            DrawerHeader(
-              child: Center(
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  radius: 35,
-                  child: Text(UsuarioProvider.getUsuario().nome!),
-                ),
+            Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.grey,
+                radius: 35,
+                child: Text(nomeUsuario),
               ),
             ),
+            const SizedBox(height: 10),
+            const Divider(),
             Column(
               children: [
                 ListTile(
                   onTap: () {
                     setState(() {
                       pageIndex = 0;
+                      pageController.jumpToPage(0);
                     });
                     Navigator.pop(context);
                   },
-                  leading: const Icon(Icons.home),
+                  leading: const Icon(Icons.home_outlined),
                   title: const Text('Início'),
-                  trailing: const Icon(Icons.arrow_forward),
                 ),
-                const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
                 ListTile(
                   onTap: () {
                     setState(() {
                       pageIndex = 1;
+                      pageController.jumpToPage(1);
                     });
 
                     Navigator.pop(context);
                   },
                   leading: const Icon(Icons.search),
                   title: const Text('Buscar'),
-                  trailing: const Icon(Icons.arrow_forward),
                 ),
-                const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
                 ListTile(
                   onTap: () {
                     setState(() {
                       pageIndex = 2;
+                      pageController.jumpToPage(2);
                     });
                     Navigator.pop(context);
                   },
-                  leading: const Icon(Icons.airplane_ticket),
-                  title: const Text('Compras'),
-                  trailing: const Icon(Icons.arrow_forward),
+                  leading: const Icon(Icons.sell_outlined),
+                  title: const Text('Inscrições'),
                 ),
-                const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
                 ListTile(
                   onTap: () {
                     setState(() {
                       pageIndex = 3;
+                      pageController.jumpToPage(3);
                     });
                     Navigator.pop(context);
                   },
-                  leading: const Icon(Icons.person),
+                  leading: const Icon(Icons.person_outline),
                   title: const Text('Perfil'),
-                  trailing: const Icon(Icons.arrow_forward),
                 ),
-                const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
+                ListTile(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const PaginaOrdemDeEntrada();
+                      },
+                    ));
+                  },
+                  leading: const Icon(Icons.arrow_outward_rounded),
+                  title: const Text('Ordem de Entrada'),
+                ),
                 ListTile(
                   onTap: () {
                     showDialog<String>(
@@ -255,13 +251,52 @@ class _PaginaInicioState extends State<PaginaInicio> {
                   ),
                   // trailing: Icon(Icons),
                 ),
-                const Divider(height: 0, indent: 10, endIndent: 10, color: Colors.black),
               ],
             )
           ],
         ),
       ),
       endDrawerEnableOpenDragGesture: false,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0, 0),
+              blurRadius: 10.0,
+            )
+          ]),
+          child: AppBar(
+            elevation: 0.0,
+            title: const Text("LOGO"),
+          ),
+        ),
+      ),
+      body: PageView(
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
+          PaginaHome(),
+          PaginaBuscar(),
+          PaginaCompras(),
+          PaginaPerfil(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: pageIndex,
+        onTap: (index) {
+          setState(() => pageIndex = index);
+          pageController.jumpToPage(index);
+        },
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Início'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
+          BottomNavigationBarItem(icon: Icon(Icons.sell_outlined), label: 'Inscrições'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil')
+        ],
+      ),
     );
   }
 }

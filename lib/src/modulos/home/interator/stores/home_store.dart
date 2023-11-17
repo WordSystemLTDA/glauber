@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:glauber/src/modulos/home/interator/estados/home_estado.dart';
-import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
+import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
+import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 
 class HomeStore extends ValueNotifier<HomeEstado> {
   final HomeServico _homeServico;

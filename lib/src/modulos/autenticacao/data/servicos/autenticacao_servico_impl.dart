@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -84,7 +84,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     var usuarioProvider = UsuarioProvider.getUsuario();
 
-    if (usuarioProvider.id == '') {
+    if (usuarioProvider == null) {
       return false;
     }
 
@@ -142,7 +142,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     var usuarioProvider = UsuarioProvider.getUsuario();
 
-    if (usuarioProvider.toMap().isEmpty) {
+    if (usuarioProvider == null) {
       return false;
     }
 

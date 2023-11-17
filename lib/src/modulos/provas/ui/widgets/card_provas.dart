@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/uteis.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class CardProvas extends StatefulWidget {
   final ProvaModelo prova;
@@ -30,6 +32,26 @@ class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 120;
 
   void aoClicarNaCabeceira(ProvaModelo prova, item) {
+    var usuario = UsuarioProvider.getUsuario();
+
+    if (usuario == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Você precisa estar logado para fazer compras.'),
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+        ));
+
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const PaginaLogin();
+          },
+        ));
+      }
+      return;
+    }
+
     if (prova.jaComprou) {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -83,6 +105,26 @@ class _CardProvasState extends State<CardProvas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
+            var usuario = UsuarioProvider.getUsuario();
+
+            if (usuario == null) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Você precisa estar logado para fazer compras.'),
+                  showCloseIcon: true,
+                  backgroundColor: Colors.red,
+                ));
+
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const PaginaLogin();
+                  },
+                ));
+              }
+              return;
+            }
+
             if (prova.jaComprou) {
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();

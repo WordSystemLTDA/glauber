@@ -1,9 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/home/interator/estados/home_estado.dart';
-import 'package:glauber/src/modulos/home/interator/stores/home_store.dart';
-import 'package:glauber/src/modulos/home/ui/widgets/card_eventos.dart';
-import 'package:glauber/src/modulos/home/ui/widgets/card_propagandas.dart';
+import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
+import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
+import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
+import 'package:provadelaco/src/modulos/home/ui/widgets/card_propagandas.dart';
 import 'package:provider/provider.dart';
 
 class PaginaHome extends StatefulWidget {

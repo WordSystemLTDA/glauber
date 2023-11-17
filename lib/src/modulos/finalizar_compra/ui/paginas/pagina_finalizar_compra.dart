@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/uteis.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
-import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
 
 class PaginaFinalizarCompra extends StatefulWidget {

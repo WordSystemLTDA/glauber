@@ -1,4 +1,4 @@
-import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 
 abstract interface class AutenticacaoServico {
   Future<bool> verificar(String? tokenNotificacao);

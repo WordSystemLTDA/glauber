@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/home_modelo.dart';
-import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/home_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 
 class HomeServicoImpl implements HomeServico {
   final IHttpClient client;

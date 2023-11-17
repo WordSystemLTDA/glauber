@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provider/provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
@@ -52,11 +52,38 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     {
       'titulo': const Text('Excluir Conta'),
       'icone': const Icon(Icons.delete_outline),
+      'funcao': (context) {
+        var usuario = UsuarioProvider.getUsuario();
+
+        if (usuario == null) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Você não está logado para excluir uma conta.'),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+
+          return;
+        }
+      }
     },
     {
       'titulo': const Text('Sair', style: TextStyle(color: Colors.red)),
       'icone': const Icon(Icons.logout_outlined, color: Colors.red),
       'funcao': (context) {
+        var usuario = UsuarioProvider.getUsuario();
+
+        if (usuario == null) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Você não está logado para sair.'),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+
+          return;
+        }
+
         showDialog<String>(
           context: context,
           builder: (BuildContext context) {
@@ -82,6 +109,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                     final autenticacaoServico = context.read<AutenticacaoServico>();
                     final firebaseMessagingService = context.read<FirebaseMessagingService>();
                     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+
                     autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
                       if (sucessoAoExcluirToken) {
                         UsuarioProvider.removerUsuario().then((sucessoAoSair) {

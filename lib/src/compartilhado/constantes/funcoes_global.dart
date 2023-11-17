@@ -1,5 +1,5 @@
 import 'package:url_launcher/url_launcher.dart';
-import 'package:glauber/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 
 class FuncoesGlobais {
   static void abrirWhatsapp(String celular) async {

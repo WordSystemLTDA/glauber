@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glauber/src/modulos/provas/interator/estados/provas_estado.dart';
-import 'package:glauber/src/modulos/provas/interator/servicos/prova_servico.dart';
+import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 
 class ProvasStore extends ValueNotifier<ProvasEstado> {
   final ProvaServico _provaServico;

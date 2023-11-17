@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 
 class MudarSenhaServicoImpl implements MudarSenhaServico {
   final IHttpClient client;
@@ -15,7 +15,7 @@ class MudarSenhaServicoImpl implements MudarSenhaServico {
 
     var usuarioProvider = UsuarioProvider.getUsuario();
 
-    if (usuarioProvider.toMap().isEmpty) {
+    if (usuarioProvider == null) {
       return false;
     }
 

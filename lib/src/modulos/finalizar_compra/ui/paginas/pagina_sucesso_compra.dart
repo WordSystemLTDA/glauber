@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
-import 'package:glauber/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lottie/lottie.dart';
 

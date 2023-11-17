@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 

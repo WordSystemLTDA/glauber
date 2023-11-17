@@ -9,6 +9,11 @@ class EventoModelo {
   final String horaInicio;
   final String horaTermino;
   final String foto;
+  final String cep;
+  final String endereco;
+  final String numero;
+  final String bairro;
+  final String complemento;
   final String nomeCidade;
   final String nomeEmpresa;
   final String liberacaoDeCompra;
@@ -21,6 +26,11 @@ class EventoModelo {
     required this.horaInicio,
     required this.horaTermino,
     required this.foto,
+    required this.cep,
+    required this.endereco,
+    required this.numero,
+    required this.bairro,
+    required this.complemento,
     required this.nomeCidade,
     required this.nomeEmpresa,
     required this.liberacaoDeCompra,
@@ -35,6 +45,11 @@ class EventoModelo {
       'horaInicio': horaInicio,
       'horaTermino': horaTermino,
       'foto': foto,
+      'cep': cep,
+      'endereco': endereco,
+      'numero': numero,
+      'bairro': bairro,
+      'complemento': complemento,
       'nomeCidade': nomeCidade,
       'nomeEmpresa': nomeEmpresa,
       'liberacaoDeCompra': liberacaoDeCompra,
@@ -50,6 +65,11 @@ class EventoModelo {
       horaInicio: map['horaInicio'] as String,
       horaTermino: map['horaTermino'] as String,
       foto: map['foto'] as String,
+      cep: map['cep'] as String,
+      endereco: map['endereco'] as String,
+      numero: map['numero'] as String,
+      bairro: map['bairro'] as String,
+      complemento: map['complemento'] as String,
       nomeCidade: map['nomeCidade'] as String,
       nomeEmpresa: map['nomeEmpresa'] as String,
       liberacaoDeCompra: map['liberacaoDeCompra'] as String,

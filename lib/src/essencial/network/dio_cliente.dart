@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:glauber/src/compartilhado/constantes/constantes_global.dart';
-import 'package:glauber/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 
 class DioClient implements IHttpClient {
   final dio = Dio(BaseOptions(baseUrl: ConstantesGlobal.apiUrl));

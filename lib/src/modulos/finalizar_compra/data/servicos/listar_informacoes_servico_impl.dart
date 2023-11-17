@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class ListarInformacoesServicoImpl implements ListarInformacoesServico {
   final IHttpClient client;

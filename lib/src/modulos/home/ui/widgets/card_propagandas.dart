@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CardPropagandas extends StatefulWidget {
@@ -21,11 +22,19 @@ class _CardPropagandasState extends State<CardPropagandas> {
           },
           child: Stack(
             children: [
-              Image.network(
-                'https://lh3.googleusercontent.com/p/AF1QipOo4kxjmXxQ0HW2TxQ177AFo3MwbxabQAMptjdu=w1080-h608-p-no-v0',
+              CachedNetworkImage(
+                imageUrl: 'https://lh3.googleusercontent.com/p/AF1QipOo4kxjmXxQ0HW2TxQ177AFo3MwbxabQAMptjdu=w1080-h608-p-no-v0',
                 width: double.infinity,
                 height: 100,
                 fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(value: downloadProgress.progress),
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
               // Align(
               //   alignment: Alignment.bottomCenter,

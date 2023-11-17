@@ -1,6 +1,6 @@
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 sealed class ProvasEstado {
   final List<ProvaModelo> provas;

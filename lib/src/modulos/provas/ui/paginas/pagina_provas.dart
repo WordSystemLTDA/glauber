@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/src/compartilhado/uteis.dart';
-import 'package:glauber/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/estados/provas_estado.dart';
-import 'package:glauber/src/modulos/provas/interator/modelos/prova_modelo.dart';
-import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
-import 'package:glauber/src/modulos/provas/ui/widgets/card_provas.dart';
+import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -180,7 +180,70 @@ class _PaginaProvasState extends State<PaginaProvas> {
                       ActionChip(
                         avatar: const Icon(Icons.location_on_outlined),
                         label: const Text('Localização'),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "CEP: ",
+                                            style: TextStyle(fontWeight: FontWeight.w800),
+                                          ),
+                                          Text(state.evento!.cep),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Bairro: ",
+                                            style: TextStyle(fontWeight: FontWeight.w800),
+                                          ),
+                                          Text(state.evento!.bairro),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Complemento: ",
+                                            style: TextStyle(fontWeight: FontWeight.w800),
+                                          ),
+                                          Text(state.evento!.complemento),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Endereço: ",
+                                            style: TextStyle(fontWeight: FontWeight.w800),
+                                          ),
+                                          Text(state.evento!.endereco),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Cidade: ",
+                                            style: TextStyle(fontWeight: FontWeight.w800),
+                                          ),
+                                          Text(state.evento!.nomeCidade),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                       const SizedBox(width: 10),
                       ActionChip(

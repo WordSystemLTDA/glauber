@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/dados_provas_modelo.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
-import 'package:glauber/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_provas_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 class ListarInformacoesModelo {
   final DadosProvasModelo prova;

@@ -1,33 +1,36 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:glauber/firebase_options.dart';
-import 'package:glauber/src/app_widget.dart';
-import 'package:glauber/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:glauber/src/compartilhado/firebase/notification_service.dart';
-import 'package:glauber/src/compartilhado/theme/theme_controller.dart';
-import 'package:glauber/src/essencial/network/dio_cliente.dart';
-import 'package:glauber/src/essencial/network/http_cliente.dart';
-import 'package:glauber/src/essencial/usuario_provider.dart';
-import 'package:glauber/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:glauber/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
-import 'package:glauber/src/modulos/compras/data/servicos/compras_servico_impl.dart';
-import 'package:glauber/src/modulos/compras/interator/servicos/compras_servico.dart';
-import 'package:glauber/src/modulos/compras/interator/stores/compras_store.dart';
-import 'package:glauber/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
-import 'package:glauber/src/modulos/finalizar_compra/data/servicos/listar_informacoes_servico_impl.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
-import 'package:glauber/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
-import 'package:glauber/src/modulos/home/data/servicos/home_servico_impl.dart';
-import 'package:glauber/src/modulos/home/interator/servicos/home_servico.dart';
-import 'package:glauber/src/modulos/home/interator/stores/home_store.dart';
-import 'package:glauber/src/modulos/inicio/data/servicos/mudar_senha_servico_impl.dart';
-import 'package:glauber/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
-import 'package:glauber/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
-import 'package:glauber/src/modulos/provas/interator/servicos/prova_servico.dart';
-import 'package:glauber/src/modulos/provas/interator/stores/provas_store.dart';
+import 'package:provadelaco/firebase_options.dart';
+import 'package:provadelaco/src/app_widget.dart';
+import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
+import 'package:provadelaco/src/essencial/network/dio_cliente.dart';
+import 'package:provadelaco/src/essencial/network/http_cliente.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
+import 'package:provadelaco/src/modulos/compras/interator/stores/compras_store.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_informacoes_servico_impl.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
+import 'package:provadelaco/src/modulos/home/data/servicos/home_servico_impl.dart';
+import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
+import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
+import 'package:provadelaco/src/modulos/inicio/data/servicos/mudar_senha_servico_impl.dart';
+import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/data/servicos/ordermdeentrada_servico_impl.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
+import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
+import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -61,6 +64,9 @@ void main() async {
       // Compras
       Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ComprasStore(context.read())),
+      // Ordem de Entrada
+      Provider<OrdemDeEntradaServico>(create: (context) => OrdemDeEntradaServicoImpl(context.read())),
+      ChangeNotifierProvider(create: (context) => OrdemDeEntradaStore(context.read())),
     ],
     child: const AppWidget(),
   );

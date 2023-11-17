@@ -1,4 +1,4 @@
-import 'package:glauber/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
 
 sealed class ListarInformacoesEstado {}
 
