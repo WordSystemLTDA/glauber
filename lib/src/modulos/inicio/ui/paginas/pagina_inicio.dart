@@ -74,7 +74,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                                 if (mounted) {
                                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                    content: Text('Sua senha foi mudada com sucesso.'),
+                                    content: Center(child: Text('Sua senha foi mudada com sucesso.')),
                                     showCloseIcon: true,
                                     backgroundColor: Colors.green,
                                   ));
@@ -110,7 +110,8 @@ class _PaginaInicioState extends State<PaginaInicio> {
       floatingActionButton: Visibility(
         visible: UsuarioProvider.getUsuario() == null,
         child: SizedBox(
-          width: 120,
+          width: 150,
+          height: 50,
           child: FloatingActionButton.extended(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
@@ -120,10 +121,10 @@ class _PaginaInicioState extends State<PaginaInicio> {
               ));
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            backgroundColor: Colors.red,
+            backgroundColor: const Color.fromARGB(255, 247, 24, 8),
             label: const Text(
               'Entrar',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 14),
             ),
           ),
         ),

@@ -51,168 +51,180 @@ class _PaginaLoginState extends State<PaginaLogin> {
     return ValueListenableBuilder<AutenticacaoEstado>(
       valueListenable: autenticacaoStore,
       builder: (context, state, _) {
-        return Stack(
-          children: [
-            Scaffold(
-              body: SafeArea(
-                child: Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(hintText: 'E-mail'),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          obscureText: ocultarSenha,
-                          controller: _senhaController,
-                          decoration: InputDecoration(
-                            hintText: 'Senha',
-                            suffix: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  ocultarSenha = !ocultarSenha;
-                                });
-                              },
-                              icon: ocultarSenha ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Stack(
+            children: [
+              Scaffold(
+                body: SafeArea(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'LOGO',
+                            style: TextStyle(fontSize: 32),
+                          ),
+                          const SizedBox(height: 50),
+                          TextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(hintText: 'E-mail'),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            obscureText: ocultarSenha,
+                            controller: _senhaController,
+                            decoration: const InputDecoration(
+                              hintText: 'Senha',
+                              // suffix: IconButton(
+                              //   onPressed: () {
+                              //     setState(() {
+                              //       ocultarSenha = !ocultarSenha;
+                              //     });
+                              //   },
+                              //   icon: ocultarSenha ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
+                              // ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                          const SizedBox(height: 30),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: const MaterialStatePropertyAll(Color.fromARGB(255, 247, 24, 8)),
+                                foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                  ),
                                 ),
                               ),
-                            ),
-                            onPressed: () {
-                              entrarComEmail();
-                            },
-                            child: const Text(
-                              'Entrar',
-                              style: TextStyle(fontSize: 18),
+                              onPressed: () {
+                                entrarComEmail();
+                              },
+                              child: const Text(
+                                'Entrar',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                  child: SizedBox(
-                                    width: 300,
-                                    height: 230,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Text('E-mail'),
-                                          const SizedBox(height: 10),
-                                          const TextField(
-                                            decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          ElevatedButton(
-                                            onPressed: () {},
-                                            child: const Text('Recuperar'),
-                                          )
-                                        ],
+                          ListTile(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    child: SizedBox(
+                                      width: 300,
+                                      height: 230,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('E-mail'),
+                                            const SizedBox(height: 10),
+                                            const TextField(
+                                              decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            ElevatedButton(
+                                              onPressed: () {},
+                                              child: const Text('Recuperar'),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          title: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Esqueceu sua senha? ',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                              Text(
-                                'Clique aqui',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 14,
+                                  );
+                                },
+                              );
+                            },
+                            title: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Esqueceu sua senha? ',
+                                  style: TextStyle(fontSize: 14),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  'Clique aqui',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        SignInButton(
-                          Buttons.GoogleDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                          text: 'Entrar com o Google',
-                          onPressed: () {
-                            entrarComGoogle();
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        if (Platform.isIOS) ...[
+                          const SizedBox(height: 20),
                           SignInButton(
-                            Buttons.AppleDark,
+                            Buttons.GoogleDark,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                            text: 'Entrar com a Apple',
-                            onPressed: () async {
-                              entrarComApple();
+                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                            text: 'Entrar com o Google',
+                            onPressed: () {
+                              entrarComGoogle();
                             },
                           ),
-                        ],
-                        const SizedBox(height: 20),
-                        ListTile(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                          },
-                          title: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Não está cadastrado? ',
-                                style: TextStyle(fontSize: 14),
+                          const SizedBox(height: 10),
+                          if (Platform.isIOS) ...[
+                            SignInButton(
+                              Buttons.AppleDark,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
-                              Text('Cadastre-se', style: TextStyle(color: Colors.blue, fontSize: 14)),
-                            ],
+                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                              text: 'Entrar com a Apple',
+                              onPressed: () async {
+                                entrarComApple();
+                              },
+                            ),
+                          ],
+                          const SizedBox(height: 20),
+                          ListTile(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                            },
+                            title: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Não está cadastrado? ',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Text('Cadastre-se', style: TextStyle(color: Colors.blue, fontSize: 14)),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            if (state is Carregando)
-              Opacity(
-                opacity: 0.5,
-                child: Container(
-                  color: Colors.black,
-                  alignment: Alignment.center,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
+              if (state is Carregando)
+                Opacity(
+                  opacity: 0.5,
+                  child: Container(
+                    color: Colors.black,
+                    alignment: Alignment.center,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -237,7 +249,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
           if (mounted) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Text('Dados incorretos'),
+              content: const Center(child: Text('Dados incorretos')),
               action: SnackBarAction(
                 label: 'OK',
                 onPressed: () {},

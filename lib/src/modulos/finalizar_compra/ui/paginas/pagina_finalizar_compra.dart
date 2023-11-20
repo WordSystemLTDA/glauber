@@ -60,7 +60,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         idEmpresa: dados.evento.idEmpresa,
         idFormaPagamento: metodoPagamento,
         valorIngresso: dados.prova.valor,
-        valorTaxa: "0",
+        valorTaxa: dados.prova.taxaProva,
         valorDesconto: "0",
         valorTotal: dados.prova.valor,
         tipoDeVenda: "Venda",
@@ -118,6 +118,24 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                       SizedBox(
                         width: width,
                         child: SegmentedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.selected)) {
+                                  return const Color.fromARGB(255, 247, 24, 8);
+                                }
+                                return Colors.white;
+                              },
+                            ),
+                            foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.selected)) {
+                                  return Colors.white;
+                                }
+                                return Colors.black;
+                              },
+                            ),
+                          ),
                           segments: [
                             for (var i = 0; i < state.dados.pagamentos.length; i++)
                               ButtonSegment(
@@ -154,19 +172,21 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           ),
                         ],
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     const Text(
-                      //       'Taxa Admin.',
-                      //       style: TextStyle(fontSize: 16),
-                      //     ),
-                      //     Text(
-                      //       "+ ${Utils.coverterEmReal.format(5)}",
-                      //       style: const TextStyle(fontSize: 16, color: Colors.green),
-                      //     ),
-                      //   ],
-                      // ),
+                      if (double.parse(state.dados.prova.taxaProva) != 0) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Taxa Admin.',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "+ ${Utils.coverterEmReal.format(double.parse(state.dados.prova.taxaProva))}",
+                              style: const TextStyle(fontSize: 16, color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 30),
                       Row(
                         children: [
@@ -181,7 +201,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      Utils.coverterEmReal.format(double.parse(state.dados.prova.valor.toString())),
+                                      Utils.coverterEmReal.format(double.parse(state.dados.prova.valor.toString()) + double.parse(state.dados.prova.taxaProva)),
                                       style: const TextStyle(fontSize: 16, color: Colors.green),
                                     ),
                                   ],
@@ -197,7 +217,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                         child: ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor: MaterialStateProperty.all(
-                                              (!concorda || metodoPagamento == '0' || stateFinalizarCompra is Carregando) ? Colors.grey : Colors.green,
+                                              (!concorda || metodoPagamento == '0' || stateFinalizarCompra is Carregando) ? Colors.grey : const Color.fromARGB(255, 247, 24, 8),
                                             ),
                                             foregroundColor: MaterialStateProperty.all(Colors.white),
                                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(

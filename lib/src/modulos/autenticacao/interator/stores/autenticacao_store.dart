@@ -72,6 +72,22 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     }
   }
 
+  void preencherInformacoes(nome, apelido, email, hcCabeceira, hcPiseiro, idSocialLogin) {
+    value = Cadastrando();
+
+    _autenticacaoServico.preencherInformacoes(nome, apelido, email, hcCabeceira, hcPiseiro, idSocialLogin).then((resposta) {
+      var (sucesso, mensagem) = resposta;
+
+      if (sucesso) {
+        value = Cadastrado();
+      } else {
+        value = ErroAoCadastrar(erro: Exception(mensagem));
+      }
+    }).onError((error, stackTrace) {
+      value = ErroAoCadastrar(erro: Exception(error));
+    });
+  }
+
   void cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro) async {
     value = Cadastrando();
 

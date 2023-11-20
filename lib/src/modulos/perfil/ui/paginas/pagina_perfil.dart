@@ -58,7 +58,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
         if (usuario == null) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Você não está logado para excluir uma conta.'),
+            content: Center(child: Text('Você não está logado para excluir uma conta.')),
             showCloseIcon: true,
             backgroundColor: Colors.red,
           ));
@@ -76,7 +76,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
         if (usuario == null) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Você não está logado para sair.'),
+            content: Center(child: Text('Você não está logado para sair.')),
             showCloseIcon: true,
             backgroundColor: Colors.red,
           ));

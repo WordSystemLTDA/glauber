@@ -29,7 +29,7 @@ class CardProvas extends StatefulWidget {
 }
 
 class _CardProvasState extends State<CardProvas> {
-  double tamanhoCard = 120;
+  double tamanhoCard = 110;
 
   void aoClicarNaCabeceira(ProvaModelo prova, item) {
     var usuario = UsuarioProvider.getUsuario();
@@ -38,7 +38,7 @@ class _CardProvasState extends State<CardProvas> {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Você precisa estar logado para fazer compras.'),
+          content: Center(child: Text('Você precisa estar logado para fazer compras.')),
           showCloseIcon: true,
           backgroundColor: Colors.red,
         ));
@@ -56,7 +56,7 @@ class _CardProvasState extends State<CardProvas> {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Você já comprou essa prova.'),
+          content: Center(child: Text('Você já comprou essa prova.')),
           showCloseIcon: true,
           backgroundColor: Colors.red,
         ));
@@ -77,7 +77,7 @@ class _CardProvasState extends State<CardProvas> {
 
   Color? coresAction(prova, item) {
     if (prova.jaComprou) {
-      return const Color.fromARGB(255, 230, 230, 230);
+      return const Color.fromARGB(255, 252, 252, 252);
     }
 
     if (widget.provasCarrinho.contains(ProvaModelo(id: prova.id, jaComprou: false, nomeProva: prova.nomeProva, valor: prova.valor, idCabeceira: item.id))) {
@@ -100,7 +100,7 @@ class _CardProvasState extends State<CardProvas> {
     return SizedBox(
       height: tamanhoCard,
       child: Card(
-        color: prova.jaComprou ? const Color.fromARGB(255, 230, 230, 230) : Colors.white,
+        color: prova.jaComprou ? const Color.fromARGB(255, 252, 252, 252) : Colors.white,
         margin: const EdgeInsets.only(bottom: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
@@ -111,7 +111,7 @@ class _CardProvasState extends State<CardProvas> {
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Você precisa estar logado para fazer compras.'),
+                  content: Center(child: Text('Você precisa estar logado para fazer compras.')),
                   showCloseIcon: true,
                   backgroundColor: Colors.red,
                 ));
@@ -129,7 +129,7 @@ class _CardProvasState extends State<CardProvas> {
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Você já comprou essa prova.'),
+                  content: Center(child: Text('Você já comprou essa prova.')),
                   showCloseIcon: true,
                   backgroundColor: Colors.red,
                 ));
@@ -184,16 +184,12 @@ class _CardProvasState extends State<CardProvas> {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
                   ),
-                  elevation: 0,
                   margin: EdgeInsets.zero,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      border: Border(left: BorderSide(color: Colors.grey, width: 1)),
-                    ),
+                  child: SizedBox(
                     height: tamanhoCard,
                     child: ListView.separated(
                       separatorBuilder: (context, index) {
-                        return const Divider(height: 1);
+                        return const Divider(height: 1, color: Color.fromARGB(255, 238, 238, 238));
                       },
                       padding: const EdgeInsets.only(bottom: 1),
                       physics: const NeverScrollableScrollPhysics(),

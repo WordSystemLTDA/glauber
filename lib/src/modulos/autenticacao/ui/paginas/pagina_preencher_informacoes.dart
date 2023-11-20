@@ -3,28 +3,28 @@ import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autentica
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provider/provider.dart';
 
-class PaginaCadastro extends StatefulWidget {
-  const PaginaCadastro({super.key});
+class PaginaPreencherInformacoes extends StatefulWidget {
+  final String nome;
+  final String email;
+  final String idSocialLogin;
+  const PaginaPreencherInformacoes({super.key, required this.nome, required this.email, required this.idSocialLogin});
 
   @override
-  State<PaginaCadastro> createState() => _PaginaCadastroState();
+  State<PaginaPreencherInformacoes> createState() => _PaginaPreencherInformacoesState();
 }
 
-class _PaginaCadastroState extends State<PaginaCadastro> {
+class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes> {
   final _nomeController = TextEditingController();
   final _apelidoController = TextEditingController();
-  final _emailController = TextEditingController();
   final _hcCabeceiraController = TextEditingController();
   final _hcPiseiroController = TextEditingController();
-  final _senhaController = TextEditingController();
-  final _confirmarSenhaController = TextEditingController();
-
-  bool ocultarSenha = true;
-  bool ocultarConfirmar = true;
 
   @override
   Widget build(BuildContext context) {
     var autenticacaoStore = context.read<AutenticacaoStore>();
+
+    _nomeController.text = widget.nome;
+    _apelidoController.text = widget.nome;
 
     return GestureDetector(
       onTap: () {
@@ -60,81 +60,14 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   const SizedBox(height: 5),
                   TextField(
                     controller: _nomeController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
+                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: José Silveira dos Santos'),
                   ),
                   const SizedBox(height: 10),
                   const Text('Apelido'),
                   const SizedBox(height: 5),
                   TextField(
                     controller: _apelidoController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('E-mail'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: joao@gmail.com'),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Senha'),
-                            const SizedBox(height: 5),
-                            TextField(
-                              obscureText: ocultarSenha,
-                              controller: _senhaController,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: 'Senha',
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      ocultarSenha = !ocultarSenha;
-                                    });
-                                  },
-                                  icon: ocultarSenha
-                                      ? const Icon(Icons.remove_red_eye)
-                                      : const Icon(
-                                          Icons.remove_red_eye_outlined,
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Confirmar senha'),
-                            const SizedBox(height: 5),
-                            TextField(
-                              obscureText: ocultarConfirmar,
-                              controller: _confirmarSenhaController,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: 'Confirmar senha',
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      ocultarConfirmar = !ocultarConfirmar;
-                                    });
-                                  },
-                                  icon: ocultarConfirmar ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: zé'),
                   ),
                   const SizedBox(height: 10),
                   const Text('H.C Cabeceira'),
@@ -159,28 +92,17 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       onPressed: () {
                         String nome = _nomeController.text;
                         String apelido = _apelidoController.text;
-                        String email = _emailController.text;
-                        String senha = _senhaController.text;
-                        String confirmar = _confirmarSenhaController.text;
                         String hcCabeceira = _hcCabeceiraController.text;
                         String hcPiseiro = _hcPiseiroController.text;
 
-                        if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
+                        if (nome.isEmpty || hcCabeceira.isEmpty || hcPiseiro.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             showCloseIcon: true,
                             backgroundColor: Colors.red,
                             content: Center(child: Text('Preencha todos os campos!')),
                           ));
                         } else {
-                          if (senha != confirmar) {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              showCloseIcon: true,
-                              backgroundColor: Colors.red,
-                              content: Center(child: Text('Campos de senha precisam ser iguais!')),
-                            ));
-                          } else {
-                            autenticacaoStore.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro);
-                          }
+                          autenticacaoStore.preencherInformacoes(nome, apelido, widget.email, hcCabeceira, hcPiseiro, widget.idSocialLogin);
                         }
                       },
                       child: state is Cadastrando ? const CircularProgressIndicator() : const Text('Cadastrar-se'),

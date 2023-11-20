@@ -117,7 +117,10 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                       itemBuilder: (context, index) {
                         var item = state.eventos[index];
 
-                        return CardEventos(evento: item);
+                        return CardEventos(
+                          evento: item,
+                          aparecerInformacoes: true,
+                        );
                       },
                     ),
                   ),

@@ -111,6 +111,32 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
+  Future<(bool, String)> preencherInformacoes(String nome, String apelido, String email, String hcCabeceira, String hcPiseiro, String idSocialLogin) async {
+    var url = 'autenticacao/preencher_informacoes.php';
+
+    var campos = {
+      "nome": nome,
+      "apelido": apelido,
+      "email": email,
+      "hcCabeceira": hcCabeceira,
+      "hcPiseiro": hcPiseiro,
+      "idSocialLogin": idSocialLogin,
+    };
+
+    var response = await client.post(url: url, body: jsonEncode(campos));
+
+    Map result = jsonDecode(response.data);
+    bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
+
+    if (response.statusCode == 200) {
+      return (sucesso, mensagem);
+    } else {
+      return (false, 'Erro ao tentar inserir');
+    }
+  }
+
+  @override
   Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String hcCabeceira, String hcPiseiro) async {
     var url = 'autenticacao/cadastrar.php';
 

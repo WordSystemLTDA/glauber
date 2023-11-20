@@ -48,9 +48,11 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     showCloseIcon: true,
-                    content: Text(
-                      'Código PIX copiado',
-                      textAlign: TextAlign.center,
+                    content: Center(
+                      child: Text(
+                        'Código PIX copiado',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ));
                   Clipboard.setData(ClipboardData(text: dados.codigoPix!));

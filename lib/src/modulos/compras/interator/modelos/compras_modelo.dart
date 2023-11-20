@@ -11,6 +11,7 @@ class ComprasModelo {
   final String valorTotal;
   final String status;
   final String codigoQr;
+  final String codigoPIX;
   final String idCliente;
   final String dataCompra;
   final String horaCompra;
@@ -31,6 +32,7 @@ class ComprasModelo {
     required this.valorTotal,
     required this.status,
     required this.codigoQr,
+    required this.codigoPIX,
     required this.idCliente,
     required this.dataCompra,
     required this.horaCompra,
@@ -53,6 +55,7 @@ class ComprasModelo {
       'valorTotal': valorTotal,
       'status': status,
       'codigoQr': codigoQr,
+      'codigoPIX': codigoPIX,
       'idCliente': idCliente,
       'dataCompra': dataCompra,
       'horaCompra': horaCompra,
@@ -77,6 +80,7 @@ class ComprasModelo {
       status: map['status'] as String,
       codigoQr: map['codigoQr'] as String,
       idCliente: map['idCliente'] as String,
+      codigoPIX: map['codigoPIX'] as String,
       dataCompra: map['dataCompra'] as String,
       horaCompra: map['horaCompra'] as String,
       pago: map['pago'] as String,
