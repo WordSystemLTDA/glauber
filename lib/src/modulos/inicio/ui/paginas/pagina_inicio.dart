@@ -29,6 +29,50 @@ class _PaginaInicioState extends State<PaginaInicio> {
     verificar();
   }
 
+  void botaoSair() {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext contextDialog) {
+        return AlertDialog(
+          title: const Text('Sair'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Deseja realmente sair?"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(contextDialog).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Sair'),
+              onPressed: () async {
+                final autenticacaoServico = context.read<AutenticacaoServico>();
+                final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+
+                autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
+                  if (sucessoAoExcluirToken) {
+                    UsuarioProvider.removerUsuario().then((sucessoAoSair) {
+                      if (sucessoAoSair) {
+                        Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                      }
+                    });
+                  }
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void verificar() {
     var usuarioProvider = UsuarioProvider.getUsuario();
     var mudarSenhaServico = context.read<MudarSenhaServico>();
@@ -100,9 +144,19 @@ class _PaginaInicioState extends State<PaginaInicio> {
     });
   }
 
-  var nomeUsuario = (UsuarioProvider.getUsuario() != null && UsuarioProvider.getUsuario()!.nome!.isNotEmpty)
-      ? "${UsuarioProvider.getUsuario()!.nome![0].toUpperCase()}${UsuarioProvider.getUsuario()!.nome![1].toUpperCase()}"
-      : 'N/A';
+  String nomeUsuario() {
+    if (UsuarioProvider.getUsuario() != null && UsuarioProvider.getUsuario()!.nome!.isNotEmpty) {
+      var nomeComEspaco = UsuarioProvider.getUsuario()!.nome!.split(' ');
+
+      if (nomeComEspaco.length > 1) {
+        return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";
+      } else {
+        return "${UsuarioProvider.getUsuario()!.nome![0].toUpperCase()}${UsuarioProvider.getUsuario()!.nome![1].toUpperCase()}";
+      }
+    } else {
+      return "N/A";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,9 +192,27 @@ class _PaginaInicioState extends State<PaginaInicio> {
               child: CircleAvatar(
                 backgroundColor: Colors.grey,
                 radius: 35,
-                child: Text(nomeUsuario),
+                child: Text(nomeUsuario()),
               ),
             ),
+            if (UsuarioProvider.getUsuario() != null) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  UsuarioProvider.getUsuario()!.nome!,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 0),
+                child: Text(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  UsuarioProvider.getUsuario()!.email!,
+                ),
+              ),
+            ],
             const SizedBox(height: 10),
             const Divider(),
             Column(
@@ -158,100 +230,62 @@ class _PaginaInicioState extends State<PaginaInicio> {
                 ),
                 ListTile(
                   onTap: () {
-                    setState(() {
-                      pageIndex = 1;
-                      pageController.jumpToPage(1);
-                    });
-
                     Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const PaginaBuscar();
+                      },
+                    ));
                   },
                   leading: const Icon(Icons.search),
                   title: const Text('Buscar'),
                 ),
-                ListTile(
-                  onTap: () {
-                    setState(() {
-                      pageIndex = 2;
-                      pageController.jumpToPage(2);
-                    });
-                    Navigator.pop(context);
-                  },
-                  leading: const Icon(Icons.sell_outlined),
-                  title: const Text('Inscrições'),
-                ),
-                ListTile(
-                  onTap: () {
-                    setState(() {
-                      pageIndex = 3;
-                      pageController.jumpToPage(3);
-                    });
-                    Navigator.pop(context);
-                  },
-                  leading: const Icon(Icons.person_outline),
-                  title: const Text('Perfil'),
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return const PaginaOrdemDeEntrada();
-                      },
-                    ));
-                  },
-                  leading: const Icon(Icons.arrow_outward_rounded),
-                  title: const Text('Ordem de Entrada'),
-                ),
-                ListTile(
-                  onTap: () {
-                    showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Sair'),
-                          content: const SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text("Deseja realmente sair?"),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('Cancelar'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            TextButton(
-                              child: const Text('Sair'),
-                              onPressed: () async {
-                                final autenticacaoServico = context.read<AutenticacaoServico>();
-                                final firebaseMessagingService = context.read<FirebaseMessagingService>();
-                                String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
-                                autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
-                                  if (sucessoAoExcluirToken) {
-                                    UsuarioProvider.removerUsuario().then((sucessoAoSair) {
-                                      if (sucessoAoSair) {
-                                        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                                      }
-                                    });
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  leading: const Icon(Icons.logout, color: Colors.red),
-                  title: const Text(
-                    'Sair',
-                    style: TextStyle(color: Colors.red),
+                if (UsuarioProvider.getUsuario() != null) ...[
+                  ListTile(
+                    onTap: () {
+                      setState(() {
+                        pageIndex = 2;
+                        pageController.jumpToPage(2);
+                      });
+                      Navigator.pop(context);
+                    },
+                    leading: const Icon(Icons.sell_outlined),
+                    title: const Text('Inscrições'),
                   ),
-                  // trailing: Icon(Icons),
-                ),
+                  ListTile(
+                    onTap: () {
+                      setState(() {
+                        pageIndex = 3;
+                        pageController.jumpToPage(3);
+                      });
+                      Navigator.pop(context);
+                    },
+                    leading: const Icon(Icons.person_outline),
+                    title: const Text('Perfil'),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        pageIndex = 2;
+                        pageController.jumpToPage(2);
+                      });
+                    },
+                    leading: const Icon(Icons.format_list_numbered_outlined),
+                    title: const Text('Ordem de Entrada'),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      botaoSair();
+                    },
+                    leading: const Icon(Icons.logout, color: Colors.red),
+                    title: const Text(
+                      'Sair',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    // trailing: Icon(Icons),
+                  ),
+                ],
               ],
             )
           ],
@@ -279,8 +313,8 @@ class _PaginaInicioState extends State<PaginaInicio> {
         physics: const NeverScrollableScrollPhysics(),
         children: const [
           PaginaHome(),
-          PaginaBuscar(),
           PaginaCompras(),
+          PaginaOrdemDeEntrada(),
           PaginaPerfil(),
         ],
       ),
@@ -293,8 +327,8 @@ class _PaginaInicioState extends State<PaginaInicio> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Início'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
           BottomNavigationBarItem(icon: Icon(Icons.sell_outlined), label: 'Inscrições'),
+          BottomNavigationBarItem(icon: Icon(Icons.format_list_numbered_outlined), label: 'Ordem Entrada'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil')
         ],
       ),

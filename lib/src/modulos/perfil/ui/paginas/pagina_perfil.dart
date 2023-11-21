@@ -15,43 +15,53 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
   List<dynamic> itemsPerfil = [
     {
       'titulo': const Text('Editar dados'),
+      'ativo': UsuarioProvider.getUsuario() != null,
       'icone': const Icon(Icons.edit_outlined),
     },
     {
       'titulo': const Text('Avaliar APP'),
+      'ativo': true,
       'icone': const Icon(Icons.star_outline),
     },
     {
       'titulo': const Text('Notificações'),
+      'ativo': true,
       'icone': const Icon(Icons.notifications_outlined),
     },
     {
       'titulo': const Text('Dúvida'),
+      'ativo': true,
       'icone': const Icon(Icons.tungsten_outlined),
     },
     {
       'titulo': const Text('Ajuda'),
+      'ativo': true,
       'icone': const Icon(Icons.help_outline),
     },
     {
       'titulo': const Text('Suporte'),
+      'ativo': true,
       'icone': const Icon(Icons.support_agent_outlined),
     },
     {
       'titulo': const Text('Atualização'),
+      'ativo': true,
       'icone': const Icon(Icons.system_update_outlined),
     },
     {
       'titulo': const Text('Sugestões'),
+      'ativo': true,
       'icone': const Icon(Icons.send_outlined),
     },
     {
       'titulo': const Text('Compartilhar App'),
+      'ativo': true,
       'icone': const Icon(Icons.share_outlined),
     },
     {
       'titulo': const Text('Excluir Conta'),
       'icone': const Icon(Icons.delete_outline),
+      'ativo': UsuarioProvider.getUsuario() != null,
       'funcao': (context) {
         var usuario = UsuarioProvider.getUsuario();
 
@@ -70,6 +80,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     {
       'titulo': const Text('Sair', style: TextStyle(color: Colors.red)),
       'icone': const Icon(Icons.logout_outlined, color: Colors.red),
+      'ativo': UsuarioProvider.getUsuario() != null,
       'funcao': (context) {
         var usuario = UsuarioProvider.getUsuario();
 
@@ -136,6 +147,8 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     super.build(context);
 
+    var itemsAtivos = itemsPerfil.where((element) => element['ativo'] == true).toList();
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -145,15 +158,17 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
               shrinkWrap: true,
               padding: const EdgeInsets.all(10),
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: itemsPerfil.length,
+              itemCount: itemsAtivos.length,
               separatorBuilder: (context, index) {
-                return const Divider();
+                return const Divider(indent: 0, endIndent: 0);
               },
               itemBuilder: (context, index) {
+                var item = itemsAtivos[index];
+
                 return ListTile(
-                  onTap: () => itemsPerfil[index]['funcao'](context),
-                  leading: itemsPerfil[index]['icone'],
-                  title: itemsPerfil[index]['titulo'],
+                  onTap: () => item['funcao'](context),
+                  leading: item['icone'],
+                  title: item['titulo'],
                   trailing: const Icon(Icons.arrow_forward_ios_rounded),
                 );
               },

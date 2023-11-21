@@ -20,8 +20,6 @@ class ProvaServicoImpl implements ProvaServico {
 
     var url = 'provas/listar.php?id_evento=$idEvento&id_cliente=$idCliente';
 
-    print(url);
-
     var response = await client.get(url: url);
     var jsonData = jsonDecode(response.data);
 

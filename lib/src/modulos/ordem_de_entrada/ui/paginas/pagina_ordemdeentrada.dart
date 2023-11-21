@@ -17,22 +17,6 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
     var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Container(
-          decoration: const BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0, 0),
-              blurRadius: 10.0,
-            )
-          ]),
-          child: AppBar(
-            elevation: 0.0,
-            title: const Text("Ordem de Entrada"),
-          ),
-        ),
-      ),
       body: ValueListenableBuilder<OrdemDeEntradaEstado>(
         valueListenable: ordemDeEntradaStore,
         builder: (context, state, _) {

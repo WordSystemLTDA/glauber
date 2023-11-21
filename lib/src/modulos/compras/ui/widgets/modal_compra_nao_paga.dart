@@ -14,6 +14,7 @@ class ModalCompraNaoPaga extends StatefulWidget {
 }
 
 class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
+  // ignore: unused_field
   late StateSetter _setState;
 
   @override

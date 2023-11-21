@@ -38,18 +38,18 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<bool> entrarSocial(dynamic usuario, TiposLogin tipo, String? tokenNotificacao) async {
+  Future<bool> entrarSocial(dynamic usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
     var url = 'autenticacao/entrar_social.php';
     String? idSocialLogin = '';
     String? nome = '';
     String? email = '';
 
-    if (tipo == TiposLogin.google) {
+    if (tipo == TiposLoginSocial.google) {
       var usuarioTipo = usuario as GoogleSignInAccount;
       idSocialLogin = usuarioTipo.id;
       nome = usuarioTipo.displayName;
       email = usuarioTipo.email;
-    } else if (tipo == TiposLogin.apple) {
+    } else if (tipo == TiposLoginSocial.apple) {
       var usuarioTipo = usuario as AuthorizationCredentialAppleID;
       idSocialLogin = usuarioTipo.userIdentifier;
       nome = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
@@ -111,28 +111,46 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<(bool, String)> preencherInformacoes(String nome, String apelido, String email, String hcCabeceira, String hcPiseiro, String idSocialLogin) async {
-    var url = 'autenticacao/preencher_informacoes.php';
+  Future<bool> cadastrarSocial(dynamic usuario, TiposLoginSocial tipo, String hcCabeceira, String hcPiseiro) async {
+    var url = 'autenticacao/entrar_social.php';
+
+    String? idSocialLogin = '';
+    String? nome = '';
+    String? email = '';
+
+    if (tipo == TiposLoginSocial.google) {
+      var usuarioTipo = usuario as GoogleSignInAccount;
+      idSocialLogin = usuarioTipo.id;
+      nome = usuarioTipo.displayName;
+      email = usuarioTipo.email;
+    } else if (tipo == TiposLoginSocial.apple) {
+      var usuarioTipo = usuario as AuthorizationCredentialAppleID;
+      idSocialLogin = usuarioTipo.userIdentifier;
+      nome = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
+      email = usuarioTipo.email;
+    }
 
     var campos = {
-      "nome": nome,
-      "apelido": apelido,
       "email": email,
+      "idSocialLogin": idSocialLogin,
+      "nome": nome,
+      "tokenNotificacao": '',
       "hcCabeceira": hcCabeceira,
       "hcPiseiro": hcPiseiro,
-      "idSocialLogin": idSocialLogin,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    String mensagem = result['mensagem'];
+    dynamic dados = result['resultado'];
 
-    if (response.statusCode == 200) {
-      return (sucesso, mensagem);
+    if (response.statusCode == 200 && sucesso == true) {
+      await UsuarioProvider.setUsuario(jsonEncode(dados));
+
+      return sucesso;
     } else {
-      return (false, 'Erro ao tentar inserir');
+      return false;
     }
   }
 
@@ -159,6 +177,45 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       return (sucesso, mensagem);
     } else {
       return (false, 'Erro ao tentar inserir');
+    }
+  }
+
+  @override
+  Future<bool> verificarLoginSocial(dynamic usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
+    var url = 'autenticacao/verificacao_social.php';
+
+    String? idSocialLogin = '';
+    String? email = '';
+
+    if (tipo == TiposLoginSocial.google) {
+      var usuarioTipo = usuario as GoogleSignInAccount;
+      idSocialLogin = usuarioTipo.id;
+      email = usuarioTipo.email;
+    } else if (tipo == TiposLoginSocial.apple) {
+      var usuarioTipo = usuario as AuthorizationCredentialAppleID;
+      idSocialLogin = usuarioTipo.userIdentifier;
+      email = usuarioTipo.email;
+    }
+
+    var campos = {
+      "email": email,
+      "token": idSocialLogin,
+      "tipo": 'social',
+      "tokenNotificacao": tokenNotificacao,
+    };
+
+    var response = await client.post(url: url, body: jsonEncode(campos));
+
+    Map result = jsonDecode(response.data);
+    bool sucesso = result['sucesso'];
+    dynamic dados = result['resultado'];
+
+    if (response.statusCode == 200 && sucesso == true) {
+      await UsuarioProvider.setUsuario(jsonEncode(dados));
+
+      return sucesso;
+    } else {
+      return false;
     }
   }
 

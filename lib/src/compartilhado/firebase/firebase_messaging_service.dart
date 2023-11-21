@@ -1,5 +1,4 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
 
 class FirebaseMessagingService {
@@ -19,11 +18,6 @@ class FirebaseMessagingService {
 
   Future<String?> getDeviceFirebaseToken() async {
     final token = await FirebaseMessaging.instance.getToken();
-
-    debugPrint('=======================');
-    debugPrint('TOKEN: $token');
-    debugPrint('=======================');
-
     return token;
   }
 

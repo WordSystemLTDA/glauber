@@ -5,6 +5,7 @@ import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_servic
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -25,23 +26,62 @@ class _PaginaLoginState extends State<PaginaLogin> {
     final firebaseMessagingService = context.read<FirebaseMessagingService>();
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.email, tokenNotificacao);
+    autenticacaoStore.entrarComEmail(_emailController.text, _senhaController.text, tokenNotificacao);
   }
 
-  void entrarComGoogle() async {
+  void entrarSocial(TiposLoginSocial tipoLoginSocial) async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
-    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+    final FirebaseMessagingService firebaseMessagingService = context.read<FirebaseMessagingService>();
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.google, tokenNotificacao);
+    autenticacaoStore.listarInformacoesLogin(tipoLoginSocial, tokenNotificacao).then((resposta) {
+      var (sucesso, usuario) = resposta;
+      if (!sucesso) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tipoLoginSocial);
+          },
+        ));
+      }
+    });
   }
 
-  void entrarComApple() async {
-    final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
-    final firebaseMessagingService = context.read<FirebaseMessagingService>();
-    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+  @override
+  void initState() {
+    super.initState();
+    final autenticacaoStore = context.read<AutenticacaoStore>();
 
-    autenticacaoStore.entrar(_emailController.text, _senhaController.text, TiposLogin.apple, tokenNotificacao);
+    autenticacaoStore.addListener(() {
+      AutenticacaoEstado state = autenticacaoStore.value;
+      if (state is Autenticado) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            UsuarioProvider.init();
+            Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+          }
+        });
+      } else if (state is AutenticacaoErro) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Center(child: Text('Dados incorretos')),
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {},
+              ),
+            ));
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _senhaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -173,7 +213,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                             text: 'Entrar com o Google',
                             onPressed: () {
-                              entrarComGoogle();
+                              entrarSocial(TiposLoginSocial.google);
                             },
                           ),
                           const SizedBox(height: 10),
@@ -186,7 +226,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                               text: 'Entrar com a Apple',
                               onPressed: () async {
-                                entrarComApple();
+                                entrarSocial(TiposLoginSocial.apple);
                               },
                             ),
                           ],
@@ -228,36 +268,5 @@ class _PaginaLoginState extends State<PaginaLogin> {
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final autenticacaoStore = context.read<AutenticacaoStore>();
-
-    autenticacaoStore.addListener(() {
-      AutenticacaoEstado state = autenticacaoStore.value;
-      if (state is Autenticado) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            UsuarioProvider.init();
-            Navigator.pushReplacementNamed(context, '/inicio');
-          }
-        });
-      } else if (state is AutenticacaoErro) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Center(child: Text('Dados incorretos')),
-              action: SnackBarAction(
-                label: 'OK',
-                onPressed: () {},
-              ),
-            ));
-          }
-        });
-      }
-    });
   }
 }
