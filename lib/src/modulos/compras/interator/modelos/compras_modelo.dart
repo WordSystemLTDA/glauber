@@ -20,8 +20,10 @@ class ComprasModelo {
   final String nomeEvento;
   final String dataEvento;
   final String horaInicio;
+  final String horaInicioF;
   final String horaTermino;
   final String numeroCelular;
+  final String formaPagamento;
   final List<ProvasComprasModelo> provas;
 
   ComprasModelo({
@@ -41,7 +43,9 @@ class ComprasModelo {
     required this.nomeEvento,
     required this.dataEvento,
     required this.horaInicio,
+    required this.horaInicioF,
     required this.horaTermino,
+    required this.formaPagamento,
     required this.numeroCelular,
     required this.provas,
   });
@@ -64,8 +68,10 @@ class ComprasModelo {
       'nomeEvento': nomeEvento,
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
+      'horaInicioF': horaInicioF,
       'horaTermino': horaTermino,
       'numeroCelular': numeroCelular,
+      'formaPagamento': formaPagamento,
       'provas': provas.map((x) => x.toMap()).toList(),
     };
   }
@@ -79,8 +85,8 @@ class ComprasModelo {
       valorTotal: map['valorTotal'] as String,
       status: map['status'] as String,
       codigoQr: map['codigoQr'] as String,
-      idCliente: map['idCliente'] as String,
       codigoPIX: map['codigoPIX'] as String,
+      idCliente: map['idCliente'] as String,
       dataCompra: map['dataCompra'] as String,
       horaCompra: map['horaCompra'] as String,
       pago: map['pago'] as String,
@@ -88,8 +94,10 @@ class ComprasModelo {
       nomeEvento: map['nomeEvento'] as String,
       dataEvento: map['dataEvento'] as String,
       horaInicio: map['horaInicio'] as String,
+      horaInicioF: map['horaInicioF'] as String,
       horaTermino: map['horaTermino'] as String,
       numeroCelular: map['numeroCelular'] as String,
+      formaPagamento: map['formaPagamento'] as String,
       provas: List<ProvasComprasModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvasComprasModelo>(
           (x) => ProvasComprasModelo.fromMap(x as Map<String, dynamic>),

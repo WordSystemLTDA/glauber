@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/uteis.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
@@ -41,17 +42,30 @@ class _CardComprasState extends State<CardCompras> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Detalhes do seu Ingresso'),
-                        const SizedBox(height: 10),
-                        const Row(
+                        const Text(
+                          'Detalhes do seu Ingresso',
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Detalhes do evento',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Nome'),
-                            Text('10/07/2023'),
-                            Text('14:22 PM'),
+                            Text(item.nomeEvento),
+                            Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
+                            Text(item.horaInicio),
                           ],
                         ),
                         const SizedBox(height: 20),
+                        const Text(
+                          'Valores da venda',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 5),
                         Column(
                           children: [
                             Row(
@@ -100,26 +114,40 @@ class _CardComprasState extends State<CardCompras> {
                           ],
                         ),
                         const SizedBox(height: 20),
+                        const Text(
+                          'Detalhes da compra',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(item.nomeEvento),
-                            const Text('Online'),
+                            Text(
+                              item.pago == 'Não' ? "Não Pago" : "Pago",
+                              style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
+                            ),
+                            Text(item.formaPagamento),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(item.dataCompra),
-                            Text(item.horaCompra),
                             Text(item.status),
+                            Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
+                            Text(item.horaCompra),
                           ],
                         ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Provas Vinculadas',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 5),
                         Flexible(
                           child: ListView.builder(
                             shrinkWrap: true,
-                            padding: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 5),
                             itemCount: item.provas.length,
                             itemBuilder: (context, index) {
                               var provas = item.provas[index];

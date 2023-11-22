@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/verificar_pagamento_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_pagamento_store.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lottie/lottie.dart';
 
@@ -17,6 +20,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
   @override
   Widget build(BuildContext context) {
     var dados = widget.dados;
+    var verificarPagamentoStore = context.read<VerificarPagamentoStore>();
 
     return Scaffold(
       body: Center(
@@ -25,8 +29,8 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
           children: [
             Lottie.asset(
               'assets/lotties/sucesso.json',
-              width: 135,
-              height: 135,
+              width: 145,
+              height: 145,
               fit: BoxFit.fill,
               repeat: false,
             ),
@@ -37,17 +41,18 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            const SizedBox(height: 25),
             QrImageView(
               data: dados.codigoPix!,
               size: 250,
             ),
-            const SizedBox(height: 10),
             SizedBox(
-              width: 280,
+              width: 220,
               child: ElevatedButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     showCloseIcon: true,
+                    backgroundColor: Colors.green,
                     content: Center(
                       child: Text(
                         'Código PIX copiado',
@@ -90,19 +95,25 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                    foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const Text('Verificar Pagamento'),
-                ),
+                ValueListenableBuilder<VerificarPagamentoEstado>(
+                    valueListenable: verificarPagamentoStore,
+                    builder: (context, state, _) {
+                      return ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                          foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          verificarPagamentoStore.verificarPagamento(dados.idVenda!, '1');
+                        },
+                        child: state is Verificando ? const CircularProgressIndicator() : const Text('Verificar Pagamento'),
+                      );
+                    }),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   style: ButtonStyle(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -22,12 +21,6 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
     var width = MediaQuery.of(context).size.width;
     var item = widget.item;
 
-    var dataInicioFiltrado = DateTime.parse(
-      DateFormat('yyyy-MM-dd HH:mm:ss').format(
-        DateFormat('yyyy-MM-dd HH:mm:ss').parse("${item.dataEvento} ${item.horaInicio}"),
-      ),
-    );
-
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
@@ -47,7 +40,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                 size: 220.0,
                 gapless: false,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -91,73 +84,15 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Row(
-                  children: [
-                    Text(
-                      item.nomeEvento,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                  ],
+                child: SizedBox(
+                  width: width - 50,
+                  child: const Text(
+                    'Para concluir sua inscrição, realize o pagamento através do PIX, copiando e colando o código no seu aplicativo do BANCO.',
+                    textAlign: TextAlign.justify,
+                  ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Data'),
-                        SizedBox(
-                          width: 200,
-                          child: Text(
-                            DateFormat.yMMMMEEEEd('pt_BR').format(DateTime.parse(item.dataEvento)),
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Text('Hora Inicio'),
-                        Text(
-                          DateFormat.jm('pt_BR').format(dataInicioFiltrado),
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.schedule,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          '18:00:00',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      item.status,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Row(
@@ -187,6 +122,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                         onPressed: () async {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             showCloseIcon: true,
+                            backgroundColor: Colors.green,
                             content: Center(
                               child: Text(
                                 'Código PIX copiado',

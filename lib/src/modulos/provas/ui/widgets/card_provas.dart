@@ -34,6 +34,7 @@ class _CardProvasState extends State<CardProvas> {
   void aoClicarNaCabeceira(ProvaModelo prova, item) {
     var usuario = UsuarioProvider.getUsuario();
 
+    // Caso o usuário não esteja logado
     if (usuario == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -52,6 +53,49 @@ class _CardProvasState extends State<CardProvas> {
       return;
     }
 
+    // Caso o usuário não tenha nenhum handicap
+    if (double.parse(usuario.hcCabeceira) <= 0 && double.parse(usuario.hcPezeiro) <= 0) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(child: Text("Você precisa ter um HandiCap para poder continuar a compra.")),
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+        ));
+      }
+      return;
+    }
+
+    // Verificação do HandiCap Máximo e Mínimo da prova
+    if (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0) {
+      // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
+      if (item.id == '1' && !(double.parse(usuario.hcCabeceira) >= double.parse(prova.hcMinimo) && double.parse(usuario.hcCabeceira) <= double.parse(prova.hcMaximo))) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(child: Text("Seu Handicap de ${usuario.hcCabeceira} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+        }
+        return;
+      }
+
+      // Verificação se o id cabeceira é o segundo (PISEIRO) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
+      if (item.id == '2' && !(double.parse(usuario.hcPezeiro) >= double.parse(prova.hcMinimo) && double.parse(usuario.hcPezeiro) <= double.parse(prova.hcMaximo))) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(child: Text("Seu Handicap ${usuario.hcPezeiro} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+        }
+        return;
+      }
+    }
+
+    // Caso o usuário ja tenha comprado essa prova
     if (prova.jaComprou) {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -69,6 +113,8 @@ class _CardProvasState extends State<CardProvas> {
       jaComprou: false,
       nomeProva: prova.nomeProva,
       valor: prova.valor,
+      hcMinimo: '0',
+      hcMaximo: '0',
       idCabeceira: item.id,
     );
 
@@ -80,7 +126,15 @@ class _CardProvasState extends State<CardProvas> {
       return const Color.fromARGB(255, 252, 252, 252);
     }
 
-    if (widget.provasCarrinho.contains(ProvaModelo(id: prova.id, jaComprou: false, nomeProva: prova.nomeProva, valor: prova.valor, idCabeceira: item.id))) {
+    if (widget.provasCarrinho.contains(ProvaModelo(
+      id: prova.id,
+      jaComprou: false,
+      nomeProva: prova.nomeProva,
+      hcMinimo: '0',
+      hcMaximo: '0',
+      valor: prova.valor,
+      idCabeceira: item.id,
+    ))) {
       if (Theme.of(context).brightness == Brightness.light) {
         return Colors.green;
       } else {
@@ -154,7 +208,7 @@ class _CardProvasState extends State<CardProvas> {
                           bottomLeft: Radius.circular(8),
                         ),
                       ),
-                      child: const VerticalDivider(color: Colors.red, thickness: 5),
+                      child: VerticalDivider(color: prova.jaComprou ? Colors.red : Colors.green, thickness: 5),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
@@ -212,8 +266,15 @@ class _CardProvasState extends State<CardProvas> {
                               child: Text(
                                 item.nome,
                                 style: TextStyle(
-                                    color: widget.provasCarrinho
-                                            .contains(ProvaModelo(id: prova.id, jaComprou: false, nomeProva: prova.nomeProva, valor: prova.valor, idCabeceira: item.id))
+                                    color: widget.provasCarrinho.contains(ProvaModelo(
+                                  id: prova.id,
+                                  jaComprou: false,
+                                  hcMinimo: '0',
+                                  hcMaximo: '0',
+                                  nomeProva: prova.nomeProva,
+                                  valor: prova.valor,
+                                  idCabeceira: item.id,
+                                ))
                                         ? Colors.white
                                         : Colors.black),
                                 textAlign: TextAlign.center,

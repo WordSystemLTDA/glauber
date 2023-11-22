@@ -38,6 +38,8 @@ class DadosModelo {
   final String? senha;
   final String? nome;
   final String? token;
+  final String hcCabeceira;
+  final String hcPezeiro;
   final String? tipo;
   final String? primeiroAcesso;
 
@@ -45,6 +47,8 @@ class DadosModelo {
     required this.id,
     required this.email,
     required this.senha,
+    required this.hcCabeceira,
+    required this.hcPezeiro,
     required this.nome,
     required this.token,
     required this.tipo,
@@ -58,6 +62,8 @@ class DadosModelo {
       'senha': senha,
       'nome': nome,
       'token': token,
+      'hcCabeceira': hcCabeceira,
+      'hcPezeiro': hcPezeiro,
       'tipo': tipo,
       'primeiroAcesso': primeiroAcesso,
     };
@@ -70,6 +76,8 @@ class DadosModelo {
       senha: map['senha'] != null ? map['senha'] as String : null,
       nome: map['nome'] != null ? map['nome'] as String : null,
       token: map['token'] != null ? map['token'] as String : null,
+      hcCabeceira: map['hcCabeceira'] as String,
+      hcPezeiro: map['hcPezeiro'] as String,
       tipo: map['tipo'] != null ? map['tipo'] as String : null,
       primeiroAcesso: map['primeiroAcesso'] != null ? map['primeiroAcesso'] as String : null,
     );

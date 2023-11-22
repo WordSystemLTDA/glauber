@@ -63,7 +63,7 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                 size: 220.0,
                 gapless: false,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

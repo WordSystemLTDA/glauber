@@ -19,10 +19,13 @@ import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servi
 import 'package:provadelaco/src/modulos/compras/interator/stores/compras_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_informacoes_servico_impl.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/verificar_pagamento_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_pagamento_store.dart';
 import 'package:provadelaco/src/modulos/home/data/servicos/home_servico_impl.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
@@ -63,8 +66,10 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
       // Finalizar Compra
       Provider<FinalizarCompraServico>(create: (context) => FinalizarCompraServicoImpl(context.read())),
+      Provider<VerificarPagamentoServico>(create: (context) => VerificarPagamentoServicoImpl(context.read())),
       Provider<ListarInformacoesServico>(create: (context) => ListarInformacoesServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => FinalizarCompraStore(context.read())),
+      ChangeNotifierProvider(create: (context) => VerificarPagamentoStore(context.read())),
       ChangeNotifierProvider(create: (context) => ListarInformacoesStore(context.read())),
       // Compras
       Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
