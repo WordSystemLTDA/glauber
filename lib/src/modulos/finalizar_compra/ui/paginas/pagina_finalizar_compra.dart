@@ -41,7 +41,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           if (mounted) {
             Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) {
-                return PaginaSucessoCompra(dados: state.dados);
+                return PaginaSucessoCompra(dados: state.dados, metodoPagamento: metodoPagamento);
               },
             ));
           }

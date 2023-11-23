@@ -42,6 +42,18 @@ class DadosModelo {
   final String hcPezeiro;
   final String? tipo;
   final String? primeiroAcesso;
+  final String? cpf;
+  final String? dataNascimento;
+  final String? sexo;
+  final String? rg;
+  final String? telefone;
+  final String? celular;
+  final String? cep;
+  final String? endereco;
+  final String? numero;
+  final String? bairro;
+  final String? complemento;
+  final String? cidade;
 
   DadosModelo({
     required this.id,
@@ -53,6 +65,18 @@ class DadosModelo {
     required this.token,
     required this.tipo,
     required this.primeiroAcesso,
+    required this.cpf,
+    required this.dataNascimento,
+    required this.sexo,
+    required this.rg,
+    required this.telefone,
+    required this.celular,
+    required this.cep,
+    required this.endereco,
+    required this.numero,
+    required this.bairro,
+    required this.complemento,
+    required this.cidade,
   });
 
   Map<String, dynamic> toMap() {
@@ -66,6 +90,18 @@ class DadosModelo {
       'hcPezeiro': hcPezeiro,
       'tipo': tipo,
       'primeiroAcesso': primeiroAcesso,
+      'cpf': cpf,
+      'dataNascimento': dataNascimento,
+      'sexo': sexo,
+      'rg': rg,
+      'telefone': telefone,
+      'celular': celular,
+      'cep': cep,
+      'endereco': endereco,
+      'numero': numero,
+      'bairro': bairro,
+      'complemento': complemento,
+      'cidade': cidade,
     };
   }
 
@@ -80,6 +116,18 @@ class DadosModelo {
       hcPezeiro: map['hcPezeiro'] as String,
       tipo: map['tipo'] != null ? map['tipo'] as String : null,
       primeiroAcesso: map['primeiroAcesso'] != null ? map['primeiroAcesso'] as String : null,
+      cpf: map['cpf'] != null ? map['cpf'] as String : null,
+      dataNascimento: map['dataNascimento'] != null ? map['dataNascimento'] as String : null,
+      sexo: map['sexo'] != null ? map['sexo'] as String : null,
+      rg: map['rg'] != null ? map['rg'] as String : null,
+      telefone: map['telefone'] != null ? map['telefone'] as String : null,
+      celular: map['celular'] != null ? map['celular'] as String : null,
+      cep: map['cep'] != null ? map['cep'] as String : null,
+      endereco: map['endereco'] != null ? map['endereco'] as String : null,
+      numero: map['numero'] != null ? map['numero'] as String : null,
+      bairro: map['bairro'] != null ? map['bairro'] as String : null,
+      complemento: map['complemento'] != null ? map['complemento'] as String : null,
+      cidade: map['cidade'] != null ? map['cidade'] as String : null,
     );
   }
 

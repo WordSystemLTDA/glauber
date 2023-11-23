@@ -1,42 +1,52 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/parceiros_modelo.dart';
+
 class OrdemDeEntradaModelo {
   final String id;
-  final String somatoria;
-  final String numeroDaInscricao;
-  final String nomeEmpresa;
-  final String prova;
-  final String numeroCelular;
+  final String idProva;
+  final String nomeEvento;
+  final String nomeProva;
+  final String nomeCliente;
+  final String nomeCabeceira;
+  final List<ParceirosModelos> parceiros;
 
   OrdemDeEntradaModelo({
     required this.id,
-    required this.somatoria,
-    required this.numeroDaInscricao,
-    required this.nomeEmpresa,
-    required this.prova,
-    required this.numeroCelular,
+    required this.idProva,
+    required this.nomeEvento,
+    required this.nomeProva,
+    required this.nomeCliente,
+    required this.nomeCabeceira,
+    required this.parceiros,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'somatoria': somatoria,
-      'numeroDaInscricao': numeroDaInscricao,
-      'nomeEmpresa': nomeEmpresa,
-      'prova': prova,
-      'numeroCelular': numeroCelular,
+      'idProva': idProva,
+      'nomeEvento': nomeEvento,
+      'nomeProva': nomeProva,
+      'nomeCliente': nomeCliente,
+      'nomeCabeceira': nomeCabeceira,
+      'parceiros': parceiros.map((x) => x.toMap()).toList(),
     };
   }
 
   factory OrdemDeEntradaModelo.fromMap(Map<String, dynamic> map) {
     return OrdemDeEntradaModelo(
       id: map['id'] as String,
-      somatoria: map['somatoria'] as String,
-      numeroDaInscricao: map['numeroDaInscricao'] as String,
-      nomeEmpresa: map['nomeEmpresa'] as String,
-      prova: map['prova'] as String,
-      numeroCelular: map['numeroCelular'] as String,
+      idProva: map['idProva'] as String,
+      nomeEvento: map['nomeEvento'] as String,
+      nomeProva: map['nomeProva'] as String,
+      nomeCliente: map['nomeCliente'] as String,
+      nomeCabeceira: map['nomeCabeceira'] as String,
+      parceiros: List<ParceirosModelos>.from(
+        (map['parceiros'] as List<dynamic>).map<ParceirosModelos>(
+          (x) => ParceirosModelos.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 

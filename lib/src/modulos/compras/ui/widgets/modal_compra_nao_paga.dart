@@ -1,12 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ModalCompraNaoPaga extends StatefulWidget {
   final ComprasModelo item;
-  const ModalCompraNaoPaga({super.key, required this.item});
+  final Function(ComprasModelo item) aoVerificarPagamento;
+  const ModalCompraNaoPaga({super.key, required this.item, required this.aoVerificarPagamento});
 
   @override
   State<ModalCompraNaoPaga> createState() => _ModalCompraNaoPagaState();
@@ -15,6 +21,35 @@ class ModalCompraNaoPaga extends StatefulWidget {
 class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
   // ignore: unused_field
   late StateSetter _setState;
+  bool sucessoAoVerificarPagamento = false;
+
+  @override
+  void initState() {
+    super.initState();
+    iniciarVerificacaoPagamento();
+  }
+
+  void iniciarVerificacaoPagamento() {
+    if (widget.item.quandoInscricaoNaoPaga == 'mostrar_qrcode_pix') {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (mounted) {
+          var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
+
+          Timer.periodic(const Duration(seconds: 5), (timer) {
+            verificarPagamentoServico.verificarPagamento(widget.item.id, widget.item.idFormaPagamento).then((sucesso) {
+              if (sucesso) {
+                widget.aoVerificarPagamento(widget.item);
+                _setState(() {
+                  sucessoAoVerificarPagamento = true;
+                });
+                timer.cancel();
+              }
+            });
+          });
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +65,51 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
       child: StatefulBuilder(
         builder: (context, setStateDialog) {
           _setState = setStateDialog;
+
+          if (sucessoAoVerificarPagamento) {
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Lottie.asset(
+                    'assets/lotties/sucesso.json',
+                    width: 145,
+                    height: 145,
+                    fit: BoxFit.fill,
+                    repeat: false,
+                  ),
+                  const Text(
+                    'Sua compra foi verificada com sucesso.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
+                        foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                      child: const Text('Fechar'),
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                ],
+              ),
+            );
+          }
 
           return Column(
             mainAxisSize: MainAxisSize.min,

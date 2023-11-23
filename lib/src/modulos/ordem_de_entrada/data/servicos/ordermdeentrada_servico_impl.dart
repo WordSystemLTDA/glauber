@@ -16,15 +16,12 @@ class OrdemDeEntradaServicoImpl implements OrdemDeEntradaServico {
 
   @override
   Future<List<OrdemDeEntradaModelo>> listar() async {
-    var url = 'ordem_de_entrada/listar.php';
     UsuarioProvider.atualizar();
     var usuarioProvider = UsuarioProvider.getUsuario();
+    var idCliente = usuarioProvider!.id;
+    var url = "ordem_de_entrada/listar.php?id_cliente=$idCliente";
 
-    var campos = {
-      'id_cliente': usuarioProvider!.id,
-    };
-
-    var response = await client.post(url: url, body: jsonEncode(campos));
+    var response = await client.get(url: url);
 
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];

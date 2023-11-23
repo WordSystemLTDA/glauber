@@ -13,6 +13,17 @@ class PaginaOrdemDeEntrada extends StatefulWidget {
 
 class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
+        var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
+        ordemDeEntradaStore.listar();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
 
@@ -27,14 +38,19 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
           }
 
           if (state is OrdemDeEntradaCarregado) {
-            return ListView.builder(
-              itemCount: state.ordemdeentradas.length,
-              padding: const EdgeInsets.all(10),
-              itemBuilder: (context, index) {
-                var item = state.ordemdeentradas[index];
-
-                return CardOrdemDeEntrada(item: item);
+            return RefreshIndicator(
+              onRefresh: () async {
+                ordemDeEntradaStore.listar();
               },
+              child: ListView.builder(
+                itemCount: state.ordemdeentradas.length,
+                padding: const EdgeInsets.all(10),
+                itemBuilder: (context, index) {
+                  var item = state.ordemdeentradas[index];
+
+                  return CardOrdemDeEntrada(item: item);
+                },
+              ),
             );
           }
 

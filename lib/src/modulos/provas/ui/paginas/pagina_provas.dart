@@ -360,7 +360,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                       ),
                       child: Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.only(bottom: 50),
+                        padding: const EdgeInsets.only(bottom: 10),
                         decoration: const BoxDecoration(
                           color: Color.fromARGB(255, 244, 244, 244),
                           borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
@@ -427,7 +427,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                   style: const TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
                                 ),
                               ],
-                              if (state.evento!.descricao1.isEmpty || state.evento!.descricao2.isEmpty) ...[
+                              if (state.evento!.descricao1.isEmpty && state.evento!.descricao2.isEmpty) ...[
                                 const SizedBox(height: 15),
                                 const Text(
                                   '...',

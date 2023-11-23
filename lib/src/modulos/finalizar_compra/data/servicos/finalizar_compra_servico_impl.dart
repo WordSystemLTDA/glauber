@@ -19,7 +19,7 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
 
     var campos = {
       ...dados.toMap(),
-      'id_cliente': usuarioProvider!.id,
+      'usuario': usuarioProvider!.toMap(),
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

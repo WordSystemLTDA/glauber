@@ -34,6 +34,18 @@ class _CardProvasState extends State<CardProvas> {
   void aoClicarNaCabeceira(ProvaModelo prova, item) {
     var usuario = UsuarioProvider.getUsuario();
 
+    if (!prova.compraLiberada) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(child: Text('Essa prova não está liberada para venda ainda.')),
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+        ));
+      }
+      return;
+    }
+
     // Caso o usuário não esteja logado
     if (usuario == null) {
       if (mounted) {
@@ -116,6 +128,7 @@ class _CardProvasState extends State<CardProvas> {
       hcMinimo: '0',
       hcMaximo: '0',
       idCabeceira: item.id,
+      compraLiberada: true,
     );
 
     widget.aoClicarNaProva(provaModelo);
@@ -126,15 +139,7 @@ class _CardProvasState extends State<CardProvas> {
       return const Color.fromARGB(255, 252, 252, 252);
     }
 
-    if (widget.provasCarrinho.contains(ProvaModelo(
-      id: prova.id,
-      jaComprou: false,
-      nomeProva: prova.nomeProva,
-      hcMinimo: '0',
-      hcMaximo: '0',
-      valor: prova.valor,
-      idCabeceira: item.id,
-    ))) {
+    if (existeNoCarrinho(prova, item)) {
       if (Theme.of(context).brightness == Brightness.light) {
         return Colors.green;
       } else {
@@ -145,6 +150,19 @@ class _CardProvasState extends State<CardProvas> {
     } else {
       return Colors.red;
     }
+  }
+
+  bool existeNoCarrinho(prova, item) {
+    return widget.provasCarrinho.contains(ProvaModelo(
+      id: prova.id,
+      jaComprou: false,
+      hcMinimo: '0',
+      hcMaximo: '0',
+      nomeProva: prova.nomeProva,
+      valor: prova.valor,
+      idCabeceira: item.id,
+      compraLiberada: true,
+    ));
   }
 
   @override
@@ -160,6 +178,18 @@ class _CardProvasState extends State<CardProvas> {
         child: InkWell(
           onTap: () {
             var usuario = UsuarioProvider.getUsuario();
+
+            if (!prova.compraLiberada) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Center(child: Text('Essa prova não está liberada para venda ainda.')),
+                  showCloseIcon: true,
+                  backgroundColor: Colors.red,
+                ));
+              }
+              return;
+            }
 
             if (usuario == null) {
               if (mounted) {
@@ -208,7 +238,7 @@ class _CardProvasState extends State<CardProvas> {
                           bottomLeft: Radius.circular(8),
                         ),
                       ),
-                      child: VerticalDivider(color: prova.jaComprou ? Colors.red : Colors.green, thickness: 5),
+                      child: VerticalDivider(color: (prova.jaComprou || !prova.compraLiberada) ? Colors.red : Colors.green, thickness: 5),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
@@ -235,6 +265,7 @@ class _CardProvasState extends State<CardProvas> {
                 width: 90,
                 height: tamanhoCard,
                 child: Card(
+                  clipBehavior: Clip.hardEdge,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
                   ),
@@ -250,34 +281,22 @@ class _CardProvasState extends State<CardProvas> {
                       itemCount: widget.nomesCabeceira!.length,
                       itemBuilder: (context, index) {
                         var item = widget.nomesCabeceira![index];
-                        return InkWell(
-                          borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                          onTap: () {
-                            aoClicarNaCabeceira(prova, item);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
+                        return SizedBox(
+                          width: 90,
+                          height: tamanhoCard / 2.1,
+                          child: Material(
+                            color: coresAction(prova, item),
+                            child: InkWell(
                               borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                              color: coresAction(prova, item),
-                            ),
-                            width: 90,
-                            height: tamanhoCard / 2.1,
-                            child: Center(
-                              child: Text(
-                                item.nome,
-                                style: TextStyle(
-                                    color: widget.provasCarrinho.contains(ProvaModelo(
-                                  id: prova.id,
-                                  jaComprou: false,
-                                  hcMinimo: '0',
-                                  hcMaximo: '0',
-                                  nomeProva: prova.nomeProva,
-                                  valor: prova.valor,
-                                  idCabeceira: item.id,
-                                ))
-                                        ? Colors.white
-                                        : Colors.black),
-                                textAlign: TextAlign.center,
+                              onTap: () {
+                                aoClicarNaCabeceira(prova, item);
+                              },
+                              child: Center(
+                                child: Text(
+                                  item.nome,
+                                  style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : Colors.black),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ),

@@ -65,6 +65,8 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     var response = await client.post(url: url, body: jsonEncode(campos));
 
+    print(response.data);
+
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
     dynamic dados = result['resultado'];
@@ -81,6 +83,38 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   @override
   Future<bool> sair(tokenNotificacao) async {
     var url = 'autenticacao/sair.php';
+
+    var usuarioProvider = UsuarioProvider.getUsuario();
+
+    if (usuarioProvider == null) {
+      return false;
+    }
+
+    var idCliente = usuarioProvider.id;
+
+    var campos = {
+      "id_cliente": idCliente,
+      "tokenNotificacao": tokenNotificacao,
+    };
+
+    final response = await client.post(
+      url: url,
+      body: jsonEncode(campos),
+    );
+
+    Map result = jsonDecode(response.data);
+    bool sucesso = result['sucesso'];
+
+    if (response.statusCode == 200 && sucesso == true) {
+      return sucesso;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> excluirConta(tokenNotificacao) async {
+    var url = 'autenticacao/excluir_conta.php';
 
     var usuarioProvider = UsuarioProvider.getUsuario();
 
@@ -140,6 +174,8 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
+
+    print(response.data);
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];

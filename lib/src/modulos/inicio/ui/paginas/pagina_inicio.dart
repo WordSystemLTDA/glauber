@@ -201,7 +201,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                 child: Text(
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  UsuarioProvider.getUsuario()!.nome!,
+                  "#${UsuarioProvider.getUsuario()!.id} - ${UsuarioProvider.getUsuario()!.nome!}",
                 ),
               ),
               Padding(
