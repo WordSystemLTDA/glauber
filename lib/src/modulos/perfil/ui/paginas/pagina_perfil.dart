@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provider/provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
@@ -17,6 +18,13 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Editar dados'),
       'ativo': UsuarioProvider.getUsuario() != null,
       'icone': const Icon(Icons.edit_outlined),
+      'funcao': (context) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const PaginaEditarUsuario();
+          },
+        ));
+      }
     },
     {
       'titulo': const Text('Avaliar APP'),
@@ -62,19 +70,76 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Excluir Conta'),
       'icone': const Icon(Icons.delete_outline),
       'ativo': UsuarioProvider.getUsuario() != null,
-      'funcao': (context) {
-        var usuario = UsuarioProvider.getUsuario();
+      'funcao': (context) async {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext contextDialog) {
+            return AlertDialog(
+              title: const Text('Excluir'),
+              content: const SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text("Deseja realmente excluir sua conta?"),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Não'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Sim'),
+                  onPressed: () async {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Exclusão de Conta'),
+                          content: const SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text("Excluindo a sua conta você perderá o acesso a todos os seus dados, tem certeza que quer excluir?"),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Não'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Sim'),
+                              onPressed: () async {
+                                final autenticacaoServico = context.read<AutenticacaoServico>();
+                                final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                                String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-        if (usuario == null) {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Center(child: Text('Você não está logado para excluir uma conta.')),
-            showCloseIcon: true,
-            backgroundColor: Colors.red,
-          ));
-
-          return;
-        }
+                                autenticacaoServico.excluirConta(tokenNotificacao).then((sucessoAoExcluirConta) {
+                                  if (sucessoAoExcluirConta) {
+                                    UsuarioProvider.removerUsuario().then((sucessoAoSair) {
+                                      if (sucessoAoSair) {
+                                        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                                      }
+                                    });
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     },
     {
@@ -82,19 +147,6 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'icone': const Icon(Icons.logout_outlined, color: Colors.red),
       'ativo': UsuarioProvider.getUsuario() != null,
       'funcao': (context) {
-        var usuario = UsuarioProvider.getUsuario();
-
-        if (usuario == null) {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Center(child: Text('Você não está logado para sair.')),
-            showCloseIcon: true,
-            backgroundColor: Colors.red,
-          ));
-
-          return;
-        }
-
         showDialog<String>(
           context: context,
           builder: (BuildContext context) {
@@ -140,6 +192,20 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     },
   ];
 
+  String nomeUsuario() {
+    if (UsuarioProvider.getUsuario() != null && UsuarioProvider.getUsuario()!.nome!.isNotEmpty) {
+      var nomeComEspaco = UsuarioProvider.getUsuario()!.nome!.split(' ');
+
+      if (nomeComEspaco.length > 1) {
+        return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";
+      } else {
+        return "${UsuarioProvider.getUsuario()!.nome![0].toUpperCase()}${UsuarioProvider.getUsuario()!.nome![1].toUpperCase()}";
+      }
+    } else {
+      return "N/A";
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -148,28 +214,95 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     super.build(context);
 
     var itemsAtivos = itemsPerfil.where((element) => element['ativo'] == true).toList();
+    var usuario = UsuarioProvider.getUsuario();
 
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  (usuario != null && (usuario.tipo == 'social' && usuario.foto != 'semfoto'))
+                      ? CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 45,
+                          backgroundImage: Image.network(
+                            usuario.foto!,
+                          ).image,
+                        )
+                      : CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 45,
+                          child: Text(nomeUsuario()),
+                        ),
+                  if (UsuarioProvider.getUsuario() != null) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        "#${UsuarioProvider.getUsuario()!.id} - ${UsuarioProvider.getUsuario()!.nome!}",
+                      ),
+                    ),
+                    Text(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      UsuarioProvider.getUsuario()!.email!,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          "HC Cabeceira: ${UsuarioProvider.getUsuario()!.hcCabeceira}",
+                        ),
+                        const SizedBox(width: 30),
+                        Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          "HC Pezeiro: ${UsuarioProvider.getUsuario()!.hcPezeiro}",
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          const Divider(height: 1),
           Flexible(
             child: ListView.separated(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.only(bottom: 40),
               physics: const NeverScrollableScrollPhysics(),
               itemCount: itemsAtivos.length,
               separatorBuilder: (context, index) {
-                return const Divider(indent: 0, endIndent: 0);
+                return const Divider(
+                  indent: 0,
+                  endIndent: 0,
+                  height: 1,
+                );
               },
               itemBuilder: (context, index) {
                 var item = itemsAtivos[index];
 
                 return ListTile(
-                  onTap: () => item['funcao'](context),
+                  onTap: () => item['funcao'] != null ? item['funcao'](context) : null,
                   leading: item['icone'],
                   title: item['titulo'],
-                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 20,
+                    color: Color.fromARGB(255, 82, 82, 82),
+                  ),
                 );
               },
             ),

@@ -33,27 +33,28 @@ class UsuarioProvider {
 }
 
 class DadosModelo {
-  final String? id;
-  final String? email;
-  final String? senha;
-  final String? nome;
-  final String? token;
-  final String hcCabeceira;
-  final String hcPezeiro;
-  final String? tipo;
-  final String? primeiroAcesso;
-  final String? cpf;
-  final String? dataNascimento;
-  final String? sexo;
-  final String? rg;
-  final String? telefone;
-  final String? celular;
-  final String? cep;
-  final String? endereco;
-  final String? numero;
-  final String? bairro;
-  final String? complemento;
-  final String? cidade;
+  String? id;
+  String? email;
+  String? senha;
+  String? nome;
+  String? token;
+  String hcCabeceira;
+  String hcPezeiro;
+  String? tipo;
+  String? primeiroAcesso;
+  String? cpf;
+  String? dataNascimento;
+  String? sexo;
+  String? rg;
+  String? telefone;
+  String? celular;
+  String? cep;
+  String? endereco;
+  String? numero;
+  String? bairro;
+  String? complemento;
+  String? cidade;
+  String? foto;
 
   DadosModelo({
     required this.id,
@@ -77,6 +78,7 @@ class DadosModelo {
     required this.bairro,
     required this.complemento,
     required this.cidade,
+    required this.foto,
   });
 
   Map<String, dynamic> toMap() {
@@ -102,6 +104,7 @@ class DadosModelo {
       'bairro': bairro,
       'complemento': complemento,
       'cidade': cidade,
+      'foto': foto,
     };
   }
 
@@ -128,6 +131,7 @@ class DadosModelo {
       bairro: map['bairro'] != null ? map['bairro'] as String : null,
       complemento: map['complemento'] != null ? map['complemento'] as String : null,
       cidade: map['cidade'] != null ? map['cidade'] as String : null,
+      foto: map['foto'] != null ? map['foto'] as String : null,
     );
   }
 

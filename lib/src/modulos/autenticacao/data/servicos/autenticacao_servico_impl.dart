@@ -43,16 +43,19 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
     String? idSocialLogin = '';
     String? nome = '';
     String? email = '';
+    String? foto = '';
 
     if (tipo == TiposLoginSocial.google) {
       var usuarioTipo = usuario as GoogleSignInAccount;
       idSocialLogin = usuarioTipo.id;
       nome = usuarioTipo.displayName;
+      foto = usuarioTipo.photoUrl;
       email = usuarioTipo.email;
     } else if (tipo == TiposLoginSocial.apple) {
       var usuarioTipo = usuario as AuthorizationCredentialAppleID;
       idSocialLogin = usuarioTipo.userIdentifier;
       nome = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
+      foto = 'semfoto';
       email = usuarioTipo.email;
     }
 
@@ -65,11 +68,9 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     var response = await client.post(url: url, body: jsonEncode(campos));
 
-    print(response.data);
-
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    dynamic dados = result['resultado'];
+    dynamic dados = {...result['resultado'], 'foto': foto};
 
     if (response.statusCode == 200 && sucesso == true) {
       await UsuarioProvider.setUsuario(jsonEncode(dados));
@@ -150,16 +151,19 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     String? idSocialLogin = '';
     String? nome = '';
+    String? foto = '';
     String? email = '';
 
     if (tipo == TiposLoginSocial.google) {
       var usuarioTipo = usuario as GoogleSignInAccount;
       idSocialLogin = usuarioTipo.id;
       nome = usuarioTipo.displayName;
+      foto = usuarioTipo.photoUrl;
       email = usuarioTipo.email;
     } else if (tipo == TiposLoginSocial.apple) {
       var usuarioTipo = usuario as AuthorizationCredentialAppleID;
       idSocialLogin = usuarioTipo.userIdentifier;
+      foto = 'semfoto';
       nome = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
       email = usuarioTipo.email;
     }
@@ -175,11 +179,9 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     var response = await client.post(url: url, body: jsonEncode(campos));
 
-    print(response.data);
-
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    dynamic dados = result['resultado'];
+    dynamic dados = {...result['resultado'], 'foto': foto};
 
     if (response.statusCode == 200 && sucesso == true) {
       await UsuarioProvider.setUsuario(jsonEncode(dados));
@@ -222,14 +224,17 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     String? idSocialLogin = '';
     String? email = '';
+    String? foto = '';
 
     if (tipo == TiposLoginSocial.google) {
       var usuarioTipo = usuario as GoogleSignInAccount;
       idSocialLogin = usuarioTipo.id;
       email = usuarioTipo.email;
+      foto = usuarioTipo.photoUrl;
     } else if (tipo == TiposLoginSocial.apple) {
       var usuarioTipo = usuario as AuthorizationCredentialAppleID;
       idSocialLogin = usuarioTipo.userIdentifier;
+      foto = 'semfoto';
       email = usuarioTipo.email;
     }
 
@@ -244,7 +249,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    dynamic dados = result['resultado'];
+    dynamic dados = {...result['resultado'], 'foto': foto};
 
     if (response.statusCode == 200 && sucesso == true) {
       await UsuarioProvider.setUsuario(jsonEncode(dados));
@@ -277,13 +282,15 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    dynamic dados = result['resultado'];
+    dynamic dados = {...result['resultado'], 'foto': usuarioProvider.foto};
+    // print(sucesso);
 
     if (response.statusCode == 200 && sucesso == true) {
       await UsuarioProvider.setUsuario(jsonEncode(dados));
 
       return sucesso;
     } else {
+      await UsuarioProvider.removerUsuario();
       return false;
     }
   }

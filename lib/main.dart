@@ -14,6 +14,9 @@ import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autentic
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/handicap_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
+import 'package:provadelaco/src/modulos/buscar/data/servicos/buscar_servico_impl.dart';
+import 'package:provadelaco/src/modulos/buscar/interator/servicos/buscar_servico.dart';
+import 'package:provadelaco/src/modulos/buscar/interator/stores/buscar_store.dart';
 import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/interator/stores/compras_store.dart';
@@ -34,6 +37,8 @@ import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_se
 import 'package:provadelaco/src/modulos/ordem_de_entrada/data/servicos/ordermdeentrada_servico_impl.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
+import 'package:provadelaco/src/modulos/perfil/data/editar_usuario_servico_impl.dart';
+import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario_servico.dart';
 import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
@@ -61,6 +66,11 @@ void main() async {
       // Home
       Provider<HomeServico>(create: (context) => HomeServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => HomeStore(context.read())),
+      // Editar Usuario
+      Provider<EditarUsuarioServico>(create: (context) => EditarUsuarioServicoImpl(context.read())),
+      // Buscar
+      Provider<BuscarServico>(create: (context) => BuscarServicoImpl(context.read())),
+      ChangeNotifierProvider(create: (context) => BuscarStore(context.read())),
       // Provas
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),

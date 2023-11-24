@@ -43,7 +43,7 @@ class ComprasServicoImpl implements ComprasServico {
     var tempDir = await getTemporaryDirectory();
     var savePath = '${tempDir.path}/inscricao$idVenda.pdf';
 
-    var url = 'geracao_pdf/gerar_pdf.php?id_venda=$idVenda';
+    var url = 'geracao_pdf/gerar_pdf_inscricao.php?id_venda=$idVenda';
 
     Response response = await client.get(
       url: url,

@@ -32,6 +32,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   Widget build(BuildContext context) {
     super.build(context);
     var comprasStore = context.read<ComprasStore>();
+    var height = MediaQuery.of(context).size.height;
 
     if (UsuarioProvider.getUsuario() == null) {
       return const Center(child: Text('Você precisa estar logado.'));
@@ -145,8 +146,19 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
           );
         }
 
-        return const Center(
-          child: Text('Você ainda não tem nenhuma Compra.'),
+        return RefreshIndicator(
+          onRefresh: () async {
+            comprasStore.listar();
+          },
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: SizedBox(
+              height: height - 200,
+              child: const Center(
+                child: Text('Nenhuma compra foi encontrada.'),
+              ),
+            ),
+          ),
         );
       },
     );

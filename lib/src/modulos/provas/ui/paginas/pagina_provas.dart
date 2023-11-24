@@ -9,6 +9,7 @@ import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dar
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaginaProvas extends StatefulWidget {
   final String idEvento;
@@ -245,7 +246,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             children: [
                                               const Text(
                                                 "CEP: ",
-                                                style: TextStyle(fontWeight: FontWeight.w800),
+                                                style: TextStyle(fontWeight: FontWeight.w700),
                                               ),
                                               Text(state.evento!.cep),
                                             ],
@@ -254,7 +255,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             children: [
                                               const Text(
                                                 "Bairro: ",
-                                                style: TextStyle(fontWeight: FontWeight.w800),
+                                                style: TextStyle(fontWeight: FontWeight.w700),
                                               ),
                                               Text(state.evento!.bairro),
                                             ],
@@ -263,7 +264,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             children: [
                                               const Text(
                                                 "Complemento: ",
-                                                style: TextStyle(fontWeight: FontWeight.w800),
+                                                style: TextStyle(fontWeight: FontWeight.w700),
                                               ),
                                               Text(state.evento!.complemento),
                                             ],
@@ -272,7 +273,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             children: [
                                               const Text(
                                                 "Endereço: ",
-                                                style: TextStyle(fontWeight: FontWeight.w800),
+                                                style: TextStyle(fontWeight: FontWeight.w700),
                                               ),
                                               Text(state.evento!.endereco),
                                             ],
@@ -281,10 +282,45 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             children: [
                                               const Text(
                                                 "Cidade: ",
-                                                style: TextStyle(fontWeight: FontWeight.w800),
+                                                style: TextStyle(fontWeight: FontWeight.w700),
                                               ),
                                               Text(state.evento!.nomeCidade),
                                             ],
+                                          ),
+                                          const SizedBox(height: 20),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: ElevatedButton(
+                                              style: const ButtonStyle(
+                                                shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                                  ),
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                var latitude = -3.823216;
+                                                var longitude = -38.481700;
+
+                                                String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+                                                if (await canLaunchUrl(Uri.parse(googleUrl))) {
+                                                  await launchUrl(Uri.parse(googleUrl));
+                                                } else {
+                                                  throw 'Não foi possível abrir o mapa.';
+                                                }
+                                              },
+                                              child: const Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text('Abrir Mapa'),
+                                                  SizedBox(width: 5),
+                                                  Icon(
+                                                    Icons.pin_drop_outlined,
+                                                    size: 20,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -443,6 +479,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                     child: ElevatedButton(
                                       onPressed: () {},
                                       style: const ButtonStyle(
+                                        backgroundColor: MaterialStatePropertyAll(Colors.white),
                                         side: MaterialStatePropertyAll<BorderSide>(
                                           BorderSide(
                                             width: 1,
@@ -462,6 +499,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                     child: ElevatedButton(
                                       onPressed: () {},
                                       style: const ButtonStyle(
+                                        backgroundColor: MaterialStatePropertyAll(Colors.white),
                                         side: MaterialStatePropertyAll<BorderSide>(
                                           BorderSide(
                                             width: 1,

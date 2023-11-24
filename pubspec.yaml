@@ -58,6 +58,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   google_sign_in: ^6.1.6
   sign_in_with_apple: ^5.0.0
+  brasil_fields: ^1.14.0
 
 dev_dependencies:
   flutter_test:

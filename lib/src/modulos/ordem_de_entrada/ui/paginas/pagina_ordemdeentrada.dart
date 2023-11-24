@@ -11,7 +11,7 @@ class PaginaOrdemDeEntrada extends StatefulWidget {
   State<PaginaOrdemDeEntrada> createState() => _PaginaOrdemDeEntradaState();
 }
 
-class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
+class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -24,8 +24,13 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
+    var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: ValueListenableBuilder<OrdemDeEntradaEstado>(
@@ -54,8 +59,19 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
             );
           }
 
-          return const Center(
-            child: Text('Não tem nada aqui por enquanto.'),
+          return RefreshIndicator(
+            onRefresh: () async {
+              ordemDeEntradaStore.listar();
+            },
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: SizedBox(
+                height: height - 200,
+                child: const Center(
+                  child: Text('Nenhuma compra foi encontrada.'),
+                ),
+              ),
+            ),
           );
         },
       ),

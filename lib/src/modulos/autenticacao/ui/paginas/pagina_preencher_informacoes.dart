@@ -4,6 +4,7 @@ import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autentica
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
+import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -43,7 +44,11 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
       if (state is Cadastrado) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            Navigator.pushReplacementNamed(context, '/inicio');
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (context) {
+                return const PaginaInicio();
+              },
+            ), (Route<dynamic> route) => false);
           }
         });
       } else if (state is ErroAoCadastrar) {

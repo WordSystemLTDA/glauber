@@ -6,6 +6,7 @@ import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
+import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -57,7 +58,11 @@ class _PaginaLoginState extends State<PaginaLogin> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             UsuarioProvider.init();
-            Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (context) {
+                return const PaginaInicio();
+              },
+            ), (Route<dynamic> route) => false);
           }
         });
       } else if (state is AutenticacaoErro) {

@@ -48,24 +48,33 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
                         ),
                         const SizedBox(height: 20),
-                        const Divider(),
-                        Flexible(
-                          child: ListView.separated(
-                            separatorBuilder: (context, index) {
-                              return const Divider();
-                            },
-                            shrinkWrap: true,
-                            itemCount: item.parceiros.length,
-                            itemBuilder: (context, index) {
-                              var itemParceiro = item.parceiros[index];
+                        if (item.parceiros.isNotEmpty) ...[
+                          const Divider(),
+                          Flexible(
+                            child: ListView.separated(
+                              separatorBuilder: (context, index) {
+                                return const Divider();
+                              },
+                              shrinkWrap: true,
+                              itemCount: item.parceiros.length,
+                              itemBuilder: (context, index) {
+                                var itemParceiro = item.parceiros[index];
 
-                              return ListTile(
-                                title: Text(itemParceiro.nomeCliente),
-                                trailing: Text(itemParceiro.somatoria),
-                              );
-                            },
+                                return ListTile(
+                                  title: Text(itemParceiro.nomeCliente),
+                                  subtitle: Text("Inscrição: ${itemParceiro.numeroDaInscricao}"),
+                                  trailing: Text(
+                                    itemParceiro.somatoria,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
+                        ],
+                        if (item.parceiros.isEmpty) ...[
+                          const Text('Não existe parceiros cadastrados ainda.'),
+                        ],
                       ],
                     ),
                   ),
