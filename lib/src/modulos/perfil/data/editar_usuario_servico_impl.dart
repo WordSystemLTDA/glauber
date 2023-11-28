@@ -10,7 +10,7 @@ class EditarUsuarioServicoImpl implements EditarUsuarioServico {
   EditarUsuarioServicoImpl(this.client);
 
   @override
-  Future<bool> editarUsuario(FormularioEditarUsuarioModelo dados) async {
+  Future<(bool, String)> editarUsuario(FormularioEditarUsuarioModelo dados) async {
     var url = 'clientes/editar.php';
 
     var campos = {
@@ -24,11 +24,12 @@ class EditarUsuarioServicoImpl implements EditarUsuarioServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return sucesso;
+      return (sucesso, mensagem);
     } else {
-      return false;
+      return (false, mensagem);
     }
   }
 }

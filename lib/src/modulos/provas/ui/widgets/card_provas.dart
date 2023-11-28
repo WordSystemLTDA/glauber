@@ -5,6 +5,7 @@ import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dar
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provider/provider.dart';
 
 class CardProvas extends StatefulWidget {
   final ProvaModelo prova;
@@ -32,7 +33,7 @@ class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 110;
 
   void aoClicarNaCabeceira(ProvaModelo prova, item) {
-    var usuario = UsuarioProvider.getUsuario();
+    var usuarioProvider = context.read<UsuarioProvider>();
 
     if (!prova.compraLiberada) {
       if (mounted) {
@@ -47,7 +48,7 @@ class _CardProvasState extends State<CardProvas> {
     }
 
     // Caso o usuário não esteja logado
-    if (usuario == null) {
+    if (usuarioProvider.usuario == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -66,7 +67,8 @@ class _CardProvasState extends State<CardProvas> {
     }
 
     // Caso o usuário não tenha nenhum handicap
-    if (double.parse(usuario.hcCabeceira) <= 0 && double.parse(usuario.hcPezeiro) <= 0) {
+    if ((usuarioProvider.usuario!.hcCabeceira!.isEmpty && usuarioProvider.usuario!.hcPezeiro!.isEmpty) ||
+        (double.parse(usuarioProvider.usuario!.hcCabeceira!) <= 0 && double.parse(usuarioProvider.usuario!.hcPezeiro!) <= 0)) {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -79,13 +81,15 @@ class _CardProvasState extends State<CardProvas> {
     }
 
     // Verificação do HandiCap Máximo e Mínimo da prova
-    if (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0) {
+    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
       // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
-      if (item.id == '1' && !(double.parse(usuario.hcCabeceira) >= double.parse(prova.hcMinimo) && double.parse(usuario.hcCabeceira) <= double.parse(prova.hcMaximo))) {
+      if (item.id == '1' &&
+          !(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo))) {
         if (mounted) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Center(child: Text("Seu Handicap de ${usuario.hcCabeceira} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            content: Center(child: Text("Seu Handicap de ${usuarioProvider.usuario!.hcCabeceira} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
             showCloseIcon: true,
             backgroundColor: Colors.red,
           ));
@@ -94,11 +98,13 @@ class _CardProvasState extends State<CardProvas> {
       }
 
       // Verificação se o id cabeceira é o segundo (PISEIRO) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
-      if (item.id == '2' && !(double.parse(usuario.hcPezeiro) >= double.parse(prova.hcMinimo) && double.parse(usuario.hcPezeiro) <= double.parse(prova.hcMaximo))) {
+      if (item.id == '2' &&
+          !(double.parse(usuarioProvider.usuario!.hcPezeiro!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo))) {
         if (mounted) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Center(child: Text("Seu Handicap ${usuario.hcPezeiro} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            content: Center(child: Text("Seu Handicap ${usuarioProvider.usuario!.hcPezeiro} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
             showCloseIcon: true,
             backgroundColor: Colors.red,
           ));
@@ -177,7 +183,7 @@ class _CardProvasState extends State<CardProvas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            var usuario = UsuarioProvider.getUsuario();
+            var usuarioProvider = context.read<UsuarioProvider>();
 
             if (!prova.compraLiberada) {
               if (mounted) {
@@ -191,7 +197,7 @@ class _CardProvasState extends State<CardProvas> {
               return;
             }
 
-            if (usuario == null) {
+            if (usuarioProvider.usuario == null) {
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

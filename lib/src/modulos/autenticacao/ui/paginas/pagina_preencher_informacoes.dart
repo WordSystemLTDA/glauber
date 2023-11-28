@@ -255,7 +255,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
                             content: Center(child: Text('Algum dos dois HandiCap precisa ser preenchido.')),
                           ));
                         } else {
-                          autenticacaoStore.cadastrarSocial(widget.usuario, widget.tipoLogin, hcCabeceira, hcPiseiro);
+                          autenticacaoStore.cadastrarSocial(context, widget.usuario, widget.tipoLogin, hcCabeceira, hcPiseiro);
                         }
                       },
                       child: state is Cadastrando ? const CircularProgressIndicator() : const Text('Cadastrar-se'),

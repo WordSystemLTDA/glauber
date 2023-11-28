@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
@@ -12,14 +12,12 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
   FinalizarCompraServicoImpl(this.client);
 
   @override
-  Future<RetornoCompraModelo> inserir(FormularioCompraModelo dados) async {
+  Future<RetornoCompraModelo> inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
     var url = 'vendas/inserir.php';
-
-    var usuarioProvider = UsuarioProvider.getUsuario();
 
     var campos = {
       ...dados.toMap(),
-      'usuario': usuarioProvider!.toMap(),
+      'usuario': usuario!.toMap(),
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

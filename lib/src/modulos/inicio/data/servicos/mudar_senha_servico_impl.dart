@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 
 class MudarSenhaServicoImpl implements MudarSenhaServico {
@@ -10,17 +10,15 @@ class MudarSenhaServicoImpl implements MudarSenhaServico {
   MudarSenhaServicoImpl(this.client);
 
   @override
-  Future<bool> mudarSenha(String senha) async {
+  Future<bool> mudarSenha(UsuarioModelo? usuario, String senha) async {
     var url = 'clientes/mudar_senha.php';
 
-    var usuarioProvider = UsuarioProvider.getUsuario();
-
-    if (usuarioProvider == null) {
+    if (usuario == null) {
       return false;
     }
 
     var campos = {
-      "id": usuarioProvider.id,
+      "id": usuario.id,
       "senha": senha,
     };
 
@@ -28,11 +26,8 @@ class MudarSenhaServicoImpl implements MudarSenhaServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    dynamic dados = result['dados'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      await UsuarioProvider.setUsuario(jsonEncode(dados));
-
       return sucesso;
     } else {
       return false;

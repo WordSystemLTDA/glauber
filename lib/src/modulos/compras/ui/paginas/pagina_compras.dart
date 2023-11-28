@@ -18,9 +18,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var comprasStore = context.read<ComprasStore>();
+      var usuarioProvider = context.read<UsuarioProvider>();
 
-      if (UsuarioProvider.getUsuario() != null) {
-        comprasStore.listar();
+      if (usuarioProvider.usuario != null) {
+        comprasStore.listar(usuarioProvider.usuario);
       }
     });
   }
@@ -32,9 +33,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   Widget build(BuildContext context) {
     super.build(context);
     var comprasStore = context.read<ComprasStore>();
+    var usuarioProvider = context.read<UsuarioProvider>();
     var height = MediaQuery.of(context).size.height;
 
-    if (UsuarioProvider.getUsuario() == null) {
+    if (usuarioProvider.usuario == null) {
       return const Center(child: Text('Você precisa estar logado.'));
     }
 
@@ -129,7 +131,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    comprasStore.listar();
+                    comprasStore.listar(usuarioProvider.usuario);
                   },
                   child: ListView.builder(
                     itemCount: state.compras.length,
@@ -148,7 +150,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
         return RefreshIndicator(
           onRefresh: () async {
-            comprasStore.listar();
+            comprasStore.listar(usuarioProvider.usuario);
           },
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/orderdeentrada_estado.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/widgets/card_ordemdeentrada.dart';
@@ -18,7 +19,8 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) {
         var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
-        ordemDeEntradaStore.listar();
+        var usuarioProvider = context.read<UsuarioProvider>();
+        ordemDeEntradaStore.listar(usuarioProvider.usuario);
       }
     });
   }
@@ -30,6 +32,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
   Widget build(BuildContext context) {
     super.build(context);
     var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
+    var usuarioProvider = context.read<UsuarioProvider>();
     var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -45,7 +48,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
           if (state is OrdemDeEntradaCarregado) {
             return RefreshIndicator(
               onRefresh: () async {
-                ordemDeEntradaStore.listar();
+                ordemDeEntradaStore.listar(usuarioProvider.usuario);
               },
               child: ListView.builder(
                 itemCount: state.ordemdeentradas.length,
@@ -61,7 +64,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
 
           return RefreshIndicator(
             onRefresh: () async {
-              ordemDeEntradaStore.listar();
+              ordemDeEntradaStore.listar(usuarioProvider.usuario);
             },
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),

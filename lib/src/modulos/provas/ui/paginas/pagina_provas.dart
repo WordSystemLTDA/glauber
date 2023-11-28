@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
@@ -538,7 +539,8 @@ class _PaginaProvasState extends State<PaginaProvas> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var provasStore = context.read<ProvasStore>();
-      provasStore.listar(widget.idEvento);
+      var usuarioProvider = context.read<UsuarioProvider>();
+      provasStore.listar(usuarioProvider.usuario, widget.idEvento);
     });
   }
 }

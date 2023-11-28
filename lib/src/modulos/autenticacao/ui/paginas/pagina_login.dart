@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
@@ -27,7 +26,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
     final firebaseMessagingService = context.read<FirebaseMessagingService>();
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.entrarComEmail(_emailController.text, _senhaController.text, tokenNotificacao);
+    if (mounted) {
+      autenticacaoStore.entrarComEmail(context, _emailController.text, _senhaController.text, tokenNotificacao);
+    }
   }
 
   void entrarSocial(TiposLoginSocial tipoLoginSocial) async {
@@ -35,16 +36,18 @@ class _PaginaLoginState extends State<PaginaLogin> {
     final FirebaseMessagingService firebaseMessagingService = context.read<FirebaseMessagingService>();
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoStore.listarInformacoesLogin(tipoLoginSocial, tokenNotificacao).then((resposta) {
-      var (sucesso, usuario) = resposta;
-      if (!sucesso) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tipoLoginSocial);
-          },
-        ));
-      }
-    });
+    if (mounted) {
+      autenticacaoStore.listarInformacoesLogin(context, tipoLoginSocial, tokenNotificacao).then((resposta) {
+        var (sucesso, usuario) = resposta;
+        if (!sucesso) {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tipoLoginSocial);
+            },
+          ));
+        }
+      });
+    }
   }
 
   @override
@@ -57,7 +60,6 @@ class _PaginaLoginState extends State<PaginaLogin> {
       if (state is Autenticado) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            UsuarioProvider.init();
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
               builder: (context) {
                 return const PaginaInicio();

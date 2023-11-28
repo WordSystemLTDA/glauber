@@ -28,8 +28,8 @@ class _PaginaInicioState extends State<PaginaInicio> {
   }
 
   void verificar() {
-    var usuarioProvider = UsuarioProvider.getUsuario();
     var mudarSenhaServico = context.read<MudarSenhaServico>();
+    var usuarioProvider = context.read<UsuarioProvider>().usuario;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted && usuarioProvider != null && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'normal') {
@@ -65,7 +65,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                         const SizedBox(width: 10),
                         ElevatedButton(
                           onPressed: () {
-                            mudarSenhaServico.mudarSenha(novaSenha.text).then((sucesso) {
+                            mudarSenhaServico.mudarSenha(usuarioProvider, novaSenha.text).then((sucesso) {
                               if (sucesso) {
                                 Navigator.pop(context);
 
@@ -100,80 +100,82 @@ class _PaginaInicioState extends State<PaginaInicio> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: Visibility(
-        visible: UsuarioProvider.getUsuario() == null,
-        child: SizedBox(
-          width: 150,
-          height: 50,
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return const PaginaLogin();
-                },
-              ));
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            backgroundColor: const Color.fromARGB(255, 247, 24, 8),
-            label: const Text(
-              'Entrar',
-              style: TextStyle(fontSize: 14),
+    return Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {
+      return Scaffold(
+        floatingActionButton: Visibility(
+          visible: usuarioProvider.usuario == null,
+          child: SizedBox(
+            width: 150,
+            height: 50,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const PaginaLogin();
+                  },
+                ));
+              },
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              backgroundColor: const Color.fromARGB(255, 247, 24, 8),
+              label: const Text(
+                'Entrar',
+                style: TextStyle(fontSize: 14),
+              ),
             ),
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      endDrawer: DrawerCustomizado(
-        aoMudarPagina: (index) {
-          setState(() {
-            pageIndex = index;
-            pageController.jumpToPage(index);
-          });
-          Navigator.pop(context);
-        },
-      ),
-      endDrawerEnableOpenDragGesture: false,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Container(
-          decoration: const BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0, 0),
-              blurRadius: 10.0,
-            )
-          ]),
-          child: AppBar(
-            elevation: 0.0,
-            title: const Text("LOGO"),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        endDrawer: DrawerCustomizado(
+          aoMudarPagina: (index) {
+            setState(() {
+              pageIndex = index;
+              pageController.jumpToPage(index);
+            });
+            Navigator.pop(context);
+          },
+        ),
+        endDrawerEnableOpenDragGesture: false,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: const BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, 0),
+                blurRadius: 10.0,
+              )
+            ]),
+            child: AppBar(
+              elevation: 0.0,
+              title: const Text("LOGO"),
+            ),
           ),
         ),
-      ),
-      body: PageView(
-        controller: pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          PaginaHome(),
-          PaginaCompras(),
-          PaginaOrdemDeEntrada(),
-          PaginaPerfil(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: pageIndex,
-        onTap: (index) {
-          setState(() => pageIndex = index);
-          pageController.jumpToPage(index);
-        },
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Início'),
-          BottomNavigationBarItem(icon: Icon(Icons.sell_outlined), label: 'Inscrições'),
-          BottomNavigationBarItem(icon: Icon(Icons.format_list_numbered_outlined), label: 'Ordem Entrada'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil')
-        ],
-      ),
-    );
+        body: PageView(
+          controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            PaginaHome(),
+            PaginaCompras(),
+            PaginaOrdemDeEntrada(),
+            PaginaPerfil(),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: pageIndex,
+          onTap: (index) {
+            setState(() => pageIndex = index);
+            pageController.jumpToPage(index);
+          },
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Início'),
+            BottomNavigationBarItem(icon: Icon(Icons.sell_outlined), label: 'Inscrições'),
+            BottomNavigationBarItem(icon: Icon(Icons.format_list_numbered_outlined), label: 'Ordem Entrada'),
+            BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil')
+          ],
+        ),
+      );
+    });
   }
 }

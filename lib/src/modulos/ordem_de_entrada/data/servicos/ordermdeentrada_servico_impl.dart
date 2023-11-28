@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,10 +15,8 @@ class OrdemDeEntradaServicoImpl implements OrdemDeEntradaServico {
   OrdemDeEntradaServicoImpl(this.client);
 
   @override
-  Future<List<OrdemDeEntradaModelo>> listar() async {
-    UsuarioProvider.atualizar();
-    var usuarioProvider = UsuarioProvider.getUsuario();
-    var idCliente = usuarioProvider!.id;
+  Future<List<OrdemDeEntradaModelo>> listar(UsuarioModelo? usuario) async {
+    var idCliente = usuario!.id;
     var url = "ordem_de_entrada/listar.php?id_cliente=$idCliente";
 
     var response = await client.get(url: url);

@@ -46,8 +46,6 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await UsuarioProvider.init();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final app = MultiProvider(
@@ -56,6 +54,7 @@ void main() async {
       Provider<FirebaseMessagingService>(create: (context) => FirebaseMessagingService(context.read())),
       ChangeNotifierProvider(create: (context) => ThemeController()),
       Provider<IHttpClient>(create: (context) => DioClient()),
+      ChangeNotifierProvider(create: (context) => UsuarioProvider()),
       // Inicio
       Provider<MudarSenhaServico>(create: (context) => MudarSenhaServicoImpl(context.read())),
       // Autenticação

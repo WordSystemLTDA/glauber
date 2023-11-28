@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
@@ -48,16 +49,25 @@ class _PaginaSplashState extends State<PaginaSplash> {
   }
 
   void verificarLogin() async {
-    final autenticacaoServico = context.read<AutenticacaoServico>();
-    final firebaseMessagingService = context.read<FirebaseMessagingService>();
-    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+    if (mounted) {
+      final autenticacaoServico = context.read<AutenticacaoServico>();
+      final firebaseMessagingService = context.read<FirebaseMessagingService>();
+      final usuarioProvider = context.read<UsuarioProvider>();
+      String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-    autenticacaoServico.verificar(tokenNotificacao).then((logado) async {
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-        builder: (context) {
-          return const PaginaInicio();
-        },
-      ), (Route<dynamic> route) => false);
-    });
+      autenticacaoServico.verificar(usuarioProvider.usuario, tokenNotificacao).then((resposta) async {
+        var (sucesso, usuarioRetorno) = resposta;
+
+        if (sucesso) {
+          usuarioProvider.setUsuario(usuarioRetorno);
+        }
+
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+          builder: (context) {
+            return const PaginaInicio();
+          },
+        ), (Route<dynamic> route) => false);
+      });
+    }
   }
 }

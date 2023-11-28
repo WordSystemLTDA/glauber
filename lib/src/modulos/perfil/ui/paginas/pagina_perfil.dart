@@ -16,7 +16,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
   List<dynamic> itemsPerfil = [
     {
       'titulo': const Text('Editar dados'),
-      'ativo': UsuarioProvider.getUsuario() != null,
+      'ativo': true,
       'icone': const Icon(Icons.edit_outlined),
       'funcao': (context) {
         Navigator.push(context, MaterialPageRoute(
@@ -69,7 +69,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     {
       'titulo': const Text('Excluir Conta'),
       'icone': const Icon(Icons.delete_outline),
-      'ativo': UsuarioProvider.getUsuario() != null,
+      'ativo': true,
       'funcao': (context) async {
         showDialog<String>(
           context: context,
@@ -117,15 +117,16 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                               onPressed: () async {
                                 final autenticacaoServico = context.read<AutenticacaoServico>();
                                 final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                                var usuarioProvider = context.read<UsuarioProvider>();
                                 String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                                autenticacaoServico.excluirConta(tokenNotificacao).then((sucessoAoExcluirConta) {
+                                autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirConta) {
                                   if (sucessoAoExcluirConta) {
-                                    UsuarioProvider.removerUsuario().then((sucessoAoSair) {
-                                      if (sucessoAoSair) {
-                                        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                                      }
-                                    });
+                                    // UsuarioProvider.removerUsuario().then((sucessoAoSair) {
+                                    //   if (sucessoAoSair) {
+                                    //     Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                                    //   }
+                                    // });
                                   }
                                 });
                               },
@@ -145,7 +146,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     {
       'titulo': const Text('Sair', style: TextStyle(color: Colors.red)),
       'icone': const Icon(Icons.logout_outlined, color: Colors.red),
-      'ativo': UsuarioProvider.getUsuario() != null,
+      'ativo': true,
       'funcao': (context) {
         showDialog<String>(
           context: context,
@@ -171,15 +172,16 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                   onPressed: () async {
                     final autenticacaoServico = context.read<AutenticacaoServico>();
                     final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                    var usuarioProvider = context.read<UsuarioProvider>();
                     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                    autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
+                    autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
                       if (sucessoAoExcluirToken) {
-                        UsuarioProvider.removerUsuario().then((sucessoAoSair) {
-                          if (sucessoAoSair) {
-                            Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                          }
-                        });
+                        // UsuarioProvider.removerUsuario().then((sucessoAoSair) {
+                        //   if (sucessoAoSair) {
+                        //     Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                        //   }
+                        // });
                       }
                     });
                   },
@@ -193,13 +195,15 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
   ];
 
   String nomeUsuario() {
-    if (UsuarioProvider.getUsuario() != null && UsuarioProvider.getUsuario()!.nome!.isNotEmpty) {
-      var nomeComEspaco = UsuarioProvider.getUsuario()!.nome!.split(' ');
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    if (usuarioProvider.usuario != null && usuarioProvider.usuario!.nome!.isNotEmpty) {
+      var nomeComEspaco = usuarioProvider.usuario!.nome!.split(' ');
 
       if (nomeComEspaco.length > 1) {
         return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";
       } else {
-        return "${UsuarioProvider.getUsuario()!.nome![0].toUpperCase()}${UsuarioProvider.getUsuario()!.nome![1].toUpperCase()}";
+        return "${usuarioProvider.usuario!.nome![0].toUpperCase()}${usuarioProvider.usuario!.nome![1].toUpperCase()}";
       }
     } else {
       return "N/A";
@@ -214,7 +218,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     super.build(context);
 
     var itemsAtivos = itemsPerfil.where((element) => element['ativo'] == true).toList();
-    var usuario = UsuarioProvider.getUsuario();
+    var usuarioProvider = context.read<UsuarioProvider>();
 
     return SingleChildScrollView(
       child: Column(
@@ -228,32 +232,30 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  (usuario != null && (usuario.tipo == 'social' && usuario.foto != 'semfoto'))
+                  (usuarioProvider.usuario != null && (usuarioProvider.usuario!.tipo == 'social' && usuarioProvider.usuario!.foto != 'semfoto'))
                       ? CircleAvatar(
                           backgroundColor: Colors.grey,
                           radius: 45,
-                          backgroundImage: Image.network(
-                            usuario.foto!,
-                          ).image,
+                          backgroundImage: Image.network(usuarioProvider.usuario!.foto!).image,
                         )
                       : CircleAvatar(
                           backgroundColor: Colors.grey,
                           radius: 45,
                           child: Text(nomeUsuario()),
                         ),
-                  if (UsuarioProvider.getUsuario() != null) ...[
+                  if (usuarioProvider.usuario != null) ...[
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Text(
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        "#${UsuarioProvider.getUsuario()!.id} - ${UsuarioProvider.getUsuario()!.nome!}",
+                        "#${usuarioProvider.usuario!.id} - ${usuarioProvider.usuario!.nome!}",
                       ),
                     ),
                     Text(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      UsuarioProvider.getUsuario()!.email!,
+                      usuarioProvider.usuario!.email!,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -261,13 +263,13 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                         Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          "HC Cabeceira: ${UsuarioProvider.getUsuario()!.hcCabeceira}",
+                          "HC Cabeceira: ${usuarioProvider.usuario!.hcCabeceira}",
                         ),
                         const SizedBox(width: 30),
                         Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          "HC Pezeiro: ${UsuarioProvider.getUsuario()!.hcPezeiro}",
+                          "HC Pezeiro: ${usuarioProvider.usuario!.hcPezeiro}",
                         ),
                       ],
                     ),

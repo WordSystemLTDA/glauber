@@ -47,7 +47,10 @@ class _CardEventosState extends State<CardEventos> {
                     child: CircularProgressIndicator(value: downloadProgress.progress),
                   ),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error,
+                  size: 25,
+                ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,

@@ -1,8 +1,11 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 enum TiposLoginSocial { google, apple }
@@ -12,11 +15,15 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
   AutenticacaoStore(this._autenticacaoServico) : super(AutenticacaoEstadoInicial());
 
-  void entrarComEmail(email, senha, String? tokenNotificacao) async {
+  void entrarComEmail(BuildContext context, email, senha, String? tokenNotificacao) async {
     value = Carregando();
 
-    _autenticacaoServico.entrar(email, senha, tokenNotificacao).then((sucesso) {
+    _autenticacaoServico.entrar(email, senha, tokenNotificacao).then((resposta) {
+      var (sucesso, usuarioRetorno) = resposta;
+
       if (sucesso) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+        usuarioProvider.setUsuario(usuarioRetorno!);
         value = Autenticado();
       } else {
         value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
@@ -26,7 +33,7 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     });
   }
 
-  Future<(bool, dynamic)> listarInformacoesLogin(tipoLoginSocial, tokenNotificacao) async {
+  Future<(bool, dynamic)> listarInformacoesLogin(BuildContext context, tipoLoginSocial, tokenNotificacao) async {
     value = Carregando();
 
     if (tipoLoginSocial == TiposLoginSocial.google) {
@@ -42,7 +49,7 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
         return Future.error(error!);
       });
 
-      bool sucesso = await _autenticacaoServico.verificarLoginSocial(usuario, tipoLoginSocial, tokenNotificacao);
+      var (sucesso, _) = await _autenticacaoServico.verificarLoginSocial(usuario, tipoLoginSocial, tokenNotificacao);
 
       if (sucesso) {
         value = Autenticado();
@@ -60,9 +67,11 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
         return Future.error(error!);
       });
 
-      bool sucesso = await _autenticacaoServico.verificarLoginSocial(usuario, tipoLoginSocial, tokenNotificacao);
+      var (sucesso, usuarioRetorno) = await _autenticacaoServico.verificarLoginSocial(usuario, tipoLoginSocial, tokenNotificacao);
 
       if (sucesso) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+        usuarioProvider.setUsuario(usuarioRetorno!);
         value = Autenticado();
       }
 
@@ -72,11 +81,15 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     return (false, 'Erro');
   }
 
-  void entrarSocial(usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
+  void entrarSocial(BuildContext context, usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
     value = Carregando();
 
-    _autenticacaoServico.entrarSocial(usuario, tipo, tokenNotificacao).then((sucesso) {
+    _autenticacaoServico.entrarSocial(usuario, tipo, tokenNotificacao).then((resposta) {
+      var (sucesso, usuarioRetorno) = resposta;
+
       if (sucesso) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+        usuarioProvider.setUsuario(usuarioRetorno!);
         value = Autenticado();
       } else {
         value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
@@ -86,11 +99,14 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     });
   }
 
-  void cadastrarSocial(usuario, tipoLogin, hcCabeceira, hcPiseiro) async {
+  void cadastrarSocial(BuildContext context, usuario, tipoLogin, hcCabeceira, hcPiseiro) async {
     value = Cadastrando();
 
-    _autenticacaoServico.cadastrarSocial(usuario, tipoLogin, hcCabeceira, hcPiseiro).then((sucesso) {
+    _autenticacaoServico.cadastrarSocial(usuario, tipoLogin, hcCabeceira, hcPiseiro).then((resposta) {
+      var (sucesso, usuarioRetorno) = resposta;
       if (sucesso) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+        usuarioProvider.setUsuario(usuarioRetorno!);
         value = Cadastrado();
       } else {
         value = ErroAoCadastrar(erro: Exception('Erro ao tentar cadastrar, tente novamente.'));

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
@@ -14,9 +14,8 @@ class ProvaServicoImpl implements ProvaServico {
   ProvaServicoImpl(this.client);
 
   @override
-  Future<ProvaRetornoModelo> listar(String idEvento) async {
-    var usuarioProvider = UsuarioProvider.getUsuario();
-    var idCliente = usuarioProvider != null ? usuarioProvider.id : 0;
+  Future<ProvaRetornoModelo> listar(UsuarioModelo? usuario, String idEvento) async {
+    var idCliente = usuario != null ? usuario.id : 0;
 
     var url = 'provas/listar.php?id_evento=$idEvento&id_cliente=$idCliente';
 

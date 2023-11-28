@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
@@ -8,10 +9,10 @@ class FinalizarCompraStore extends ValueNotifier<FinalizarCompraEstado> {
 
   FinalizarCompraStore(this._servico) : super(FinalizarCompraEstadoInicial());
 
-  void inserir(FormularioCompraModelo dados) async {
+  void inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
     value = Carregando();
 
-    var dadosRetorno = await _servico.inserir(dados);
+    var dadosRetorno = await _servico.inserir(usuario, dados);
 
     if (dadosRetorno.sucesso) {
       value = CompraRealizadaComSucesso(dados: dadosRetorno.dados);

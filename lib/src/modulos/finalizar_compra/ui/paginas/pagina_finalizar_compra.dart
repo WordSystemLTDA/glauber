@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
@@ -52,7 +53,10 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
 
   void salvar(ListarInformacoesModelo dados) {
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
+    var usuarioProvider = context.read<UsuarioProvider>();
+
     finalizarCompraStore.inserir(
+      usuarioProvider.usuario,
       FormularioCompraModelo(
         provas: widget.provas,
         idEvento: widget.idEvento,

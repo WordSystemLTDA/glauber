@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,13 +15,11 @@ class ComprasServicoImpl implements ComprasServico {
   ComprasServicoImpl(this.client);
 
   @override
-  Future<List<ComprasModelo>> listar() async {
+  Future<List<ComprasModelo>> listar(UsuarioModelo? usuario) async {
     var url = 'compras/listar.php';
-    UsuarioProvider.atualizar();
-    var usuarioProvider = UsuarioProvider.getUsuario();
 
     var campos = {
-      'id_cliente': usuarioProvider!.id,
+      'id_cliente': usuario!.id,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

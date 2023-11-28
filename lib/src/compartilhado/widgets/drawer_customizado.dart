@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +16,15 @@ class DrawerCustomizado extends StatefulWidget {
 
 class _DrawerCustomizadoState extends State<DrawerCustomizado> {
   String nomeUsuario() {
-    if (UsuarioProvider.getUsuario() != null && UsuarioProvider.getUsuario()!.nome!.isNotEmpty) {
-      var nomeComEspaco = UsuarioProvider.getUsuario()!.nome!.split(' ');
+    var usuario = context.read<UsuarioProvider>().usuario;
+
+    if (usuario != null && usuario.nome!.isNotEmpty) {
+      var nomeComEspaco = usuario.nome!.split(' ');
 
       if (nomeComEspaco.length > 1) {
         return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";
       } else {
-        return "${UsuarioProvider.getUsuario()!.nome![0].toUpperCase()}${UsuarioProvider.getUsuario()!.nome![1].toUpperCase()}";
+        return "${usuario.nome![0].toUpperCase()}${usuario.nome![1].toUpperCase()}";
       }
     } else {
       return "N/A";
@@ -51,15 +54,18 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
             TextButton(
               child: const Text('Sair'),
               onPressed: () async {
-                final autenticacaoServico = context.read<AutenticacaoServico>();
-                final firebaseMessagingService = context.read<FirebaseMessagingService>();
-                String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                  if (mounted) {
+                    final autenticacaoServico = context.read<AutenticacaoServico>();
+                    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                    final usuarioProvider = context.read<UsuarioProvider>();
+                    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                autenticacaoServico.sair(tokenNotificacao).then((sucessoAoExcluirToken) {
-                  if (sucessoAoExcluirToken) {
-                    UsuarioProvider.removerUsuario().then((sucessoAoSair) {
-                      if (sucessoAoSair) {
-                        Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                    autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
+                      if (sucessoAoExcluirToken) {
+                        UsuarioServico.sair(context).then((value) {
+                          Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                        });
                       }
                     });
                   }
@@ -74,7 +80,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
 
   @override
   Widget build(BuildContext context) {
-    var usuario = UsuarioProvider.getUsuario();
+    var usuario = context.read<UsuarioProvider>().usuario;
 
     return Drawer(
       width: 200,
@@ -95,13 +101,13 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                     child: Text(nomeUsuario()),
                   ),
           ),
-          if (UsuarioProvider.getUsuario() != null) ...[
+          if (usuario != null) ...[
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 10),
               child: Text(
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                "#${UsuarioProvider.getUsuario()!.id} - ${UsuarioProvider.getUsuario()!.nome!}",
+                "#${usuario.id} - ${usuario.nome!}",
               ),
             ),
             Padding(
@@ -109,7 +115,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
               child: Text(
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                UsuarioProvider.getUsuario()!.email!,
+                usuario.email!,
               ),
             ),
           ],
@@ -136,7 +142,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                 leading: const Icon(Icons.search),
                 title: const Text('Buscar'),
               ),
-              if (UsuarioProvider.getUsuario() != null) ...[
+              if (usuario != null) ...[
                 ListTile(
                   onTap: () {
                     widget.aoMudarPagina(1);
