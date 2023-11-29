@@ -59,6 +59,8 @@ dependencies:
   google_sign_in: ^6.1.6
   sign_in_with_apple: ^5.0.0
   brasil_fields: ^1.14.0
+  pub_semver: ^2.1.4
+  package_info_plus: ^4.2.0
 
 dev_dependencies:
   flutter_test:

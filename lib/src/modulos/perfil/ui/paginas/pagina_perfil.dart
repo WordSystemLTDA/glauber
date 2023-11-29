@@ -218,99 +218,100 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     super.build(context);
 
     var itemsAtivos = itemsPerfil.where((element) => element['ativo'] == true).toList();
-    var usuarioProvider = context.read<UsuarioProvider>();
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  (usuarioProvider.usuario != null && (usuarioProvider.usuario!.tipo == 'social' && usuarioProvider.usuario!.foto != 'semfoto'))
-                      ? CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 45,
-                          backgroundImage: Image.network(usuarioProvider.usuario!.foto!).image,
-                        )
-                      : CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 45,
-                          child: Text(nomeUsuario()),
+    return Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    (usuarioProvider.usuario != null && (usuarioProvider.usuario!.tipo == 'social' && usuarioProvider.usuario!.foto != 'semfoto'))
+                        ? CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 45,
+                            backgroundImage: Image.network(usuarioProvider.usuario!.foto!).image,
+                          )
+                        : CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 45,
+                            child: Text(nomeUsuario()),
+                          ),
+                    if (usuarioProvider.usuario != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          "#${usuarioProvider.usuario!.id} - ${usuarioProvider.usuario!.nome!}",
                         ),
-                  if (usuarioProvider.usuario != null) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(
+                      ),
+                      Text(
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        "#${usuarioProvider.usuario!.id} - ${usuarioProvider.usuario!.nome!}",
+                        usuarioProvider.usuario!.email!,
                       ),
-                    ),
-                    Text(
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      usuarioProvider.usuario!.email!,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          "HC Cabeceira: ${usuarioProvider.usuario!.hcCabeceira}",
-                        ),
-                        const SizedBox(width: 30),
-                        Text(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          "HC Pezeiro: ${usuarioProvider.usuario!.hcPezeiro}",
-                        ),
-                      ],
-                    ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            "HC Cabeça: ${usuarioProvider.usuario!.hcCabeceira}",
+                          ),
+                          const SizedBox(width: 30),
+                          Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            "HC Pé: ${usuarioProvider.usuario!.hcPezeiro}",
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 30),
-          const Divider(height: 1),
-          Flexible(
-            child: ListView.separated(
-              shrinkWrap: true,
-              padding: const EdgeInsets.only(bottom: 40),
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: itemsAtivos.length,
-              separatorBuilder: (context, index) {
-                return const Divider(
-                  indent: 0,
-                  endIndent: 0,
-                  height: 1,
-                );
-              },
-              itemBuilder: (context, index) {
-                var item = itemsAtivos[index];
+            const SizedBox(height: 30),
+            const Divider(height: 1),
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(bottom: 40),
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: itemsAtivos.length,
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    indent: 0,
+                    endIndent: 0,
+                    height: 1,
+                  );
+                },
+                itemBuilder: (context, index) {
+                  var item = itemsAtivos[index];
 
-                return ListTile(
-                  onTap: () => item['funcao'] != null ? item['funcao'](context) : null,
-                  leading: item['icone'],
-                  title: item['titulo'],
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 20,
-                    color: Color.fromARGB(255, 82, 82, 82),
-                  ),
-                );
-              },
+                  return ListTile(
+                    onTap: () => item['funcao'] != null ? item['funcao'](context) : null,
+                    leading: item['icone'],
+                    title: item['titulo'],
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 20,
+                      color: Color.fromARGB(255, 82, 82, 82),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }

@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
+import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_propagandas.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaginaHome extends StatefulWidget {
   const PaginaHome({super.key});
@@ -135,6 +140,90 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     );
   }
 
+  void verificarAtualicao() async {
+    var dados = context.read<UsuarioProvider>().usuario!;
+
+    if (await FuncoesGlobais.appPrecisaAtualizar(dados.versaoAppAndroid, dados.versaoAppIos) && mounted) {
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext contextDialog) {
+          return AlertDialog(
+            title: const Text(
+              'Atualização disponível',
+              style: TextStyle(fontSize: 16),
+            ),
+            content: Text(Platform.isAndroid ? 'Escolha uma opção para poder atualizar o aplicativo.' : 'Clique no botão ATUALIZAR para poder atualizar o aplicativo'),
+            actions: <Widget>[
+              if (Platform.isAndroid) ...[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text('Baixar APK'),
+                  onPressed: () async {
+                    try {
+                      if (await canLaunchUrl(Uri.parse(dados.baixarApk!))) {
+                        await launchUrl(Uri.parse(dados.baixarApk!));
+                      } else {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text('Não foi possível abrir o LINK, entre em contato com o suporte.'),
+                            backgroundColor: Colors.red,
+                            showCloseIcon: true,
+                          ));
+                        }
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Não foi possível abrir o LINK, entre em contato com o suporte.'),
+                          backgroundColor: Colors.red,
+                          showCloseIcon: true,
+                        ));
+                        // print(e);
+                      }
+                    }
+                  },
+                ),
+              ],
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                child: const Text('Atualizar'),
+                onPressed: () async {
+                  try {
+                    if (Platform.isAndroid) {
+                      if (await canLaunchUrl(Uri.parse(dados.linkAtualizacaoAndroid!))) {
+                        await launchUrl(Uri.parse(dados.linkAtualizacaoAndroid!));
+                      }
+                    } else if (Platform.isIOS) {
+                      if (await canLaunchUrl(Uri.parse(dados.linkAtualizacaoIos!))) {
+                        await launchUrl(Uri.parse(dados.linkAtualizacaoIos!));
+                      }
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Não foi possível abrir o LINK, entre em contato com o suporte.'),
+                        backgroundColor: Colors.red,
+                        showCloseIcon: true,
+                      ));
+                    }
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -142,6 +231,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       HomeStore homeStore = context.read<HomeStore>();
       homeStore.listar();
+      verificarAtualicao();
     });
 
     _categoriaController = TabController(

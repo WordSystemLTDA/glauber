@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
+import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
@@ -49,6 +50,17 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         }
       });
     });
+  }
+
+  void abrirTermosDeUso() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Dialog(
+          child: TermosDeUso(),
+        );
+      },
+    );
   }
 
   void salvar(ListarInformacoesModelo dados) {
@@ -284,17 +296,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                       style: const TextStyle(color: Colors.red),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return const Dialog(
-                                                child: SizedBox(
-                                                  height: 230,
-                                                  width: 300,
-                                                ),
-                                              );
-                                            },
-                                          );
+                                          abrirTermosDeUso();
                                         },
                                     ),
                                   ],

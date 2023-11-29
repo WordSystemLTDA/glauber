@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/compartilhado/uteis.dart';
+import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
+import 'package:provadelaco/src/essencial/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
@@ -39,12 +40,15 @@ class _PaginaLoginState extends State<PaginaLogin> {
     if (mounted) {
       autenticacaoStore.listarInformacoesLogin(context, tipoLoginSocial, tokenNotificacao).then((resposta) {
         var (sucesso, usuario) = resposta;
+
         if (!sucesso) {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
               return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tipoLoginSocial);
             },
           ));
+        } else {
+          UsuarioServico.salvarUsuario(context, usuario!);
         }
       });
     }

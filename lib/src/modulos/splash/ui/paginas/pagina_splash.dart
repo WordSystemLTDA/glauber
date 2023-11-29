@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
@@ -52,14 +52,15 @@ class _PaginaSplashState extends State<PaginaSplash> {
     if (mounted) {
       final autenticacaoServico = context.read<AutenticacaoServico>();
       final firebaseMessagingService = context.read<FirebaseMessagingService>();
-      final usuarioProvider = context.read<UsuarioProvider>();
+      var usuario = await UsuarioServico.getUsuario(context);
+
       String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-      autenticacaoServico.verificar(usuarioProvider.usuario, tokenNotificacao).then((resposta) async {
+      autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
         var (sucesso, usuarioRetorno) = resposta;
 
         if (sucesso) {
-          usuarioProvider.setUsuario(usuarioRetorno);
+          UsuarioServico.salvarUsuario(context, usuarioRetorno!);
         }
 
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(

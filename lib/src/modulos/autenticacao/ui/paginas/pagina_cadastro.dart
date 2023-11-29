@@ -185,7 +185,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  const Text('HandiCap Cabeceira'),
+                  const Text('HandiCap Cabeça'),
                   const SizedBox(height: 5),
                   TextField(
                     readOnly: true,
@@ -243,7 +243,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     },
                   ),
                   const SizedBox(height: 10),
-                  const Text('HandiCap Piseiro'),
+                  const Text('HandiCap Pé'),
                   const SizedBox(height: 5),
                   TextField(
                     readOnly: true,

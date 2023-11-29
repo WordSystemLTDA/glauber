@@ -2,11 +2,15 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/formatters/rg_formatter.dart';
+import 'package:provadelaco/src/essencial/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
+import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/formulario_editar_usuario_modelo.dart';
+import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario_servico.dart';
 import 'package:provider/provider.dart';
 
@@ -38,12 +42,14 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   final TextEditingController bairroController = TextEditingController();
   final TextEditingController numeroController = TextEditingController();
   final TextEditingController complementoController = TextEditingController();
-  final TextEditingController cidadeController = TextEditingController();
+
+  TextEditingController cidadeController = TextEditingController();
+  SearchController pesquisaCidadeController = SearchController();
 
   String idHcCabeceira = '0';
   String idHcPiseiro = '0';
   String dataNascimentoNormal = '';
-  String cidade = '';
+  String idCidade = '';
 
   var dadosSexos = [
     {
@@ -86,25 +92,30 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
 
     setState(() {
       nomeController.text = usuario.nome!;
-      apelidoController.text = usuario.nome!;
+      apelidoController.text = usuario.apelido!;
       emailController.text = usuario.email!;
       cpfController.text = usuario.cpf!;
       rgController.text = usuario.rg!;
-      dataNascimentoController.text = usuario.dataNascimento!;
+      sexoController.text = usuario.sexo!;
+      dataNascimentoNormal = DateFormat('yyyy-MM-dd').format(DateTime.parse(usuario.dataNascimento!)).toString();
+      dataNascimentoController.text = DateFormat('dd/MM/yyyy').format(DateTime.parse(usuario.dataNascimento!)).toString();
       telefoneController.text = usuario.telefone!;
       celularController.text = usuario.celular!;
       senhaController.text = usuario.senha!;
+      civilController.text = usuario.civil!;
 
       cabeceiraController.text = usuario.hcCabeceira!;
       pezeiroController.text = usuario.hcPezeiro!;
-
       idHcCabeceira = usuario.idHcCabeceira!;
       idHcPiseiro = usuario.idHcPezeiro!;
 
+      cepController.text = usuario.cep!;
       enderecoController.text = usuario.endereco!;
       bairroController.text = usuario.bairro!;
       numeroController.text = usuario.numero!;
       complementoController.text = usuario.complemento!;
+      cidadeController.text = usuario.nomeCidade!;
+      idCidade = usuario.idCidade!;
     });
   }
 
@@ -113,6 +124,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
     var width = MediaQuery.of(context).size.width;
 
     var handiCapStore = context.read<HandiCapStore>();
+    var cidadeServico = context.read<CidadeServico>();
 
     return Consumer<UsuarioProvider>(builder: (context, usuario, chil) {
       return GestureDetector(
@@ -375,8 +387,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                         keyboardType: TextInputType.number,
                         controller: cabeceiraController,
                         decoration: const InputDecoration(
-                          hintText: 'Cabeceira',
-                          label: Text('Cabeceira'),
+                          hintText: 'Cabeça',
+                          label: Text('Cabeça'),
                         ),
                         onTap: () {
                           handiCapStore.listar();
@@ -433,8 +445,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                         keyboardType: TextInputType.number,
                         controller: pezeiroController,
                         decoration: const InputDecoration(
-                          hintText: 'Pezeiro',
-                          label: Text('Pezeiro'),
+                          hintText: 'Pé',
+                          label: Text('Pé'),
                         ),
                         onTap: () {
                           handiCapStore.listar();
@@ -496,6 +508,10 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: cepController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CepInputFormatter(),
+                  ],
                   decoration: const InputDecoration(
                     hintText: 'CEP',
                     label: Text('CEP'),
@@ -547,13 +563,64 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: TextField(
-                        readOnly: true,
-                        controller: cidadeController,
-                        decoration: const InputDecoration(
-                          hintText: 'Cidade',
-                          label: Text('Cidade'),
-                        ),
+                      child: SearchAnchor(
+                        viewBuilder: (suggestions) {
+                          return ListView.builder(
+                            itemCount: suggestions.length,
+                            padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                            itemBuilder: (context, index) {
+                              var item = suggestions.elementAt(index);
+
+                              return item;
+                            },
+                          );
+                        },
+                        isFullScreen: true,
+                        searchController: pesquisaCidadeController,
+                        builder: (BuildContext context, SearchController controller) {
+                          return TextField(
+                            onTap: () {
+                              pesquisaCidadeController.openView();
+                            },
+                            controller: cidadeController,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('Cidade'),
+                            ),
+                          );
+                        },
+                        suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                          final keyword = controller.value.text;
+
+                          List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
+
+                          Iterable<Widget> widgets = cidades!.map((cidade) {
+                            return GestureDetector(
+                              onTap: () {
+                                controller.closeView('');
+                                setState(() {
+                                  idCidade = cidade.id;
+                                  cidadeController.text = cidade.nome;
+                                });
+                                FocusScope.of(context).unfocus();
+                              },
+                              child: Card(
+                                elevation: 3.0,
+                                child: ListTile(
+                                  leading: const Icon(Icons.copy_all_outlined),
+                                  title: Text(cidade.nome),
+                                  subtitle: Text(
+                                    cidade.nomeUf,
+                                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+
+                          return widgets;
+                        },
                       ),
                     ),
                   ],
@@ -586,7 +653,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                           numero: numeroController.text,
                           bairro: bairroController.text,
                           complemento: complementoController.text,
-                          cidade: '1',
+                          cidade: idCidade,
                           hcCabeceira: idHcCabeceira,
                           hcPezeiro: idHcPiseiro,
                         ),
@@ -594,25 +661,62 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                           .then((resposta) {
                         var (sucesso, mensagem) = resposta;
 
+                        var usuarioNovo = UsuarioModelo(
+                          id: usuario.usuario!.id!,
+                          nome: nomeController.text,
+                          sexo: sexoController.text,
+                          dataNascimento: dataNascimentoNormal,
+                          cpf: cpfController.text,
+                          rg: rgController.text,
+                          email: emailController.text,
+                          senha: senhaController.text,
+                          telefone: telefoneController.text,
+                          celular: celularController.text,
+                          cep: cepController.text,
+                          endereco: enderecoController.text,
+                          numero: numeroController.text,
+                          bairro: bairroController.text,
+                          complemento: complementoController.text,
+                          idCidade: idCidade,
+                          nomeCidade: cidadeController.text,
+                          hcCabeceira: cabeceiraController.text,
+                          hcPezeiro: pezeiroController.text,
+                          idHcCabeceira: idHcCabeceira,
+                          idHcPezeiro: idHcPiseiro,
+                          token: usuario.usuario!.token,
+                          tipo: usuario.usuario!.tipo,
+                          primeiroAcesso: usuario.usuario!.primeiroAcesso,
+                          foto: usuario.usuario!.foto,
+                          civil: civilController.text,
+                          apelido: apelidoController.text,
+                          baixarApk: usuario.usuario!.baixarApk,
+                          linkAtualizacaoAndroid: usuario.usuario!.linkAtualizacaoAndroid,
+                          linkAtualizacaoIos: usuario.usuario!.linkAtualizacaoIos,
+                          versaoAppAndroid: usuario.usuario!.versaoAppAndroid,
+                          versaoAppIos: usuario.usuario!.versaoAppIos,
+                        );
+
                         if (sucesso) {
+                          var usuarioProvider = context.read<UsuarioProvider>();
+                          usuarioProvider.setUsuario(usuarioNovo);
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: const Text('Sucesso ao editar dados.'),
+                            backgroundColor: Colors.green,
                             action: SnackBarAction(
                               label: 'OK',
                               onPressed: () {},
                             ),
-                            backgroundColor: Colors.green,
                           ));
                         } else {
                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(mensagem),
+                            backgroundColor: Colors.red,
                             action: SnackBarAction(
                               label: 'OK',
                               onPressed: () {},
                             ),
-                            backgroundColor: Colors.red,
                           ));
                         }
                       });

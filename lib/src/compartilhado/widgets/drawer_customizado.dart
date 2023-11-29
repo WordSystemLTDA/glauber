@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/essencial/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/usuario_servico.dart';
@@ -15,6 +18,9 @@ class DrawerCustomizado extends StatefulWidget {
 }
 
 class _DrawerCustomizadoState extends State<DrawerCustomizado> {
+  String ultimaVersao = '';
+  String versaoInstalada = '';
+
   String nomeUsuario() {
     var usuario = context.read<UsuarioProvider>().usuario;
 
@@ -78,108 +84,145 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
     );
   }
 
+  void setarInformacoes() async {
+    var usuarioProvider = context.read<UsuarioProvider>();
+    var versao = await FuncoesGlobais.getVersaoInstalada();
+
+    var ultimaVersaoIos = usuarioProvider.usuario!.versaoAppIos;
+    var ultimaVersaoAndroid = usuarioProvider.usuario!.versaoAppAndroid;
+
+    setState(() {
+      versaoInstalada = versao;
+      ultimaVersao = Platform.isAndroid ? ultimaVersaoAndroid! : ultimaVersaoIos!;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setarInformacoes();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var usuario = context.read<UsuarioProvider>().usuario;
-
-    return Drawer(
-      width: 200,
-      child: ListView(
-        children: [
-          Center(
-            child: (usuario != null && (usuario.tipo == 'social' && usuario.foto != 'semfoto'))
-                ? CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    radius: 35,
-                    backgroundImage: Image.network(
-                      usuario.foto!,
-                    ).image,
-                  )
-                : CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    radius: 35,
-                    child: Text(nomeUsuario()),
+    return Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {
+      return Drawer(
+        width: 200,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  Center(
+                    child: (usuarioProvider.usuario != null && (usuarioProvider.usuario!.tipo == 'social' && usuarioProvider.usuario!.foto != 'semfoto'))
+                        ? CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 35,
+                            backgroundImage: Image.network(
+                              usuarioProvider.usuario!.foto!,
+                            ).image,
+                          )
+                        : CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 35,
+                            child: Text(nomeUsuario()),
+                          ),
                   ),
-          ),
-          if (usuario != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 10),
-              child: Text(
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                "#${usuario.id} - ${usuario.nome!}",
+                  if (usuarioProvider.usuario != null) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 10),
+                      child: Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        "#${usuarioProvider.usuario!.id} - ${usuarioProvider.usuario!.nome!}",
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 0),
+                      child: Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        usuarioProvider.usuario!.email!,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  Column(
+                    children: [
+                      ListTile(
+                        onTap: () {
+                          widget.aoMudarPagina(0);
+                        },
+                        leading: const Icon(Icons.home_outlined),
+                        title: const Text('Início'),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return const PaginaBuscar();
+                            },
+                          ));
+                        },
+                        leading: const Icon(Icons.search),
+                        title: const Text('Buscar'),
+                      ),
+                      if (usuarioProvider.usuario != null) ...[
+                        ListTile(
+                          onTap: () {
+                            widget.aoMudarPagina(1);
+                          },
+                          leading: const Icon(Icons.sell_outlined),
+                          title: const Text('Inscrições'),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            widget.aoMudarPagina(3);
+                          },
+                          leading: const Icon(Icons.person_outline),
+                          title: const Text('Perfil'),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            widget.aoMudarPagina(2);
+                          },
+                          leading: const Icon(Icons.format_list_numbered_outlined),
+                          title: const Text('Ordem de Entrada'),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            botaoSair();
+                          },
+                          leading: const Icon(Icons.logout, color: Colors.red),
+                          title: const Text(
+                            'Sair',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          // trailing: Icon(Icons),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 0),
-              child: Text(
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                usuario.email!,
-              ),
+            const Divider(),
+            Text(
+              "Ultima versão $ultimaVersao",
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
             ),
+            Text(
+              "Versão instalada $versaoInstalada",
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 30),
           ],
-          const SizedBox(height: 10),
-          const Divider(),
-          Column(
-            children: [
-              ListTile(
-                onTap: () {
-                  widget.aoMudarPagina(0);
-                },
-                leading: const Icon(Icons.home_outlined),
-                title: const Text('Início'),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const PaginaBuscar();
-                    },
-                  ));
-                },
-                leading: const Icon(Icons.search),
-                title: const Text('Buscar'),
-              ),
-              if (usuario != null) ...[
-                ListTile(
-                  onTap: () {
-                    widget.aoMudarPagina(1);
-                  },
-                  leading: const Icon(Icons.sell_outlined),
-                  title: const Text('Inscrições'),
-                ),
-                ListTile(
-                  onTap: () {
-                    widget.aoMudarPagina(3);
-                  },
-                  leading: const Icon(Icons.person_outline),
-                  title: const Text('Perfil'),
-                ),
-                ListTile(
-                  onTap: () {
-                    widget.aoMudarPagina(2);
-                  },
-                  leading: const Icon(Icons.format_list_numbered_outlined),
-                  title: const Text('Ordem de Entrada'),
-                ),
-                ListTile(
-                  onTap: () {
-                    botaoSair();
-                  },
-                  leading: const Icon(Icons.logout, color: Colors.red),
-                  title: const Text(
-                    'Sair',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  // trailing: Icon(Icons),
-                ),
-              ],
-            ],
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

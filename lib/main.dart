@@ -37,9 +37,13 @@ import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_se
 import 'package:provadelaco/src/modulos/ordem_de_entrada/data/servicos/ordermdeentrada_servico_impl.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
-import 'package:provadelaco/src/modulos/perfil/data/editar_usuario_servico_impl.dart';
+import 'package:provadelaco/src/modulos/perfil/data/servicos/cidade_servico_impl.dart';
+import 'package:provadelaco/src/modulos/perfil/data/servicos/editar_usuario_servico_impl.dart';
+import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario_servico.dart';
+import 'package:provadelaco/src/modulos/provas/data/servicos/denunciar_servico_impl.dart';
 import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provider/provider.dart';
@@ -66,11 +70,13 @@ void main() async {
       Provider<HomeServico>(create: (context) => HomeServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => HomeStore(context.read())),
       // Editar Usuario
+      Provider<CidadeServico>(create: (context) => CidadeServicoImpl(context.read())),
       Provider<EditarUsuarioServico>(create: (context) => EditarUsuarioServicoImpl(context.read())),
       // Buscar
       Provider<BuscarServico>(create: (context) => BuscarServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => BuscarStore(context.read())),
       // Provas
+      Provider<DenunciarServico>(create: (context) => DenunciarServicoImpl(context.read())),
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
       // Finalizar Compra
