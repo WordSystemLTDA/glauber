@@ -16,10 +16,10 @@ class HomeStore extends ValueNotifier<HomeEstado> {
 
   HomeStore(this._homeServico) : super(EstadoInicial());
 
-  void listar(BuildContext context) async {
+  void listar(BuildContext context, int categoria) async {
     value = Carregando();
 
-    var resposta = await _homeServico.listar();
+    var resposta = await _homeServico.listar(categoria);
 
     if (resposta.sucesso) {
       var versaoProvider = context.read<VersoesProvider>();
@@ -27,7 +27,7 @@ class HomeStore extends ValueNotifier<HomeEstado> {
 
       verificarAtualicao(context, resposta.versoes);
 
-      value = Carregado(eventos: resposta.eventos, propagandas: resposta.propagandas);
+      value = Carregado(eventos: resposta.eventos, propagandas: resposta.propagandas, categorias: resposta.categorias);
     } else {
       value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
     }

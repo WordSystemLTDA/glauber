@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/essencial/providers/versoes/versoes_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
@@ -26,7 +28,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Editar dados'),
       'ativo': true,
       'icone': const Icon(Icons.edit_outlined),
-      'funcao': (context) {
+      'funcao': (BuildContext context) {
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
             return const PaginaEditarUsuario();
@@ -78,7 +80,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Excluir Conta'),
       'icone': const Icon(Icons.delete_outline),
       'ativo': true,
-      'funcao': (context) async {
+      'funcao': (BuildContext context) async {
         showDialog<String>(
           context: context,
           builder: (BuildContext contextDialog) {
@@ -155,10 +157,10 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Sair', style: TextStyle(color: Colors.red)),
       'icone': const Icon(Icons.logout_outlined, color: Colors.red),
       'ativo': true,
-      'funcao': (context) {
+      'funcao': (BuildContext context) {
         showDialog<String>(
           context: context,
-          builder: (BuildContext context) {
+          builder: (BuildContext contextDialog) {
             return AlertDialog(
               title: const Text('Sair'),
               content: const SingleChildScrollView(
@@ -172,25 +174,25 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                 TextButton(
                   child: const Text('Cancelar'),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(contextDialog).pop();
                   },
                 ),
                 TextButton(
                   child: const Text('Sair'),
                   onPressed: () async {
-                    final autenticacaoServico = context.read<AutenticacaoServico>();
-                    final firebaseMessagingService = context.read<FirebaseMessagingService>();
-                    var usuarioProvider = context.read<UsuarioProvider>();
-                    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                      final autenticacaoServico = context.read<AutenticacaoServico>();
+                      final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                      final usuarioProvider = context.read<UsuarioProvider>();
+                      String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                    autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
-                      if (sucessoAoExcluirToken) {
-                        // UsuarioProvider.removerUsuario().then((sucessoAoSair) {
-                        //   if (sucessoAoSair) {
-                        //     Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                        //   }
-                        // });
-                      }
+                      autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
+                        if (sucessoAoExcluirToken) {
+                          UsuarioServico.sair(context).then((value) {
+                            Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                          });
+                        }
+                      });
                     });
                   },
                 ),
@@ -267,9 +269,12 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                             backgroundImage: Image.network(usuarioProvider.usuario!.foto!).image,
                           )
                         : CircleAvatar(
-                            backgroundColor: Colors.grey,
+                            backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
                             radius: 45,
-                            child: Text(nomeUsuario()),
+                            child: Text(
+                              nomeUsuario(),
+                              style: const TextStyle(fontSize: 22, color: Colors.white),
+                            ),
                           ),
                     if (usuarioProvider.usuario != null) ...[
                       Padding(
@@ -291,13 +296,13 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                           Text(
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            "HC Cabeça: ${usuarioProvider.usuario!.hcCabeceira}",
+                            "HC Cabeça: ${usuarioProvider.usuario!.hcCabeceira!.isEmpty ? 'Nenhum' : usuarioProvider.usuario!.hcCabeceira}",
                           ),
                           const SizedBox(width: 30),
                           Text(
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            "HC Pé: ${usuarioProvider.usuario!.hcPezeiro}",
+                            "HC Pé: ${usuarioProvider.usuario!.hcPezeiro!.isEmpty ? 'Nenhum' : usuarioProvider.usuario!.hcPezeiro}",
                           ),
                         ],
                       ),
@@ -317,6 +322,11 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                   onTap: () {
                     context.read<ThemeController>().onThemeSwitchEvent();
                   },
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 20,
+                    color: Color.fromARGB(255, 82, 82, 82),
+                  ),
                 );
               },
             ),
@@ -327,14 +337,14 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                 padding: const EdgeInsets.only(bottom: 40),
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: itemsAtivos.length,
-                separatorBuilder: (context, index) {
+                separatorBuilder: (contextLista, index) {
                   return const Divider(
                     indent: 0,
                     endIndent: 0,
                     height: 1,
                   );
                 },
-                itemBuilder: (context, index) {
+                itemBuilder: (contextLista, index) {
                   var item = itemsAtivos[index];
 
                   return ListTile(

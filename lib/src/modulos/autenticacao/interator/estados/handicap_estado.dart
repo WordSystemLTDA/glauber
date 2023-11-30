@@ -15,7 +15,7 @@ class HandiCapCarregando extends HandiCapEstado {
 }
 
 class HandiCapCarregado extends HandiCapEstado {
-  HandiCapCarregado({required List<HandiCapsModelos> handicaps}) : super(handicaps: handicaps);
+  HandiCapCarregado({required super.handicaps});
 }
 
 class HandiCapErro extends HandiCapEstado {

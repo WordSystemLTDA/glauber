@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/providers/versoes/versoes_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 class HomeModelo {
@@ -9,8 +10,15 @@ class HomeModelo {
   final List<EventoModelo> eventos;
   final List<EventoModelo> propagandas;
   final VersoesModelo versoes;
+  final List<CategoriaModelo> categorias;
 
-  HomeModelo({required this.sucesso, required this.eventos, required this.propagandas, required this.versoes});
+  HomeModelo({
+    required this.sucesso,
+    required this.eventos,
+    required this.propagandas,
+    required this.versoes,
+    required this.categorias,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -18,6 +26,7 @@ class HomeModelo {
       'eventos': eventos.map((x) => x.toMap()).toList(),
       'propagandas': propagandas.map((x) => x.toMap()).toList(),
       'versoes': versoes.toMap(),
+      'categorias': categorias.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -35,6 +44,11 @@ class HomeModelo {
         ),
       ),
       versoes: VersoesModelo.fromMap(map['versoes'] as Map<String, dynamic>),
+      categorias: List<CategoriaModelo>.from(
+        (map['categorias'] as List<dynamic>).map<CategoriaModelo>(
+          (x) => CategoriaModelo.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 

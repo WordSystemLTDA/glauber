@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/versoes/versoes_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/home_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
@@ -12,8 +13,8 @@ class HomeServicoImpl implements HomeServico {
   HomeServicoImpl(this.client);
 
   @override
-  Future<HomeModelo> listar() async {
-    var url = 'home/listar.php';
+  Future<HomeModelo> listar(int categoria) async {
+    var url = 'home/listar.php?categoria=$categoria';
 
     var response = await client.post(url: url, body: jsonEncode(''));
 
@@ -30,12 +31,16 @@ class HomeServicoImpl implements HomeServico {
       return EventoModelo.fromMap(elemento);
     }));
 
+    List<CategoriaModelo> categorias = List<CategoriaModelo>.from(jsonData['categorias'].map((elemento) {
+      return CategoriaModelo.fromMap(elemento);
+    }));
+
     VersoesModelo versoes = VersoesModelo.fromMap(jsonData['dadosVersoes']);
 
     if (response.statusCode == 200 && sucesso == true) {
-      return HomeModelo(sucesso: sucesso, eventos: eventos, propagandas: propagandas, versoes: versoes);
+      return HomeModelo(sucesso: sucesso, eventos: eventos, propagandas: propagandas, versoes: versoes, categorias: categorias);
     } else {
-      return HomeModelo(sucesso: sucesso, eventos: eventos, propagandas: propagandas, versoes: versoes);
+      return HomeModelo(sucesso: sucesso, eventos: eventos, propagandas: propagandas, versoes: versoes, categorias: categorias);
     }
   }
 }

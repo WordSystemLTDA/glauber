@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
+import 'package:provider/provider.dart';
 
 class CardOrdemDeEntrada extends StatefulWidget {
   final OrdemDeEntradaModelo item;
@@ -19,6 +21,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
   @override
   Widget build(BuildContext context) {
     var item = widget.item;
+    var usuarioProvider = context.read<UsuarioProvider>();
 
     return SizedBox(
       height: tamanhoCard,
@@ -27,7 +30,6 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            // widget.aoClicarNaProva(prova);
             showDialog(
               context: context,
               builder: (context) {
@@ -47,6 +49,8 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                           item.nomeCabeceira,
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
                         ),
+                        const SizedBox(height: 10),
+                        Text("Sua somatória: ${item.idCabeceira == '1' ? usuarioProvider.usuario!.hcCabeceira! : usuarioProvider.usuario!.hcPezeiro!}"),
                         const SizedBox(height: 20),
                         if (item.parceiros.isNotEmpty) ...[
                           const Divider(),

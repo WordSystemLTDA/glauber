@@ -28,6 +28,7 @@ Atualizações
 - (FEITO) Melhorar a modal de localização nas provas (ver se colocar latitude e longitude)
 - (FEITO) Fazer troca de tema
 - (FEITO) Arrumar modo escuro do app
+- (FEITO) Colocar "sua somatoria: 5" na ordem de entrada
 - Fazer categorias dos eventos na pagina Home
 - Fazer propagandas
 - Arrumar termos de uso (deixar dados dinâmicos)

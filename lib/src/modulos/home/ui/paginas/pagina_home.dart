@@ -15,7 +15,6 @@ class PaginaHome extends StatefulWidget {
 
 class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   int categoriasIndex = 0;
-  List<String> categorias = ['Todas', 'Provas de Laços', 'Outros', 'Outros', 'Outros'];
 
   late TabController _categoriaController;
 
@@ -30,6 +29,12 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     return ValueListenableBuilder<HomeEstado>(
       valueListenable: homeStore,
       builder: (context, state, _) {
+        _categoriaController = TabController(
+          initialIndex: 0,
+          length: state.categorias.length,
+          vsync: this,
+        );
+
         if (state is Carregando) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -39,7 +44,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
         if (state is Carregado) {
           return RefreshIndicator(
             onRefresh: () async {
-              homeStore.listar(context);
+              homeStore.listar(context, categoriasIndex);
             },
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(bottom: 30),
@@ -48,41 +53,51 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                 children: [
                   const SizedBox(height: 10),
                   // Carrosel de Eventos
-                  SizedBox(
-                    height: 220,
-                    child: CarouselSlider.builder(
-                      options: CarouselOptions(
-                        height: 220.0,
-                        autoPlay: true,
-                        aspectRatio: 2.0,
-                        pauseAutoPlayOnTouch: true,
-                        autoPlayInterval: const Duration(seconds: 10),
-                        enlargeCenterPage: true,
-                        enlargeStrategy: CenterPageEnlargeStrategy.height,
-                      ),
-                      itemCount: state.eventos.length,
-                      itemBuilder: (context, index, realIndex) {
-                        var item = state.eventos[index];
+                  if (state.eventos.isNotEmpty) ...[
+                    SizedBox(
+                      height: 220,
+                      child: CarouselSlider.builder(
+                        options: CarouselOptions(
+                          height: 220.0,
+                          autoPlay: true,
+                          aspectRatio: 2.0,
+                          pauseAutoPlayOnTouch: true,
+                          autoPlayInterval: const Duration(seconds: 10),
+                          enlargeCenterPage: true,
+                          enlargeStrategy: CenterPageEnlargeStrategy.height,
+                        ),
+                        itemCount: state.eventos.length,
+                        itemBuilder: (context, index, realIndex) {
+                          var item = state.eventos[index];
 
-                        return CardEventos(
-                          evento: item,
-                          aparecerInformacoes: true,
-                        );
-                      },
+                          return CardEventos(
+                            evento: item,
+                            aparecerInformacoes: true,
+                          );
+                        },
+                      ),
                     ),
-                  ),
+                  ],
                   // Categorias
                   Align(
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
                       height: 40,
                       child: TabBar(
+                        tabAlignment: TabAlignment.start,
                         dividerColor: Colors.transparent,
                         controller: _categoriaController,
                         isScrollable: true,
-                        tabs: categorias
+                        onTap: (categoria) {
+                          _categoriaController.animateTo(categoria);
+                          setState(() {
+                            categoriasIndex = int.parse(state.categorias[categoria].id);
+                          });
+                          homeStore.listar(context, int.parse(state.categorias[categoria].id));
+                        },
+                        tabs: state.categorias
                             .map((e) => Tab(
-                                  child: Text(e, style: const TextStyle(fontSize: 16)),
+                                  child: Text(e.nome, style: const TextStyle(fontSize: 16)),
                                 ))
                             .toList(),
                       ),
@@ -90,22 +105,24 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                   ),
                   // Carrosel de Propagandas
                   const SizedBox(height: 10),
-                  SizedBox(
-                    height: 100,
-                    child: CarouselSlider.builder(
-                      options: CarouselOptions(
-                        height: 100.0,
-                        autoPlay: true,
-                        aspectRatio: 2.0,
-                        pauseAutoPlayOnTouch: true,
-                        autoPlayInterval: const Duration(seconds: 20),
+                  if (state.propagandas.isNotEmpty) ...[
+                    SizedBox(
+                      height: 100,
+                      child: CarouselSlider.builder(
+                        options: CarouselOptions(
+                          height: 100.0,
+                          autoPlay: true,
+                          aspectRatio: 2.0,
+                          pauseAutoPlayOnTouch: true,
+                          autoPlayInterval: const Duration(seconds: 20),
+                        ),
+                        itemCount: state.propagandas.length,
+                        itemBuilder: (context, index, realIndex) {
+                          return const CardPropagandas();
+                        },
                       ),
-                      itemCount: 2,
-                      itemBuilder: (context, index, realIndex) {
-                        return const CardPropagandas();
-                      },
                     ),
-                  ),
+                  ],
                   const SizedBox(height: 10),
                   // Lista de eventos
                   Flexible(
@@ -141,13 +158,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       HomeStore homeStore = context.read<HomeStore>();
-      homeStore.listar(context);
+      homeStore.listar(context, categoriasIndex);
     });
-
-    _categoriaController = TabController(
-      initialIndex: 0,
-      length: categorias.length,
-      vsync: this,
-    );
   }
 }

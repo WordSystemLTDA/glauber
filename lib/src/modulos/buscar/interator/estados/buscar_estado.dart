@@ -15,7 +15,7 @@ class Carregando extends BuscarEstado {
 }
 
 class Carregado extends BuscarEstado {
-  Carregado({required List<EventoModelo> eventos}) : super(eventos: eventos);
+  Carregado({required super.eventos});
 }
 
 class ErroAoCarregar extends BuscarEstado {

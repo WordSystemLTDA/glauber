@@ -21,9 +21,12 @@ class ProvasCarregando extends ProvasEstado {
 }
 
 class ProvasCarregado extends ProvasEstado {
-  ProvasCarregado(
-      {required List<ProvaModelo> provas, required EventoModelo evento, required List<NomesCabeceiraModelo> nomesCabeceira, required List<PagamentosModelo> pagamentosDisponiveis})
-      : super(provas: provas, evento: evento, nomesCabeceira: nomesCabeceira, pagamentosDisponiveis: pagamentosDisponiveis);
+  ProvasCarregado({
+    required super.provas,
+    required EventoModelo super.evento,
+    required List<NomesCabeceiraModelo> super.nomesCabeceira,
+    required List<PagamentosModelo> super.pagamentosDisponiveis,
+  });
 }
 
 class ErroAoCarregar extends ProvasEstado {
