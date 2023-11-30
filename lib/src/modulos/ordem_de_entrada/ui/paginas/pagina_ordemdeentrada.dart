@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/orderdeentrada_estado.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/widgets/card_ordemdeentrada.dart';
@@ -52,7 +52,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
               },
               child: ListView.builder(
                 itemCount: state.ordemdeentradas.length,
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(15),
                 itemBuilder: (context, index) {
                   var item = state.ordemdeentradas[index];
 

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:provadelaco/src/essencial/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 
 class UsuarioProvider extends ChangeNotifier {
   UsuarioModelo? _usuario;

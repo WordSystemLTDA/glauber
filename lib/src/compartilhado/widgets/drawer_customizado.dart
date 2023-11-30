@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
-import 'package:provadelaco/src/essencial/usuario_servico.dart';
+import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
+import 'package:provadelaco/src/essencial/providers/versoes/versoes_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:provider/provider.dart';
@@ -85,15 +87,16 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
   }
 
   void setarInformacoes() async {
-    var usuarioProvider = context.read<UsuarioProvider>();
+    var versoesProvider = context.read<VersoesProvider>();
+
     var versao = await FuncoesGlobais.getVersaoInstalada();
 
-    var ultimaVersaoIos = usuarioProvider.usuario!.versaoAppIos;
-    var ultimaVersaoAndroid = usuarioProvider.usuario!.versaoAppAndroid;
+    var ultimaVersaoIos = versoesProvider.versoes!.versaoAppIos;
+    var ultimaVersaoAndroid = versoesProvider.versoes!.versaoAppAndroid;
 
     setState(() {
       versaoInstalada = versao;
-      ultimaVersao = Platform.isAndroid ? ultimaVersaoAndroid! : ultimaVersaoIos!;
+      ultimaVersao = Platform.isAndroid ? ultimaVersaoAndroid : ultimaVersaoIos;
     });
   }
 
@@ -150,6 +153,19 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                   const Divider(),
                   Column(
                     children: [
+                      ValueListenableBuilder<ThemeMode>(
+                        valueListenable: context.read<ThemeController>(),
+                        builder: (context, state, _) {
+                          return ListTile(
+                            leading: context.read<ThemeController>().value == ThemeMode.dark ? const Icon(Icons.nightlight_round) : const Icon(Icons.wb_sunny),
+                            dense: true,
+                            title: const Text('Mudar Tema'),
+                            onTap: () {
+                              context.read<ThemeController>().onThemeSwitchEvent();
+                            },
+                          );
+                        },
+                      ),
                       ListTile(
                         onTap: () {
                           widget.aoMudarPagina(0);

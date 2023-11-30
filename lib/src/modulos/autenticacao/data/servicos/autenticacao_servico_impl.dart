@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:google_sign_in/google_sign_in.dart';

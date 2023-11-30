@@ -1,11 +1,13 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
@@ -278,39 +280,81 @@ class _PaginaProvasState extends State<PaginaProvas> {
                     Text(evento!.nomeCidade),
                   ],
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: const ButtonStyle(
-                      shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                if (evento.longitude != '0' && evento.latitude != '0') ...[
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: const ButtonStyle(
+                        shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
                         ),
                       ),
-                    ),
-                    onPressed: () async {
-                      var latitude = -3.823216;
-                      var longitude = -38.481700;
+                      onPressed: () async {
+                        var latitude = evento.latitude;
+                        var longitude = evento.longitude;
 
-                      String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-                      if (await canLaunchUrl(Uri.parse(googleUrl))) {
-                        await launchUrl(Uri.parse(googleUrl));
-                      } else {
-                        throw 'Não foi possível abrir o mapa.';
-                      }
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Abrir Mapa'),
-                        SizedBox(width: 5),
-                        Icon(
-                          Icons.pin_drop_outlined,
-                          size: 20,
-                        ),
-                      ],
+                        String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+                        if (await canLaunchUrl(Uri.parse(googleUrl))) {
+                          await launchUrl(Uri.parse(googleUrl));
+                        } else {
+                          throw 'Não foi possível abrir o mapa.';
+                        }
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Abrir no Google Maps'),
+                          SizedBox(width: 5),
+                          Icon(Icons.map_sharp, size: 20),
+                        ],
+                      ),
                     ),
+                  ),
+                ]
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void abrirPagamentosDisponiveis(List<PagamentosModelo> pagamentosDisponiveis) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Pagamentos Disponíveis',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 10),
+                Flexible(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return const Divider();
+                    },
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: pagamentosDisponiveis.length,
+                    itemBuilder: (context, index) {
+                      var item = pagamentosDisponiveis[index];
+
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(item.nome),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -433,16 +477,27 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                 errorWidget: (context, url, error) => const Icon(Icons.error),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 300,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    end: const Alignment(0.0, -0.6),
-                                    begin: const Alignment(0.0, 0),
-                                    colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                            GestureDetector(
+                              onTap: () {
+                                final imageProvider = Image.network(state.evento!.foto).image;
+                                showImageViewer(
+                                  context,
+                                  imageProvider,
+                                  useSafeArea: true,
+                                  doubleTapZoomable: true,
+                                );
+                              },
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: 300,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      end: const Alignment(0.0, -0.6),
+                                      begin: const Alignment(0.0, 0),
+                                      colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -513,7 +568,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             ActionChip(
                               avatar: const Icon(Icons.payment_outlined),
                               label: const Text('Pagamentos'),
-                              onPressed: () {},
+                              onPressed: () {
+                                abrirPagamentosDisponiveis(state.pagamentosDisponiveis!);
+                              },
                             ),
                             const SizedBox(width: 10),
                             ActionChip(
@@ -575,132 +632,117 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         padding: EdgeInsets.only(
                           top: setarTamanho(height, state),
                         ),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(bottom: 10),
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 244, 244, 244),
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.pin_drop_outlined,
-                                          color: Color.fromARGB(255, 116, 116, 116),
-                                          size: 20,
-                                        ),
-                                        Text(
-                                          " ${state.evento!.nomeCidade}",
-                                          style: const TextStyle(
-                                            color: Color.fromARGB(255, 116, 116, 116),
-                                            fontSize: 15,
+                        child: Card(
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(bottom: 10),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                            ),
+                            margin: EdgeInsets.zero,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.pin_drop_outlined, size: 20),
+                                          Opacity(
+                                            opacity: 0.6,
+                                            child: Text(
+                                              " ${state.evento!.nomeCidade}",
+                                              style: const TextStyle(fontSize: 15),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.date_range,
-                                          color: Color.fromARGB(255, 116, 116, 116),
-                                          size: 20,
-                                        ),
-                                        Text(
-                                          " ${DateFormat('dd/MM/yyyy').format(DateTime.parse(state.evento!.dataEvento))}",
-                                          style: const TextStyle(
-                                            color: Color.fromARGB(255, 116, 116, 116),
-                                            fontSize: 15,
+                                        ],
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.date_range, size: 20),
+                                          Opacity(
+                                            opacity: 0.6,
+                                            child: Text(
+                                              " ${DateFormat('dd/MM/yyyy').format(DateTime.parse(state.evento!.dataEvento))}",
+                                              style: const TextStyle(fontSize: 15),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 15),
-                                const Text(
-                                  'Descrição do evento',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                if (state.evento!.descricao1.isNotEmpty) ...[
-                                  const SizedBox(height: 15),
-                                  Text(
-                                    state.evento!.descricao1,
-                                    style: const TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ],
-                                if (state.evento!.descricao2.isNotEmpty) ...[
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    state.evento!.descricao2,
-                                    style: const TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
-                                  ),
-                                ],
-                                if (state.evento!.descricao1.isEmpty && state.evento!.descricao2.isEmpty) ...[
                                   const SizedBox(height: 15),
                                   const Text(
-                                    '...',
-                                    style: TextStyle(color: Color.fromARGB(255, 59, 59, 59)),
+                                    'Descrição do evento',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  if (state.evento!.descricao1.isNotEmpty) ...[
+                                    const SizedBox(height: 15),
+                                    Text(state.evento!.descricao1),
+                                  ],
+                                  if (state.evento!.descricao2.isNotEmpty) ...[
+                                    const SizedBox(height: 10),
+                                    Text(state.evento!.descricao2),
+                                  ],
+                                  if (state.evento!.descricao1.isEmpty && state.evento!.descricao2.isEmpty) ...[
+                                    const SizedBox(height: 15),
+                                    const Text('...'),
+                                  ],
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: width / 2.4,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            abrirTermosDeUso();
+                                          },
+                                          style: const ButtonStyle(
+                                            elevation: MaterialStatePropertyAll(0),
+                                            side: MaterialStatePropertyAll<BorderSide>(
+                                              BorderSide(
+                                                width: 1,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Termos de Uso',
+                                            style: TextStyle(color: Colors.grey),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      SizedBox(
+                                        width: width / 2.4,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            abrirDenunciar(state);
+                                          },
+                                          style: const ButtonStyle(
+                                            elevation: MaterialStatePropertyAll(0),
+                                            side: MaterialStatePropertyAll<BorderSide>(
+                                              BorderSide(
+                                                width: 1,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Denunciar',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: width / 2.3,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          abrirTermosDeUso();
-                                        },
-                                        style: const ButtonStyle(
-                                          backgroundColor: MaterialStatePropertyAll(Colors.white),
-                                          side: MaterialStatePropertyAll<BorderSide>(
-                                            BorderSide(
-                                              width: 1,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Termos de Uso',
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    SizedBox(
-                                      width: width / 2.3,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          abrirDenunciar(state);
-                                        },
-                                        style: const ButtonStyle(
-                                          backgroundColor: MaterialStatePropertyAll(Colors.white),
-                                          side: MaterialStatePropertyAll<BorderSide>(
-                                            BorderSide(
-                                              width: 1,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'Denunciar',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),

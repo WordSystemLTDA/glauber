@@ -29,11 +29,6 @@ class UsuarioModelo {
   String? apelido;
   String? nomeCidade;
   String? idCidade;
-  String? versaoAppAndroid;
-  String? versaoAppIos;
-  String? baixarApk;
-  String? linkAtualizacaoAndroid;
-  String? linkAtualizacaoIos;
 
   UsuarioModelo({
     required this.id,
@@ -63,11 +58,6 @@ class UsuarioModelo {
     required this.apelido,
     required this.nomeCidade,
     required this.idCidade,
-    required this.versaoAppAndroid,
-    required this.versaoAppIos,
-    required this.baixarApk,
-    required this.linkAtualizacaoAndroid,
-    required this.linkAtualizacaoIos,
   });
 
   Map<String, dynamic> toMap() {
@@ -99,11 +89,6 @@ class UsuarioModelo {
       'apelido': apelido,
       'nomeCidade': nomeCidade,
       'idCidade': idCidade,
-      'versaoAppAndroid': versaoAppAndroid,
-      'versaoAppIos': versaoAppIos,
-      'baixarApk': baixarApk,
-      'linkAtualizacaoAndroid': linkAtualizacaoAndroid,
-      'linkAtualizacaoIos': linkAtualizacaoIos,
     };
   }
 
@@ -136,11 +121,6 @@ class UsuarioModelo {
       apelido: map['apelido'] != null ? map['apelido'] as String : null,
       nomeCidade: map['nomeCidade'] != null ? map['nomeCidade'] as String : null,
       idCidade: map['idCidade'] != null ? map['idCidade'] as String : null,
-      versaoAppAndroid: map['versaoAppAndroid'] != null ? map['versaoAppAndroid'] as String : null,
-      versaoAppIos: map['versaoAppIos'] != null ? map['versaoAppIos'] as String : null,
-      baixarApk: map['baixarApk'] != null ? map['baixarApk'] as String : null,
-      linkAtualizacaoAndroid: map['linkAtualizacaoAndroid'] != null ? map['linkAtualizacaoAndroid'] as String : null,
-      linkAtualizacaoIos: map['linkAtualizacaoIos'] != null ? map['linkAtualizacaoIos'] as String : null,
     );
   }
 

@@ -1,20 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:provadelaco/src/essencial/providers/versoes/versoes_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 class HomeModelo {
   final bool sucesso;
   final List<EventoModelo> eventos;
   final List<EventoModelo> propagandas;
+  final VersoesModelo versoes;
 
-  HomeModelo({required this.sucesso, required this.eventos, required this.propagandas});
+  HomeModelo({required this.sucesso, required this.eventos, required this.propagandas, required this.versoes});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'sucesso': sucesso,
       'eventos': eventos.map((x) => x.toMap()).toList(),
       'propagandas': propagandas.map((x) => x.toMap()).toList(),
+      'versoes': versoes.toMap(),
     };
   }
 
@@ -31,6 +34,7 @@ class HomeModelo {
           (x) => EventoModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      versoes: VersoesModelo.fromMap(map['versoes'] as Map<String, dynamic>),
     );
   }
 

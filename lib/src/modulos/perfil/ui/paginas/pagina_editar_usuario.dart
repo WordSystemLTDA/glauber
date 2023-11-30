@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/formatters/rg_formatter.dart';
-import 'package:provadelaco/src/essencial/usuario_modelo.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
@@ -97,8 +98,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       cpfController.text = usuario.cpf!;
       rgController.text = usuario.rg!;
       sexoController.text = usuario.sexo!;
-      dataNascimentoNormal = DateFormat('yyyy-MM-dd').format(DateTime.parse(usuario.dataNascimento!)).toString();
-      dataNascimentoController.text = DateFormat('dd/MM/yyyy').format(DateTime.parse(usuario.dataNascimento!)).toString();
+      // dataNascimentoNormal = DateFormat('yyyy-MM-dd').format(DateTime.parse(usuario.dataNascimento!)).toString();
+      // dataNascimentoController.text = DateFormat('dd/MM/yyyy').format(DateTime.parse(usuario.dataNascimento!)).toString();
       telefoneController.text = usuario.telefone!;
       celularController.text = usuario.celular!;
       senhaController.text = usuario.senha!;
@@ -132,21 +133,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: Container(
-              decoration: const BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  offset: Offset(0, 0),
-                  blurRadius: 10.0,
-                )
-              ]),
-              child: AppBar(
-                elevation: 0.0,
-                title: const Text("Editar Dados"),
-              ),
-            ),
+          appBar: const AppBarSombra(
+            titulo: Text("Editar Dados"),
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
@@ -689,11 +677,6 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                           foto: usuario.usuario!.foto,
                           civil: civilController.text,
                           apelido: apelidoController.text,
-                          baixarApk: usuario.usuario!.baixarApk,
-                          linkAtualizacaoAndroid: usuario.usuario!.linkAtualizacaoAndroid,
-                          linkAtualizacaoIos: usuario.usuario!.linkAtualizacaoIos,
-                          versaoAppAndroid: usuario.usuario!.versaoAppAndroid,
-                          versaoAppIos: usuario.usuario!.versaoAppIos,
                         );
 
                         if (sucesso) {

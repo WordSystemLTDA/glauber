@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/drawer_customizado.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
@@ -135,21 +136,8 @@ class _PaginaInicioState extends State<PaginaInicio> {
           },
         ),
         endDrawerEnableOpenDragGesture: false,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Container(
-            decoration: const BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0, 0),
-                blurRadius: 10.0,
-              )
-            ]),
-            child: AppBar(
-              elevation: 0.0,
-              title: const Text("LOGO"),
-            ),
-          ),
+        appBar: const AppBarSombra(
+          titulo: Text("LOGO"),
         ),
         body: PageView(
           controller: pageController,

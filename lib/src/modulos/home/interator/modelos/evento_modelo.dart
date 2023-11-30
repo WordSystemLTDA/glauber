@@ -16,6 +16,8 @@ class EventoModelo {
   final String numero;
   final String bairro;
   final String complemento;
+  final String longitude;
+  final String latitude;
   final String nomeCidade;
   final String nomeEmpresa;
   final String liberacaoDeCompra;
@@ -35,6 +37,8 @@ class EventoModelo {
     required this.numero,
     required this.bairro,
     required this.complemento,
+    required this.longitude,
+    required this.latitude,
     required this.nomeCidade,
     required this.nomeEmpresa,
     required this.liberacaoDeCompra,
@@ -50,12 +54,14 @@ class EventoModelo {
       'horaTermino': horaTermino,
       'foto': foto,
       'cep': cep,
+      'endereco': endereco,
       'descricao1': descricao1,
       'descricao2': descricao2,
-      'endereco': endereco,
       'numero': numero,
       'bairro': bairro,
       'complemento': complemento,
+      'longitude': longitude,
+      'latitude': latitude,
       'nomeCidade': nomeCidade,
       'nomeEmpresa': nomeEmpresa,
       'liberacaoDeCompra': liberacaoDeCompra,
@@ -71,13 +77,15 @@ class EventoModelo {
       horaInicio: map['horaInicio'] as String,
       horaTermino: map['horaTermino'] as String,
       foto: map['foto'] as String,
-      descricao1: map['descricao1'] as String,
-      descricao2: map['descricao2'] as String,
       cep: map['cep'] as String,
       endereco: map['endereco'] as String,
+      descricao1: map['descricao1'] as String,
+      descricao2: map['descricao2'] as String,
       numero: map['numero'] as String,
       bairro: map['bairro'] as String,
       complemento: map['complemento'] as String,
+      longitude: map['longitude'] as String,
+      latitude: map['latitude'] as String,
       nomeCidade: map['nomeCidade'] as String,
       nomeEmpresa: map['nomeEmpresa'] as String,
       liberacaoDeCompra: map['liberacaoDeCompra'] as String,

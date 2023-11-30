@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
@@ -9,15 +10,23 @@ class ProvaRetornoModelo {
   final bool sucesso;
   final List<ProvaModelo> provas;
   final List<NomesCabeceiraModelo> nomesCabeceira;
+  final List<PagamentosModelo> pagamentoDisponiveis;
   final EventoModelo evento;
 
-  ProvaRetornoModelo({required this.provas, required this.nomesCabeceira, required this.evento, required this.sucesso});
+  ProvaRetornoModelo({
+    required this.sucesso,
+    required this.provas,
+    required this.nomesCabeceira,
+    required this.pagamentoDisponiveis,
+    required this.evento,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'sucesso': sucesso,
       'provas': provas.map((x) => x.toMap()).toList(),
       'nomesCabeceira': nomesCabeceira.map((x) => x.toMap()).toList(),
+      'pagamentoDisponiveis': pagamentoDisponiveis.map((x) => x.toMap()).toList(),
       'evento': evento.toMap(),
     };
   }
@@ -33,6 +42,11 @@ class ProvaRetornoModelo {
       nomesCabeceira: List<NomesCabeceiraModelo>.from(
         (map['nomesCabeceira'] as List<dynamic>).map<NomesCabeceiraModelo>(
           (x) => NomesCabeceiraModelo.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      pagamentoDisponiveis: List<PagamentosModelo>.from(
+        (map['pagamentoDisponiveis'] as List<dynamic>).map<PagamentosModelo>(
+          (x) => PagamentosModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
       evento: EventoModelo.fromMap(map['evento'] as Map<String, dynamic>),

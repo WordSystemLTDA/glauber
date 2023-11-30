@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_retorno_modelo.dart';
@@ -34,8 +35,12 @@ class ProvaServicoImpl implements ProvaServico {
       return NomesCabeceiraModelo.fromMap(elemento);
     }));
 
+    List<PagamentosModelo> pagamentoDisponiveis = List<PagamentosModelo>.from(jsonData['pagamentoDisponiveis'].map((elemento) {
+      return PagamentosModelo.fromMap(elemento);
+    }));
+
     if (response.statusCode == 200 && sucesso == true) {
-      return ProvaRetornoModelo(sucesso: sucesso, provas: provas, evento: evento, nomesCabeceira: nomesCabeceira);
+      return ProvaRetornoModelo(sucesso: sucesso, provas: provas, evento: evento, pagamentoDisponiveis: pagamentoDisponiveis, nomesCabeceira: nomesCabeceira);
     } else {
       return Future.error('');
     }

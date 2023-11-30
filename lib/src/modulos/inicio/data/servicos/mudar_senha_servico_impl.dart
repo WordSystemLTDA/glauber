@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 
 class MudarSenhaServicoImpl implements MudarSenhaServico {

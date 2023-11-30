@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';

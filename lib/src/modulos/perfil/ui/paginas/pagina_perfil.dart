@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/versoes/versoes_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +18,9 @@ class PaginaPerfil extends StatefulWidget {
 }
 
 class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClientMixin {
+  String ultimaVersao = '';
+  String versaoInstalada = '';
+
   List<dynamic> itemsPerfil = [
     {
       'titulo': const Text('Editar dados'),
@@ -210,6 +218,26 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     }
   }
 
+  void setarInformacoes() async {
+    var versoesProvider = context.read<VersoesProvider>();
+
+    var versao = await FuncoesGlobais.getVersaoInstalada();
+
+    var ultimaVersaoIos = versoesProvider.versoes!.versaoAppIos;
+    var ultimaVersaoAndroid = versoesProvider.versoes!.versaoAppAndroid;
+
+    setState(() {
+      versaoInstalada = versao;
+      ultimaVersao = Platform.isAndroid ? ultimaVersaoAndroid : ultimaVersaoIos;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setarInformacoes();
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -280,6 +308,19 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
             ),
             const SizedBox(height: 30),
             const Divider(height: 1),
+            ValueListenableBuilder<ThemeMode>(
+              valueListenable: context.read<ThemeController>(),
+              builder: (context, state, _) {
+                return ListTile(
+                  leading: context.read<ThemeController>().value == ThemeMode.dark ? const Icon(Icons.nightlight_round) : const Icon(Icons.wb_sunny),
+                  title: const Text('Mudar Tema'),
+                  onTap: () {
+                    context.read<ThemeController>().onThemeSwitchEvent();
+                  },
+                );
+              },
+            ),
+            const Divider(height: 1),
             Flexible(
               child: ListView.separated(
                 shrinkWrap: true,
@@ -309,6 +350,17 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                 },
               ),
             ),
+            Text(
+              "Ultima versão $ultimaVersao",
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
+            ),
+            Text(
+              "Versão instalada $versaoInstalada",
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 30),
           ],
         ),
       );

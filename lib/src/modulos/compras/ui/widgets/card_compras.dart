@@ -33,8 +33,6 @@ class _CardComprasState extends State<CardCompras> {
               builder: (context) {
                 return Dialog(
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                  backgroundColor: Colors.white,
-                  shadowColor: Colors.white,
                   surfaceTintColor: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),

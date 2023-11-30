@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
@@ -82,23 +83,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         valueListenable: autenticacaoStore,
         builder: (context, state, _) {
           return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(kToolbarHeight),
-              child: Container(
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 0),
-                      blurRadius: 10.0,
-                    )
-                  ],
-                ),
-                child: AppBar(
-                  elevation: 0.0,
-                  title: const Text("Cadastrar-se"),
-                ),
-              ),
+            appBar: const AppBarSombra(
+              titulo: Text("Cadastre-se"),
             ),
             body: Padding(
               padding: const EdgeInsets.all(30),

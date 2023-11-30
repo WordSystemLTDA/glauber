@@ -147,6 +147,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
               QrImageView(
                 data: dados.codigoPix!,
                 size: 250,
+                backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.transparent : Colors.white,
               ),
               SizedBox(
                 width: 220,
@@ -183,7 +184,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     text: 'O pagamento deve ser realizado em até',
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white),
                     children: <TextSpan>[
                       TextSpan(text: " ${dados.tempoCancel} minutos", style: const TextStyle(fontWeight: FontWeight.bold)),
                       const TextSpan(text: '. Ápos isso, o pedido será'),

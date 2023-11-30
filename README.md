@@ -22,12 +22,14 @@ Atualizações
 - (FEITO) Fazer com que aparece um texto acima de cada textfield na pagina de editar dados
 - (FEITO) Fazer botões Termos de Uso e Denunciar nas provas
 - (FEITO) Aparecer número de versões no drawer navigator
-- Deixar a Ultima versão vir do banco de dados
-- Fazer modal de pagamentos
-- Melhorar a modal de localização nas provas (ver se colocar latitude e longitude)
+- (FEITA) Deixar a Ultima versão vir do banco de dados
+- (FEITO) Fazer modal de pagamentos
+- (FEITO) Fazer quando clicar na foto do evento abrir para melhor visualização
+- (FEITO) Melhorar a modal de localização nas provas (ver se colocar latitude e longitude)
+- (FEITO) Fazer troca de tema
+- (FEITO) Arrumar modo escuro do app
 - Fazer categorias dos eventos na pagina Home
 - Fazer propagandas
-- Arrumar modo escuro do app
 - Arrumar termos de uso (deixar dados dinâmicos)
 
 Ideias

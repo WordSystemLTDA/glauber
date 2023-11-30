@@ -59,8 +59,6 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-      backgroundColor: Colors.white,
-      shadowColor: Colors.white,
       surfaceTintColor: Colors.white,
       child: StatefulBuilder(
         builder: (context, setStateDialog) {
@@ -94,8 +92,6 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
-                        backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
-                        foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
@@ -117,8 +113,8 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
               const SizedBox(height: 50),
               QrImageView(
                 data: item.codigoPIX,
-                size: 220.0,
-                gapless: false,
+                size: 250.0,
+                backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.transparent : Colors.white,
               ),
               const SizedBox(height: 15),
               Row(
@@ -185,8 +181,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
-                          backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 219, 219, 219)),
-                          foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
+                          foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.onBackground),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),

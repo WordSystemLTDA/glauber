@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/estados/compras_estado.dart';
 import 'package:provadelaco/src/modulos/compras/interator/stores/compras_store.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_compras.dart';

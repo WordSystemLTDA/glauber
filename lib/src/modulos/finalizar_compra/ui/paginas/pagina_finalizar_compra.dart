@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
+import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
-import 'package:provadelaco/src/essencial/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
@@ -91,21 +92,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     var listarInformacoesStore = context.read<ListarInformacoesStore>();
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Container(
-          decoration: const BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0, 0),
-              blurRadius: 10.0,
-            )
-          ]),
-          child: AppBar(
-            elevation: 0.0,
-            title: const Text("Finalizar Compra"),
-          ),
-        ),
+      appBar: const AppBarSombra(
+        titulo: Text("Finalizar Compra"),
       ),
       body: ValueListenableBuilder<ListarInformacoesEstado>(
         valueListenable: listarInformacoesStore,
@@ -127,50 +115,58 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                     children: [
                       const SizedBox(width: double.infinity, height: 20),
                       const Text(
-                        'Método de pagamento',
+                        'Métodos de pagamento',
                         style: TextStyle(fontSize: 16),
                       ),
                       const SizedBox(width: double.infinity, height: 10),
-                      SizedBox(
-                        width: width,
-                        child: SegmentedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return const Color.fromARGB(255, 247, 24, 8);
-                                }
-                                return Colors.white;
-                              },
-                            ),
-                            foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return Colors.white;
-                                }
-                                return Colors.black;
-                              },
-                            ),
-                          ),
-                          segments: [
-                            for (var i = 0; i < state.dados.pagamentos.length; i++)
-                              ButtonSegment(
-                                value: state.dados.pagamentos[i].id,
-                                label: Text(
-                                  state.dados.pagamentos[i].nome,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                          ],
-                          selected: {metodoPagamento},
-                          showSelectedIcon: false,
-                          onSelectionChanged: (pagamento) {
-                            setState(() {
-                              metodoPagamento = pagamento.first;
-                            });
-                          },
+                      if (state.dados.pagamentos.isEmpty) ...[
+                        SizedBox(
+                          width: width,
+                          child: const Center(child: Text('Nenhum pagamento está diponivel.')),
                         ),
-                      )
+                      ],
+                      if (state.dados.pagamentos.isNotEmpty) ...[
+                        SizedBox(
+                          width: width,
+                          child: SegmentedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.selected)) {
+                                    return const Color.fromARGB(222, 247, 24, 8);
+                                  }
+                                  return Colors.transparent;
+                                },
+                              ),
+                              foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.selected)) {
+                                    return Colors.white;
+                                  }
+                                  return Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
+                                },
+                              ),
+                            ),
+                            segments: [
+                              for (var i = 0; i < state.dados.pagamentos.length; i++)
+                                ButtonSegment(
+                                  value: state.dados.pagamentos[i].id,
+                                  label: Text(
+                                    state.dados.pagamentos[i].nome,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                            ],
+                            selected: {metodoPagamento},
+                            showSelectedIcon: false,
+                            onSelectionChanged: (pagamento) {
+                              setState(() {
+                                metodoPagamento = pagamento.first;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   Column(
