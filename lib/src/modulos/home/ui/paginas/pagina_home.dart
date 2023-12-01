@@ -19,6 +19,38 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
   late TabController _categoriaController;
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      HomeStore homeStore = context.read<HomeStore>();
+      homeStore.listar(context, categoriasIndex);
+
+      homeStore.addListener(() {
+        HomeEstado state = homeStore.value;
+
+        if (state is Carregado) {
+          _categoriaController = TabController(
+            initialIndex: 0,
+            length: state.categorias.length,
+            vsync: this,
+          );
+
+          print(_categoriaController.index);
+
+          _categoriaController.addListener(() {
+            _categoriaController.animateTo((_categoriaController.index + 1) % 2);
+            setState(() {
+              categoriasIndex = int.parse(state.categorias[_categoriaController.index].id);
+            });
+            homeStore.listar(context, int.parse(state.categorias[_categoriaController.index].id));
+          });
+        }
+      });
+    });
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override
@@ -29,12 +61,6 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     return ValueListenableBuilder<HomeEstado>(
       valueListenable: homeStore,
       builder: (context, state, _) {
-        _categoriaController = TabController(
-          initialIndex: 0,
-          length: state.categorias.length,
-          vsync: this,
-        );
-
         if (state is Carregando) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -88,13 +114,6 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         dividerColor: Colors.transparent,
                         controller: _categoriaController,
                         isScrollable: true,
-                        onTap: (categoria) {
-                          _categoriaController.animateTo(categoria);
-                          setState(() {
-                            categoriasIndex = int.parse(state.categorias[categoria].id);
-                          });
-                          homeStore.listar(context, int.parse(state.categorias[categoria].id));
-                        },
                         tabs: state.categorias
                             .map((e) => Tab(
                                   child: Text(e.nome, style: const TextStyle(fontSize: 16)),
@@ -150,15 +169,5 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
         return Container();
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      HomeStore homeStore = context.read<HomeStore>();
-      homeStore.listar(context, categoriasIndex);
-    });
   }
 }
