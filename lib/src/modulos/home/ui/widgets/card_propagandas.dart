@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/propaganda_modelo.dart';
+import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
 
 class CardPropagandas extends StatefulWidget {
-  const CardPropagandas({super.key});
+  final PropagandaModelo propaganda;
+  const CardPropagandas({super.key, required this.propaganda});
 
   @override
   State<CardPropagandas> createState() => _CardPropagandasState();
@@ -11,21 +14,28 @@ class CardPropagandas extends StatefulWidget {
 class _CardPropagandasState extends State<CardPropagandas> {
   @override
   Widget build(BuildContext context) {
+    var propaganda = widget.propaganda;
+
     return SizedBox(
-      height: 100,
+      height: 110,
       child: Card(
         clipBehavior: Clip.hardEdge,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
             // Navigator.pushNamed(context, '/provas');
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return PaginaPropaganda(propaganda: propaganda);
+              },
+            ));
           },
           child: Stack(
             children: [
               CachedNetworkImage(
-                imageUrl: 'https://lh3.googleusercontent.com/p/AF1QipOo4kxjmXxQ0HW2TxQ177AFo3MwbxabQAMptjdu=w1080-h608-p-no-v0',
+                imageUrl: propaganda.foto,
                 width: double.infinity,
-                height: 100,
+                height: 110,
                 fit: BoxFit.cover,
                 progressIndicatorBuilder: (context, url, downloadProgress) => Center(
                   child: SizedBox(
@@ -36,39 +46,6 @@ class _CardPropagandasState extends State<CardPropagandas> {
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
-              // Align(
-              //   alignment: Alignment.bottomCenter,
-              //   child: Container(
-              //     height: 100,
-              //     width: double.infinity,
-              //     decoration: BoxDecoration(
-              //       gradient: LinearGradient(
-              //         end: const Alignment(0.0, -0.6),
-              //         begin: const Alignment(0.0, 0),
-              //         colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // const Padding(
-              //   padding: EdgeInsets.only(left: 10),
-              //   child: Align(
-              //     alignment: Alignment.centerLeft,
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.end,
-              //       children: [
-              //         Text(
-              //           "Propaganda",
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 18,
-              //           ),
-              //         ),
-              //         SizedBox(height: 5),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

@@ -65,6 +65,9 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                 var itemParceiro = item.parceiros[index];
 
                                 return ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  minVerticalPadding: 0,
+                                  // visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                                   title: Text(itemParceiro.nomeCliente),
                                   subtitle: Text("Inscrição: ${itemParceiro.numeroDaInscricao}"),
                                   trailing: Text(

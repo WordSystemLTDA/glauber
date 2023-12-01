@@ -1,17 +1,23 @@
 import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-class VersoesModelo {
+class ConfigModelo {
   String versaoAppAndroid;
   String versaoAppIos;
   String linkAtualizacaoAndroid;
   String linkAtualizacaoIos;
+  String nomeApp;
+  String anoApp;
+  String logoApp;
 
-  VersoesModelo({
+  ConfigModelo({
     required this.versaoAppAndroid,
     required this.versaoAppIos,
     required this.linkAtualizacaoAndroid,
     required this.linkAtualizacaoIos,
+    required this.nomeApp,
+    required this.anoApp,
+    required this.logoApp,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,19 +26,25 @@ class VersoesModelo {
       'versaoAppIos': versaoAppIos,
       'linkAtualizacaoAndroid': linkAtualizacaoAndroid,
       'linkAtualizacaoIos': linkAtualizacaoIos,
+      'nomeApp': nomeApp,
+      'anoApp': anoApp,
+      'logoApp': logoApp,
     };
   }
 
-  factory VersoesModelo.fromMap(Map<String, dynamic> map) {
-    return VersoesModelo(
+  factory ConfigModelo.fromMap(Map<String, dynamic> map) {
+    return ConfigModelo(
       versaoAppAndroid: map['versaoAppAndroid'] as String,
       versaoAppIos: map['versaoAppIos'] as String,
       linkAtualizacaoAndroid: map['linkAtualizacaoAndroid'] as String,
       linkAtualizacaoIos: map['linkAtualizacaoIos'] as String,
+      nomeApp: map['nomeApp'] as String,
+      anoApp: map['anoApp'] as String,
+      logoApp: map['logoApp'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory VersoesModelo.fromJson(String source) => VersoesModelo.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ConfigModelo.fromJson(String source) => ConfigModelo.fromMap(json.decode(source) as Map<String, dynamic>);
 }

@@ -27,10 +27,6 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
     String mensagem = jsonData['mensagem'];
     DadosRetornoCompraModelo dadosRetorno = DadosRetornoCompraModelo.fromMap(jsonData['dados']);
 
-    if (response.statusCode == 200 && sucesso == true) {
-      return RetornoCompraModelo(sucesso: sucesso, mensagem: mensagem, dados: dadosRetorno);
-    } else {
-      return RetornoCompraModelo(sucesso: sucesso, mensagem: mensagem, dados: dadosRetorno);
-    }
+    return RetornoCompraModelo(sucesso: sucesso, mensagem: mensagem, dados: dadosRetorno);
   }
 }

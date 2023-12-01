@@ -8,7 +8,7 @@ import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/network/dio_cliente.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/essencial/providers/versoes/versoes_provider.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/handicap_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
@@ -60,7 +60,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ThemeController()),
       Provider<IHttpClient>(create: (context) => DioClient()),
       ChangeNotifierProvider(create: (context) => UsuarioProvider()),
-      ChangeNotifierProvider(create: (context) => VersoesProvider()),
+      ChangeNotifierProvider(create: (context) => ConfigProvider()),
       // Inicio
       Provider<MudarSenhaServico>(create: (context) => MudarSenhaServicoImpl(context.read())),
       // Autenticação

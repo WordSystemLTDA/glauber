@@ -16,7 +16,7 @@ class PaginaHome extends StatefulWidget {
 class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   int categoriasIndex = 0;
 
-  late TabController _categoriaController;
+  TabController? _categoriaController;
 
   @override
   void initState() {
@@ -30,24 +30,28 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
         HomeEstado state = homeStore.value;
 
         if (state is Carregado) {
-          _categoriaController = TabController(
-            initialIndex: 0,
-            length: state.categorias.length,
-            vsync: this,
-          );
+          if (mounted) {
+            _categoriaController = TabController(
+              initialIndex: 0,
+              length: state.categorias.length,
+              vsync: this,
+            );
+          }
 
-          print(_categoriaController.index);
-
-          _categoriaController.addListener(() {
-            _categoriaController.animateTo((_categoriaController.index + 1) % 2);
-            setState(() {
-              categoriasIndex = int.parse(state.categorias[_categoriaController.index].id);
-            });
-            homeStore.listar(context, int.parse(state.categorias[_categoriaController.index].id));
-          });
+          if (_categoriaController != null) {
+            _categoriaController!.animateTo(categoriasIndex);
+          }
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    if (_categoriaController != null) {
+      _categoriaController!.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -79,7 +83,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                 children: [
                   const SizedBox(height: 10),
                   // Carrosel de Eventos
-                  if (state.eventos.isNotEmpty) ...[
+                  if (state.eventosTopo.isNotEmpty) ...[
                     SizedBox(
                       height: 220,
                       child: CarouselSlider.builder(
@@ -92,9 +96,9 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                           enlargeCenterPage: true,
                           enlargeStrategy: CenterPageEnlargeStrategy.height,
                         ),
-                        itemCount: state.eventos.length,
+                        itemCount: state.eventosTopo.length,
                         itemBuilder: (context, index, realIndex) {
-                          var item = state.eventos[index];
+                          var item = state.eventosTopo[index];
 
                           return CardEventos(
                             evento: item,
@@ -105,31 +109,45 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                     ),
                   ],
                   // Categorias
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      height: 40,
-                      child: TabBar(
-                        tabAlignment: TabAlignment.start,
-                        dividerColor: Colors.transparent,
-                        controller: _categoriaController,
-                        isScrollable: true,
-                        tabs: state.categorias
-                            .map((e) => Tab(
-                                  child: Text(e.nome, style: const TextStyle(fontSize: 16)),
-                                ))
-                            .toList(),
+                  if (_categoriaController != null) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        height: 40,
+                        child: TabBar(
+                          tabAlignment: TabAlignment.start,
+                          dividerColor: Colors.transparent,
+                          controller: _categoriaController,
+                          isScrollable: true,
+                          onTap: (categoria) async {
+                            if (categoriasIndex == categoria) {
+                              return;
+                            }
+
+                            setState(() {
+                              categoriasIndex = categoria;
+                            });
+
+                            homeStore.listar(context, int.parse(state.categorias[categoria].id));
+                          },
+                          tabs: state.categorias
+                              .map((e) => Tab(
+                                    child: Text(e.nome, style: const TextStyle(fontSize: 16)),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
+
                   // Carrosel de Propagandas
                   const SizedBox(height: 10),
                   if (state.propagandas.isNotEmpty) ...[
                     SizedBox(
-                      height: 100,
+                      height: 110,
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
-                          height: 100.0,
+                          height: 110.0,
                           autoPlay: true,
                           aspectRatio: 2.0,
                           pauseAutoPlayOnTouch: true,
@@ -137,13 +155,14 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         ),
                         itemCount: state.propagandas.length,
                         itemBuilder: (context, index, realIndex) {
-                          return const CardPropagandas();
+                          var item = state.propagandas[index];
+
+                          return CardPropagandas(propaganda: item);
                         },
                       ),
                     ),
                   ],
                   const SizedBox(height: 10),
-                  // Lista de eventos
                   Flexible(
                     child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),

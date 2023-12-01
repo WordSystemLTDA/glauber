@@ -48,6 +48,18 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
               },
             ));
           }
+        } else if (state is ErroAoTentarComprar) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.erro.toString()),
+              backgroundColor: Colors.red,
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {},
+              ),
+            ));
+          }
         }
       });
     });

@@ -20,7 +20,10 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
       if (mounted) {
         var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
         var usuarioProvider = context.read<UsuarioProvider>();
-        ordemDeEntradaStore.listar(usuarioProvider.usuario);
+
+        if (usuarioProvider.usuario != null) {
+          ordemDeEntradaStore.listar(usuarioProvider.usuario);
+        }
       }
     });
   }
@@ -34,6 +37,10 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
     var ordemDeEntradaStore = context.read<OrdemDeEntradaStore>();
     var usuarioProvider = context.read<UsuarioProvider>();
     var height = MediaQuery.of(context).size.height;
+
+    if (usuarioProvider.usuario == null) {
+      return const Center(child: Text('Você precisa estar logado.'));
+    }
 
     return Scaffold(
       body: ValueListenableBuilder<OrdemDeEntradaEstado>(

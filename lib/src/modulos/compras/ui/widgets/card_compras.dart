@@ -238,18 +238,6 @@ class _CardComprasState extends State<CardCompras> {
                         ),
                         IconButton(
                           onPressed: () {
-                            if (item.quandoInscricaoNaoPaga == 'nao_mostrar_qrcode_pix') {
-                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(item.mensagemQuandoInscricaoNaoPaga),
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  onPressed: () {},
-                                ),
-                              ));
-                              return;
-                            }
-
                             if (item.pago == 'Sim') {
                               showDialog(
                                 context: context,
@@ -258,6 +246,18 @@ class _CardComprasState extends State<CardCompras> {
                                 },
                               );
                             } else {
+                              if (item.quandoInscricaoNaoPaga == 'nao_mostrar_qrcode_pix') {
+                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(item.mensagemQuandoInscricaoNaoPaga),
+                                  action: SnackBarAction(
+                                    label: 'OK',
+                                    onPressed: () {},
+                                  ),
+                                ));
+                                return;
+                              }
+
                               showDialog(
                                 context: context,
                                 builder: (context) {

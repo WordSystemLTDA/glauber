@@ -7,7 +7,7 @@ import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_servic
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
-import 'package:provadelaco/src/essencial/providers/versoes/versoes_provider.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provider/provider.dart';
@@ -221,12 +221,12 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
   }
 
   void setarInformacoes() async {
-    var versoesProvider = context.read<VersoesProvider>();
+    var configProvider = context.read<ConfigProvider>();
 
     var versao = await FuncoesGlobais.getVersaoInstalada();
 
-    var ultimaVersaoIos = versoesProvider.versoes!.versaoAppIos;
-    var ultimaVersaoAndroid = versoesProvider.versoes!.versaoAppAndroid;
+    var ultimaVersaoIos = configProvider.configs!.versaoAppIos;
+    var ultimaVersaoAndroid = configProvider.configs!.versaoAppAndroid;
 
     setState(() {
       versaoInstalada = versao;

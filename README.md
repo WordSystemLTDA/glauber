@@ -29,8 +29,10 @@ Atualizações
 - (FEITO) Fazer troca de tema
 - (FEITO) Arrumar modo escuro do app
 - (FEITO) Colocar "sua somatoria: 5" na ordem de entrada
-- Fazer categorias dos eventos na pagina Home
-- Fazer propagandas
+- (FEITO) Fazer categorias dos eventos na pagina Home
+- (FEITO) Fazer propagandas
+- Mudar logo app (nativo)
+- Mudar nome app (nativo)
 - Arrumar termos de uso (deixar dados dinâmicos)
 
 Ideias

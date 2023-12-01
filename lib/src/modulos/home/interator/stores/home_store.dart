@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
-import 'package:provadelaco/src/essencial/providers/versoes/versoes_modelo.dart';
-import 'package:provadelaco/src/essencial/providers/versoes/versoes_provider.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provider/provider.dart';
@@ -22,18 +22,18 @@ class HomeStore extends ValueNotifier<HomeEstado> {
     var resposta = await _homeServico.listar(categoria);
 
     if (resposta.sucesso) {
-      var versaoProvider = context.read<VersoesProvider>();
-      versaoProvider.setVersoes(resposta.versoes);
+      var configProvider = context.read<ConfigProvider>();
+      configProvider.setVersoes(resposta.dadosConfig);
 
-      verificarAtualicao(context, resposta.versoes);
+      verificarAtualicao(context, resposta.dadosConfig);
 
-      value = Carregado(eventos: resposta.eventos, propagandas: resposta.propagandas, categorias: resposta.categorias);
+      value = Carregado(eventos: resposta.eventos, eventosTopo: resposta.eventosTopo, propagandas: resposta.propagandas, categorias: resposta.categorias);
     } else {
       value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
     }
   }
 
-  void verificarAtualicao(context, VersoesModelo versoes) async {
+  void verificarAtualicao(context, ConfigModelo versoes) async {
     if (await FuncoesGlobais.appPrecisaAtualizar(versoes.versaoAppAndroid, versoes.versaoAppIos)) {
       showDialog<void>(
         context: context,

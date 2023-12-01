@@ -1,4 +1,4 @@
-package com.example.glauber
+package com.provadelaco.glauber
 
 import io.flutter.embedding.android.FlutterActivity
 
