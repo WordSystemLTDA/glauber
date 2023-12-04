@@ -33,7 +33,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
     var usuarioProvider = context.read<UsuarioProvider>().usuario;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted && usuarioProvider != null && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'normal') {
+      if (mounted && usuarioProvider != null && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'social') {
         showDialog(
           context: context,
           builder: (context) {

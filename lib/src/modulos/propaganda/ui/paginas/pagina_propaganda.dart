@@ -58,7 +58,7 @@ class _PaginaPropagandaState extends State<PaginaPropaganda> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: width * 0.70,
+                          width: width * 0.60,
                           child: Text(
                             propaganda.nome,
                             maxLines: 1,
@@ -69,25 +69,28 @@ class _PaginaPropagandaState extends State<PaginaPropaganda> {
                             ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              onPressed: () async {
-                                if (await canLaunchUrl(Uri.parse(propaganda.instagram))) {
-                                  await launchUrl(Uri.parse(propaganda.instagram));
-                                }
-                              },
-                              icon: const FaIcon(FontAwesomeIcons.instagram),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                FuncoesGlobais.abrirWhatsapp(propaganda.celular);
-                              },
-                              color: Colors.green,
-                              icon: const FaIcon(FontAwesomeIcons.whatsapp),
-                            ),
-                          ],
+                        SizedBox(
+                          width: width * 0.30,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  if (await canLaunchUrl(Uri.parse(propaganda.instagram))) {
+                                    await launchUrl(Uri.parse(propaganda.instagram));
+                                  }
+                                },
+                                icon: const FaIcon(FontAwesomeIcons.instagram),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  FuncoesGlobais.abrirWhatsapp(propaganda.celular);
+                                },
+                                color: Colors.green,
+                                icon: const FaIcon(FontAwesomeIcons.whatsapp),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
