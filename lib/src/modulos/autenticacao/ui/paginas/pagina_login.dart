@@ -42,6 +42,10 @@ class _PaginaLoginState extends State<PaginaLogin> {
         var (sucesso, usuario) = resposta;
 
         if (!sucesso) {
+          if (usuario == null) {
+            return;
+          }
+
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
               return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tipoLoginSocial);
@@ -76,7 +80,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
           if (mounted) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: const Center(child: Text('Dados incorretos')),
+              content: Center(child: Text(state.erro.toString())),
               action: SnackBarAction(
                 label: 'OK',
                 onPressed: () {},

@@ -174,8 +174,8 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 140,
+                    Flexible(
+                      fit: FlexFit.tight,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -191,8 +191,9 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                         child: const Text('Fechar'),
                       ),
                     ),
-                    SizedBox(
-                      width: 160,
+                    const SizedBox(width: 20),
+                    Flexible(
+                      fit: FlexFit.tight,
                       child: ElevatedButton(
                         onPressed: () async {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

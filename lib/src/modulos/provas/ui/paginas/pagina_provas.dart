@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
@@ -84,8 +86,6 @@ class _PaginaProvasState extends State<PaginaProvas> {
   }
 
   void abrirDenunciar(ProvasEstado state) {
-    var width = MediaQuery.of(context).size.width;
-
     showDialog(
       context: context,
       builder: (contextDialog) {
@@ -97,123 +97,124 @@ class _PaginaProvasState extends State<PaginaProvas> {
               },
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: nomeDenuncia,
-                      decoration: const InputDecoration(
-                        hintText: "Nome",
-                      ),
-                      onChanged: (value) {
-                        setStateDialog(() {});
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: celularDenuncia,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        TelefoneInputFormatter(),
-                      ],
-                      onChanged: (value) {
-                        setStateDialog(() {});
-                      },
-                      decoration: const InputDecoration(
-                        hintText: "Celular",
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      height: 100,
-                      child: TextField(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: nomeDenuncia,
+                        decoration: const InputDecoration(
+                          hintText: "Nome",
+                        ),
                         onChanged: (value) {
                           setStateDialog(() {});
                         },
-                        controller: mensagemDenuncia,
-                        decoration: const InputDecoration(
-                          hintText: "Mensagem",
-                        ),
-                        maxLines: 3,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        setStateDialog(() {
-                          concordaDenunciar = concordaDenunciar ? false : true;
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            value: concordaDenunciar,
-                            onChanged: (novoValor) {
-                              setStateDialog(() {
-                                concordaDenunciar = novoValor!;
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            width: width * 0.60,
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              softWrap: true,
-                              text: TextSpan(
-                                text: "Autorizo que a Empresa entre em contato para pedir mais informações",
-                                style: Theme.of(context).textTheme.titleSmall,
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    setStateDialog(() {
-                                      concordaDenunciar = concordaDenunciar ? false : true;
-                                    });
-                                  },
-                              ),
-                            ),
-                          ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: celularDenuncia,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          TelefoneInputFormatter(),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    AbsorbPointer(
-                      absorbing: !concordaDenunciar || nomeDenuncia.text.isEmpty || celularDenuncia.text.isEmpty || mensagemDenuncia.text.isEmpty,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: const MaterialStatePropertyAll(Colors.white),
-                          foregroundColor: (!concordaDenunciar || nomeDenuncia.text.isEmpty || celularDenuncia.text.isEmpty || mensagemDenuncia.text.isEmpty)
-                              ? const MaterialStatePropertyAll(Colors.grey)
-                              : const MaterialStatePropertyAll(Colors.red),
+                        onChanged: (value) {
+                          setStateDialog(() {});
+                        },
+                        decoration: const InputDecoration(
+                          hintText: "Celular",
                         ),
-                        onPressed: () {
-                          var denunciarServico = context.read<DenunciarServico>();
-
-                          denunciarServico.denunciar(state.evento!.id, state.evento!.idEmpresa, nomeDenuncia.text, celularDenuncia.text, mensagemDenuncia.text).then((sucesso) {
-                            if (sucesso) {
-                              Navigator.pop(context);
-
-                              setStateDialog(() {
-                                nomeDenuncia.text = '';
-                                celularDenuncia.text = '';
-                                mensagemDenuncia.text = '';
-                                concordaDenunciar = concordaDenunciar ? false : true;
-                              });
-
-                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: const Text('Sucesso ao fazer denuncia.'),
-                                backgroundColor: Colors.green,
-                                action: SnackBarAction(
-                                  label: 'OK',
-                                  onPressed: () {},
-                                ),
-                              ));
-                            }
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 100,
+                        child: TextField(
+                          onChanged: (value) {
+                            setStateDialog(() {});
+                          },
+                          controller: mensagemDenuncia,
+                          decoration: const InputDecoration(
+                            hintText: "Mensagem",
+                          ),
+                          maxLines: 3,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          setStateDialog(() {
+                            concordaDenunciar = concordaDenunciar ? false : true;
                           });
                         },
-                        child: const Text('Enviar Denúncia'),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: concordaDenunciar,
+                              onChanged: (novoValor) {
+                                setStateDialog(() {
+                                  concordaDenunciar = novoValor!;
+                                });
+                              },
+                            ),
+                            Flexible(
+                              child: RichText(
+                                textAlign: TextAlign.left,
+                                softWrap: true,
+                                text: TextSpan(
+                                  text: "Autorizo que a Empresa entre em contato para pedir mais informações",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      setStateDialog(() {
+                                        concordaDenunciar = concordaDenunciar ? false : true;
+                                      });
+                                    },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 10),
+                      AbsorbPointer(
+                        absorbing: !concordaDenunciar || nomeDenuncia.text.isEmpty || celularDenuncia.text.isEmpty || mensagemDenuncia.text.isEmpty,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: const MaterialStatePropertyAll(Colors.white),
+                            foregroundColor: (!concordaDenunciar || nomeDenuncia.text.isEmpty || celularDenuncia.text.isEmpty || mensagemDenuncia.text.isEmpty)
+                                ? const MaterialStatePropertyAll(Colors.grey)
+                                : const MaterialStatePropertyAll(Colors.red),
+                          ),
+                          onPressed: () {
+                            var denunciarServico = context.read<DenunciarServico>();
+
+                            denunciarServico.denunciar(state.evento!.id, state.evento!.idEmpresa, nomeDenuncia.text, celularDenuncia.text, mensagemDenuncia.text).then((sucesso) {
+                              if (sucesso) {
+                                Navigator.pop(context);
+
+                                setStateDialog(() {
+                                  nomeDenuncia.text = '';
+                                  celularDenuncia.text = '';
+                                  mensagemDenuncia.text = '';
+                                  concordaDenunciar = concordaDenunciar ? false : true;
+                                });
+
+                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: const Text('Sucesso ao fazer denuncia.'),
+                                  backgroundColor: Colors.green,
+                                  action: SnackBarAction(
+                                    label: 'OK',
+                                    onPressed: () {},
+                                  ),
+                                ));
+                              }
+                            });
+                          },
+                          child: const Text('Enviar Denúncia'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -436,31 +437,16 @@ class _PaginaProvasState extends State<PaginaProvas> {
             }
 
             if (state is ProvasCarregado) {
-              return CustomScrollView(
-                physics: const ClampingScrollPhysics(),
-                slivers: [
-                  SliverAppBar.medium(
-                    pinned: true,
-                    // expandedHeight: 200, // ANIMAÇÃO
-                    expandedHeight: 200,
-                    collapsedHeight: 300,
-                    // title: Column(
-                    //   children: [
-                    //     Text(
-                    //       state.evento!.nomeEvento,
-                    //       style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                    //     ),
-                    //     Text(
-                    //       DateFormat('dd/MM/yyyy').format(DateTime.parse(state.evento!.dataEvento)),
-                    //       style: const TextStyle(fontSize: 14),
-                    //     ),
-                    //     const SizedBox(height: 5),
-                    //   ],
-                    // ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.parallax,
-                      background: SizedBox(
-                        height: 300,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  provasStore.listar(usuarioProvider.usuario, widget.idEvento);
+                },
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 250,
                         child: Stack(
                           children: [
                             Positioned.fill(
@@ -524,34 +510,30 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                 ),
                               ),
                             ),
-                            // SafeArea(
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.only(left: 10),
-                            //     child: Container(
-                            //       width: 100,
-                            //       height: 50,
-                            //       decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
-                            //       child: IconButton(
-                            //         icon: const Row(
-                            //           children: [
-                            //             Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-                            //             Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 16)),
-                            //           ],
-                            //         ),
-                            //         onPressed: () {
-                            //           Navigator.pop(context);
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
+                            SafeArea(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Container(
+                                  width: 90,
+                                  decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+                                  child: IconButton(
+                                    icon: const Row(
+                                      children: [
+                                        Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                                        SizedBox(width: 10),
+                                        Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  SliverList.list(
-                    children: [
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -633,6 +615,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           top: setarTamanho(height, state),
                         ),
                         child: Card(
+                          margin: EdgeInsets.zero,
                           child: Container(
                             width: double.infinity,
                             padding: const EdgeInsets.only(bottom: 10),
@@ -641,7 +624,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             ),
                             margin: EdgeInsets.zero,
                             child: Padding(
-                              padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : 20),
+                              padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (Platform.isAndroid ? 50 : 20)),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -749,7 +732,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                       ),
                     ],
                   ),
-                ],
+                ),
               );
             }
 

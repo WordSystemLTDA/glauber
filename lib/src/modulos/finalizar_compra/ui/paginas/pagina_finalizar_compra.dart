@@ -91,7 +91,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         valorIngresso: dados.prova.valor,
         valorTaxa: dados.prova.taxaProva,
         valorDesconto: "0",
-        valorTotal: dados.prova.valor,
+        valorTotal: (double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva)).toString(),
         tipoDeVenda: "Venda",
       ),
     );
@@ -211,7 +211,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           ],
                         ),
                       ],
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
@@ -314,7 +314,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ],

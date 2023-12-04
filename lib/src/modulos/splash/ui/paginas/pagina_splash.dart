@@ -56,6 +56,19 @@ class _PaginaSplashState extends State<PaginaSplash> {
 
       String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
+      print(usuario);
+
+      if (usuario == null) {
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return const PaginaInicio();
+            },
+          ), (Route<dynamic> route) => false);
+        }
+        return;
+      }
+
       autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
         var (sucesso, usuarioRetorno) = resposta;
 

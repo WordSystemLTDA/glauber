@@ -17,8 +17,6 @@ class PaginaPropaganda extends StatefulWidget {
 class _PaginaPropagandaState extends State<PaginaPropaganda> {
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-
     var propaganda = widget.propaganda;
 
     return Scaffold(
@@ -57,8 +55,7 @@ class _PaginaPropagandaState extends State<PaginaPropaganda> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: width * 0.70,
+                        Flexible(
                           child: Text(
                             propaganda.nome,
                             maxLines: 1,
@@ -93,6 +90,7 @@ class _PaginaPropagandaState extends State<PaginaPropaganda> {
                     ),
                   ),
                   Text(propaganda.obs),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),

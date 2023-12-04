@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/compartilhado/widgets/mostrar_hora_atual.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:provider/provider.dart';
@@ -159,10 +160,7 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                           size: 20,
                         ),
                         SizedBox(width: 5),
-                        Text(
-                          '18:00:00',
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                        MostrarHoraAtual(),
                       ],
                     ),
                     Text(
@@ -177,8 +175,8 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 140,
+                    Flexible(
+                      fit: FlexFit.tight,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -194,8 +192,9 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                         child: const Text('Fechar'),
                       ),
                     ),
-                    SizedBox(
-                      width: 160,
+                    const SizedBox(width: 20),
+                    Flexible(
+                      fit: FlexFit.tight,
                       child: ElevatedButton(
                         onPressed: () async {
                           setStateDialog(() {
@@ -230,7 +229,10 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                                   strokeWidth: 1,
                                 ),
                               )
-                            : const Text('Baixar Ingresso'),
+                            : const FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Text('Baixar Ingresso'),
+                              ),
                       ),
                     ),
                   ],

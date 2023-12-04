@@ -22,6 +22,7 @@ class VerificarPagamentoServicoImpl implements VerificarPagamentoServico {
     var jsonData = jsonDecode(response.data);
 
     bool sucesso = jsonData['sucesso'];
+    // dynamic resultado = jsonData['resultado'];
 
     return sucesso;
   }

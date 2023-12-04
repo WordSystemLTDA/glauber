@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
@@ -32,7 +31,7 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     });
   }
 
-  Future<(bool, UsuarioModelo?)> listarInformacoesLogin(BuildContext context, tipoLoginSocial, tokenNotificacao) async {
+  Future<(bool, dynamic)> listarInformacoesLogin(BuildContext context, tipoLoginSocial, tokenNotificacao) async {
     value = Carregando();
 
     if (tipoLoginSocial == TiposLoginSocial.google) {
@@ -52,6 +51,8 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
       if (sucesso) {
         value = Autenticado();
+      } else {
+        return (sucesso, usuario);
       }
 
       return (sucesso, usuarioRetorno);
@@ -70,6 +71,8 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
       if (sucesso) {
         value = Autenticado();
+      } else {
+        return (sucesso, usuario);
       }
 
       return (sucesso, usuarioRetorno);

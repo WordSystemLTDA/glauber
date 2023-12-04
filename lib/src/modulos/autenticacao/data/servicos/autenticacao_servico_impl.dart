@@ -241,9 +241,9 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
 
     if (response.statusCode == 200 && sucesso == true) {
+      UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
       return (sucesso, usuarioRetorno);
     } else {
       return (false, null);

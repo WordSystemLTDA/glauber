@@ -78,31 +78,31 @@ class TermosDeUso extends StatelessWidget {
                       text:
                           ' Seu uso dos Serviços e o tratamento, por parte da ${configProvider.configs!.nomeApp}, de qualquer informação fornecida por você ou recolhida pela ${configProvider.configs!.nomeApp} ou partes terceiras durante qualquer visita ou uso dos Serviços é regida pela Política de Privacidade, aqui incorporada por meio desta referência. A Política de Privacidade é o documento que regula o tratamento de dados pessoais e/ou confidenciais pela ${configProvider.configs!.nomeApp} e seus prestadores de serviços ou parceiros. A coleta, uso e compartilhamento, por parte da ${configProvider.configs!.nomeApp}, de suas informações pessoais serão realizados nos termos determinados na Política de Privacidade, razão pela qual você deve ler tal Política com atenção e descontinuar o uso dos Serviços caso não concorde com a descrição do tratamento.\n\n',
                     ),
-                    TextSpan(text: 'Menores de Idade:\n\n', style: estiloTituloTermos),
-                    TextSpan(
-                      text:
-                          'Os Serviços não foram formulados nem são destinados para serem usados por indivíduos menores de 18 anos e, portanto, se você for menor de 18 anos, solicitamos que você não use os Serviços nem nos forneça qualquer dado pessoal.\n\n',
-                    ),
+                    // TextSpan(text: 'Menores de Idade:\n\n', style: estiloTituloTermos),
+                    // TextSpan(
+                    //   text:
+                    //       'Os Serviços não foram formulados nem são destinados para serem usados por indivíduos menores de 18 anos e, portanto, se você for menor de 18 anos, solicitamos que você não use os Serviços nem nos forneça qualquer dado pessoal.\n\n',
+                    // ),
                     TextSpan(text: '• IMPORTANTE:\n\n', style: estiloTituloTermos),
                     TextSpan(
                       text:
                           'Em caso de cópias do e-Ticket, o sistema de segurança validará apenas o primeiro acesso. Após validados uma vez, o e-Ticket não poderá ser reutilizado. Não nos responsabilizamos por qualquer PERDA, DANO ou ROUBO do seu e-Ticket. Nós da ${configProvider.configs!.nomeApp} e a Empresa pelo evento não se responsabiliza pela transferência de ingressos ou revenda do mesmo.\n\n',
                     ),
-                    TextSpan(text: 'Reembolso:\n\n', style: estiloTituloTermos),
-                    TextSpan(
-                      text:
-                          '- O prazo para reembolso é de {dadosEmpresa.dias_de_cancelamento} dias contando a data da compra, desde que seja {dadosEmpresa.dias_limite_de_cancelamento} dias antes do evento, para que seja realizada a devolução do valor do ingresso.\n\n',
-                    ),
-                    TextSpan(text: '- O valor referente à taxa administrativa não será devolvido.\n\n'),
-                    TextSpan(
-                      text:
-                          '- Onde solicitar o reembolso? Deverá ser solicitado no proprio app ou site, na aba compra, clicando em cima do ingresso, vai ter a opção para reembolso, e você será redirecionando para uma conversa no whatssap direto com a empresa promovedora do evento. Não sendo de responsabilidade do ${configProvider.configs!.nomeApp}.\n\n',
-                    ),
-                    TextSpan(text: 'Reembolso:\n\n', style: estiloTituloTermos),
-                    TextSpan(
-                      text:
-                          'Essa EMPRESA ou ORGANIZAÇÃO não permite Reembolso dos Ingressos. Em caso de dúvida entre em contato com a EMPRESA ou ORGANIZAÇÃO do Evento para mais informações. A ${configProvider.configs!.nomeApp} não se responsabiliza com reembolso devido que os pagamentos é feito diretamente aos responsáveis do Evento.',
-                    ),
+                    // TextSpan(text: 'Reembolso:\n\n', style: estiloTituloTermos),
+                    // TextSpan(
+                    //   text:
+                    //       '- O prazo para reembolso é de {dadosEmpresa.dias_de_cancelamento} dias contando a data da compra, desde que seja {dadosEmpresa.dias_limite_de_cancelamento} dias antes do evento, para que seja realizada a devolução do valor do ingresso.\n\n',
+                    // ),
+                    // TextSpan(text: '- O valor referente à taxa administrativa não será devolvido.\n\n'),
+                    // TextSpan(
+                    //   text:
+                    //       '- Onde solicitar o reembolso? Deverá ser solicitado no proprio app ou site, na aba compra, clicando em cima do ingresso, vai ter a opção para reembolso, e você será redirecionando para uma conversa no whatssap direto com a empresa promovedora do evento. Não sendo de responsabilidade do ${configProvider.configs!.nomeApp}.\n\n',
+                    // ),
+                    // TextSpan(text: 'Reembolso:\n\n', style: estiloTituloTermos),
+                    // TextSpan(
+                    //   text:
+                    //       'Essa EMPRESA ou ORGANIZAÇÃO não permite Reembolso dos Ingressos. Em caso de dúvida entre em contato com a EMPRESA ou ORGANIZAÇÃO do Evento para mais informações. A ${configProvider.configs!.nomeApp} não se responsabiliza com reembolso devido que os pagamentos é feito diretamente aos responsáveis do Evento.',
+                    // ),
                   ],
                 ),
               ),
