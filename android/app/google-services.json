@@ -12,7 +12,28 @@
           "package_name": "com.provadelaco.glauber"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "558343760209-hujctapi6sdgnfvc560q3stpblbnrt7v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.provadelaco.glauber",
+            "certificate_hash": "e64cbb8157a274a2e5b0d9386204ad8affe9b3d4"
+          }
+        },
+        {
+          "client_id": "558343760209-o3pdq488pkastu7sbc2eipfll2nsijmn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.provadelaco.glauber",
+            "certificate_hash": "3525655b95a296b579c5c8347f6d23d2835561c1"
+          }
+        },
+        {
+          "client_id": "558343760209-6ca0vmmtkk3gbdps5o2ip6ht0mqoggge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCttqpQ_-pKp-Wqcqmog8A_koxL93xty2A"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558343760209-6ca0vmmtkk3gbdps5o2ip6ht0mqoggge.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "558343760209-94ilkhohuule9jbmh1n4m03a723rdt2d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.glauber.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }

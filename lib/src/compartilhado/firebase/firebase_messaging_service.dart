@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
 
@@ -17,8 +19,13 @@ class FirebaseMessagingService {
   }
 
   Future<String?> getDeviceFirebaseToken() async {
-    final token = await FirebaseMessaging.instance.getToken();
-    return token;
+    if (Platform.isIOS) {
+      final token = await FirebaseMessaging.instance.getToken();
+      return token;
+    } else {
+      final token = await FirebaseMessaging.instance.getToken();
+      return token;
+    }
   }
 
   _onMessage() {
