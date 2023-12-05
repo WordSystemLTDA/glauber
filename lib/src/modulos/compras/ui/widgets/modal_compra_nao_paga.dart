@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
+import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_paga.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -22,6 +23,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
   // ignore: unused_field
   late StateSetter _setState;
   bool sucessoAoVerificarPagamento = false;
+  bool aparecerModalPaga = false;
 
   @override
   void initState() {
@@ -42,6 +44,11 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                 _setState(() {
                   sucessoAoVerificarPagamento = true;
                 });
+                Future.delayed(const Duration(seconds: 2)).then((value) {
+                  setState(() {
+                    aparecerModalPaga = true;
+                  });
+                });
                 timer.cancel();
               }
             });
@@ -55,6 +62,10 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var item = widget.item;
+
+    if (aparecerModalPaga) {
+      return ModalCompraPaga(item: item);
+    }
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),

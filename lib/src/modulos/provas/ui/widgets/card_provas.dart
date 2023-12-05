@@ -42,7 +42,6 @@ class _CardProvasState extends State<CardProvas> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Center(child: Text('Essa prova não está liberada para venda ainda.')),
           showCloseIcon: true,
-          backgroundColor: Colors.red,
         ));
       }
       return;
@@ -66,13 +65,35 @@ class _CardProvasState extends State<CardProvas> {
       return;
     }
 
-    // Caso o usuário não tenha nenhum handicap
-    if ((usuarioProvider.usuario!.hcCabeceira!.isEmpty && usuarioProvider.usuario!.hcPezeiro!.isEmpty) ||
-        (double.parse(usuarioProvider.usuario!.hcCabeceira!) <= 0 && double.parse(usuarioProvider.usuario!.hcPezeiro!) <= 0)) {
+    if (item.id == '1' && (usuarioProvider.usuario!.hcCabeceira!.isEmpty || double.parse(usuarioProvider.usuario!.hcCabeceira!) <= 0)) {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Center(child: Text("Você precisa ter um HandiCap para poder continuar a compra.")),
+          content: Center(child: Text("Você precisa ter um HandiCap ${item.nome} para poder continuar a compra.")),
+          showCloseIcon: true,
+          action: SnackBarAction(
+            label: 'Editar',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const PaginaEditarUsuario();
+                  },
+                ),
+              );
+            },
+          ),
+        ));
+      }
+      return;
+    }
+
+    if (item.id == '2' && (usuarioProvider.usuario!.hcPezeiro!.isEmpty || double.parse(usuarioProvider.usuario!.hcPezeiro!) <= 0)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(child: Text("Você precisa ter um HandiCap ${item.nome} para poder continuar a compra.")),
           showCloseIcon: true,
           action: SnackBarAction(
             label: 'Editar',
@@ -116,7 +137,7 @@ class _CardProvasState extends State<CardProvas> {
         if (mounted) {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Center(child: Text("Seu Handicap ${usuarioProvider.usuario!.hcPezeiro} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            content: Center(child: Text("Seu Handicap de ${usuarioProvider.usuario!.hcPezeiro} não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
             showCloseIcon: true,
             backgroundColor: Colors.red,
           ));
@@ -132,7 +153,6 @@ class _CardProvasState extends State<CardProvas> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Center(child: Text('Você já comprou essa prova.')),
           showCloseIcon: true,
-          backgroundColor: Colors.red,
         ));
       }
       return;
@@ -179,6 +199,25 @@ class _CardProvasState extends State<CardProvas> {
     ));
   }
 
+  Color coresJaComprou(prova) {
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    // Verificação do HandiCap Máximo e Mínimo da prova
+    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
+      // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
+      if (!(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo)) &&
+          !(double.parse(usuarioProvider.usuario!.hcPezeiro!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo))) {
+        return Colors.red;
+      }
+    } else if (prova.jaComprou || !prova.compraLiberada || widget.evento.liberacaoDeCompra == '0') {
+      return Colors.red;
+    }
+
+    return Colors.green;
+  }
+
   @override
   Widget build(BuildContext context) {
     var prova = widget.prova;
@@ -200,7 +239,6 @@ class _CardProvasState extends State<CardProvas> {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Center(child: Text('Essa prova não está liberada para venda ainda.')),
                   showCloseIcon: true,
-                  backgroundColor: Colors.red,
                 ));
               }
               return;
@@ -229,7 +267,6 @@ class _CardProvasState extends State<CardProvas> {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Center(child: Text('Você já comprou essa prova.')),
                   showCloseIcon: true,
-                  backgroundColor: Colors.red,
                 ));
               }
               return;
@@ -252,7 +289,7 @@ class _CardProvasState extends State<CardProvas> {
                           bottomLeft: Radius.circular(8),
                         ),
                       ),
-                      child: VerticalDivider(color: (prova.jaComprou || !prova.compraLiberada || widget.evento.liberacaoDeCompra == '0') ? Colors.red : Colors.green, thickness: 5),
+                      child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
@@ -275,54 +312,70 @@ class _CardProvasState extends State<CardProvas> {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 90,
-                height: tamanhoCard,
-                child: Material(
-                  child: Card(
-                    clipBehavior: Clip.hardEdge,
-                    margin: EdgeInsets.zero,
-                    elevation: 5,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+              Row(
+                children: [
+                  if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8, right: 10),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
                     ),
-                    child: SizedBox(
-                      height: tamanhoCard,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) {
-                          return Divider(height: 1, color: Theme.of(context).colorScheme.background);
-                        },
-                        padding: const EdgeInsets.only(bottom: 1),
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.nomesCabeceira!.length,
-                        itemBuilder: (context, index) {
-                          var item = widget.nomesCabeceira![index];
+                  ],
+                  SizedBox(
+                    width: 90,
+                    height: tamanhoCard,
+                    child: Material(
+                      child: Card(
+                        clipBehavior: Clip.hardEdge,
+                        margin: EdgeInsets.zero,
+                        elevation: 5,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+                        ),
+                        child: SizedBox(
+                          height: tamanhoCard,
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return Divider(height: 1, color: Theme.of(context).colorScheme.background);
+                            },
+                            padding: const EdgeInsets.only(bottom: 1),
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.nomesCabeceira!.length,
+                            itemBuilder: (context, index) {
+                              var item = widget.nomesCabeceira![index];
 
-                          return SizedBox(
-                            width: 90,
-                            height: tamanhoCard / 2.1,
-                            child: Material(
-                              color: coresAction(prova, item),
-                              child: InkWell(
-                                borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                                onTap: () {
-                                  aoClicarNaCabeceira(prova, item);
-                                },
-                                child: Center(
-                                  child: Text(
-                                    item.nome,
-                                    style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                    textAlign: TextAlign.center,
+                              return SizedBox(
+                                width: 90,
+                                height: tamanhoCard / 2.1,
+                                child: Material(
+                                  color: coresAction(prova, item),
+                                  child: InkWell(
+                                    borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                    onTap: () {
+                                      aoClicarNaCabeceira(prova, item);
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        item.nome,
+                                        style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),

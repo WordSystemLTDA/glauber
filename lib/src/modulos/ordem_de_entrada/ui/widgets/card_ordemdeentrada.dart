@@ -68,7 +68,11 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                   contentPadding: EdgeInsets.zero,
                                   minVerticalPadding: 0,
                                   // visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                  title: Text(itemParceiro.nomeCliente),
+                                  title: Text(
+                                    itemParceiro.nomeCliente,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   subtitle: Text("Inscrição: ${itemParceiro.numeroDaInscricao}"),
                                   trailing: Text(
                                     itemParceiro.somatoria,
@@ -80,7 +84,11 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                           ),
                         ],
                         if (item.parceiros.isEmpty) ...[
-                          const Text('Não existe parceiros cadastrados ainda.'),
+                          const Divider(),
+                          const Text(
+                            'Ainda não há parceiros cadastrados.',
+                            textAlign: TextAlign.center,
+                          ),
                         ],
                       ],
                     ),

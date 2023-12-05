@@ -31,9 +31,10 @@ Atualizações
 - (FEITO) Colocar "sua somatoria: 5" na ordem de entrada
 - (FEITO) Fazer categorias dos eventos na pagina Home
 - (FEITO) Fazer propagandas
+- (FEITO) Arrumar termos de uso (deixar dados dinâmicos)
+- (FEITO) Quando entra no app pela primeira vez, fica carregando infinitamente
+- (FEITO) Mudar nome app (nativo)
 - Mudar logo app (nativo)
-- Mudar nome app (nativo)
-- Arrumar termos de uso (deixar dados dinâmicos)
 
 Ideias
 

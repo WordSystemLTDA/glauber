@@ -34,7 +34,6 @@ class _PaginaSplashState extends State<PaginaSplash> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      verificarLogin();
       initializeFirebaseMessaging();
       checkForNotifications();
     });
@@ -46,15 +45,12 @@ class _PaginaSplashState extends State<PaginaSplash> {
 
   checkForNotifications() async {
     await Provider.of<NotificationService>(context, listen: false).checkForNotifications();
+    verificarLogin();
   }
 
   void verificarLogin() async {
     if (mounted) {
-      final autenticacaoServico = context.read<AutenticacaoServico>();
-      final firebaseMessagingService = context.read<FirebaseMessagingService>();
       var usuario = await UsuarioServico.getUsuario(context);
-
-      String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
       if (usuario == null) {
         if (mounted) {
@@ -65,21 +61,28 @@ class _PaginaSplashState extends State<PaginaSplash> {
           ), (Route<dynamic> route) => false);
         }
         return;
-      }
+      } else {
+        if (mounted) {
+          final autenticacaoServico = context.read<AutenticacaoServico>();
+          final firebaseMessagingService = context.read<FirebaseMessagingService>();
 
-      autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
-        var (sucesso, usuarioRetorno) = resposta;
+          String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-        if (sucesso) {
-          UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+          autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
+            var (sucesso, usuarioRetorno) = resposta;
+
+            if (sucesso) {
+              UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+            }
+
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (context) {
+                return const PaginaInicio();
+              },
+            ), (Route<dynamic> route) => false);
+          });
         }
-
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-          builder: (context) {
-            return const PaginaInicio();
-          },
-        ), (Route<dynamic> route) => false);
-      });
+      }
     }
   }
 }

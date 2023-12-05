@@ -18,6 +18,16 @@ class CardCompras extends StatefulWidget {
 class _CardComprasState extends State<CardCompras> {
   double tamanhoCard = 120;
 
+  Color corCompra(ComprasModelo item) {
+    if (item.status == 'Cancelado') {
+      return Colors.yellow;
+    } else if (item.pago == 'Não') {
+      return Colors.red;
+    } else {
+      return Colors.green;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var item = widget.item;
@@ -188,7 +198,7 @@ class _CardComprasState extends State<CardCompras> {
                   ),
                 ),
                 child: VerticalDivider(
-                  color: item.pago == 'Sim' ? Colors.green : Colors.red,
+                  color: corCompra(item),
                   thickness: 5,
                 ),
               ),
@@ -206,8 +216,8 @@ class _CardComprasState extends State<CardCompras> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('11/10/2023'),
-                          const Text('14:48 PM'),
+                          Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
+                          Text(item.horaCompra),
                           Text(item.status),
                         ],
                       )
@@ -246,6 +256,18 @@ class _CardComprasState extends State<CardCompras> {
                                 },
                               );
                             } else {
+                              if (item.status == 'Cancelado') {
+                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: const Text('Esse ingresso foi cancelado.'),
+                                  action: SnackBarAction(
+                                    label: 'OK',
+                                    onPressed: () {},
+                                  ),
+                                ));
+                                return;
+                              }
+
                               if (item.quandoInscricaoNaoPaga == 'nao_mostrar_qrcode_pix') {
                                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
