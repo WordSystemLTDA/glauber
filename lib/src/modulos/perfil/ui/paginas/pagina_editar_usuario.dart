@@ -7,8 +7,6 @@ import 'package:provadelaco/src/compartilhado/formatters/rg_formatter.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/formulario_editar_usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
@@ -88,6 +86,118 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
     setarInformacoes();
   }
 
+  @override
+  void dispose() {
+    nomeController.dispose();
+    apelidoController.dispose();
+    emailController.dispose();
+    cpfController.dispose();
+    rgController.dispose();
+    sexoController.dispose();
+    dataNascimentoController.dispose();
+    telefoneController.dispose();
+    celularController.dispose();
+    senhaController.dispose();
+    civilController.dispose();
+    cabeceiraController.dispose();
+    pezeiroController.dispose();
+    cepController.dispose();
+    enderecoController.dispose();
+    bairroController.dispose();
+    numeroController.dispose();
+    complementoController.dispose();
+    cidadeController.dispose();
+    pesquisaCidadeController.dispose();
+    super.dispose();
+  }
+
+  void editar(usuario) {
+    var editarUsuarioServico = context.read<EditarUsuarioServico>();
+
+    editarUsuarioServico
+        .editarUsuario(
+      FormularioEditarUsuarioModelo(
+        id: usuario.usuario!.id!,
+        nome: nomeController.text,
+        apelido: apelidoController.text,
+        civil: civilController.text,
+        sexo: sexoController.text,
+        dataNascimento: dataNascimentoNormal,
+        cpf: cpfController.text,
+        rg: rgController.text,
+        email: emailController.text,
+        senha: senhaController.text,
+        telefone: telefoneController.text,
+        celular: celularController.text,
+        cep: cepController.text,
+        endereco: enderecoController.text,
+        numero: numeroController.text,
+        bairro: bairroController.text,
+        complemento: complementoController.text,
+        cidade: idCidade,
+        hcCabeceira: idHcCabeceira,
+        hcPezeiro: idHcPiseiro,
+      ),
+    )
+        .then((resposta) {
+      var (sucesso, mensagem) = resposta;
+
+      var usuarioNovo = UsuarioModelo(
+        id: usuario.usuario!.id!,
+        nome: nomeController.text,
+        sexo: sexoController.text,
+        dataNascimento: dataNascimentoNormal,
+        cpf: cpfController.text,
+        rg: rgController.text,
+        email: emailController.text,
+        senha: senhaController.text,
+        telefone: telefoneController.text,
+        celular: celularController.text,
+        cep: cepController.text,
+        endereco: enderecoController.text,
+        numero: numeroController.text,
+        bairro: bairroController.text,
+        complemento: complementoController.text,
+        idCidade: idCidade,
+        nomeCidade: cidadeController.text,
+        hcCabeceira: cabeceiraController.text,
+        hcPezeiro: pezeiroController.text,
+        idHcCabeceira: idHcCabeceira,
+        idHcPezeiro: idHcPiseiro,
+        token: usuario.usuario!.token,
+        tipo: usuario.usuario!.tipo,
+        primeiroAcesso: usuario.usuario!.primeiroAcesso,
+        foto: usuario.usuario!.foto,
+        civil: civilController.text,
+        apelido: apelidoController.text,
+      );
+
+      if (sucesso) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+        usuarioProvider.setUsuario(usuarioNovo);
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Sucesso ao editar dados.'),
+          backgroundColor: Colors.green,
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(mensagem),
+          backgroundColor: Colors.red,
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+      }
+    });
+  }
+
   void setarInformacoes() {
     var usuario = context.read<UsuarioProvider>().usuario!;
 
@@ -124,7 +234,6 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    var handiCapStore = context.read<HandiCapStore>();
     var cidadeServico = context.read<CidadeServico>();
 
     return Consumer<UsuarioProvider>(builder: (context, usuario, chil) {
@@ -372,117 +481,26 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     Expanded(
                       child: TextField(
                         readOnly: true,
+                        enabled: false,
                         keyboardType: TextInputType.number,
                         controller: cabeceiraController,
                         decoration: const InputDecoration(
                           hintText: 'Cabeça',
                           label: Text('Cabeça'),
                         ),
-                        onTap: () {
-                          handiCapStore.listar();
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: SizedBox(
-                                  height: 400,
-                                  child: ValueListenableBuilder<HandiCapEstado>(
-                                    valueListenable: handiCapStore,
-                                    builder: (context, state, _) {
-                                      if (state is HandiCapCarregando) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-
-                                      if (state is HandiCapCarregado) {
-                                        return ListView.builder(
-                                          itemCount: state.handicaps.length,
-                                          padding: const EdgeInsets.symmetric(vertical: 15),
-                                          itemBuilder: (context, index) {
-                                            var item = state.handicaps[index];
-
-                                            return ListTile(
-                                              onTap: () {
-                                                setState(() {
-                                                  cabeceiraController.text = item.valor;
-                                                  idHcCabeceira = item.id;
-                                                });
-                                                Navigator.pop(context);
-                                              },
-                                              title: Text(item.nome),
-                                            );
-                                          },
-                                        );
-                                      }
-
-                                      return const Text('Erro ao tentar Listar HandiCaps');
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: TextField(
                         readOnly: true,
+                        enabled: false,
                         keyboardType: TextInputType.number,
                         controller: pezeiroController,
                         decoration: const InputDecoration(
                           hintText: 'Pé',
                           label: Text('Pé'),
                         ),
-                        onTap: () {
-                          handiCapStore.listar();
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: SizedBox(
-                                  height: 400,
-                                  child: ValueListenableBuilder<HandiCapEstado>(
-                                    valueListenable: handiCapStore,
-                                    builder: (context, state, _) {
-                                      if (state is HandiCapCarregando) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-
-                                      if (state is HandiCapCarregado) {
-                                        return ListView.builder(
-                                          itemCount: state.handicaps.length,
-                                          padding: const EdgeInsets.symmetric(vertical: 15),
-                                          itemBuilder: (context, index) {
-                                            var item = state.handicaps[index];
-
-                                            return ListTile(
-                                              onTap: () {
-                                                setState(() {
-                                                  pezeiroController.text = item.valor;
-                                                  idHcPiseiro = item.id;
-                                                });
-
-                                                Navigator.pop(context);
-                                              },
-                                              title: Text(item.nome),
-                                            );
-                                          },
-                                        );
-                                      }
-
-                                      return const Text('Erro ao tentar Listar HandiCaps');
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
                       ),
                     ),
                   ],
@@ -619,90 +637,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      var editarUsuarioServico = context.read<EditarUsuarioServico>();
-
-                      editarUsuarioServico
-                          .editarUsuario(
-                        FormularioEditarUsuarioModelo(
-                          id: usuario.usuario!.id!,
-                          nome: nomeController.text,
-                          apelido: apelidoController.text,
-                          civil: civilController.text,
-                          sexo: sexoController.text,
-                          dataNascimento: dataNascimentoNormal,
-                          cpf: cpfController.text,
-                          rg: rgController.text,
-                          email: emailController.text,
-                          senha: senhaController.text,
-                          telefone: telefoneController.text,
-                          celular: celularController.text,
-                          cep: cepController.text,
-                          endereco: enderecoController.text,
-                          numero: numeroController.text,
-                          bairro: bairroController.text,
-                          complemento: complementoController.text,
-                          cidade: idCidade,
-                          hcCabeceira: idHcCabeceira,
-                          hcPezeiro: idHcPiseiro,
-                        ),
-                      )
-                          .then((resposta) {
-                        var (sucesso, mensagem) = resposta;
-
-                        var usuarioNovo = UsuarioModelo(
-                          id: usuario.usuario!.id!,
-                          nome: nomeController.text,
-                          sexo: sexoController.text,
-                          dataNascimento: dataNascimentoNormal,
-                          cpf: cpfController.text,
-                          rg: rgController.text,
-                          email: emailController.text,
-                          senha: senhaController.text,
-                          telefone: telefoneController.text,
-                          celular: celularController.text,
-                          cep: cepController.text,
-                          endereco: enderecoController.text,
-                          numero: numeroController.text,
-                          bairro: bairroController.text,
-                          complemento: complementoController.text,
-                          idCidade: idCidade,
-                          nomeCidade: cidadeController.text,
-                          hcCabeceira: cabeceiraController.text,
-                          hcPezeiro: pezeiroController.text,
-                          idHcCabeceira: idHcCabeceira,
-                          idHcPezeiro: idHcPiseiro,
-                          token: usuario.usuario!.token,
-                          tipo: usuario.usuario!.tipo,
-                          primeiroAcesso: usuario.usuario!.primeiroAcesso,
-                          foto: usuario.usuario!.foto,
-                          civil: civilController.text,
-                          apelido: apelidoController.text,
-                        );
-
-                        if (sucesso) {
-                          var usuarioProvider = context.read<UsuarioProvider>();
-                          usuarioProvider.setUsuario(usuarioNovo);
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: const Text('Sucesso ao editar dados.'),
-                            backgroundColor: Colors.green,
-                            action: SnackBarAction(
-                              label: 'OK',
-                              onPressed: () {},
-                            ),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(mensagem),
-                            backgroundColor: Colors.red,
-                            action: SnackBarAction(
-                              label: 'OK',
-                              onPressed: () {},
-                            ),
-                          ));
-                        }
-                      });
+                      editar(usuario);
                     },
                     child: const Text('Salvar'),
                   ),

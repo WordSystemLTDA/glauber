@@ -11,7 +11,7 @@ class HandiCapServicoImpl implements HandiCapServico {
 
   @override
   Future<List<HandiCapsModelos>> listar() async {
-    var url = 'autenticacao/listar_handicaps.php';
+    var url = 'handicaps/listar.php';
 
     var response = await client.get(url: url);
 

@@ -30,6 +30,7 @@ class _CardComprasState extends State<CardCompras> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     var item = widget.item;
 
     return SizedBox(
@@ -42,144 +43,155 @@ class _CardComprasState extends State<CardCompras> {
               context: context,
               builder: (context) {
                 return Dialog(
+                  insetPadding: EdgeInsets.zero,
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                   surfaceTintColor: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Detalhes do seu Ingresso',
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Detalhes do evento',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(item.nomeEvento),
-                            Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
-                            Text(item.horaInicio),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Valores da venda',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 5),
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Valor ingresso'),
-                                Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
-                                  style: const TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Valor taxa'),
-                                Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
-                                  style: const TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Valor desconto'),
-                                Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
-                                  style: const TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Valor total'),
-                                Text(
-                                  Utils.coverterEmReal.format(double.parse(item.valorTotal)),
-                                  style: const TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Detalhes da compra',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              item.pago == 'Não' ? "Não Pago" : "Pago",
-                              style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
-                            ),
-                            Text(item.formaPagamento),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(item.status),
-                            Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
-                            Text(item.horaCompra),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Provas Vinculadas',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 5),
-                        Flexible(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(top: 5),
-                            itemCount: item.provas.length,
-                            itemBuilder: (context, index) {
-                              var provas = item.provas[index];
-
-                              return Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(provas.nomeCabeceira),
-                                      Text(provas.nomeProva),
-                                      Text(
-                                        Utils.coverterEmReal.format(double.parse(provas.total)),
-                                        style: const TextStyle(color: Colors.green),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                  child: SizedBox(
+                    width: width * 0.9,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Detalhes do seu Ingresso',
+                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Detalhes do evento',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                child: Text(
+                                  item.nomeEvento,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
+                              Text(item.horaInicioF),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Valores da venda',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 5),
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Valor ingresso'),
+                                  Text(
+                                    Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
+                                    style: const TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Valor taxa'),
+                                  Text(
+                                    Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
+                                    style: const TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Valor desconto'),
+                                  Text(
+                                    Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
+                                    style: const TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Valor total'),
+                                  Text(
+                                    Utils.coverterEmReal.format(double.parse(item.valorTotal)),
+                                    style: const TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Detalhes da compra',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                item.pago == 'Não' ? "Não Pago" : "Pago",
+                                style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
+                              ),
+                              Text(item.formaPagamento),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(item.status),
+                              Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
+                              Text(item.horaCompra),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Provas Vinculadas',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 5),
+                          Flexible(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.only(top: 5),
+                              itemCount: item.provas.length,
+                              itemBuilder: (context, index) {
+                                var provas = item.provas[index];
+
+                                return Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(provas.nomeCabeceira),
+                                        Text(provas.nomeProva),
+                                        Text(
+                                          Utils.coverterEmReal.format(double.parse(provas.total)),
+                                          style: const TextStyle(color: Colors.green),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

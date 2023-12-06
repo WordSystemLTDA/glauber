@@ -16,6 +16,7 @@ class CardEventos extends StatefulWidget {
 class _CardEventosState extends State<CardEventos> {
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     var evento = widget.evento;
     var aparecerInformacoes = widget.aparecerInformacoes ?? false;
 
@@ -87,12 +88,17 @@ class _CardEventosState extends State<CardEventos> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                          Text(
-                            evento.nomeEvento,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
+                          SizedBox(
+                            width: width * 0.50,
+                            child: Text(
+                              evento.nomeEvento,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 5),

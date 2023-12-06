@@ -3,9 +3,25 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+enum TiposLogin {
+  email,
+  google,
+  apple;
+
+  String get nome {
+    switch (this) {
+      case TiposLogin.email:
+        return 'email';
+      case TiposLogin.google:
+        return 'google';
+      case TiposLogin.apple:
+        return 'apple';
+    }
+  }
+}
 
 class AutenticacaoServicoImpl implements AutenticacaoServico {
   final IHttpClient client;
@@ -13,55 +29,37 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   AutenticacaoServicoImpl(this.client);
 
   @override
-  Future<(bool, UsuarioModelo?)> entrar(String email, String senha, String? tokenNotificacao) async {
+  Future<(bool, UsuarioModelo?)> entrar(String email, String senha, TiposLogin tipoLogin, dynamic usuario, String? tokenNotificacao) async {
     var url = 'autenticacao/entrar.php';
 
-    var campos = {
-      "email": email,
-      "senha": senha,
-      "tokenNotificacao": tokenNotificacao,
-    };
-
-    var response = await client.post(url: url, body: jsonEncode(campos));
-
-    Map result = jsonDecode(response.data);
-    bool sucesso = result['sucesso'];
-    UsuarioModelo usuario = UsuarioModelo.fromMap(result['resultado']);
-
-    if (response.statusCode == 200 && sucesso == true) {
-      return (sucesso, usuario);
-    } else {
-      return (false, null);
-    }
-  }
-
-  @override
-  Future<(bool, UsuarioModelo?)> entrarSocial(dynamic usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
-    var url = 'autenticacao/entrar_social.php';
     String? idSocialLogin = '';
     String? nome = '';
-    String? email = '';
+    String? emailNovo = '';
     String? foto = '';
 
-    if (tipo == TiposLoginSocial.google) {
+    if (tipoLogin == TiposLogin.email) {
+      emailNovo = email;
+    } else if (tipoLogin == TiposLogin.google) {
       var usuarioTipo = usuario as GoogleSignInAccount;
       idSocialLogin = usuarioTipo.id;
       nome = usuarioTipo.displayName;
       foto = usuarioTipo.photoUrl;
-      email = usuarioTipo.email;
-    } else if (tipo == TiposLoginSocial.apple) {
+      emailNovo = usuarioTipo.email;
+    } else if (tipoLogin == TiposLogin.apple) {
       var usuarioTipo = usuario as AuthorizationCredentialAppleID;
       idSocialLogin = usuarioTipo.userIdentifier;
       nome = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
       foto = 'semfoto';
-      email = usuarioTipo.email;
+      emailNovo = usuarioTipo.email;
     }
 
     var campos = {
-      "email": email,
+      "email": emailNovo,
       "nome": nome,
-      "idSocialLogin": idSocialLogin,
+      "senha": senha,
+      "tipoLogin": tipoLogin.nome,
       "tokenNotificacao": tokenNotificacao,
+      "idSocialLogin": idSocialLogin,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
@@ -69,9 +67,8 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
 
-    UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
-
     if (response.statusCode == 200 && sucesso == true) {
+      UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
       return (sucesso, usuarioRetorno);
     } else {
       return (false, null);
@@ -139,32 +136,36 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<(bool, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLoginSocial tipo, String hcCabeceira, String hcPiseiro) async {
-    var url = 'autenticacao/entrar_social.php';
+  Future<(bool, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLogin tipoLogin, String nome, String hcCabeceira, String hcPiseiro) async {
+    var url = 'autenticacao/cadastrar_social.php';
 
     String? idSocialLogin = '';
-    String? nome = '';
+    String? nomeNovo = '';
     String? foto = '';
     String? email = '';
+    String? identityToken = '';
 
-    if (tipo == TiposLoginSocial.google) {
+    if (tipoLogin == TiposLogin.google) {
       var usuarioTipo = usuario as GoogleSignInAccount;
       idSocialLogin = usuarioTipo.id;
-      nome = usuarioTipo.displayName;
+      nomeNovo = usuarioTipo.displayName;
       foto = usuarioTipo.photoUrl;
       email = usuarioTipo.email;
-    } else if (tipo == TiposLoginSocial.apple) {
+    } else if (tipoLogin == TiposLogin.apple) {
       var usuarioTipo = usuario as AuthorizationCredentialAppleID;
       idSocialLogin = usuarioTipo.userIdentifier;
       foto = 'semfoto';
-      nome = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
+      identityToken = usuarioTipo.identityToken;
+      nomeNovo = nome;
       email = usuarioTipo.email;
     }
 
     var campos = {
       "email": email,
       "idSocialLogin": idSocialLogin,
-      "nome": nome,
+      'identityToken': identityToken,
+      "nome": nomeNovo,
+      "tipoLogin": tipoLogin.nome,
       "tokenNotificacao": '',
       "hcCabeceira": hcCabeceira,
       "hcPiseiro": hcPiseiro,
@@ -175,9 +176,8 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
 
-    UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
-
     if (response.statusCode == 200 && sucesso == true) {
+      UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
       return (sucesso, usuarioRetorno);
     } else {
       return (false, null);
@@ -211,46 +211,6 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<(bool, UsuarioModelo?)> verificarLoginSocial(dynamic usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
-    var url = 'autenticacao/verificacao_social.php';
-
-    String? idSocialLogin = '';
-    String? email = '';
-    String? foto = '';
-
-    if (tipo == TiposLoginSocial.google) {
-      var usuarioTipo = usuario as GoogleSignInAccount;
-      idSocialLogin = usuarioTipo.id;
-      email = usuarioTipo.email;
-      foto = usuarioTipo.photoUrl;
-    } else if (tipo == TiposLoginSocial.apple) {
-      var usuarioTipo = usuario as AuthorizationCredentialAppleID;
-      idSocialLogin = usuarioTipo.userIdentifier;
-      foto = 'semfoto';
-      email = usuarioTipo.email;
-    }
-
-    var campos = {
-      "email": email,
-      "token": idSocialLogin,
-      "tipo": 'social',
-      "tokenNotificacao": tokenNotificacao,
-    };
-
-    var response = await client.post(url: url, body: jsonEncode(campos));
-
-    Map result = jsonDecode(response.data);
-    bool sucesso = result['sucesso'];
-
-    if (response.statusCode == 200 && sucesso == true) {
-      UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
-      return (sucesso, usuarioRetorno);
-    } else {
-      return (false, null);
-    }
-  }
-
-  @override
   Future<(bool, UsuarioModelo?)> verificar(UsuarioModelo? usuario, String? tokenNotificacao) async {
     var url = 'autenticacao/verificacao.php';
 
@@ -270,9 +230,9 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
-    UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': usuario.foto});
 
     if (response.statusCode == 200 && sucesso == true) {
+      UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': usuario.foto});
       return (sucesso, usuarioRetorno);
     } else {
       // await UsuarioProvider.removerUsuario();

@@ -13,6 +13,7 @@ class ProvaModelo extends Equatable {
   final bool jaComprou;
   final bool compraLiberada;
   String? idCabeceira;
+  String? tempoFaltante;
 
   ProvaModelo({
     required this.id,
@@ -23,10 +24,11 @@ class ProvaModelo extends Equatable {
     required this.jaComprou,
     required this.compraLiberada,
     this.idCabeceira,
+    this.tempoFaltante,
   });
 
   @override
-  List<Object?> get props => [id, nomeProva, valor, jaComprou, idCabeceira, hcMinimo, hcMaximo, compraLiberada];
+  List<Object?> get props => [id, nomeProva, valor, jaComprou, idCabeceira, tempoFaltante, hcMinimo, hcMaximo, compraLiberada];
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -38,6 +40,7 @@ class ProvaModelo extends Equatable {
       'jaComprou': jaComprou,
       'compraLiberada': compraLiberada,
       'idCabeceira': idCabeceira,
+      'tempoFaltante': tempoFaltante,
     };
   }
 
@@ -51,6 +54,7 @@ class ProvaModelo extends Equatable {
       jaComprou: map['jaComprou'] as bool,
       compraLiberada: map['compraLiberada'] as bool,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
+      tempoFaltante: map['tempoFaltante'] != null ? map['tempoFaltante'] as String : null,
     );
   }
 

@@ -167,7 +167,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                     child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: state.eventos.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 50),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         var item = state.eventos[index];

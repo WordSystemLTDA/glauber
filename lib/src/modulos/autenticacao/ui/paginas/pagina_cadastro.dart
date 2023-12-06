@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
+import 'package:provadelaco/src/compartilhado/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
 import 'package:provider/provider.dart';
 
 class PaginaCadastro extends StatefulWidget {
@@ -27,18 +26,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
   bool ocultarSenha = true;
   bool ocultarConfirmar = true;
-
-  @override
-  void dispose() {
-    _nomeController.dispose();
-    _apelidoController.dispose();
-    _emailController.dispose();
-    _hcCabeceiraController.dispose();
-    _hcPiseiroController.dispose();
-    _senhaController.dispose();
-    _confirmarSenhaController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -71,9 +58,56 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   }
 
   @override
+  void dispose() {
+    _nomeController.dispose();
+    _apelidoController.dispose();
+    _emailController.dispose();
+    _hcCabeceiraController.dispose();
+    _hcPiseiroController.dispose();
+    _senhaController.dispose();
+    _confirmarSenhaController.dispose();
+    super.dispose();
+  }
+
+  void cadastrar() {
+    var autenticacaoStore = context.read<AutenticacaoStore>();
+
+    String nome = _nomeController.text;
+    String apelido = _apelidoController.text;
+    String email = _emailController.text;
+    String senha = _senhaController.text;
+    String confirmar = _confirmarSenhaController.text;
+    String hcCabeceira = idHcCabeceira;
+    String hcPiseiro = idHcPiseiro;
+
+    if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        showCloseIcon: true,
+        backgroundColor: Colors.red,
+        content: Center(child: Text('Preencha todos os campos!')),
+      ));
+    } else if (hcCabeceira.isEmpty || hcPiseiro.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        showCloseIcon: true,
+        backgroundColor: Colors.red,
+        content: Center(child: Text('Você precisa preencher todos os handicaps.')),
+      ));
+    } else {
+      if (senha != confirmar) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Campos de senha precisam ser iguais!')),
+        ));
+      } else {
+        autenticacaoStore.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     var autenticacaoStore = context.read<AutenticacaoStore>();
-    var handiCapStore = context.read<HandiCapStore>();
 
     return GestureDetector(
       onTap: () {
@@ -142,7 +176,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,53 +210,28 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   TextField(
                     readOnly: true,
                     keyboardType: TextInputType.number,
+                    controller: _hcCabeceiraController,
                     decoration: const InputDecoration(
                       hintText: "Seu HandiCap",
                       border: OutlineInputBorder(),
                     ),
-                    controller: _hcCabeceiraController,
                     onTap: () {
-                      handiCapStore.listar();
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return Dialog(
-                            child: SizedBox(
-                              height: 400,
-                              child: ValueListenableBuilder<HandiCapEstado>(
-                                valueListenable: handiCapStore,
-                                builder: (context, state, _) {
-                                  if (state is HandiCapCarregando) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-
-                                  if (state is HandiCapCarregado) {
-                                    return ListView.builder(
-                                      itemCount: state.handicaps.length,
-                                      padding: const EdgeInsets.symmetric(vertical: 15),
-                                      itemBuilder: (context, index) {
-                                        var item = state.handicaps[index];
-
-                                        return ListTile(
-                                          onTap: () {
-                                            setState(() {
-                                              _hcCabeceiraController.text = item.nome;
-                                              idHcCabeceira = item.id;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          title: Text(item.nome),
-                                        );
-                                      },
-                                    );
-                                  }
-
-                                  return const Text('Erro ao tentar Listar HandiCaps');
-                                },
-                              ),
-                            ),
+                          return HandiCapsDialog(
+                            aoMudar: (itemHC, handicaps) {
+                              setState(() {
+                                if (int.parse(idHcPiseiro) == 3 && double.parse(itemHC.id) < 3) {
+                                  _hcCabeceiraController.text = handicaps.where((element) => element.id == '3').first.nome;
+                                  idHcCabeceira = '3';
+                                } else {
+                                  _hcCabeceiraController.text = itemHC.nome;
+                                  idHcCabeceira = itemHC.id;
+                                }
+                              });
+                              Navigator.pop(context);
+                            },
                           );
                         },
                       );
@@ -234,91 +243,36 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   TextField(
                     readOnly: true,
                     controller: _hcPiseiroController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu HandiCap'),
                     onTap: () {
-                      handiCapStore.listar();
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return Dialog(
-                            child: SizedBox(
-                              height: 400,
-                              child: ValueListenableBuilder<HandiCapEstado>(
-                                valueListenable: handiCapStore,
-                                builder: (context, state, _) {
-                                  if (state is HandiCapCarregando) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-
-                                  if (state is HandiCapCarregado) {
-                                    return ListView.builder(
-                                      itemCount: state.handicaps.length,
-                                      padding: const EdgeInsets.symmetric(vertical: 15),
-                                      itemBuilder: (context, index) {
-                                        var item = state.handicaps[index];
-
-                                        return ListTile(
-                                          onTap: () {
-                                            setState(() {
-                                              _hcPiseiroController.text = item.nome;
-                                              idHcPiseiro = item.id;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          title: Text(item.nome),
-                                        );
-                                      },
-                                    );
-                                  }
-
-                                  return const Text('Erro ao tentar Listar HandiCaps');
-                                },
-                              ),
-                            ),
+                          return HandiCapsDialog(
+                            aoMudar: (itemHC, handicaps) {
+                              setState(() {
+                                if (int.parse(idHcCabeceira) == 3 && double.parse(itemHC.id) < 3) {
+                                  _hcPiseiroController.text = handicaps.where((element) => element.id == '3').first.nome;
+                                  idHcPiseiro = '3';
+                                } else {
+                                  _hcPiseiroController.text = itemHC.nome;
+                                  idHcPiseiro = itemHC.id;
+                                }
+                              });
+                              Navigator.pop(context);
+                            },
                           );
                         },
                       );
                     },
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu HandiCap'),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        String nome = _nomeController.text;
-                        String apelido = _apelidoController.text;
-                        String email = _emailController.text;
-                        String senha = _senhaController.text;
-                        String confirmar = _confirmarSenhaController.text;
-                        String hcCabeceira = idHcCabeceira;
-                        String hcPiseiro = idHcPiseiro;
-
-                        if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            showCloseIcon: true,
-                            backgroundColor: Colors.red,
-                            content: Center(child: Text('Preencha todos os campos!')),
-                          ));
-                        } else if (hcCabeceira.isEmpty && hcPiseiro.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            showCloseIcon: true,
-                            backgroundColor: Colors.red,
-                            content: Center(child: Text('Algum dos dois HandiCap precisa ser preenchido.')),
-                          ));
-                        } else {
-                          if (senha != confirmar) {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              showCloseIcon: true,
-                              backgroundColor: Colors.red,
-                              content: Center(child: Text('Campos de senha precisam ser iguais!')),
-                            ));
-                          } else {
-                            autenticacaoStore.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro);
-                          }
-                        }
+                        cadastrar();
                       },
                       child: state is Cadastrando ? const CircularProgressIndicator() : const Text('Cadastrar-se'),
                     ),

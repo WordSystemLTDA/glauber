@@ -23,7 +23,7 @@ class HomeStore extends ValueNotifier<HomeEstado> {
 
     if (resposta.sucesso) {
       var configProvider = context.read<ConfigProvider>();
-      configProvider.setVersoes(resposta.dadosConfig);
+      configProvider.setConfig(resposta.dadosConfig);
 
       verificarAtualicao(context, resposta.dadosConfig);
 

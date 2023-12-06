@@ -16,6 +16,12 @@ class _PaginaBuscarState extends State<PaginaBuscar> with AutomaticKeepAliveClie
   TextEditingController nomeBuscaController = TextEditingController();
 
   @override
+  void dispose() {
+    nomeBuscaController.dispose();
+    super.dispose();
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override

@@ -386,6 +386,14 @@ class _PaginaProvasState extends State<PaginaProvas> {
   }
 
   @override
+  void dispose() {
+    nomeDenuncia.dispose();
+    celularDenuncia.dispose();
+    mensagemDenuncia.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var provasStore = context.read<ProvasStore>();
 
@@ -566,7 +574,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           ],
                         ),
                       ),
-                      if (state.provas.isNotEmpty) ...[
+                      if (state.provas.isNotEmpty && state.evento != null && state.nomesCabeceira != null) ...[
                         const Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Align(
@@ -686,6 +694,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             abrirTermosDeUso();
                                           },
                                           style: const ButtonStyle(
+                                            backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                                             elevation: MaterialStatePropertyAll(0),
                                             side: MaterialStatePropertyAll<BorderSide>(
                                               BorderSide(
@@ -708,6 +717,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                             abrirDenunciar(state);
                                           },
                                           style: const ButtonStyle(
+                                            backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                                             elevation: MaterialStatePropertyAll(0),
                                             side: MaterialStatePropertyAll<BorderSide>(
                                               BorderSide(

@@ -73,6 +73,8 @@ class _PaginaSplashState extends State<PaginaSplash> {
 
             if (sucesso) {
               UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+            } else {
+              UsuarioServico.sair(context);
             }
 
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(

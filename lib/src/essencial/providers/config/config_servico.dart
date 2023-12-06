@@ -5,6 +5,6 @@ import 'package:provider/provider.dart';
 
 class ConfigServico {
   static Future<void> salvarVersao(BuildContext context, ConfigModelo versao) async {
-    context.read<ConfigProvider>().setVersoes(versao);
+    context.read<ConfigProvider>().setConfig(versao);
   }
 }

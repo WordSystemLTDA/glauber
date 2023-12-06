@@ -2,39 +2,62 @@
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
+import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
-enum TiposLoginSocial { google, apple }
 
 class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
   final AutenticacaoServico _autenticacaoServico;
 
   AutenticacaoStore(this._autenticacaoServico) : super(AutenticacaoEstadoInicial());
 
-  void entrarComEmail(BuildContext context, email, senha, String? tokenNotificacao) async {
+  void entrar(BuildContext context, String email, String senha, TiposLogin tiposLogin, String? tokenNotificacao) async {
     value = Carregando();
 
-    _autenticacaoServico.entrar(email, senha, tokenNotificacao).then((resposta) {
-      var (sucesso, usuarioRetorno) = resposta;
+    if (tiposLogin == TiposLogin.email) {
+      await _autenticacaoServico.entrar(email, senha, tiposLogin, null, tokenNotificacao).then((resposta) {
+        var (sucesso, usuarioRetorno) = resposta;
 
-      if (sucesso) {
-        UsuarioServico.salvarUsuario(context, usuarioRetorno!);
-        value = Autenticado();
-      } else {
-        value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
-      }
-    }).onError((error, stackTrace) {
-      value = AutenticacaoErro(erro: Exception(error));
-    });
+        if (sucesso) {
+          UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+          value = Autenticado();
+        } else {
+          value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
+        }
+      }).onError((error, stackTrace) {
+        value = AutenticacaoErro(erro: Exception(error));
+      });
+    } else {
+      await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
+        await _autenticacaoServico.entrar(email, senha, tiposLogin, usuario, tokenNotificacao).then((resposta) {
+          var (sucesso, usuarioRetorno) = resposta;
+
+          if (sucesso) {
+            UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+            value = Autenticado();
+          } else {
+            value = AutenticacaoErro(erro: Exception('Preencha as informações acima.'));
+          }
+
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin);
+            },
+          ));
+        }).onError((error, stackTrace) {
+          value = AutenticacaoErro(erro: Exception(error));
+        });
+      }).onError((error, stackTrace) {
+        value = AutenticacaoErro(erro: Exception(error));
+      });
+    }
   }
 
-  Future<(bool, dynamic)> listarInformacoesLogin(BuildContext context, tipoLoginSocial, tokenNotificacao) async {
-    value = Carregando();
-
-    if (tipoLoginSocial == TiposLoginSocial.google) {
+  Future<dynamic> listarInformacoesLoginSocial(BuildContext context, tiposLogin) async {
+    if (tiposLogin == TiposLogin.google) {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: [
           'email',
@@ -42,66 +65,25 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
         ],
       );
 
-      var usuario = await googleSignIn.signIn().onError((error, stackTrace) {
-        value = AutenticacaoErro(erro: Exception(error));
-        return Future.error(error!);
-      });
+      var usuario = await googleSignIn.signIn();
 
-      var (sucesso, usuarioRetorno) = await _autenticacaoServico.verificarLoginSocial(usuario, tipoLoginSocial, tokenNotificacao);
-
-      if (sucesso) {
-        value = Autenticado();
-      } else {
-        return (sucesso, usuario);
-      }
-
-      return (sucesso, usuarioRetorno);
-    } else if (tipoLoginSocial == TiposLoginSocial.apple) {
+      return usuario;
+    } else if (tiposLogin == TiposLogin.apple) {
       var usuario = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
-      ).onError((error, stackTrace) {
-        value = AutenticacaoErro(erro: Exception(error));
-        return Future.error(error!);
-      });
+      );
 
-      var (sucesso, usuarioRetorno) = await _autenticacaoServico.verificarLoginSocial(usuario, tipoLoginSocial, tokenNotificacao);
-
-      if (sucesso) {
-        value = Autenticado();
-      } else {
-        return (sucesso, usuario);
-      }
-
-      return (sucesso, usuarioRetorno);
+      return usuario;
     }
-
-    return (false, null);
   }
 
-  void entrarSocial(BuildContext context, usuario, TiposLoginSocial tipo, String? tokenNotificacao) async {
-    value = Carregando();
-
-    _autenticacaoServico.entrarSocial(usuario, tipo, tokenNotificacao).then((resposta) {
-      var (sucesso, usuarioRetorno) = resposta;
-
-      if (sucesso) {
-        UsuarioServico.salvarUsuario(context, usuarioRetorno!);
-        value = Autenticado();
-      } else {
-        value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
-      }
-    }).onError((error, stackTrace) {
-      value = AutenticacaoErro(erro: Exception(error));
-    });
-  }
-
-  void cadastrarSocial(BuildContext context, usuario, tipoLogin, hcCabeceira, hcPiseiro) async {
+  void cadastrarSocial(BuildContext context, usuario, tipoLogin, String nome, hcCabeceira, hcPiseiro) async {
     value = Cadastrando();
 
-    _autenticacaoServico.cadastrarSocial(usuario, tipoLogin, hcCabeceira, hcPiseiro).then((resposta) {
+    _autenticacaoServico.cadastrarSocial(usuario, tipoLogin, nome, hcCabeceira, hcPiseiro).then((resposta) {
       var (sucesso, usuarioRetorno) = resposta;
 
       if (sucesso) {

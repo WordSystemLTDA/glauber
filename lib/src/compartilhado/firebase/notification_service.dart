@@ -59,8 +59,8 @@ class NotificationService {
   }
 
   _initializeNotifications() async {
-    // const android = AndroidInitializationSettings('@mipmap/launcher_icon');
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings('@mipmap/launcher_icon');
+    // const android = AndroidInitializationSettings('@mipmap/ic_launcher');
     const ios = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,

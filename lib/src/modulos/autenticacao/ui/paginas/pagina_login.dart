@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
-import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -28,33 +28,17 @@ class _PaginaLoginState extends State<PaginaLogin> {
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (mounted) {
-      autenticacaoStore.entrarComEmail(context, _emailController.text, _senhaController.text, tokenNotificacao);
+      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, tokenNotificacao);
     }
   }
 
-  void entrarSocial(TiposLoginSocial tipoLoginSocial) async {
+  void entrarSocial(TiposLogin tipoLogin) async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
     final FirebaseMessagingService firebaseMessagingService = context.read<FirebaseMessagingService>();
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (mounted) {
-      autenticacaoStore.listarInformacoesLogin(context, tipoLoginSocial, tokenNotificacao).then((resposta) {
-        var (sucesso, usuario) = resposta;
-
-        if (!sucesso) {
-          if (usuario == null) {
-            return;
-          }
-
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tipoLoginSocial);
-            },
-          ));
-        } else {
-          UsuarioServico.salvarUsuario(context, usuario!);
-        }
-      });
+      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, tokenNotificacao);
     }
   }
 
@@ -102,6 +86,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
   @override
   Widget build(BuildContext context) {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
+    final ConfigProvider configProvider = context.read<ConfigProvider>();
 
     return ValueListenableBuilder<AutenticacaoEstado>(
       valueListenable: autenticacaoStore,
@@ -120,10 +105,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'LOGO',
-                            style: TextStyle(fontSize: 32),
-                          ),
+                          configProvider.logoApp(context, width: 100) != null ? configProvider.logoApp(context, width: 100)! : const Text(''),
                           const SizedBox(height: 50),
                           TextField(
                             controller: _emailController,
@@ -228,7 +210,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                             text: 'Entrar com o Google',
                             onPressed: () {
-                              entrarSocial(TiposLoginSocial.google);
+                              entrarSocial(TiposLogin.google);
                             },
                           ),
                           const SizedBox(height: 10),
@@ -241,7 +223,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                               text: 'Entrar com a Apple',
                               onPressed: () async {
-                                entrarSocial(TiposLoginSocial.apple);
+                                entrarSocial(TiposLogin.apple);
                               },
                             ),
                           ],

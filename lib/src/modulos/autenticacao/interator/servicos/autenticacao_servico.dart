@@ -1,13 +1,11 @@
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 
 abstract interface class AutenticacaoServico {
+  Future<(bool, UsuarioModelo?)> entrar(String email, String senha, TiposLogin tipoLogin, dynamic usuario, String? tokenNotificacao);
   Future<(bool, UsuarioModelo?)> verificar(UsuarioModelo? usuario, String? tokenNotificacao);
-  Future<(bool, UsuarioModelo?)> verificarLoginSocial(dynamic usuario, TiposLoginSocial tipo, String? tokenNotificacao);
   Future<bool> sair(UsuarioModelo? usuario, String? tokenNotificacao);
   Future<bool> excluirConta(UsuarioModelo? usuario, String? tokenNotificacao);
-  Future<(bool, UsuarioModelo?)> entrar(String email, String senha, String? tokenNotificacao);
-  Future<(bool, UsuarioModelo?)> entrarSocial(dynamic usuario, TiposLoginSocial tipo, String? tokenNotificacao);
   Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String hcCabeceira, String hcPiseiro);
-  Future<(bool, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLoginSocial tipo, String hcCabeceira, String hcPiseiro);
+  Future<(bool, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLogin tipo, String nome, String hcCabeceira, String hcPiseiro);
 }

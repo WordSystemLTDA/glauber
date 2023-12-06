@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -36,11 +38,22 @@ class _CardProvasState extends State<CardProvas> {
   void aoClicarNaCabeceira(ProvaModelo prova, item) {
     var usuarioProvider = context.read<UsuarioProvider>();
 
-    if (!prova.compraLiberada || widget.evento.liberacaoDeCompra == '0') {
+    if (!prova.compraLiberada) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(child: Text('Ainda falta ${prova.tempoFaltante} para que essa prova seja liberada.')),
+          showCloseIcon: true,
+        ));
+      }
+      return;
+    }
+
+    if (widget.evento.liberacaoDeCompra == '0') {
       if (mounted) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Essa prova não está liberada para venda ainda.')),
+          content: Center(child: Text('A compra dessa prova foi desativada, aguarde a ativação.')),
           showCloseIcon: true,
         ));
       }
@@ -202,6 +215,10 @@ class _CardProvasState extends State<CardProvas> {
   Color coresJaComprou(prova) {
     var usuarioProvider = context.read<UsuarioProvider>();
 
+    if (prova == null || usuarioProvider == null) {
+      return Colors.red;
+    }
+
     // Verificação do HandiCap Máximo e Mínimo da prova
     if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
       // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
@@ -211,7 +228,17 @@ class _CardProvasState extends State<CardProvas> {
               double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo))) {
         return Colors.red;
       }
-    } else if (prova.jaComprou || !prova.compraLiberada || widget.evento.liberacaoDeCompra == '0') {
+    }
+
+    if (prova.jaComprou) {
+      return Colors.red;
+    }
+
+    if (!prova.compraLiberada) {
+      return Colors.red;
+    }
+
+    if (widget.evento.liberacaoDeCompra == '0') {
       return Colors.red;
     }
 
@@ -233,11 +260,22 @@ class _CardProvasState extends State<CardProvas> {
           onTap: () {
             var usuarioProvider = context.read<UsuarioProvider>();
 
-            if (!prova.compraLiberada || widget.evento.liberacaoDeCompra == '0') {
+            if (!prova.compraLiberada) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Center(child: Text('Ainda falta ${prova.tempoFaltante} para que essa prova seja liberada.')),
+                  showCloseIcon: true,
+                ));
+              }
+              return;
+            }
+
+            if (widget.evento.liberacaoDeCompra == '0') {
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Center(child: Text('Essa prova não está liberada para venda ainda.')),
+                  content: Center(child: Text('A compra dessa prova foi desativada, aguarde a ativação.')),
                   showCloseIcon: true,
                 ));
               }
@@ -301,7 +339,15 @@ class _CardProvasState extends State<CardProvas> {
                             prova.nomeProva,
                             style: const TextStyle(fontSize: 18),
                           ),
-                          const SizedBox(height: 15),
+                          if (!prova.compraLiberada) ...[
+                            Text(
+                              "${prova.tempoFaltante!} para liberação",
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                          if (prova.compraLiberada) ...[
+                            const SizedBox(height: 15),
+                          ],
                           Text(
                             Utils.coverterEmReal.format(double.parse(prova.valor)),
                             style: const TextStyle(fontSize: 18, color: Colors.green),
