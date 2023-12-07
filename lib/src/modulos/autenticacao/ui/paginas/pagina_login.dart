@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
+import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
@@ -86,7 +86,6 @@ class _PaginaLoginState extends State<PaginaLogin> {
   @override
   Widget build(BuildContext context) {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
-    final ConfigProvider configProvider = context.read<ConfigProvider>();
 
     return ValueListenableBuilder<AutenticacaoEstado>(
       valueListenable: autenticacaoStore,
@@ -105,7 +104,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          configProvider.logoApp(context, width: 100) != null ? configProvider.logoApp(context, width: 100)! : const Text(''),
+                          const LogoApp(width: 230),
                           const SizedBox(height: 50),
                           TextField(
                             controller: _emailController,

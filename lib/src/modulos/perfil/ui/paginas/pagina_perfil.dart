@@ -132,6 +132,9 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
 
                                 autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirConta) {
                                   if (sucessoAoExcluirConta) {
+                                    UsuarioServico.sair(context).then((value) {
+                                      Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                                    });
                                     // UsuarioProvider.removerUsuario().then((sucessoAoSair) {
                                     //   if (sucessoAoSair) {
                                     //     Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
@@ -216,6 +219,11 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
         return "${usuarioProvider.usuario!.nome![0].toUpperCase()}${usuarioProvider.usuario!.nome![1].toUpperCase()}";
       }
     } else {
+      itemsPerfil[0]['ativo'] = false;
+      itemsPerfil[1]['ativo'] = false;
+      itemsPerfil[2]['ativo'] = false;
+      itemsPerfil[itemsPerfil.length - 1]['ativo'] = false;
+      itemsPerfil[itemsPerfil.length - 2]['ativo'] = false;
       return "N/A";
     }
   }

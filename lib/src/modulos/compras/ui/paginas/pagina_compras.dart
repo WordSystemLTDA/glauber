@@ -153,7 +153,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
             comprasStore.listar(usuarioProvider.usuario);
           },
           child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
               height: height - 200,
               child: const Center(

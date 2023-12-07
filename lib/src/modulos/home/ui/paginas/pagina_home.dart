@@ -77,6 +77,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
               homeStore.listar(context, categoriasIndex);
             },
             child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 30),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

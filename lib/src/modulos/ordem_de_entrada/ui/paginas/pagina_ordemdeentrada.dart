@@ -74,7 +74,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
               ordemDeEntradaStore.listar(usuarioProvider.usuario);
             },
             child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: SizedBox(
                 height: height - 200,
                 child: const Center(

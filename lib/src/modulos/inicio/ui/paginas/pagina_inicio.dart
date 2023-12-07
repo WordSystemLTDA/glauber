@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/drawer_customizado.dart';
-import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
+import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
@@ -108,7 +108,6 @@ class _PaginaInicioState extends State<PaginaInicio> {
 
   @override
   Widget build(BuildContext context) {
-    var configProvider = context.read<ConfigProvider>();
     return Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {
       return Scaffold(
         floatingActionButton: Visibility(
@@ -144,8 +143,8 @@ class _PaginaInicioState extends State<PaginaInicio> {
           },
         ),
         endDrawerEnableOpenDragGesture: false,
-        appBar: AppBarSombra(
-          titulo: configProvider.logoApp(context, width: 100) != null ? configProvider.logoApp(context, width: 100)! : const Text(''),
+        appBar: const AppBarSombra(
+          titulo: LogoApp(width: 100),
         ),
         body: PageView(
           controller: pageController,

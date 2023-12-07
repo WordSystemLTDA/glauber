@@ -6,7 +6,6 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
 
@@ -84,19 +83,6 @@ class _CardProvasState extends State<CardProvas> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Center(child: Text("Você precisa ter um HandiCap ${item.nome} para poder continuar a compra.")),
           showCloseIcon: true,
-          action: SnackBarAction(
-            label: 'Editar',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const PaginaEditarUsuario();
-                  },
-                ),
-              );
-            },
-          ),
         ));
       }
       return;
@@ -108,19 +94,6 @@ class _CardProvasState extends State<CardProvas> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Center(child: Text("Você precisa ter um HandiCap ${item.nome} para poder continuar a compra.")),
           showCloseIcon: true,
-          action: SnackBarAction(
-            label: 'Editar',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const PaginaEditarUsuario();
-                  },
-                ),
-              );
-            },
-          ),
         ));
       }
       return;
@@ -129,6 +102,31 @@ class _CardProvasState extends State<CardProvas> {
     // Verificação do HandiCap Máximo e Mínimo da prova
     if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
       // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
+
+      if (item.id == '1' && usuarioProvider.usuario!.hcCabeceira!.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(child: Text("Seu Handicap é vazio e não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+        }
+        return;
+      }
+
+      if (item.id == '2' && usuarioProvider.usuario!.hcPezeiro!.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(child: Text("Seu Handicap é vazio e não é permitido para essa Somatória de ${prova.hcMinimo} á ${prova.hcMaximo}.")),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+        }
+        return;
+      }
+
       if (item.id == '1' &&
           !(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
               double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo))) {
@@ -215,17 +213,26 @@ class _CardProvasState extends State<CardProvas> {
   Color coresJaComprou(prova) {
     var usuarioProvider = context.read<UsuarioProvider>();
 
-    if (prova == null || usuarioProvider == null) {
+    if (prova == null || usuarioProvider == null || usuarioProvider.usuario == null) {
       return Colors.red;
     }
 
     // Verificação do HandiCap Máximo e Mínimo da prova
-    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
+    if ((prova.hcMinimo != null && prova.hcMaximo != null) &&
+        (prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) &&
+        (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
       // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
-      if (!(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
-              double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo)) &&
-          !(double.parse(usuarioProvider.usuario!.hcPezeiro!) >= double.parse(prova.hcMinimo) &&
-              double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo))) {
+      if (usuarioProvider.usuario!.hcPezeiro!.isEmpty || usuarioProvider.usuario!.hcCabeceira!.isEmpty) {
+        return Colors.red;
+      }
+
+      var verificacaoMaxMinCabeceira = !(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
+          double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo));
+
+      var verificacaoMaxMinPiseiro =
+          !(double.parse(usuarioProvider.usuario!.hcPezeiro!) >= double.parse(prova.hcMinimo) && double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo));
+
+      if (verificacaoMaxMinCabeceira && verificacaoMaxMinPiseiro) {
         return Colors.red;
       }
     }
@@ -248,6 +255,7 @@ class _CardProvasState extends State<CardProvas> {
   @override
   Widget build(BuildContext context) {
     var prova = widget.prova;
+    var width = MediaQuery.of(context).size.width;
 
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
@@ -348,9 +356,26 @@ class _CardProvasState extends State<CardProvas> {
                           if (prova.compraLiberada) ...[
                             const SizedBox(height: 15),
                           ],
-                          Text(
-                            Utils.coverterEmReal.format(double.parse(prova.valor)),
-                            style: const TextStyle(fontSize: 18, color: Colors.green),
+                          SizedBox(
+                            width: (width - 90) - 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  Utils.coverterEmReal.format(double.parse(prova.valor)),
+                                  style: const TextStyle(fontSize: 18, color: Colors.green),
+                                ),
+                                if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Text(
+                                      "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -358,70 +383,54 @@ class _CardProvasState extends State<CardProvas> {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8, right: 10),
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ),
+              SizedBox(
+                width: 90,
+                height: tamanhoCard,
+                child: Material(
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    margin: EdgeInsets.zero,
+                    elevation: 5,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
                     ),
-                  ],
-                  SizedBox(
-                    width: 90,
-                    height: tamanhoCard,
-                    child: Material(
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        margin: EdgeInsets.zero,
-                        elevation: 5,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                        ),
-                        child: SizedBox(
-                          height: tamanhoCard,
-                          child: ListView.separated(
-                            separatorBuilder: (context, index) {
-                              return Divider(height: 1, color: Theme.of(context).colorScheme.background);
-                            },
-                            padding: const EdgeInsets.only(bottom: 1),
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: widget.nomesCabeceira!.length,
-                            itemBuilder: (context, index) {
-                              var item = widget.nomesCabeceira![index];
+                    child: SizedBox(
+                      height: tamanhoCard,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) {
+                          return Divider(height: 1, color: Theme.of(context).colorScheme.background);
+                        },
+                        padding: const EdgeInsets.only(bottom: 1),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.nomesCabeceira!.length,
+                        itemBuilder: (context, index) {
+                          var item = widget.nomesCabeceira![index];
 
-                              return SizedBox(
-                                width: 90,
-                                height: tamanhoCard / 2.1,
-                                child: Material(
-                                  color: coresAction(prova, item),
-                                  child: InkWell(
-                                    borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                                    onTap: () {
-                                      aoClicarNaCabeceira(prova, item);
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        item.nome,
-                                        style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
+                          return SizedBox(
+                            width: 90,
+                            height: tamanhoCard / 2.1,
+                            child: Material(
+                              color: coresAction(prova, item),
+                              child: InkWell(
+                                borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                onTap: () {
+                                  aoClicarNaCabeceira(prova, item);
+                                },
+                                child: Center(
+                                  child: Text(
+                                    item.nome,
+                                    style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
-                              );
-                            },
-                          ),
-                        ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),

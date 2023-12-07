@@ -125,6 +125,8 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       body: jsonEncode(campos),
     );
 
+    print(response.data);
+
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
 

@@ -17,7 +17,7 @@ class AppWidget extends StatelessWidget {
       valueListenable: context.read<ThemeController>(),
       builder: (context, state, _) {
         return MaterialApp(
-          title: 'Gs Equine',
+          title: 'GS Equine',
           debugShowCheckedModeBanner: false,
           theme: lightTheme,
           darkTheme: darkTheme,

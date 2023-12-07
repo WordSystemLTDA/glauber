@@ -21,6 +21,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
   @override
   Widget build(BuildContext context) {
     var item = widget.item;
+    var width = MediaQuery.of(context).size.width;
     var usuarioProvider = context.read<UsuarioProvider>();
 
     return SizedBox(
@@ -121,9 +122,23 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "${item.nomeEvento} - ${item.nomeProva}",
-                            style: const TextStyle(fontSize: 18),
+                          SizedBox(
+                            width: width * 0.70,
+                            child: Text(
+                              item.nomeEvento,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.70,
+                            child: Text(
+                              item.nomeProva,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 16),
+                            ),
                           ),
                           const SizedBox(height: 15),
                           Text(

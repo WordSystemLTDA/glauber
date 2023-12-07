@@ -169,6 +169,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
                                 _hcCabeceiraController.text = itemHC.nome;
                                 idHcCabeceira = itemHC.id;
                               }
+                              Navigator.pop(context);
                             },
                           );
                         },
