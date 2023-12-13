@@ -128,14 +128,14 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   const SizedBox(height: 5),
                   TextField(
                     controller: _nomeController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
+                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Nome Completo'),
                   ),
                   const SizedBox(height: 10),
                   const Text('Apelido'),
                   const SizedBox(height: 5),
                   TextField(
                     controller: _apelidoController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: João'),
+                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Como quer ser chamado no Brete'),
                   ),
                   const SizedBox(height: 10),
                   const Text('E-mail'),
@@ -271,6 +271,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
+                      style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.red),
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                      ),
                       onPressed: () {
                         cadastrar();
                       },

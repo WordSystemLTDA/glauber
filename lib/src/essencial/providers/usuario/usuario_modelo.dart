@@ -4,6 +4,8 @@ import 'dart:convert';
 class UsuarioModelo {
   String? id;
   String? email;
+  String? tipoDePix;
+  String? chavePix;
   String? senha;
   String? nome;
   String? token;
@@ -33,13 +35,15 @@ class UsuarioModelo {
   UsuarioModelo({
     required this.id,
     required this.email,
+    required this.tipoDePix,
+    required this.chavePix,
     required this.senha,
+    required this.nome,
+    required this.token,
     required this.hcCabeceira,
     required this.hcPezeiro,
     required this.idHcCabeceira,
     required this.idHcPezeiro,
-    required this.nome,
-    required this.token,
     required this.tipo,
     required this.primeiroAcesso,
     required this.cpf,
@@ -64,6 +68,8 @@ class UsuarioModelo {
     return <String, dynamic>{
       'id': id,
       'email': email,
+      'tipoDePix': tipoDePix,
+      'chavePix': chavePix,
       'senha': senha,
       'nome': nome,
       'token': token,
@@ -96,6 +102,8 @@ class UsuarioModelo {
     return UsuarioModelo(
       id: map['id'] != null ? map['id'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
+      tipoDePix: map['tipoDePix'] != null ? map['tipoDePix'] as String : null,
+      chavePix: map['chavePix'] != null ? map['chavePix'] as String : null,
       senha: map['senha'] != null ? map['senha'] as String : null,
       nome: map['nome'] != null ? map['nome'] as String : null,
       token: map['token'] != null ? map['token'] as String : null,

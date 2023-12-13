@@ -78,7 +78,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
               child: SizedBox(
                 height: height - 200,
                 child: const Center(
-                  child: Text('Nenhuma compra foi encontrada.'),
+                  child: Text('Nenhuma ordem de entrada foi encontrada.'),
                 ),
               ),
             ),

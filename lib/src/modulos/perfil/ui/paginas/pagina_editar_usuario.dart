@@ -42,6 +42,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   final TextEditingController numeroController = TextEditingController();
   final TextEditingController complementoController = TextEditingController();
 
+  TextEditingController chavePix = TextEditingController();
+
   TextEditingController cidadeController = TextEditingController();
   SearchController pesquisaCidadeController = SearchController();
 
@@ -49,6 +51,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   String idHcPiseiro = '0';
   String dataNascimentoNormal = '';
   String idCidade = '';
+  String tipoDeChave = 'Celular';
 
   var dadosSexos = [
     {
@@ -108,6 +111,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
     complementoController.dispose();
     cidadeController.dispose();
     pesquisaCidadeController.dispose();
+    chavePix.dispose();
     super.dispose();
   }
 
@@ -119,6 +123,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       FormularioEditarUsuarioModelo(
         id: usuario.usuario!.id!,
         nome: nomeController.text,
+        tipoDePix: tipoDeChave,
+        chavePix: chavePix.text,
         apelido: apelidoController.text,
         civil: civilController.text,
         sexo: sexoController.text,
@@ -144,6 +150,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
 
       var usuarioNovo = UsuarioModelo(
         id: usuario.usuario!.id!,
+        tipoDePix: tipoDeChave,
+        chavePix: chavePix.text,
         nome: nomeController.text,
         sexo: sexoController.text,
         dataNascimento: dataNascimentoNormal,
@@ -208,6 +216,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       cpfController.text = usuario.cpf!;
       rgController.text = usuario.rg!;
       sexoController.text = usuario.sexo!;
+      chavePix.text = usuario.chavePix!;
+      tipoDeChave = usuario.tipoDePix!.isEmpty ? 'Celular' : usuario.tipoDePix!;
       // dataNascimentoNormal = DateFormat('yyyy-MM-dd').format(DateTime.parse(usuario.dataNascimento!)).toString();
       // dataNascimentoController.text = DateFormat('dd/MM/yyyy').format(DateTime.parse(usuario.dataNascimento!)).toString();
       telefoneController.text = usuario.telefone!;
@@ -633,13 +643,67 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                 ),
                 // -----------------------------------------------------------------
                 const SizedBox(height: 20),
+                const Text(
+                  'Outras Informações',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    DropdownMenu(
+                      initialSelection: tipoDeChave,
+                      dropdownMenuEntries: const [
+                        DropdownMenuEntry(
+                          value: 'Celular',
+                          label: 'Celular',
+                        ),
+                        DropdownMenuEntry(
+                          value: 'CPF',
+                          label: 'CPF',
+                        ),
+                        DropdownMenuEntry(
+                          value: 'Email',
+                          label: 'E-mail',
+                        ),
+                        DropdownMenuEntry(
+                          value: 'Chave Aleatória',
+                          label: 'Chave Aleatória',
+                        ),
+                      ],
+                      onSelected: (String? value) {
+                        setState(() {
+                          tipoDeChave = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: chavePix,
+                        decoration: const InputDecoration(
+                          hintText: 'Chave Pix',
+                          label: Text('Chave Pix'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // -----------------------------------------------------------------
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.red),
+                      foregroundColor: MaterialStatePropertyAll(Colors.white),
+                    ),
                     onPressed: () {
                       editar(usuario);
                     },
-                    child: const Text('Salvar'),
+                    child: const Text(
+                      'Salvar',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 50),

@@ -210,6 +210,10 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
+                      style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.red),
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                      ),
                       onPressed: () {
                         cadastrar();
                       },

@@ -51,7 +51,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
                         ),
                         const SizedBox(height: 10),
-                        Text("Sua somatória: ${item.idCabeceira == '1' ? usuarioProvider.usuario!.hcCabeceira! : usuarioProvider.usuario!.hcPezeiro!}"),
+                        Text("Seu HandiCap: ${item.idCabeceira == '1' ? usuarioProvider.usuario!.hcCabeceira! : usuarioProvider.usuario!.hcPezeiro!}"),
                         const SizedBox(height: 20),
                         if (item.parceiros.isNotEmpty) ...[
                           const Divider(),
@@ -65,20 +65,75 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               itemBuilder: (context, index) {
                                 var itemParceiro = item.parceiros[index];
 
-                                return ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  minVerticalPadding: 0,
-                                  // visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                                  title: Text(
-                                    itemParceiro.nomeCliente,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  subtitle: Text("Inscrição: ${itemParceiro.numeroDaInscricao}"),
-                                  trailing: Text(
-                                    itemParceiro.somatoria,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "${itemParceiro.nomeCliente} HC: ${itemParceiro.handicapCliente}",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            itemParceiro.sorteio == '0' || itemParceiro.sorteio.isEmpty
+                                                ? Text("Inscrição: ${itemParceiro.numeroDaInscricao}")
+                                                : Text("Inscrição: ${itemParceiro.numeroDaInscricao}, Sorteio ${itemParceiro.sorteio}"),
+                                          ],
+                                        ),
+                                        Text(
+                                          itemParceiro.somatoria,
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            const Text('1 BOI'),
+                                            Text(itemParceiro.boi1),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            const Text('2 BOI'),
+                                            Text(itemParceiro.boi2),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            const Text('3 BOI'),
+                                            Text(itemParceiro.boi3),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            const Text('4 BOI'),
+                                            Text(itemParceiro.boi4),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            const Text('Final'),
+                                            Text(itemParceiro.finalT),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            const Text('Média'),
+                                            Text(itemParceiro.medio),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 );
                               },
                             ),

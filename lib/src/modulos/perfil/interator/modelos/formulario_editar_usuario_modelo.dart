@@ -22,6 +22,8 @@ class FormularioEditarUsuarioModelo {
   final String cidade;
   final String hcCabeceira;
   final String hcPezeiro;
+  final String tipoDePix;
+  final String chavePix;
 
   FormularioEditarUsuarioModelo({
     required this.id,
@@ -44,6 +46,8 @@ class FormularioEditarUsuarioModelo {
     required this.cidade,
     required this.hcCabeceira,
     required this.hcPezeiro,
+    required this.tipoDePix,
+    required this.chavePix,
   });
 
   Map<String, dynamic> toMap() {
@@ -68,6 +72,8 @@ class FormularioEditarUsuarioModelo {
       'cidade': cidade,
       'hcCabeceira': hcCabeceira,
       'hcPezeiro': hcPezeiro,
+      'tipoDePix': tipoDePix,
+      'chavePix': chavePix,
     };
   }
 
@@ -93,6 +99,8 @@ class FormularioEditarUsuarioModelo {
       cidade: map['cidade'] as String,
       hcCabeceira: map['hcCabeceira'] as String,
       hcPezeiro: map['hcPezeiro'] as String,
+      tipoDePix: map['tipoDePix'] as String,
+      chavePix: map['chavePix'] as String,
     );
   }
 
