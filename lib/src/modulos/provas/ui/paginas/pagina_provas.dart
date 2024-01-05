@@ -6,6 +6,7 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -19,11 +20,18 @@ import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dar
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PaginaProvas extends StatefulWidget {
+class PaginaProvasArgumentos {
   final String idEvento;
-  const PaginaProvas({super.key, required this.idEvento});
+
+  PaginaProvasArgumentos({required this.idEvento});
+}
+
+class PaginaProvas extends StatefulWidget {
+  final PaginaProvasArgumentos argumentos;
+  const PaginaProvas({super.key, required this.argumentos});
 
   @override
   State<PaginaProvas> createState() => _PaginaProvasState();
@@ -367,10 +375,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
   }
 
   double setarTamanho(double height, state) {
-    if (((height * 0.40) - ((state.provas.isNotEmpty ? state.provas.length : 1) * (state.provas.isNotEmpty ? 110 : 0))).isNegative) {
+    var provas = state is ProvasCarregando ? Utils.dadosFakesProvas : state.provas;
+
+    if (((height * 0.40) - ((provas.isNotEmpty ? provas.length : 1) * (provas.isNotEmpty ? 110 : 0))).isNegative) {
       return 50;
     } else {
-      return (height * 0.40) - ((state.provas.isNotEmpty ? state.provas.length : 1) * (state.provas.isNotEmpty ? 110 : 0));
+      return (height * 0.40) - ((provas.isNotEmpty ? provas.length : 1) * (provas.isNotEmpty ? 110 : 0));
     }
   }
 
@@ -381,7 +391,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var provasStore = context.read<ProvasStore>();
       var usuarioProvider = context.read<UsuarioProvider>();
-      provasStore.listar(usuarioProvider.usuario, widget.idEvento);
+      provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento);
     });
   }
 
@@ -412,11 +422,11 @@ class _PaginaProvasState extends State<PaginaProvas> {
             width: 250,
             child: FloatingActionButton.extended(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return PaginaFinalizarCompra(provas: provasCarrinho, idEvento: widget.idEvento);
-                  },
-                ));
+                Navigator.pushNamed(
+                  context,
+                  AppRotas.finalizarCompra,
+                  arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento),
+                );
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               backgroundColor: const Color.fromARGB(255, 247, 24, 8),
@@ -438,175 +448,189 @@ class _PaginaProvasState extends State<PaginaProvas> {
         body: ValueListenableBuilder<ProvasEstado>(
           valueListenable: provasStore,
           builder: (context, state, _) {
-            if (state is ProvasCarregando) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+            var evento = state is ProvasCarregando ? Utils.dadosFakesEventos[0] : state.evento;
+            var provas = state is ProvasCarregando ? Utils.dadosFakesProvas : state.provas;
+            var nomesCabeceira = state is ProvasCarregando ? Utils.dadosFakesNomesCabeceira : state.nomesCabeceira;
+
+            if (state is ErroAoCarregar) {
+              return const Text('Erro ao listar Provas.');
             }
 
-            if (state is ProvasCarregado) {
+            if (evento != null) {
               return RefreshIndicator(
                 onRefresh: () async {
-                  provasStore.listar(usuarioProvider.usuario, widget.idEvento);
+                  provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento);
                 },
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 250,
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: CachedNetworkImage(
-                                imageUrl: state.evento!.foto,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                  child: SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: CircularProgressIndicator(value: downloadProgress.progress),
+                      Skeletonizer(
+                        enabled: state is ProvasCarregando,
+                        child: SizedBox(
+                          height: 250,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: CachedNetworkImage(
+                                  imageUrl: evento.foto,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                    child: SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: CircularProgressIndicator(value: downloadProgress.progress),
+                                    ),
                                   ),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
                                 ),
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                final imageProvider = Image.network(state.evento!.foto).image;
-                                showImageViewer(
-                                  context,
-                                  imageProvider,
-                                  useSafeArea: true,
-                                  doubleTapZoomable: true,
-                                );
-                              },
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  height: 300,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      end: const Alignment(0.0, -0.6),
-                                      begin: const Alignment(0.0, 0),
-                                      colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                              GestureDetector(
+                                onTap: () {
+                                  final imageProvider = Image.network(evento.foto).image;
+                                  showImageViewer(
+                                    context,
+                                    imageProvider,
+                                    useSafeArea: true,
+                                    doubleTapZoomable: true,
+                                  );
+                                },
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    height: 300,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        end: const Alignment(0.0, -0.6),
+                                        begin: const Alignment(0.0, 0),
+                                        colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Align(
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
+                                      Text(
+                                        evento.nomeEvento,
+                                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+                                      ),
+                                      Text(
+                                        DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 5),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SafeArea(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Container(
+                                    width: 90,
+                                    decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+                                    child: IconButton(
+                                      icon: const Row(
+                                        children: [
+                                          Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                                          SizedBox(width: 10),
+                                          Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Skeletonizer(
+                        enabled: state is ProvasCarregando,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Row(
+                            children: [
+                              ActionChip(
+                                avatar: const Icon(Icons.location_on_outlined),
+                                label: const Text('Localização'),
+                                onPressed: () {
+                                  abrirLocalizacao(evento);
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              ActionChip(
+                                avatar: const Icon(Icons.payment_outlined),
+                                label: const Text('Pagamentos'),
+                                onPressed: () {
+                                  abrirPagamentosDisponiveis(state.pagamentosDisponiveis!);
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              ActionChip(
+                                avatar: const Icon(Icons.warning_amber),
+                                label: const Text('Termos de Uso'),
+                                onPressed: () {
+                                  abrirTermosDeUso();
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (provas.isNotEmpty && nomesCabeceira != null) ...[
+                        Skeletonizer(
+                          enabled: state is ProvasCarregando,
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
-                                    Text(
-                                      state.evento!.nomeEvento,
-                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
-                                    ),
-                                    Text(
-                                      DateFormat('dd/MM/yyyy').format(DateTime.parse(state.evento!.dataEvento)),
-                                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                    const SizedBox(height: 5),
-                                  ],
-                                ),
+                              child: Text(
+                                'Escolha sua Prova',
+                                style: TextStyle(fontSize: 16),
                               ),
-                            ),
-                            SafeArea(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Container(
-                                  width: 90,
-                                  decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
-                                  child: IconButton(
-                                    icon: const Row(
-                                      children: [
-                                        Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
-                                        SizedBox(width: 10),
-                                        Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Row(
-                          children: [
-                            ActionChip(
-                              avatar: const Icon(Icons.location_on_outlined),
-                              label: const Text('Localização'),
-                              onPressed: () {
-                                abrirLocalizacao(state.evento);
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            ActionChip(
-                              avatar: const Icon(Icons.payment_outlined),
-                              label: const Text('Pagamentos'),
-                              onPressed: () {
-                                abrirPagamentosDisponiveis(state.pagamentosDisponiveis!);
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            ActionChip(
-                              avatar: const Icon(Icons.warning_amber),
-                              label: const Text('Termos de Uso'),
-                              onPressed: () {
-                                abrirTermosDeUso();
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                          ],
-                        ),
-                      ),
-                      if (state.provas.isNotEmpty && state.evento != null && state.nomesCabeceira != null) ...[
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Escolha sua Prova',
-                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
-                        ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(10),
-                          itemCount: state.provas.length,
-                          itemBuilder: (context, index) {
-                            var prova = state.provas[index];
+                        Skeletonizer(
+                          enabled: state is ProvasCarregando,
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(10),
+                            itemCount: provas.length,
+                            itemBuilder: (context, index) {
+                              var prova = provas[index];
 
-                            return CardProvas(
-                              prova: prova,
-                              evento: state.evento!,
-                              nomesCabeceira: state.nomesCabeceira!,
-                              idEvento: widget.idEvento,
-                              provasCarrinho: provasCarrinho,
-                              aoClicarNaProva: (prova) {
-                                adicionarNoCarrinho(prova, state.evento!);
-                              },
-                            );
-                          },
+                              return CardProvas(
+                                prova: prova,
+                                evento: evento,
+                                nomesCabeceira: nomesCabeceira,
+                                idEvento: widget.argumentos.idEvento,
+                                provasCarrinho: provasCarrinho,
+                                aoClicarNaProva: (prova) {
+                                  adicionarNoCarrinho(prova, evento);
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ],
-                      if (state.provas.isEmpty) ...[
+                      if (provas.isEmpty) ...[
                         const Padding(
                           padding: EdgeInsets.only(top: 20),
                           child: Align(
@@ -618,123 +642,126 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           ),
                         ),
                       ],
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: setarTamanho(height, state),
-                        ),
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.only(bottom: 10),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                            ),
+                      Skeletonizer(
+                        enabled: state is ProvasCarregando,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: setarTamanho(height, state),
+                          ),
+                          child: Card(
                             margin: EdgeInsets.zero,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (Platform.isAndroid ? 50 : 20)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.pin_drop_outlined, size: 20),
-                                          Opacity(
-                                            opacity: 0.6,
-                                            child: Text(
-                                              " ${state.evento!.nomeCidade}",
-                                              style: const TextStyle(fontSize: 15),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.date_range, size: 20),
-                                          Opacity(
-                                            opacity: 0.6,
-                                            child: Text(
-                                              " ${DateFormat('dd/MM/yyyy').format(DateTime.parse(state.evento!.dataEvento))}",
-                                              style: const TextStyle(fontSize: 15),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 15),
-                                  const Text(
-                                    'Descrição do evento',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  if (state.evento!.descricao1.isNotEmpty) ...[
-                                    const SizedBox(height: 15),
-                                    Text(state.evento!.descricao1),
-                                  ],
-                                  if (state.evento!.descricao2.isNotEmpty) ...[
-                                    const SizedBox(height: 10),
-                                    Text(state.evento!.descricao2),
-                                  ],
-                                  if (state.evento!.descricao1.isEmpty && state.evento!.descricao2.isEmpty) ...[
-                                    const SizedBox(height: 15),
-                                    const Text('...'),
-                                  ],
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: width / 2.4,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            abrirTermosDeUso();
-                                          },
-                                          style: const ButtonStyle(
-                                            backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                                            elevation: MaterialStatePropertyAll(0),
-                                            side: MaterialStatePropertyAll<BorderSide>(
-                                              BorderSide(
-                                                width: 1,
-                                                color: Colors.grey,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.only(bottom: 10),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                              ),
+                              margin: EdgeInsets.zero,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (Platform.isAndroid ? 50 : 20)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.pin_drop_outlined, size: 20),
+                                            Opacity(
+                                              opacity: 0.6,
+                                              child: Text(
+                                                " ${evento.nomeCidade}",
+                                                style: const TextStyle(fontSize: 15),
                                               ),
                                             ),
-                                          ),
-                                          child: const Text(
-                                            'Termos de Uso',
-                                            style: TextStyle(color: Colors.grey),
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      SizedBox(
-                                        width: width / 2.4,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            abrirDenunciar(state);
-                                          },
-                                          style: const ButtonStyle(
-                                            backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                                            elevation: MaterialStatePropertyAll(0),
-                                            side: MaterialStatePropertyAll<BorderSide>(
-                                              BorderSide(
-                                                width: 1,
-                                                color: Colors.red,
+                                        const SizedBox(width: 10),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.date_range, size: 20),
+                                            Opacity(
+                                              opacity: 0.6,
+                                              child: Text(
+                                                " ${DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento))}",
+                                                style: const TextStyle(fontSize: 15),
                                               ),
                                             ),
-                                          ),
-                                          child: const Text(
-                                            'Denunciar',
-                                            style: TextStyle(color: Colors.red),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    const Text(
+                                      'Descrição do evento',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    if (evento.descricao1.isNotEmpty) ...[
+                                      const SizedBox(height: 15),
+                                      Text(evento.descricao1),
+                                    ],
+                                    if (evento.descricao2.isNotEmpty) ...[
+                                      const SizedBox(height: 10),
+                                      Text(evento.descricao2),
+                                    ],
+                                    if (evento.descricao1.isEmpty && evento.descricao2.isEmpty) ...[
+                                      const SizedBox(height: 15),
+                                      const Text('...'),
+                                    ],
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: width / 2.4,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              abrirTermosDeUso();
+                                            },
+                                            style: const ButtonStyle(
+                                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                                              elevation: MaterialStatePropertyAll(0),
+                                              side: MaterialStatePropertyAll<BorderSide>(
+                                                BorderSide(
+                                                  width: 1,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Termos de Uso',
+                                              style: TextStyle(color: Colors.grey),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        const SizedBox(width: 10),
+                                        SizedBox(
+                                          width: width / 2.4,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              abrirDenunciar(state);
+                                            },
+                                            style: const ButtonStyle(
+                                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                                              elevation: MaterialStatePropertyAll(0),
+                                              side: MaterialStatePropertyAll<BorderSide>(
+                                                BorderSide(
+                                                  width: 1,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'Denunciar',
+                                              style: TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

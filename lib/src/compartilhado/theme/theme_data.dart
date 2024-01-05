@@ -5,6 +5,9 @@ part 'color_schemes.g.dart';
 ThemeData get darkTheme => ThemeData(
       useMaterial3: true,
       colorScheme: _darkColorScheme,
+      pageTransitionsTheme: const PageTransitionsTheme(builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      }),
       appBarTheme: AppBarTheme(
         centerTitle: true,
         backgroundColor: _darkColorScheme.primaryContainer,
@@ -20,6 +23,9 @@ ThemeData get darkTheme => ThemeData(
 ThemeData get lightTheme => ThemeData(
       useMaterial3: true,
       colorScheme: _lightColorScheme,
+      pageTransitionsTheme: const PageTransitionsTheme(builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+      }),
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         backgroundColor: Colors.white,

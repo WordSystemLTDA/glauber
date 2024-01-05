@@ -1,10 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_propagandas.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaHome extends StatefulWidget {
   const PaginaHome({super.key});
@@ -17,6 +19,8 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
   int categoriasIndex = 0;
 
   TabController? _categoriaController;
+
+  GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -65,27 +69,27 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     return ValueListenableBuilder<HomeEstado>(
       valueListenable: homeStore,
       builder: (context, state, _) {
-        if (state is Carregando) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        var eventosTopo = state is Carregando ? Utils.dadosFakesEventos : state.eventosTopo;
+        var eventos = state is Carregando ? Utils.dadosFakesEventos : state.eventos;
+        var propagandas = state is Carregando ? Utils.dadosFakesPropagandas : state.propagandas;
+        var categorias = state is Carregando ? Utils.dadosFakesCategoria : state.categorias;
 
-        if (state is Carregado) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              homeStore.listar(context, categoriasIndex);
-            },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 10),
-                  // Carrosel de Eventos
-                  if (state.eventosTopo.isNotEmpty) ...[
-                    SizedBox(
+        return RefreshIndicator(
+          onRefresh: () async {
+            homeStore.listar(context, categoriasIndex);
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                // Carrosel de Eventos
+                if (eventosTopo.isNotEmpty) ...[
+                  Skeletonizer(
+                    enabled: state is Carregando,
+                    child: SizedBox(
                       height: 220,
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
@@ -97,9 +101,9 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                           enlargeCenterPage: true,
                           enlargeStrategy: CenterPageEnlargeStrategy.height,
                         ),
-                        itemCount: state.eventosTopo.length,
+                        itemCount: eventosTopo.length,
                         itemBuilder: (context, index, realIndex) {
-                          var item = state.eventosTopo[index];
+                          var item = eventosTopo[index];
 
                           return CardEventos(
                             evento: item,
@@ -108,43 +112,70 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         },
                       ),
                     ),
-                  ],
-                  // Categorias
-                  if (_categoriaController != null) ...[
-                    Align(
+                  ),
+                ],
+                if (_categoriaController != null) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      height: 40,
+                      child: TabBar(
+                        tabAlignment: TabAlignment.start,
+                        dividerColor: Colors.transparent,
+                        controller: _categoriaController,
+                        isScrollable: true,
+                        onTap: (categoria) async {
+                          if (categoriasIndex == categoria) {
+                            return;
+                          }
+
+                          setState(() {
+                            categoriasIndex = categoria;
+                          });
+
+                          homeStore.listar(context, int.parse(categorias[categoria].id));
+                        },
+                        tabs: categorias
+                            .map((e) => Tab(
+                                  child: Text(e.nome, style: const TextStyle(fontSize: 16)),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
+                // Categorias
+                if (_categoriaController == null) ...[
+                  Skeletonizer(
+                    enabled: state is Carregando,
+                    child: Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
                         height: 40,
-                        child: TabBar(
-                          tabAlignment: TabAlignment.start,
-                          dividerColor: Colors.transparent,
-                          controller: _categoriaController,
-                          isScrollable: true,
-                          onTap: (categoria) async {
-                            if (categoriasIndex == categoria) {
-                              return;
-                            }
-
-                            setState(() {
-                              categoriasIndex = categoria;
-                            });
-
-                            homeStore.listar(context, int.parse(state.categorias[categoria].id));
-                          },
-                          tabs: state.categorias
-                              .map((e) => Tab(
-                                    child: Text(e.nome, style: const TextStyle(fontSize: 16)),
-                                  ))
-                              .toList(),
+                        child: DefaultTabController(
+                          length: categorias.length,
+                          child: TabBar(
+                            tabAlignment: TabAlignment.start,
+                            dividerColor: Colors.transparent,
+                            isScrollable: true,
+                            tabs: categorias
+                                .map((e) => Tab(
+                                      child: Text(e.nome, style: const TextStyle(fontSize: 16)),
+                                    ))
+                                .toList(),
+                          ),
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                ],
 
-                  // Carrosel de Propagandas
-                  const SizedBox(height: 10),
-                  if (state.propagandas.isNotEmpty) ...[
-                    SizedBox(
+                // Carrosel de Propagandas
+                const SizedBox(height: 10),
+                if (propagandas.isNotEmpty) ...[
+                  Skeletonizer(
+                    enabled: state is Carregando,
+                    child: SizedBox(
                       height: 110,
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
@@ -154,39 +185,38 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                           pauseAutoPlayOnTouch: true,
                           autoPlayInterval: const Duration(seconds: 20),
                         ),
-                        itemCount: state.propagandas.length,
+                        itemCount: propagandas.length,
                         itemBuilder: (context, index, realIndex) {
-                          var item = state.propagandas[index];
+                          var item = propagandas[index];
 
                           return CardPropagandas(propaganda: item);
                         },
                       ),
                     ),
-                  ],
-                  const SizedBox(height: 10),
-                  Flexible(
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.eventos.length,
-                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 50),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        var item = state.eventos[index];
-
-                        return CardEventos(
-                          evento: item,
-                          aparecerInformacoes: true,
-                        );
-                      },
-                    ),
                   ),
                 ],
-              ),
-            ),
-          );
-        }
+                const SizedBox(height: 10),
+                Skeletonizer(
+                  enabled: state is Carregando,
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: eventos.length,
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 50),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      var item = eventos[index];
 
-        return Container();
+                      return CardEventos(
+                        evento: item,
+                        aparecerInformacoes: true,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }

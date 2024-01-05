@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/propaganda_modelo.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
 
@@ -23,12 +24,11 @@ class _CardPropagandasState extends State<CardPropagandas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            // Navigator.pushNamed(context, '/provas');
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return PaginaPropaganda(propaganda: propaganda);
-              },
-            ));
+            Navigator.pushNamed(
+              context,
+              AppRotas.propaganda,
+              arguments: PaginaPropagandaArgumentos(propaganda: propaganda),
+            );
           },
           child: Stack(
             children: [
@@ -37,13 +37,13 @@ class _CardPropagandasState extends State<CardPropagandas> {
                 width: double.infinity,
                 height: 110,
                 fit: BoxFit.cover,
-                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                  child: SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: CircularProgressIndicator(value: downloadProgress.progress),
-                  ),
-                ),
+                // progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                //   child: SizedBox(
+                //     width: 40,
+                //     height: 40,
+                //     child: CircularProgressIndicator(value: downloadProgress.progress),
+                //   ),
+                // ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ],

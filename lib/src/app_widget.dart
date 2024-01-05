@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_data.dart';
-import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_cadastro.dart';
-import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
-import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
-import 'package:provadelaco/src/modulos/splash/ui/paginas/pagina_splash.dart';
+import 'package:provadelaco/src/route_generator.dart';
 import 'package:provider/provider.dart';
 
 class AppWidget extends StatelessWidget {
@@ -22,7 +20,6 @@ class AppWidget extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: state,
-          initialRoute: '/',
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
@@ -32,12 +29,9 @@ class AppWidget extends StatelessWidget {
             Locale('pt', 'BR'),
           ],
           locale: const Locale('pt', 'BR'),
-          routes: {
-            '/': (context) => const PaginaSplash(),
-            '/inicio': (context) => const PaginaInicio(),
-            '/autenticacao/login': (context) => const PaginaLogin(),
-            '/autenticacao/cadastrar': (context) => const PaginaCadastro(),
-          },
+          initialRoute: AppRotas.paginaInicial,
+          navigatorKey: AppRotas.navigatorKey,
+          onGenerateRoute: RouteGenerator.generateRoute,
         );
       },
     );

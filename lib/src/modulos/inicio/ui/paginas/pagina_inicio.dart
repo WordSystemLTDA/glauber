@@ -1,9 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/drawer_customizado.dart';
 import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
 import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
@@ -20,19 +21,63 @@ class PaginaInicio extends StatefulWidget {
 
 class _PaginaInicioState extends State<PaginaInicio> {
   int pageIndex = 0;
-  final PageController pageController = PageController(initialPage: 0);
+  PageController pageController = PageController(initialPage: 0);
   TextEditingController novaSenha = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     verificar();
+    abrirPaginaQuandoClicaNotificacao();
   }
 
   @override
   void dispose() {
     novaSenha.dispose();
+    pageController.dispose();
     super.dispose();
+  }
+
+  void funcaoMudarRota(RemoteMessage? message) {
+    if (message != null) {
+      String rota = message.data['rotaApp'] ?? '';
+
+      if (rota.isNotEmpty) {
+        if (rota == AppRotas.compras) {
+          setState(() {
+            pageIndex = 1;
+            pageController.jumpToPage(1);
+          });
+        } else if (rota == AppRotas.ordemDeEntrada) {
+          setState(() {
+            pageIndex = 2;
+            pageController.jumpToPage(2);
+          });
+        } else if (rota == AppRotas.perfil) {
+          setState(() {
+            pageIndex = 3;
+            pageController.jumpToPage(3);
+          });
+        } else if (rota == AppRotas.home) {
+          setState(() {
+            pageIndex = 0;
+            pageController.jumpToPage(0);
+          });
+        } else {
+          Navigator.pushNamed(context, rota);
+        }
+      }
+    }
+  }
+
+  void abrirPaginaQuandoClicaNotificacao() async {
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      funcaoMudarRota(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+      funcaoMudarRota(message);
+    });
   }
 
   void verificar() {
@@ -117,11 +162,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
             height: 50,
             child: FloatingActionButton.extended(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const PaginaLogin();
-                  },
-                ));
+                Navigator.pushNamed(context, AppRotas.login);
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               backgroundColor: const Color.fromARGB(255, 247, 24, 8),

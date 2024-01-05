@@ -35,7 +35,12 @@ class FirebaseMessagingService {
 
       if (notification != null && android != null) {
         _notificationService.showLocalNotification(
-          CustomNotification(id: android.hashCode, title: notification.title!, body: notification.body!, payload: message.data['route'] ?? ''),
+          CustomNotification(
+            id: android.hashCode,
+            title: notification.title!,
+            body: notification.body!,
+            payload: message.data['rotaApp'] ?? '',
+          ),
         );
       }
     });

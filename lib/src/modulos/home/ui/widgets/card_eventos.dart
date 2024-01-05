@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:intl/intl.dart';
@@ -27,11 +28,10 @@ class _CardEventosState extends State<CardEventos> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => PaginaProvas(idEvento: evento.id),
-              ),
+              AppRotas.provas,
+              arguments: PaginaProvasArgumentos(idEvento: evento.id),
             );
           },
           child: Stack(
@@ -41,13 +41,13 @@ class _CardEventosState extends State<CardEventos> {
                 width: double.infinity,
                 height: 220,
                 fit: BoxFit.cover,
-                progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                  child: SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: CircularProgressIndicator(value: downloadProgress.progress),
-                  ),
-                ),
+                // progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                //   child: SizedBox(
+                //     width: 40,
+                //     height: 40,
+                //     child: CircularProgressIndicator(value: downloadProgress.progress),
+                //   ),
+                // ),
                 errorWidget: (context, url, error) => const Icon(
                   Icons.error,
                   size: 25,

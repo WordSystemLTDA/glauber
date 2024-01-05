@@ -1,9 +1,9 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
@@ -68,11 +68,7 @@ class _CardProvasState extends State<CardProvas> {
           showCloseIcon: true,
         ));
 
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const PaginaLogin();
-          },
-        ));
+        Navigator.pushNamed(context, AppRotas.login);
       }
       return;
     }
@@ -298,11 +294,7 @@ class _CardProvasState extends State<CardProvas> {
                   showCloseIcon: true,
                 ));
 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const PaginaLogin();
-                  },
-                ));
+                Navigator.pushNamed(context, AppRotas.login);
               }
               return;
             }

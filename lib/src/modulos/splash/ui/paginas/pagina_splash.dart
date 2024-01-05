@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 
 class PaginaSplash extends StatefulWidget {
@@ -54,11 +54,11 @@ class _PaginaSplashState extends State<PaginaSplash> {
 
       if (usuario == null) {
         if (mounted) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-            builder: (context) {
-              return const PaginaInicio();
-            },
-          ), (Route<dynamic> route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRotas.inicio,
+            (Route<dynamic> route) => false,
+          );
         }
         return;
       } else {
@@ -77,11 +77,11 @@ class _PaginaSplashState extends State<PaginaSplash> {
               UsuarioServico.sair(context);
             }
 
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-              builder: (context) {
-                return const PaginaInicio();
-              },
-            ), (Route<dynamic> route) => false);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRotas.inicio,
+              (Route<dynamic> route) => false,
+            );
           });
         }
       }

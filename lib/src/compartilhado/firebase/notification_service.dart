@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 
@@ -80,9 +80,10 @@ class NotificationService {
   }
 
   _onDidReceiveNotificationResponse(String? payload) {
-    if (payload != null) {
-      debugPrint(payload);
-      // Navigator.of(Routes.navigatorKey!.currentContext!).pushNamed(payload);
+    if (payload != null && payload.isNotEmpty && AppRotas.navigatorKey!.currentContext != null) {
+      if (payload != AppRotas.compras && payload != AppRotas.ordemDeEntrada && payload != AppRotas.perfil && payload != AppRotas.home) {
+        AppRotas.navigatorKey?.currentState?.pushNamed(payload);
+      }
     }
   }
 

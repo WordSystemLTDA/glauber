@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
@@ -9,7 +10,6 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:provider/provider.dart';
 
 class DrawerCustomizado extends StatefulWidget {
@@ -180,11 +180,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                       ListTile(
                         onTap: () {
                           Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return const PaginaBuscar();
-                            },
-                          ));
+                          Navigator.pushNamed(context, AppRotas.buscar);
                         },
                         leading: const Icon(Icons.search),
                         title: const Text('Buscar'),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
@@ -9,7 +10,6 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provider/provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
@@ -29,11 +29,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'ativo': true,
       'icone': const Icon(Icons.edit_outlined),
       'funcao': (BuildContext context) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const PaginaEditarUsuario();
-          },
-        ));
+        Navigator.pushNamed(context, AppRotas.editarUsuario);
       }
     },
     {
@@ -135,11 +131,6 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                                     UsuarioServico.sair(context).then((value) {
                                       Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
                                     });
-                                    // UsuarioProvider.removerUsuario().then((sucessoAoSair) {
-                                    //   if (sucessoAoSair) {
-                                    //     Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                                    //   }
-                                    // });
                                   }
                                 });
                               },
@@ -192,7 +183,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                       autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
                         if (sucessoAoExcluirToken) {
                           UsuarioServico.sair(context).then((value) {
-                            Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                            Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
                           });
                         }
                       });

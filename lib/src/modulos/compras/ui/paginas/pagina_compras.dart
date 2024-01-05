@@ -43,13 +43,25 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
     return ValueListenableBuilder<ComprasEstado>(
       valueListenable: comprasStore,
       builder: (context, state, _) {
-        if (state is ComprasCarregando) {
-          return const Center(
-            child: CircularProgressIndicator(),
+        if (state is ComprasErroAoListar) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              comprasStore.listar(usuarioProvider.usuario);
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: height - 200,
+                child: const Center(
+                  child: Text('Nenhuma compra foi encontrada.'),
+                ),
+              ),
+            ),
           );
         }
 
         if (state is ComprasCarregado) {
+          print(state.compras);
           return Column(
             children: [
               Padding(
@@ -148,20 +160,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
           );
         }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            comprasStore.listar(usuarioProvider.usuario);
-          },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: SizedBox(
-              height: height - 200,
-              child: const Center(
-                child: Text('Nenhuma compra foi encontrada.'),
-              ),
-            ),
-          ),
-        );
+        return const Text('');
       },
     );
   }

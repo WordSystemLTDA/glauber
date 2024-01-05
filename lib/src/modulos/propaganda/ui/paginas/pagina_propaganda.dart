@@ -6,9 +6,14 @@ import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/propaganda_modelo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PaginaPropaganda extends StatefulWidget {
+class PaginaPropagandaArgumentos {
   final PropagandaModelo propaganda;
-  const PaginaPropaganda({super.key, required this.propaganda});
+  const PaginaPropagandaArgumentos({required this.propaganda});
+}
+
+class PaginaPropaganda extends StatefulWidget {
+  final PaginaPropagandaArgumentos argumentos;
+  const PaginaPropaganda({super.key, required this.argumentos});
 
   @override
   State<PaginaPropaganda> createState() => _PaginaPropagandaState();
@@ -17,7 +22,7 @@ class PaginaPropaganda extends StatefulWidget {
 class _PaginaPropagandaState extends State<PaginaPropaganda> {
   @override
   Widget build(BuildContext context) {
-    var propaganda = widget.propaganda;
+    var propaganda = widget.argumentos.propaganda;
 
     return Scaffold(
       appBar: AppBarSombra(

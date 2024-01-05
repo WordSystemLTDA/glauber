@@ -2,19 +2,25 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/verificar_pagamento_estado.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_pagamento_store.dart';
-import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lottie/lottie.dart';
 
-class PaginaSucessoCompra extends StatefulWidget {
+class PaginaSucessoCompraArgumentos {
   final DadosRetornoCompraModelo dados;
   final String metodoPagamento;
-  const PaginaSucessoCompra({super.key, required this.dados, required this.metodoPagamento});
+
+  PaginaSucessoCompraArgumentos({required this.dados, required this.metodoPagamento});
+}
+
+class PaginaSucessoCompra extends StatefulWidget {
+  final PaginaSucessoCompraArgumentos argumentos;
+  const PaginaSucessoCompra({super.key, required this.argumentos});
 
   @override
   State<PaginaSucessoCompra> createState() => _PaginaSucessoCompraState();
@@ -30,13 +36,13 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
   }
 
   void iniciarVerificacaoPagamento() {
-    if (widget.dados.tipoRetorno == 'verificacao') {
+    if (widget.argumentos.dados.tipoRetorno == 'verificacao') {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (mounted) {
           var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
 
           Timer.periodic(const Duration(seconds: 5), (timer) {
-            verificarPagamentoServico.verificarPagamento(widget.dados.idVenda!, widget.metodoPagamento).then((sucesso) {
+            verificarPagamentoServico.verificarPagamento(widget.argumentos.dados.idVenda!, widget.argumentos.metodoPagamento).then((sucesso) {
               if (sucesso) {
                 setState(() {
                   sucessoAoVerificarPagamento = true;
@@ -52,7 +58,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
 
   @override
   Widget build(BuildContext context) {
-    var dados = widget.dados;
+    var dados = widget.argumentos.dados;
     var verificarPagamentoStore = context.read<VerificarPagamentoStore>();
 
     if (sucessoAoVerificarPagamento) {
@@ -87,11 +93,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const PaginaInicio();
-                    },
-                  ), (Route<dynamic> route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
                 },
                 child: const Text('Inicio'),
               ),
@@ -133,11 +135,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const PaginaInicio();
-                    },
-                  ), (Route<dynamic> route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
                 },
                 child: const Text('Inicio'),
               ),
@@ -214,7 +212,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                               ),
                             ),
                             onPressed: () {
-                              verificarPagamentoStore.verificarPagamento(dados.idVenda!, widget.metodoPagamento);
+                              verificarPagamentoStore.verificarPagamento(dados.idVenda!, widget.argumentos.metodoPagamento);
                             },
                             child: state is Verificando
                                 ? const SizedBox(
@@ -241,11 +239,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                        builder: (context) {
-                          return const PaginaInicio();
-                        },
-                      ), (Route<dynamic> route) => false);
+                      Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
                     },
                     child: const Text('Inicio'),
                   ),

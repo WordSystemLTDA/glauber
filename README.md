@@ -38,9 +38,10 @@ Atualizações
 
 Ideias
 
-- Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do evento ou propaganda seja
+Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do evento ou propaganda seja
+
 - Cobrir (pode cortar imagem ou não)
 - Esticar imagem para preencher o espaço disponível
 - Ajustar para a largura (pode cortar imagem ou não)
 - Ajustar para a altura (pode sobrar nas horizontais)
-- Aparecer imagem toda (sem se preocupar com largura ou altura, e pode sobrar nas laterais)
+- Aparecer imagem toda (sem se preocupar com largura ou altura, depedendo pode sobrar nas laterais)

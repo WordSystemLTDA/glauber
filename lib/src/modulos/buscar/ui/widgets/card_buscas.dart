@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:intl/intl.dart';
@@ -27,11 +28,10 @@ class _CardBuscasState extends State<CardBuscas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => PaginaProvas(idEvento: evento.id),
-              ),
+              AppRotas.provas,
+              arguments: PaginaProvasArgumentos(idEvento: evento.id),
             );
           },
           child: Stack(

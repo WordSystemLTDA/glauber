@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
@@ -42,11 +43,11 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
             value = AutenticacaoErro(erro: Exception('Preencha as informações acima.'));
           }
 
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return PaginaPreencherInformacoes(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin);
-            },
-          ));
+          Navigator.pushNamed(
+            context,
+            AppRotas.preencherInformacoes,
+            arguments: PaginaPreencherInformacoesArgumentos(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin),
+          );
         }).onError((error, stackTrace) {
           value = AutenticacaoErro(erro: Exception(error));
         });

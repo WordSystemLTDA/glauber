@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
@@ -13,11 +14,18 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class PaginaFinalizarCompra extends StatefulWidget {
+class PaginaFinalizarCompraArgumentos {
   final List<ProvaModelo> provas;
   final String idEvento;
-  const PaginaFinalizarCompra({super.key, required this.idEvento, required this.provas});
+
+  PaginaFinalizarCompraArgumentos({required this.provas, required this.idEvento});
+}
+
+class PaginaFinalizarCompra extends StatefulWidget {
+  final PaginaFinalizarCompraArgumentos argumentos;
+  const PaginaFinalizarCompra({super.key, required this.argumentos});
 
   @override
   State<PaginaFinalizarCompra> createState() => _PaginaFinalizarCompraState();
@@ -35,18 +43,18 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var finalizarCompraStore = context.read<FinalizarCompraStore>();
       var listarInformacoesStore = context.read<ListarInformacoesStore>();
 
-      listarInformacoesStore.listarInformacoes(widget.provas, widget.idEvento);
+      listarInformacoesStore.listarInformacoes(widget.argumentos.provas, widget.argumentos.idEvento);
 
       finalizarCompraStore.addListener(() {
         FinalizarCompraEstado state = finalizarCompraStore.value;
 
         if (state is CompraRealizadaComSucesso) {
           if (mounted) {
-            Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) {
-                return PaginaSucessoCompra(dados: state.dados, metodoPagamento: metodoPagamento);
-              },
-            ));
+            Navigator.pushReplacementNamed(
+              context,
+              AppRotas.sucessoCompra,
+              arguments: PaginaSucessoCompraArgumentos(dados: state.dados, metodoPagamento: metodoPagamento),
+            );
           }
         } else if (state is ErroAoTentarComprar) {
           if (mounted) {
@@ -83,9 +91,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     finalizarCompraStore.inserir(
       usuarioProvider.usuario,
       FormularioCompraModelo(
-        provas: widget.provas,
-        idEvento: widget.idEvento,
-        idProva: widget.provas[0].id,
+        provas: widget.argumentos.provas,
+        idEvento: widget.argumentos.idEvento,
+        idProva: widget.argumentos.provas[0].id,
         idEmpresa: dados.evento.idEmpresa,
         idFormaPagamento: metodoPagamento,
         valorIngresso: dados.prova.valor,
@@ -110,35 +118,43 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       body: ValueListenableBuilder<ListarInformacoesEstado>(
         valueListenable: listarInformacoesStore,
         builder: (context, state, _) {
-          if (state is CarregandoInformacoes) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          ListarInformacoesModelo dados = state is CarregandoInformacoes
+              ? Utils.dadosFakesFinalizarCompra
+              : state is CarregadoInformacoes
+                  ? state.dados
+                  : Utils.dadosFakesFinalizarCompra;
+
+          if (state is ErroAoListar) {
+            return const Text('Erro');
           }
 
-          if (state is CarregadoInformacoes) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      const SizedBox(width: double.infinity, height: 20),
-                      const Text(
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(width: double.infinity, height: 20),
+                    Skeletonizer(
+                      enabled: state is CarregandoInformacoes,
+                      child: const Text(
                         'Métodos de pagamento',
                         style: TextStyle(fontSize: 16),
                       ),
-                      const SizedBox(width: double.infinity, height: 10),
-                      if (state.dados.pagamentos.isEmpty) ...[
-                        SizedBox(
-                          width: width,
-                          child: const Center(child: Text('Nenhum pagamento está diponivel.')),
-                        ),
-                      ],
-                      if (state.dados.pagamentos.isNotEmpty) ...[
-                        SizedBox(
+                    ),
+                    const SizedBox(width: double.infinity, height: 10),
+                    if (dados.pagamentos.isEmpty) ...[
+                      SizedBox(
+                        width: width,
+                        child: const Center(child: Text('Nenhum pagamento está diponivel.')),
+                      ),
+                    ],
+                    if (dados.pagamentos.isNotEmpty) ...[
+                      Skeletonizer(
+                        enabled: state is CarregandoInformacoes,
+                        child: SizedBox(
                           width: width,
                           child: SegmentedButton(
                             style: ButtonStyle(
@@ -160,11 +176,11 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               ),
                             ),
                             segments: [
-                              for (var i = 0; i < state.dados.pagamentos.length; i++)
+                              for (var i = 0; i < dados.pagamentos.length; i++)
                                 ButtonSegment(
-                                  value: state.dados.pagamentos[i].id,
+                                  value: dados.pagamentos[i].id,
                                   label: Text(
-                                    state.dados.pagamentos[i].nome,
+                                    dados.pagamentos[i].nome,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -178,10 +194,13 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             },
                           ),
                         ),
-                      ],
+                      ),
                     ],
-                  ),
-                  Column(
+                  ],
+                ),
+                Skeletonizer(
+                  enabled: state is CarregandoInformacoes,
+                  child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,12 +210,12 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            Utils.coverterEmReal.format(double.parse(state.dados.prova.valor.toString())),
+                            Utils.coverterEmReal.format(double.parse(dados.prova.valor.toString())),
                             style: const TextStyle(fontSize: 16, color: Colors.green),
                           ),
                         ],
                       ),
-                      if (double.parse(state.dados.prova.taxaProva) != 0) ...[
+                      if (double.parse(dados.prova.taxaProva) != 0) ...[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -205,7 +224,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               style: TextStyle(fontSize: 16),
                             ),
                             Text(
-                              "+ ${Utils.coverterEmReal.format(double.parse(state.dados.prova.taxaProva))}",
+                              "+ ${Utils.coverterEmReal.format(double.parse(dados.prova.taxaProva))}",
                               style: const TextStyle(fontSize: 16, color: Colors.green),
                             ),
                           ],
@@ -225,7 +244,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      Utils.coverterEmReal.format(double.parse(state.dados.prova.valor.toString()) + double.parse(state.dados.prova.taxaProva)),
+                                      Utils.coverterEmReal.format(double.parse(dados.prova.valor.toString()) + double.parse(dados.prova.taxaProva)),
                                       style: const TextStyle(fontSize: 16, color: Colors.green),
                                     ),
                                   ],
@@ -255,7 +274,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                               return;
                                             }
 
-                                            salvar(state.dados);
+                                            salvar(dados);
                                           },
                                           child: stateFinalizarCompra is Carregando
                                               ? const CircularProgressIndicator(color: Colors.white)
@@ -317,12 +336,10 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                       const SizedBox(height: 20),
                     ],
                   ),
-                ],
-              ),
-            );
-          }
-
-          return const Text('Erro');
+                ),
+              ],
+            ),
+          );
         },
       ),
     );

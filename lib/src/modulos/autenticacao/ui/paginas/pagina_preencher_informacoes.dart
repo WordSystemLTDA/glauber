@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
-import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class PaginaPreencherInformacoes extends StatefulWidget {
+class PaginaPreencherInformacoesArgumentos {
   final dynamic usuario;
   final String tokenNotificacao;
   final TiposLogin tipoLogin;
-  const PaginaPreencherInformacoes({super.key, required this.usuario, required this.tokenNotificacao, required this.tipoLogin});
+
+  PaginaPreencherInformacoesArgumentos({required this.usuario, required this.tokenNotificacao, required this.tipoLogin});
+}
+
+class PaginaPreencherInformacoes extends StatefulWidget {
+  final PaginaPreencherInformacoesArgumentos argumentos;
+  const PaginaPreencherInformacoes({super.key, required this.argumentos});
 
   @override
   State<PaginaPreencherInformacoes> createState() => _PaginaPreencherInformacoesState();
@@ -37,11 +43,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
       if (state is Cadastrado) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-              builder: (context) {
-                return const PaginaInicio();
-              },
-            ), (Route<dynamic> route) => false);
+            Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
           }
         });
       } else if (state is ErroAoCadastrar) {
@@ -70,12 +72,12 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
   }
 
   void setarInformacoes() {
-    if (widget.tipoLogin == TiposLogin.google) {
-      var usuarioTipo = widget.usuario as GoogleSignInAccount;
+    if (widget.argumentos.tipoLogin == TiposLogin.google) {
+      var usuarioTipo = widget.argumentos.usuario as GoogleSignInAccount;
 
       _nomeController.text = usuarioTipo.displayName!;
-    } else if (widget.tipoLogin == TiposLogin.apple) {
-      var usuarioTipo = widget.usuario as AuthorizationCredentialAppleID;
+    } else if (widget.argumentos.tipoLogin == TiposLogin.apple) {
+      var usuarioTipo = widget.argumentos.usuario as AuthorizationCredentialAppleID;
       if (usuarioTipo.familyName != null && usuarioTipo.givenName != null) {
         _nomeController.text = "${usuarioTipo.familyName} ${usuarioTipo.givenName}";
       }
@@ -101,7 +103,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
         content: Center(child: Text('Algum dos dois HandiCap precisa ser preenchido.')),
       ));
     } else {
-      autenticacaoStore.cadastrarSocial(context, widget.usuario, widget.tipoLogin, _nomeController.text, hcCabeceira, hcPiseiro);
+      autenticacaoStore.cadastrarSocial(context, widget.argumentos.usuario, widget.argumentos.tipoLogin, _nomeController.text, hcCabeceira, hcPiseiro);
     }
   }
 
