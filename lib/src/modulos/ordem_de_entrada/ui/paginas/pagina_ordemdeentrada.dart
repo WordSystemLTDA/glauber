@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/orderdeentrada_estado.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/widgets/card_ordemdeentrada.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaOrdemDeEntrada extends StatefulWidget {
   const PaginaOrdemDeEntrada({super.key});
@@ -46,40 +48,47 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
       body: ValueListenableBuilder<OrdemDeEntradaEstado>(
         valueListenable: ordemDeEntradaStore,
         builder: (context, state, _) {
-          if (state is OrdemDeEntradaCarregando) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+          var ordemdeentradas = state is OrdemDeEntradaCarregando
+              ? DadosFakes.dadosFakesOrdemEntrada
+              : state is OrdemDeEntradaCarregado
+                  ? state.ordemdeentradas
+                  : [];
 
-          if (state is OrdemDeEntradaCarregado) {
+          if (state is OrdemDeEntradaErroAoListar) {
             return RefreshIndicator(
               onRefresh: () async {
                 ordemDeEntradaStore.listar(usuarioProvider.usuario);
               },
-              child: ListView.builder(
-                itemCount: state.ordemdeentradas.length,
-                padding: const EdgeInsets.all(15),
-                itemBuilder: (context, index) {
-                  var item = state.ordemdeentradas[index];
-
-                  return CardOrdemDeEntrada(item: item);
-                },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: SizedBox(
+                  height: height - 200,
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text('Nenhuma ordem de entrada foi encontrada.'),
+                    ),
+                  ),
+                ),
               ),
             );
           }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              ordemDeEntradaStore.listar(usuarioProvider.usuario);
-            },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: SizedBox(
-                height: height - 200,
-                child: const Center(
-                  child: Text('Nenhuma ordem de entrada foi encontrada.'),
-                ),
+          return Skeletonizer(
+            enabled: state is OrdemDeEntradaCarregando,
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ordemDeEntradaStore.listar(usuarioProvider.usuario);
+              },
+              child: ListView.builder(
+                itemCount: ordemdeentradas.length,
+                padding: const EdgeInsets.all(15),
+                itemBuilder: (context, index) {
+                  var item = ordemdeentradas[index];
+
+                  return CardOrdemDeEntrada(item: item);
+                },
               ),
             ),
           );

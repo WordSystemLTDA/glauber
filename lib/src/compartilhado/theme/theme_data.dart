@@ -7,6 +7,7 @@ ThemeData get darkTheme => ThemeData(
       colorScheme: _darkColorScheme,
       pageTransitionsTheme: const PageTransitionsTheme(builders: {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
       appBarTheme: AppBarTheme(
         centerTitle: true,
@@ -25,6 +26,7 @@ ThemeData get lightTheme => ThemeData(
       colorScheme: _lightColorScheme,
       pageTransitionsTheme: const PageTransitionsTheme(builders: {
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
       appBarTheme: const AppBarTheme(
         centerTitle: true,

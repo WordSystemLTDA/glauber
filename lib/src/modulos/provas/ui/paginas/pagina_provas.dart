@@ -7,6 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -375,7 +376,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
   }
 
   double setarTamanho(double height, state) {
-    var provas = state is ProvasCarregando ? Utils.dadosFakesProvas : state.provas;
+    var provas = state is ProvasCarregando ? DadosFakes.dadosFakesProvas : state.provas;
 
     if (((height * 0.40) - ((provas.isNotEmpty ? provas.length : 1) * (provas.isNotEmpty ? 110 : 0))).isNegative) {
       return 50;
@@ -448,9 +449,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
         body: ValueListenableBuilder<ProvasEstado>(
           valueListenable: provasStore,
           builder: (context, state, _) {
-            var evento = state is ProvasCarregando ? Utils.dadosFakesEventos[0] : state.evento;
-            var provas = state is ProvasCarregando ? Utils.dadosFakesProvas : state.provas;
-            var nomesCabeceira = state is ProvasCarregando ? Utils.dadosFakesNomesCabeceira : state.nomesCabeceira;
+            var evento = state is ProvasCarregando ? DadosFakes.dadosFakesEventos[0] : state.evento;
+            var provas = state is ProvasCarregando ? DadosFakes.dadosFakesProvas : state.provas;
+            var nomesCabeceira = state is ProvasCarregando ? DadosFakes.dadosFakesNomesCabeceira : state.nomesCabeceira;
 
             if (state is ErroAoCarregar) {
               return const Text('Erro ao listar Provas.');
@@ -463,11 +464,11 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 },
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Skeletonizer(
-                        enabled: state is ProvasCarregando,
-                        child: SizedBox(
+                  child: Skeletonizer(
+                    enabled: state is ProvasCarregando,
+                    child: Column(
+                      children: [
+                        SizedBox(
                           height: 250,
                           child: Stack(
                             children: [
@@ -485,26 +486,28 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                   errorWidget: (context, url, error) => const Icon(Icons.error),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  final imageProvider = Image.network(evento.foto).image;
-                                  showImageViewer(
-                                    context,
-                                    imageProvider,
-                                    useSafeArea: true,
-                                    doubleTapZoomable: true,
-                                  );
-                                },
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    height: 300,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        end: const Alignment(0.0, -0.6),
-                                        begin: const Alignment(0.0, 0),
-                                        colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                              Skeleton.ignore(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    final imageProvider = Image.network(evento.foto).image;
+                                    showImageViewer(
+                                      context,
+                                      imageProvider,
+                                      useSafeArea: true,
+                                      doubleTapZoomable: true,
+                                    );
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      height: 300,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          end: const Alignment(0.0, -0.6),
+                                          begin: const Alignment(0.0, 0),
+                                          colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -532,23 +535,25 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                   ),
                                 ),
                               ),
-                              SafeArea(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Container(
-                                    width: 90,
-                                    decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
-                                    child: IconButton(
-                                      icon: const Row(
-                                        children: [
-                                          Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
-                                          SizedBox(width: 10),
-                                          Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
-                                        ],
+                              Skeleton.ignore(
+                                child: SafeArea(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Container(
+                                      width: 90,
+                                      decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      child: IconButton(
+                                        icon: const Row(
+                                          children: [
+                                            Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                                            SizedBox(width: 10),
+                                            Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
                                       ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
                                     ),
                                   ),
                                 ),
@@ -556,10 +561,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             ],
                           ),
                         ),
-                      ),
-                      Skeletonizer(
-                        enabled: state is ProvasCarregando,
-                        child: SingleChildScrollView(
+                        SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           child: Row(
@@ -591,11 +593,8 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             ],
                           ),
                         ),
-                      ),
-                      if (provas.isNotEmpty && nomesCabeceira != null) ...[
-                        Skeletonizer(
-                          enabled: state is ProvasCarregando,
-                          child: const Padding(
+                        if (provas.isNotEmpty && nomesCabeceira != null) ...[
+                          const Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Align(
                               alignment: Alignment.centerLeft,
@@ -605,10 +604,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               ),
                             ),
                           ),
-                        ),
-                        Skeletonizer(
-                          enabled: state is ProvasCarregando,
-                          child: ListView.builder(
+                          ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10),
@@ -628,23 +624,20 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               );
                             },
                           ),
-                        ),
-                      ],
-                      if (provas.isEmpty) ...[
-                        const Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Não há provas para esse evento.',
-                              style: TextStyle(fontSize: 16),
+                        ],
+                        if (provas.isEmpty) ...[
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Não há provas para esse evento.',
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                      Skeletonizer(
-                        enabled: state is ProvasCarregando,
-                        child: Padding(
+                        ],
+                        Padding(
                           padding: EdgeInsets.only(
                             top: setarTamanho(height, state),
                           ),
@@ -766,8 +759,8 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );

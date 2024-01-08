@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/providers/config/config_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/propaganda_modelo.dart';
+import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
 
 class HomeModelo {
   final bool sucesso;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
@@ -6,10 +8,14 @@ import 'package:provadelaco/src/compartilhado/widgets/drawer_customizado.dart';
 import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
 import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
+import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInicio extends StatefulWidget {
@@ -40,31 +46,58 @@ class _PaginaInicioState extends State<PaginaInicio> {
 
   void funcaoMudarRota(RemoteMessage? message) {
     if (message != null) {
-      String rota = message.data['rotaApp'] ?? '';
+      String rotaApp = message.data['rota'] ?? '';
 
-      if (rota.isNotEmpty) {
-        if (rota == AppRotas.compras) {
+      if (rotaApp.isNotEmpty) {
+        if (rotaApp == AppRotas.compras) {
           setState(() {
             pageIndex = 1;
             pageController.jumpToPage(1);
           });
-        } else if (rota == AppRotas.ordemDeEntrada) {
+        } else if (rotaApp == AppRotas.ordemDeEntrada) {
           setState(() {
             pageIndex = 2;
             pageController.jumpToPage(2);
           });
-        } else if (rota == AppRotas.perfil) {
+        } else if (rotaApp == AppRotas.perfil) {
           setState(() {
             pageIndex = 3;
             pageController.jumpToPage(3);
           });
-        } else if (rota == AppRotas.home) {
+        } else if (rotaApp == AppRotas.home) {
           setState(() {
             pageIndex = 0;
             pageController.jumpToPage(0);
           });
+        } else if (rotaApp == AppRotas.finalizarCompra) {
+          Navigator.pushNamed(
+            context,
+            rotaApp,
+            arguments: PaginaFinalizarCompraArgumentos(
+              provas: List<ProvaModelo>.from(jsonDecode(message.data['provas']).map((elemento) {
+                return ProvaModelo.fromMap(elemento);
+              })),
+              idEvento: message.data['idEvento'],
+            ),
+          );
+        } else if (rotaApp == AppRotas.provas) {
+          Navigator.pushNamed(
+            context,
+            rotaApp,
+            arguments: PaginaProvasArgumentos(
+              idEvento: message.data['idEvento'],
+            ),
+          );
+        } else if (rotaApp == AppRotas.propaganda) {
+          Navigator.pushNamed(
+            context,
+            rotaApp,
+            arguments: PaginaPropagandaArgumentos(
+              idPropaganda: message.data['idPropaganda'],
+            ),
+          );
         } else {
-          Navigator.pushNamed(context, rota);
+          Navigator.pushNamed(context, rotaApp);
         }
       }
     }

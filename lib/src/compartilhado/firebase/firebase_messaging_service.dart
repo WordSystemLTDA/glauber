@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -39,7 +40,8 @@ class FirebaseMessagingService {
             id: android.hashCode,
             title: notification.title!,
             body: notification.body!,
-            payload: message.data['rotaApp'] ?? '',
+            payload: jsonEncode(message.data),
+            remoteMessage: message,
           ),
         );
       }

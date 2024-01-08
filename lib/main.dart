@@ -44,6 +44,9 @@ import 'package:provadelaco/src/modulos/perfil/data/servicos/cidade_servico_impl
 import 'package:provadelaco/src/modulos/perfil/data/servicos/editar_usuario_servico_impl.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario_servico.dart';
+import 'package:provadelaco/src/modulos/propaganda/data/servicos/propagandas_servico_impl.dart';
+import 'package:provadelaco/src/modulos/propaganda/interator/servicos/propagandas_servico.dart';
+import 'package:provadelaco/src/modulos/propaganda/interator/stores/propagandas_store.dart';
 import 'package:provadelaco/src/modulos/provas/data/servicos/denunciar_servico_impl.dart';
 import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
@@ -91,6 +94,9 @@ void main() async {
       Provider<DenunciarServico>(create: (context) => DenunciarServicoImpl(context.read())),
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
+      // Propagandas
+      Provider<PropagandasServico>(create: (context) => PropagandasServicoImpl(context.read())),
+      ChangeNotifierProvider(create: (context) => PropagandasStore(context.read())),
       // Finalizar Compra
       Provider<FinalizarCompraServico>(create: (context) => FinalizarCompraServicoImpl(context.read())),
       Provider<VerificarPagamentoServico>(create: (context) => VerificarPagamentoServicoImpl(context.read())),

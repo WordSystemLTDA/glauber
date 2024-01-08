@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/estados/compras_estado.dart';
 import 'package:provadelaco/src/modulos/compras/interator/stores/compras_store.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_compras.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaCompras extends StatefulWidget {
   const PaginaCompras({super.key});
@@ -43,6 +45,12 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
     return ValueListenableBuilder<ComprasEstado>(
       valueListenable: comprasStore,
       builder: (context, state, _) {
+        var compras = state is ComprasCarregando
+            ? DadosFakes.dadosFakesCompras
+            : state is ComprasCarregado
+                ? state.compras
+                : [];
+
         if (state is ComprasErroAoListar) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -52,17 +60,21 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
               physics: const AlwaysScrollableScrollPhysics(),
               child: SizedBox(
                 height: height - 200,
-                child: const Center(
-                  child: Text('Nenhuma compra foi encontrada.'),
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 50),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text('Nenhuma compra foi encontrada.'),
+                  ),
                 ),
               ),
             ),
           );
         }
 
-        if (state is ComprasCarregado) {
-          print(state.compras);
-          return Column(
+        return Skeletonizer(
+          enabled: state is ComprasCarregando,
+          child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -71,12 +83,14 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                   children: [
                     Row(
                       children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.green,
+                        Skeleton.shade(
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.green,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -88,12 +102,14 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                     ),
                     Row(
                       children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.red,
+                        Skeleton.shade(
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -105,12 +121,14 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                     ),
                     Row(
                       children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
+                        Skeleton.shade(
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -122,12 +140,14 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                     ),
                     Row(
                       children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.yellow,
+                        Skeleton.shade(
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.yellow,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -146,10 +166,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                     comprasStore.listar(usuarioProvider.usuario);
                   },
                   child: ListView.builder(
-                    itemCount: state.compras.length,
+                    itemCount: compras.length,
                     padding: const EdgeInsets.all(10),
                     itemBuilder: (context, index) {
-                      var item = state.compras[index];
+                      var item = compras[index];
 
                       return CardCompras(item: item);
                     },
@@ -157,10 +177,8 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                 ),
               ),
             ],
-          );
-        }
-
-        return const Text('');
+          ),
+        );
       },
     );
   }

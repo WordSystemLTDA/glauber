@@ -33,24 +33,25 @@ class RouteGenerator {
         return buildRoute(const PaginaBuscar(), settings: settings);
       case AppRotas.compras:
         return buildRoute(const PaginaCompras(), settings: settings);
-      case AppRotas.finalizarCompra:
-        final argumentos = settings.arguments as PaginaFinalizarCompraArgumentos;
-        return buildRoute(PaginaFinalizarCompra(argumentos: argumentos), settings: settings);
-      case AppRotas.preencherInformacoes:
-        final argumentos = settings.arguments as PaginaPreencherInformacoesArgumentos;
-        return buildRoute(PaginaPreencherInformacoes(argumentos: argumentos), settings: settings);
-      case AppRotas.provas:
-        final argumentos = settings.arguments as PaginaProvasArgumentos;
-        return buildRoute(PaginaProvas(argumentos: argumentos), settings: settings);
       case AppRotas.ordemDeEntrada:
         return buildRoute(const PaginaOrdemDeEntrada(), settings: settings);
       case AppRotas.perfil:
         return buildRoute(const PaginaPerfil(), settings: settings);
       case AppRotas.editarUsuario:
         return buildRoute(const PaginaEditarUsuario(), settings: settings);
+
+      case AppRotas.finalizarCompra:
+        final argumentos = settings.arguments as PaginaFinalizarCompraArgumentos;
+        return buildRoute(PaginaFinalizarCompra(argumentos: argumentos), settings: settings);
+      case AppRotas.provas:
+        final argumentos = settings.arguments as PaginaProvasArgumentos;
+        return buildRoute(PaginaProvas(argumentos: argumentos), settings: settings);
       case AppRotas.propaganda:
         final argumentos = settings.arguments as PaginaPropagandaArgumentos;
         return buildRoute(PaginaPropaganda(argumentos: argumentos), settings: settings);
+      case AppRotas.preencherInformacoes:
+        final argumentos = settings.arguments as PaginaPreencherInformacoesArgumentos;
+        return buildRoute(PaginaPreencherInformacoes(argumentos: argumentos), settings: settings);
       case AppRotas.sucessoCompra:
         final argumentos = settings.arguments as PaginaSucessoCompraArgumentos;
         return buildRoute(PaginaSucessoCompra(argumentos: argumentos), settings: settings);

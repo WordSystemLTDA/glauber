@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
@@ -119,42 +120,39 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         valueListenable: listarInformacoesStore,
         builder: (context, state, _) {
           ListarInformacoesModelo dados = state is CarregandoInformacoes
-              ? Utils.dadosFakesFinalizarCompra
+              ? DadosFakes.dadosFakesFinalizarCompra
               : state is CarregadoInformacoes
                   ? state.dados
-                  : Utils.dadosFakesFinalizarCompra;
+                  : DadosFakes.dadosFakesFinalizarCompra;
 
           if (state is ErroAoListar) {
             return const Text('Erro');
           }
 
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    const SizedBox(width: double.infinity, height: 20),
-                    Skeletonizer(
-                      enabled: state is CarregandoInformacoes,
-                      child: const Text(
+          return Skeletonizer(
+            enabled: state is CarregandoInformacoes,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      const SizedBox(width: double.infinity, height: 20),
+                      const Text(
                         'Métodos de pagamento',
                         style: TextStyle(fontSize: 16),
                       ),
-                    ),
-                    const SizedBox(width: double.infinity, height: 10),
-                    if (dados.pagamentos.isEmpty) ...[
-                      SizedBox(
-                        width: width,
-                        child: const Center(child: Text('Nenhum pagamento está diponivel.')),
-                      ),
-                    ],
-                    if (dados.pagamentos.isNotEmpty) ...[
-                      Skeletonizer(
-                        enabled: state is CarregandoInformacoes,
-                        child: SizedBox(
+                      const SizedBox(width: double.infinity, height: 10),
+                      if (dados.pagamentos.isEmpty) ...[
+                        SizedBox(
+                          width: width,
+                          child: const Center(child: Text('Nenhum pagamento está diponivel.')),
+                        ),
+                      ],
+                      if (dados.pagamentos.isNotEmpty) ...[
+                        SizedBox(
                           width: width,
                           child: SegmentedButton(
                             style: ButtonStyle(
@@ -194,13 +192,10 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             },
                           ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
-                ),
-                Skeletonizer(
-                  enabled: state is CarregandoInformacoes,
-                  child: Column(
+                  ),
+                  Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -293,51 +288,52 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            concorda = concorda ? false : true;
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: concorda,
-                              onChanged: (novoValor) {
-                                setState(() {
-                                  concorda = novoValor!;
-                                });
-                              },
-                            ),
-                            SizedBox(
-                              width: width - 100,
-                              child: RichText(
-                                textAlign: TextAlign.left,
-                                softWrap: true,
-                                text: TextSpan(
-                                  text: "Li e aceito o contrato, a politica de privacidade e os ",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: ' Termos de uso',
-                                      style: const TextStyle(color: Colors.red),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          abrirTermosDeUso();
-                                        },
-                                    ),
-                                  ],
+                      SafeArea(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              concorda = concorda ? false : true;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: concorda,
+                                onChanged: (novoValor) {
+                                  setState(() {
+                                    concorda = novoValor!;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: width - 100,
+                                child: RichText(
+                                  textAlign: TextAlign.left,
+                                  softWrap: true,
+                                  text: TextSpan(
+                                    text: "Li e aceito o contrato, a politica de privacidade e os ",
+                                    style: Theme.of(context).textTheme.titleSmall,
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: ' Termos de uso',
+                                        style: const TextStyle(color: Colors.red),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            abrirTermosDeUso();
+                                          },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

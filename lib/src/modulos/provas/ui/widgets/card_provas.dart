@@ -8,6 +8,7 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CardProvas extends StatefulWidget {
   final ProvaModelo prova;
@@ -318,16 +319,18 @@ class _CardProvasState extends State<CardProvas> {
               SizedBox(
                 child: Row(
                   children: [
-                    Container(
-                      width: 5,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          bottomLeft: Radius.circular(8),
+                    Skeleton.shade(
+                      child: Container(
+                        width: 5,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
+                          ),
                         ),
+                        child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
                       ),
-                      child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),

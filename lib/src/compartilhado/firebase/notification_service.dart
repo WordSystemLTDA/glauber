@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
+import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 
@@ -80,9 +86,38 @@ class NotificationService {
   }
 
   _onDidReceiveNotificationResponse(String? payload) {
-    if (payload != null && payload.isNotEmpty && AppRotas.navigatorKey!.currentContext != null) {
-      if (payload != AppRotas.compras && payload != AppRotas.ordemDeEntrada && payload != AppRotas.perfil && payload != AppRotas.home) {
-        AppRotas.navigatorKey?.currentState?.pushNamed(payload);
+    if (payload!.isNotEmpty && AppRotas.navigatorKey!.currentContext != null) {
+      var message = jsonDecode(payload);
+      String rotaApp = message['rota'] ?? '';
+
+      if (rotaApp != AppRotas.compras && rotaApp != AppRotas.ordemDeEntrada && rotaApp != AppRotas.perfil && rotaApp != AppRotas.home) {
+        if (rotaApp == AppRotas.finalizarCompra) {
+          AppRotas.navigatorKey?.currentState?.pushNamed(
+            rotaApp,
+            arguments: PaginaFinalizarCompraArgumentos(
+              provas: List<ProvaModelo>.from(jsonDecode(message['provas']).map((elemento) {
+                return ProvaModelo.fromMap(elemento);
+              })),
+              idEvento: message['idEvento'],
+            ),
+          );
+        } else if (rotaApp == AppRotas.provas) {
+          AppRotas.navigatorKey?.currentState?.pushNamed(
+            rotaApp,
+            arguments: PaginaProvasArgumentos(
+              idEvento: message['idEvento'],
+            ),
+          );
+        } else if (rotaApp == AppRotas.propaganda) {
+          AppRotas.navigatorKey?.currentState?.pushNamed(
+            rotaApp,
+            arguments: PaginaPropagandaArgumentos(
+              idPropaganda: message['idPropaganda'],
+            ),
+          );
+        } else {
+          AppRotas.navigatorKey?.currentState?.pushNamed(rotaApp);
+        }
       }
     }
   }

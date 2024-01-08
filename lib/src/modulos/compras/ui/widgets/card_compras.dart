@@ -6,6 +6,7 @@ import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_nao_paga.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_paga.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CardCompras extends StatefulWidget {
   final ComprasModelo item;
@@ -200,18 +201,20 @@ class _CardComprasState extends State<CardCompras> {
           },
           child: Row(
             children: [
-              Container(
-                width: 5,
-                clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    bottomLeft: Radius.circular(5),
+              Skeleton.shade(
+                child: Container(
+                  width: 5,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                    ),
                   ),
-                ),
-                child: VerticalDivider(
-                  color: corCompra(item),
-                  thickness: 5,
+                  child: VerticalDivider(
+                    color: corCompra(item),
+                    thickness: 5,
+                  ),
                 ),
               ),
               Expanded(

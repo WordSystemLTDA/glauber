@@ -192,58 +192,59 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ValueListenableBuilder<VerificarPagamentoEstado>(
-                      valueListenable: verificarPagamentoStore,
-                      builder: (context, state, _) {
-                        return SizedBox(
-                          width: 200,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                              foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
+              SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ValueListenableBuilder<VerificarPagamentoEstado>(
+                        valueListenable: verificarPagamentoStore,
+                        builder: (context, state, _) {
+                          return SizedBox(
+                            width: 200,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                                foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
                                 ),
                               ),
+                              onPressed: () {
+                                verificarPagamentoStore.verificarPagamento(dados.idVenda!, widget.argumentos.metodoPagamento);
+                              },
+                              child: state is Verificando
+                                  ? const SizedBox(
+                                      width: 25,
+                                      height: 25,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 1,
+                                      ),
+                                    )
+                                  : const Text('Verificar Pagamento'),
                             ),
-                            onPressed: () {
-                              verificarPagamentoStore.verificarPagamento(dados.idVenda!, widget.argumentos.metodoPagamento);
-                            },
-                            child: state is Verificando
-                                ? const SizedBox(
-                                    width: 25,
-                                    height: 25,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 1,
-                                    ),
-                                  )
-                                : const Text('Verificar Pagamento'),
+                          );
+                        }),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                        foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
-                        );
-                      }),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                      foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
+                      },
+                      child: const Text('Inicio'),
                     ),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
-                    },
-                    child: const Text('Inicio'),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ],

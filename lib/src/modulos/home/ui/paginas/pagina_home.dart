@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
+import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
@@ -69,10 +69,10 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     return ValueListenableBuilder<HomeEstado>(
       valueListenable: homeStore,
       builder: (context, state, _) {
-        var eventosTopo = state is Carregando ? Utils.dadosFakesEventos : state.eventosTopo;
-        var eventos = state is Carregando ? Utils.dadosFakesEventos : state.eventos;
-        var propagandas = state is Carregando ? Utils.dadosFakesPropagandas : state.propagandas;
-        var categorias = state is Carregando ? Utils.dadosFakesCategoria : state.categorias;
+        var eventosTopo = state is Carregando ? DadosFakes.dadosFakesEventos : state.eventosTopo;
+        var eventos = state is Carregando ? DadosFakes.dadosFakesEventos : state.eventos;
+        var propagandas = state is Carregando ? DadosFakes.dadosFakesPropagandas : state.propagandas;
+        var categorias = state is Carregando ? DadosFakes.dadosFakesCategoria : state.categorias;
 
         return RefreshIndicator(
           onRefresh: () async {
@@ -81,15 +81,15 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 10),
-                // Carrosel de Eventos
-                if (eventosTopo.isNotEmpty) ...[
-                  Skeletonizer(
-                    enabled: state is Carregando,
-                    child: SizedBox(
+            child: Skeletonizer(
+              enabled: state is Carregando,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 10),
+                  // Carrosel de Eventos
+                  if (eventosTopo.isNotEmpty) ...[
+                    SizedBox(
                       height: 220,
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
@@ -112,43 +112,40 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         },
                       ),
                     ),
-                  ),
-                ],
-                if (_categoriaController != null) ...[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      height: 40,
-                      child: TabBar(
-                        tabAlignment: TabAlignment.start,
-                        dividerColor: Colors.transparent,
-                        controller: _categoriaController,
-                        isScrollable: true,
-                        onTap: (categoria) async {
-                          if (categoriasIndex == categoria) {
-                            return;
-                          }
+                  ],
+                  if (_categoriaController != null) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        height: 40,
+                        child: TabBar(
+                          tabAlignment: TabAlignment.start,
+                          dividerColor: Colors.transparent,
+                          controller: _categoriaController,
+                          isScrollable: true,
+                          onTap: (categoria) async {
+                            if (categoriasIndex == categoria) {
+                              return;
+                            }
 
-                          setState(() {
-                            categoriasIndex = categoria;
-                          });
+                            setState(() {
+                              categoriasIndex = categoria;
+                            });
 
-                          homeStore.listar(context, int.parse(categorias[categoria].id));
-                        },
-                        tabs: categorias
-                            .map((e) => Tab(
-                                  child: Text(e.nome, style: const TextStyle(fontSize: 16)),
-                                ))
-                            .toList(),
+                            homeStore.listar(context, int.parse(categorias[categoria].id));
+                          },
+                          tabs: categorias
+                              .map((e) => Tab(
+                                    child: Text(e.nome, style: const TextStyle(fontSize: 16)),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-                // Categorias
-                if (_categoriaController == null) ...[
-                  Skeletonizer(
-                    enabled: state is Carregando,
-                    child: Align(
+                  ],
+                  // Categorias
+                  if (_categoriaController == null) ...[
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
                         height: 40,
@@ -167,15 +164,12 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
 
-                // Carrosel de Propagandas
-                const SizedBox(height: 10),
-                if (propagandas.isNotEmpty) ...[
-                  Skeletonizer(
-                    enabled: state is Carregando,
-                    child: SizedBox(
+                  // Carrosel de Propagandas
+                  const SizedBox(height: 10),
+                  if (propagandas.isNotEmpty) ...[
+                    SizedBox(
                       height: 110,
                       child: CarouselSlider.builder(
                         options: CarouselOptions(
@@ -193,12 +187,9 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         },
                       ),
                     ),
-                  ),
-                ],
-                const SizedBox(height: 10),
-                Skeletonizer(
-                  enabled: state is Carregando,
-                  child: ListView.builder(
+                  ],
+                  const SizedBox(height: 10),
+                  ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: eventos.length,
                     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 50),
@@ -212,8 +203,8 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                       );
                     },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

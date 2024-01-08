@@ -35,6 +35,8 @@ Atualizações
 [x] Quando entra no app pela primeira vez, fica carregando infinitamente
 [x] Mudar nome app (nativo)
 [x] Mudar logo app (nativo)
+[x] Fazer com que ao clicar na propaganda, seja carregado tudo de novo (carregar)
+[ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
 
 Ideias
 

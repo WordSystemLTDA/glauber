@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CardOrdemDeEntrada extends StatefulWidget {
   final OrdemDeEntradaModelo item;
@@ -160,16 +161,18 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
               SizedBox(
                 child: Row(
                   children: [
-                    Container(
-                      width: 5,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          bottomLeft: Radius.circular(8),
+                    Skeleton.shade(
+                      child: Container(
+                        width: 5,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
+                          ),
                         ),
+                        child: const VerticalDivider(color: Colors.green, thickness: 5),
                       ),
-                      child: const VerticalDivider(color: Colors.green, thickness: 5),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
