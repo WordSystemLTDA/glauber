@@ -51,7 +51,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
           if (mounted) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.erro.toString()),
+              content: Text(state.erro.toString().substring(11)),
               action: SnackBarAction(
                 label: 'OK',
                 onPressed: () {},

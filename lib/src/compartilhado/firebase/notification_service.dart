@@ -46,6 +46,14 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.max,
       enableVibration: true,
+      // actions: [
+      //   AndroidNotificationAction('id_1', 'Inscrições'),
+      //   AndroidNotificationAction(
+      //     'id_2',
+      //     'OK',
+      //     cancelNotification: true,
+      //   ),
+      // ],
     );
 
     iosDetails = const DarwinNotificationDetails(
@@ -71,6 +79,14 @@ class NotificationService {
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
+      // notificationCategories: [
+      //   DarwinNotificationCategory(
+      //     'demo',
+      //     actions: [
+
+      //     ]
+      //   )
+      // ]
     );
 
     // Fazer: macOs, iOS, Linux...
@@ -82,6 +98,7 @@ class NotificationService {
       onDidReceiveNotificationResponse: (details) {
         _onDidReceiveNotificationResponse(details.payload);
       },
+      // onDidReceiveBackgroundNotificationResponse: Utils.notificationTapBackground,
     );
   }
 

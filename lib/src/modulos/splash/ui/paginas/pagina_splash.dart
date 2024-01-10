@@ -69,7 +69,7 @@ class _PaginaSplashState extends State<PaginaSplash> {
           String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
           autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
-            var (sucesso, usuarioRetorno) = resposta;
+            var (sucesso, _, usuarioRetorno) = resposta;
 
             if (sucesso) {
               UsuarioServico.salvarUsuario(context, usuarioRetorno!);

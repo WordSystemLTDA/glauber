@@ -27,6 +27,20 @@ class _PaginaLoginState extends State<PaginaLogin> {
     final firebaseMessagingService = context.read<FirebaseMessagingService>();
     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
+    if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Center(child: Text('Preencha todos os campos.')),
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+        return;
+      }
+    }
+
     if (mounted) {
       autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, tokenNotificacao);
     }
@@ -60,7 +74,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
           if (mounted) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Center(child: Text(state.erro.toString())),
+              content: Center(child: Text(state.erro.toString().substring(11))),
               action: SnackBarAction(
                 label: 'OK',
                 onPressed: () {},

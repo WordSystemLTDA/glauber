@@ -16,6 +16,7 @@ class AppRotas {
   static const provas = '/provas';
   static const editarUsuario = '/editarUsuario';
   static const sucessoCompra = '/sucessoCompra';
+  static const calendario = '/calendario';
 
   static const paginaInicial = splash;
 

@@ -20,13 +20,13 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
     if (tiposLogin == TiposLogin.email) {
       await _autenticacaoServico.entrar(email, senha, tiposLogin, null, tokenNotificacao).then((resposta) {
-        var (sucesso, usuarioRetorno) = resposta;
+        var (sucesso, mensagem, usuarioRetorno) = resposta;
 
         if (sucesso) {
           UsuarioServico.salvarUsuario(context, usuarioRetorno!);
           value = Autenticado();
         } else {
-          value = AutenticacaoErro(erro: Exception('Erro ao tentar entrar!'));
+          value = AutenticacaoErro(erro: Exception(mensagem));
         }
       }).onError((error, stackTrace) {
         value = AutenticacaoErro(erro: Exception(error));
@@ -34,20 +34,20 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     } else {
       await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
         await _autenticacaoServico.entrar(email, senha, tiposLogin, usuario, tokenNotificacao).then((resposta) {
-          var (sucesso, usuarioRetorno) = resposta;
+          var (sucesso, _, usuarioRetorno) = resposta;
 
           if (sucesso) {
             UsuarioServico.salvarUsuario(context, usuarioRetorno!);
             value = Autenticado();
           } else {
             value = AutenticacaoErro(erro: Exception('Preencha as informações acima.'));
-          }
 
-          Navigator.pushNamed(
-            context,
-            AppRotas.preencherInformacoes,
-            arguments: PaginaPreencherInformacoesArgumentos(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin),
-          );
+            Navigator.pushNamed(
+              context,
+              AppRotas.preencherInformacoes,
+              arguments: PaginaPreencherInformacoesArgumentos(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin),
+            );
+          }
         }).onError((error, stackTrace) {
           value = AutenticacaoErro(erro: Exception(error));
         });
@@ -85,13 +85,13 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     value = Cadastrando();
 
     _autenticacaoServico.cadastrarSocial(usuario, tipoLogin, nome, hcCabeceira, hcPiseiro).then((resposta) {
-      var (sucesso, usuarioRetorno) = resposta;
+      var (sucesso, mensagem, usuarioRetorno) = resposta;
 
       if (sucesso) {
         UsuarioServico.salvarUsuario(context, usuarioRetorno!);
         value = Cadastrado();
       } else {
-        value = ErroAoCadastrar(erro: Exception('Erro ao tentar cadastrar, tente novamente.'));
+        value = ErroAoCadastrar(erro: Exception(mensagem));
       }
     }).onError((error, stackTrace) {
       value = ErroAoCadastrar(erro: Exception(error));

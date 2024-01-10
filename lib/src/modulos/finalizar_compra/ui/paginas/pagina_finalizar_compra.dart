@@ -1,5 +1,7 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
@@ -13,6 +15,7 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/lista
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/ui/widgets/card_cartao.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -35,6 +38,14 @@ class PaginaFinalizarCompra extends StatefulWidget {
 class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   bool concorda = false;
   String metodoPagamento = "0";
+  int parcela = 0;
+  int cartaoSelecionado = 0;
+
+  TextEditingController nomeCartaoController = TextEditingController();
+  TextEditingController numeroCartaoController = TextEditingController();
+  TextEditingController expiracaoCartaoController = TextEditingController();
+  TextEditingController cpfCartaoController = TextEditingController();
+  TextEditingController codigoCartaoController = TextEditingController();
 
   @override
   void initState() {
@@ -61,7 +72,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           if (mounted) {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.erro.toString()),
+              content: Text(state.erro.toString().substring(11)),
               backgroundColor: Colors.red,
               action: SnackBarAction(
                 label: 'OK',
@@ -103,6 +114,232 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         valorTotal: (double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva)).toString(),
         tipoDeVenda: "Venda",
       ),
+    );
+  }
+
+  void abrirModalCartoes() {
+    var width = MediaQuery.of(context).size.width;
+
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: SizedBox(
+                  width: width,
+                  height: 40,
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        showModalBottomSheet(
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                              child: SizedBox(
+                                width: width,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 10,
+                                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                                  ),
+                                  child: SafeArea(
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextField(
+                                            controller: nomeCartaoController,
+                                            decoration: const InputDecoration(
+                                              hintText: 'Seu nome',
+                                              label: Text('Nome do Cartão'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          TextField(
+                                            keyboardType: TextInputType.number,
+                                            controller: numeroCartaoController,
+                                            decoration: const InputDecoration(
+                                              hintText: '1234 1234 1234 1234',
+                                              label: Text('Número do Cartão'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          TextField(
+                                            keyboardType: TextInputType.number,
+                                            controller: expiracaoCartaoController,
+                                            decoration: const InputDecoration(
+                                              hintText: '06/2025',
+                                              label: Text('Expiração do Cartão'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          TextField(
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.digitsOnly,
+                                              CpfInputFormatter(),
+                                            ],
+                                            controller: cpfCartaoController,
+                                            decoration: const InputDecoration(
+                                              hintText: '123.123.123-12',
+                                              label: Text('CPF do titular do Cartão'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                                                foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                                shape: MaterialStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(5.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: const Text('Salvar'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                        foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                      child: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add),
+                          Text('Adicionar um cartão'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 10);
+                  },
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return CardCartao(
+                      selecionado: index == cartaoSelecionado,
+                      aoClicar: () {
+                        Navigator.pop(context);
+                        showModalBottomSheet(
+                          showDragHandle: true,
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                              child: SizedBox(
+                                width: width,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 10,
+                                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                                  ),
+                                  child: SafeArea(
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextField(
+                                            controller: codigoCartaoController,
+                                            keyboardType: TextInputType.number,
+                                            decoration: const InputDecoration(
+                                              hintText: '1234',
+                                              label: Text('Código de Segurança'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  codigoCartaoController.text = '';
+                                                  cartaoSelecionado = index;
+                                                });
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                                                foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                                shape: MaterialStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(5.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: const Text('OK'),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 30),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -177,6 +414,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               for (var i = 0; i < dados.pagamentos.length; i++)
                                 ButtonSegment(
                                   value: dados.pagamentos[i].id,
+                                  tooltip: dados.pagamentos[i].nome,
                                   label: Text(
                                     dados.pagamentos[i].nome,
                                     overflow: TextOverflow.ellipsis,
@@ -190,6 +428,81 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                 metodoPagamento = pagamento.first;
                               });
                             },
+                          ),
+                        ),
+                      ],
+                      if (metodoPagamento == '3') ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: SizedBox(
+                            height: 55,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(width: 5);
+                              },
+                              itemCount: 7,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: parcela == index ? Colors.green : Colors.grey,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (parcela == index) {
+                                        setState(() {
+                                          parcela = -1;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          parcela = index;
+                                        });
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            index == 0 ? 'Crédito á vista' : '${index}x de ${(150 / index).obterReal()}',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Text(
+                                            (150).obterReal(),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Row(
+                            children: [
+                              CardCartao(
+                                aparecerSeta: true,
+                                aparecerVazio: cartaoSelecionado == 0,
+                                tamanhoCard: width - 20,
+                                aparecerSombra: 1,
+                                aoClicar: () {
+                                  abrirModalCartoes();
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ],

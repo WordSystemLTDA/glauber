@@ -126,7 +126,9 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                                 var usuarioProvider = context.read<UsuarioProvider>();
                                 String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                                autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirConta) {
+                                autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
+                                  var (sucessoAoExcluirConta, _) = resposta;
+
                                   if (sucessoAoExcluirConta) {
                                     UsuarioServico.sair(context).then((value) {
                                       Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
@@ -180,7 +182,9 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                       final usuarioProvider = context.read<UsuarioProvider>();
                       String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                      autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
+                      autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
+                        var (sucessoAoExcluirToken, _) = resposta;
+
                         if (sucessoAoExcluirToken) {
                           UsuarioServico.sair(context).then((value) {
                             Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);

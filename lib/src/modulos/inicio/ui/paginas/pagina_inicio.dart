@@ -207,7 +207,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        endDrawer: DrawerCustomizado(
+        drawer: DrawerCustomizado(
           aoMudarPagina: (index) {
             setState(() {
               pageIndex = index;
@@ -216,9 +216,10 @@ class _PaginaInicioState extends State<PaginaInicio> {
             Navigator.pop(context);
           },
         ),
-        endDrawerEnableOpenDragGesture: false,
+        drawerEnableOpenDragGesture: false,
         appBar: const AppBarSombra(
           titulo: LogoApp(width: 100),
+          aparecerIconeNotificacao: true,
         ),
         body: PageView(
           controller: pageController,

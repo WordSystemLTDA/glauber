@@ -36,6 +36,7 @@ Atualizações
 [x] Mudar nome app (nativo)
 [x] Mudar logo app (nativo)
 [x] Fazer com que ao clicar na propaganda, seja carregado tudo de novo (carregar)
+[ ] Arrumar mensagem de erros do app (mensagem virá somente da api)
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
 
 Ideias

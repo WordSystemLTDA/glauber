@@ -29,7 +29,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   AutenticacaoServicoImpl(this.client);
 
   @override
-  Future<(bool, UsuarioModelo?)> entrar(String email, String senha, TiposLogin tipoLogin, dynamic usuario, String? tokenNotificacao) async {
+  Future<(bool, String, UsuarioModelo?)> entrar(String email, String senha, TiposLogin tipoLogin, dynamic usuario, String? tokenNotificacao) async {
     var url = 'autenticacao/entrar.php';
 
     String? idSocialLogin = '';
@@ -66,21 +66,22 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
       UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
-      return (sucesso, usuarioRetorno);
+      return (sucesso, mensagem, usuarioRetorno);
     } else {
-      return (false, null);
+      return (false, mensagem, null);
     }
   }
 
   @override
-  Future<bool> sair(UsuarioModelo? usuario, tokenNotificacao) async {
+  Future<(bool, String)> sair(UsuarioModelo? usuario, tokenNotificacao) async {
     var url = 'autenticacao/sair.php';
 
     if (usuario == null) {
-      return false;
+      return (false, '');
     }
 
     var idCliente = usuario.id;
@@ -97,20 +98,21 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return sucesso;
+      return (sucesso, mensagem);
     } else {
-      return false;
+      return (false, mensagem);
     }
   }
 
   @override
-  Future<bool> excluirConta(UsuarioModelo? usuario, tokenNotificacao) async {
+  Future<(bool, String)> excluirConta(UsuarioModelo? usuario, tokenNotificacao) async {
     var url = 'autenticacao/excluir_conta.php';
 
     if (usuario == null) {
-      return false;
+      return (false, '');
     }
 
     var idCliente = usuario.id;
@@ -127,16 +129,17 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return sucesso;
+      return (sucesso, mensagem);
     } else {
-      return false;
+      return (false, mensagem);
     }
   }
 
   @override
-  Future<(bool, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLogin tipoLogin, String nome, String hcCabeceira, String hcPiseiro) async {
+  Future<(bool, String, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLogin tipoLogin, String nome, String hcCabeceira, String hcPiseiro) async {
     var url = 'autenticacao/cadastrar_social.php';
 
     String? idSocialLogin = '';
@@ -175,12 +178,13 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
       UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
-      return (sucesso, usuarioRetorno);
+      return (sucesso, mensagem, usuarioRetorno);
     } else {
-      return (false, null);
+      return (false, mensagem, null);
     }
   }
 
@@ -211,11 +215,11 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<(bool, UsuarioModelo?)> verificar(UsuarioModelo? usuario, String? tokenNotificacao) async {
+  Future<(bool, String, UsuarioModelo?)> verificar(UsuarioModelo? usuario, String? tokenNotificacao) async {
     var url = 'autenticacao/verificacao.php';
 
     if (usuario == null) {
-      return (false, null);
+      return (false, '', null);
     }
 
     var campos = {
@@ -230,13 +234,13 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
     Map result = jsonDecode(response.data);
     bool sucesso = result['sucesso'];
+    String mensagem = result['mensagem'];
 
     if (response.statusCode == 200 && sucesso == true) {
       UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': usuario.foto});
-      return (sucesso, usuarioRetorno);
+      return (sucesso, mensagem, usuarioRetorno);
     } else {
-      // await UsuarioProvider.removerUsuario();
-      return (false, null);
+      return (false, mensagem, null);
     }
   }
 }

@@ -297,6 +297,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     Expanded(
                       child: TextField(
                         controller: cpfController,
+                        keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           CpfInputFormatter(),
@@ -311,6 +312,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     Expanded(
                       child: TextField(
                         controller: rgController,
+                        keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           RgInputFormatter(),
@@ -400,6 +402,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                           FilteringTextInputFormatter.digitsOnly,
                           TelefoneInputFormatter(),
                         ],
+                        keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           hintText: 'Telefone',
                           label: Text('Telefone'),
@@ -414,6 +417,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                           FilteringTextInputFormatter.digitsOnly,
                           TelefoneInputFormatter(),
                         ],
+                        keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           hintText: 'Celular',
                           label: Text('Celular'),
@@ -528,6 +532,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     FilteringTextInputFormatter.digitsOnly,
                     CepInputFormatter(),
                   ],
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     hintText: 'CEP',
                     label: Text('CEP'),

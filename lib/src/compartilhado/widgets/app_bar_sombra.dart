@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppBarSombra extends StatefulWidget implements PreferredSizeWidget {
   final Widget titulo;
-  const AppBarSombra({super.key, required this.titulo});
+  final bool? aparecerIconeNotificacao;
+  const AppBarSombra({super.key, required this.titulo, this.aparecerIconeNotificacao});
 
   @override
   State<AppBarSombra> createState() => _AppBarSombraState();
@@ -25,6 +26,17 @@ class _AppBarSombraState extends State<AppBarSombra> {
       child: AppBar(
         elevation: 0.0,
         title: widget.titulo,
+        actions: [
+          if (widget.aparecerIconeNotificacao ?? false) ...[
+            IconButton(
+              icon: Badge.count(
+                count: 3,
+                child: const Icon(Icons.notifications_outlined),
+              ),
+              onPressed: () {},
+            ),
+          ]
+        ],
       ),
     );
   }

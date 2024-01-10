@@ -5,6 +5,7 @@ import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_data.dart';
 import 'package:provadelaco/src/route_generator.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
@@ -24,6 +25,7 @@ class AppWidget extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
+            SfGlobalLocalizations.delegate,
           ],
           supportedLocales: const [
             Locale('pt', 'BR'),

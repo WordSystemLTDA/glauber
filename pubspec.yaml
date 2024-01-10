@@ -64,6 +64,8 @@ dependencies:
   easy_image_viewer: ^1.2.1
   flutter_launcher_icons: ^0.13.1
   skeletonizer: ^1.0.0
+  syncfusion_flutter_calendar: ^24.1.45
+  syncfusion_localizations: ^24.1.45
 
 dev_dependencies:
   flutter_test:

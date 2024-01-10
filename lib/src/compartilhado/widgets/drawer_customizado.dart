@@ -70,7 +70,9 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                     final usuarioProvider = context.read<UsuarioProvider>();
                     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
-                    autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((sucessoAoExcluirToken) {
+                    autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
+                      var (sucessoAoExcluirToken, _) = resposta;
+
                       if (sucessoAoExcluirToken) {
                         UsuarioServico.sair(context).then((value) {
                           Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
@@ -206,6 +208,13 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                           },
                           leading: const Icon(Icons.format_list_numbered_outlined),
                           title: const Text('Ordem de Entrada'),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            Navigator.pushNamed(context, AppRotas.calendario);
+                          },
+                          leading: const Icon(Icons.calendar_month_outlined),
+                          title: const Text('Calendário'),
                         ),
                         ListTile(
                           onTap: () {
