@@ -44,7 +44,7 @@ class _MostrarHoraAtualState extends State<MostrarHoraAtual> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           DateTime currentTime = snapshot.data!;
-          String formattedTime = "${currentTime.hour}:${currentTime.minute}:${currentTime.second}";
+          String formattedTime = "${currentTime.hour}:${currentTime.minute}:${currentTime.second < 10 ? '0${currentTime.second}' : currentTime.second}";
           return Text(
             formattedTime,
             style: const TextStyle(color: Colors.grey),

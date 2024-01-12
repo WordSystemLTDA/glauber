@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/cartao_modelo.dart';
 
 class CardCartao extends StatefulWidget {
   final Function() aoClicar;
+  final Function(CartaoModelo cartao)? aoExcluir;
   final double? tamanhoCard;
   final bool? aparecerSeta;
-  final bool? aparecerVazio;
+  final bool aparecerVazio;
   final bool? selecionado;
   final double? aparecerSombra;
-  const CardCartao({super.key, required this.aoClicar, this.tamanhoCard, this.aparecerSeta, this.aparecerVazio, this.aparecerSombra, this.selecionado});
+  final CartaoModelo cartao;
+
+  const CardCartao({
+    super.key,
+    required this.aoClicar,
+    this.aoExcluir,
+    this.tamanhoCard,
+    this.aparecerSeta,
+    required this.aparecerVazio,
+    this.aparecerSombra,
+    this.selecionado,
+    required this.cartao,
+  });
 
   @override
   State<CardCartao> createState() => _CardCartaoState();
@@ -39,32 +53,29 @@ class _CardCartaoState extends State<CardCartao> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (widget.aparecerVazio ?? false) ...[
+                if (widget.aparecerVazio) ...[
                   const Align(
                     alignment: Alignment.center,
                     child: Text('Selecione um cartão'),
                   ),
                 ],
-                if (widget.aparecerVazio != null ? widget.aparecerVazio == false : true) ...[
+                if (widget.aparecerVazio == false) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          CircleAvatar(
-                            child: FlutterLogo(),
-                          ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'JOAO P S CHIQUITIN',
-                                style: TextStyle(fontWeight: FontWeight.w300),
+                                widget.cartao.nomeCartao,
+                                style: const TextStyle(fontWeight: FontWeight.w300),
                               ),
                               Text(
-                                '**** **** **** 8751',
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                widget.cartao.numeroCartao.toString().replaceAll(RegExp(r'.(?=.{4})'), '*'),
+                                style: const TextStyle(fontWeight: FontWeight.w500),
                               ),
                             ],
                           )
@@ -72,21 +83,30 @@ class _CardCartaoState extends State<CardCartao> {
                       ),
                       Row(
                         children: [
-                          const Column(
+                          Column(
                             children: [
-                              Text(
+                              const Text(
                                 'Venc.',
                                 style: TextStyle(fontWeight: FontWeight.w300),
                               ),
                               Text(
-                                '08/2025',
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                widget.cartao.expiracaoCartao,
+                                style: const TextStyle(fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                           if (widget.aparecerSeta ?? false) ...[
                             const SizedBox(width: 10),
                             const Icon(Icons.arrow_forward_ios_outlined, size: 16),
+                          ],
+                          if ((widget.aoExcluir != null)) ...[
+                            const SizedBox(width: 10),
+                            IconButton(
+                              onPressed: () {
+                                widget.aoExcluir!(widget.cartao);
+                              },
+                              icon: const Icon(Icons.delete_outline),
+                            ),
                           ],
                         ],
                       ),

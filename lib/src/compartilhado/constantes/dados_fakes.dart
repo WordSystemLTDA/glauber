@@ -131,6 +131,7 @@ class DadosFakes {
 
   static ListarInformacoesModelo dadosFakesFinalizarCompra = ListarInformacoesModelo(
     prova: DadosProvasModelo(valor: '150', taxaProva: '0.00'),
+    parcelasDisponiveisCartao: [],
     evento: EventoModelo(
       id: "19",
       idEmpresa: "4",

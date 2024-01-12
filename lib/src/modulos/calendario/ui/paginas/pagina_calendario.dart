@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/modulos/calendario/ui/widgets/agenda_datasource.dart';
+import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_store.dart';
+import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_ver_evento_calendario.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class PaginaCalendario extends StatefulWidget {
@@ -10,15 +13,14 @@ class PaginaCalendario extends StatefulWidget {
 }
 
 class _PaginaCalendarioState extends State<PaginaCalendario> {
-  final CalendarController calendarioController = CalendarController();
-  final AgendaDataSource agendaDataSource = AgendaDataSource([]);
-
   FutureBuilder<void> loadMoreWidgetBuilder(BuildContext context, LoadMoreCallback loadMoreAppointments) {
+    final agendaStore = context.read<AgendaStore>();
+
     return FutureBuilder<void>(
       future: loadMoreAppointments(),
       builder: (context, snapShot) {
         return Container(
-          height: calendarioController.view == CalendarView.schedule ? 50 : double.infinity,
+          height: agendaStore.calendarioController.view == CalendarView.schedule ? 50 : double.infinity,
           width: double.infinity,
           alignment: Alignment.center,
           child: const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.blue)),
@@ -27,8 +29,16 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
     );
   }
 
+  void onTap(CalendarTapDetails calendarTapDetails) {
+    if (calendarTapDetails.targetElement == CalendarElement.appointment) {
+      Navigator.pushNamed(context, AppRotas.verEventoCalendario, arguments: PaginaVerEventoCalendarioArgumentos(dados: calendarTapDetails));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final agendaStore = context.read<AgendaStore>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendário'),
@@ -36,11 +46,12 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
       body: Stack(
         children: [
           SfCalendar(
-            view: CalendarView.schedule,
-            controller: calendarioController,
+            view: CalendarView.month,
+            controller: agendaStore.calendarioController,
             allowViewNavigation: true,
+
             showNavigationArrow: true,
-            dataSource: agendaDataSource,
+            dataSource: agendaStore.agendaDataSource,
             showDatePickerButton: true,
             loadMoreWidgetBuilder: loadMoreWidgetBuilder,
             allowedViews: const [
@@ -48,15 +59,16 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
               CalendarView.day,
               CalendarView.schedule,
             ],
+
+            // appointmentBuilder: appointmentBuilder,
             showTodayButton: true,
-            scheduleViewSettings: const ScheduleViewSettings(),
             monthViewSettings: const MonthViewSettings(
+              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
               navigationDirection: MonthNavigationDirection.vertical,
             ),
+            onTap: onTap,
             // onViewChanged: agendaStore.viewChanged,
             // onDragEnd: onDragEnd,
-            // onTap: onTap,
-            // appointmentBuilder: appointmentBuilder,
           ),
         ],
       ),

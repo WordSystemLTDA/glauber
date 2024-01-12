@@ -5,6 +5,7 @@ import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dar
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_calendario.dart';
+import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_ver_evento_calendario.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
@@ -42,6 +43,9 @@ class RouteGenerator {
         return buildRoute(const PaginaEditarUsuario(), settings: settings);
       case AppRotas.calendario:
         return buildRoute(const PaginaCalendario(), settings: settings);
+      case AppRotas.verEventoCalendario:
+        final argumentos = settings.arguments as PaginaVerEventoCalendarioArgumentos;
+        return buildRoute(PaginaVerEventoCalendario(argumentos: argumentos), settings: settings);
 
       case AppRotas.finalizarCompra:
         final argumentos = settings.arguments as PaginaFinalizarCompraArgumentos;

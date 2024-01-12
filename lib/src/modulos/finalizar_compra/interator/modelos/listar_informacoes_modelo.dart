@@ -3,19 +3,27 @@ import 'dart:convert';
 
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_provas_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/parcela_disponiveis_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 class ListarInformacoesModelo {
   final DadosProvasModelo prova;
   final EventoModelo evento;
+  final List<ParcelaDisponiveisModelo> parcelasDisponiveisCartao;
   final List<PagamentosModelo> pagamentos;
 
-  ListarInformacoesModelo({required this.prova, required this.evento, required this.pagamentos});
+  ListarInformacoesModelo({
+    required this.prova,
+    required this.evento,
+    required this.pagamentos,
+    required this.parcelasDisponiveisCartao,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'prova': prova.toMap(),
       'evento': evento.toMap(),
+      'parcelasDisponiveisCartao': parcelasDisponiveisCartao.map((x) => x.toMap()).toList(),
       'pagamentos': pagamentos.map((x) => x.toMap()).toList(),
     };
   }
@@ -24,6 +32,11 @@ class ListarInformacoesModelo {
     return ListarInformacoesModelo(
       prova: DadosProvasModelo.fromMap(map['prova'] as Map<String, dynamic>),
       evento: EventoModelo.fromMap(map['evento'] as Map<String, dynamic>),
+      parcelasDisponiveisCartao: List<ParcelaDisponiveisModelo>.from(
+        (map['parcelasDisponiveisCartao'] as List<dynamic>).map<ParcelaDisponiveisModelo>(
+          (x) => ParcelaDisponiveisModelo.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
       pagamentos: List<PagamentosModelo>.from(
         (map['pagamentos'] as List<dynamic>).map<PagamentosModelo>(
           (x) => PagamentosModelo.fromMap(x as Map<String, dynamic>),

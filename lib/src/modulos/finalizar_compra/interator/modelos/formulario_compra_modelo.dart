@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/cartao_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class FormularioCompraModelo {
@@ -14,6 +15,7 @@ class FormularioCompraModelo {
   final String valorTotal;
   final String tipoDeVenda;
   final List<ProvaModelo> provas;
+  final CartaoModelo? cartao;
 
   FormularioCompraModelo({
     required this.idProva,
@@ -26,6 +28,7 @@ class FormularioCompraModelo {
     required this.valorTotal,
     required this.tipoDeVenda,
     required this.provas,
+    this.cartao,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,6 +43,7 @@ class FormularioCompraModelo {
       'valorTotal': valorTotal,
       'tipoDeVenda': tipoDeVenda,
       'provas': provas.map((x) => x.toMap()).toList(),
+      'cartao': cartao?.toMap(),
     };
   }
 
@@ -55,10 +59,11 @@ class FormularioCompraModelo {
       valorTotal: map['valorTotal'] as String,
       tipoDeVenda: map['tipoDeVenda'] as String,
       provas: List<ProvaModelo>.from(
-        (map['provas'] as List<int>).map<ProvaModelo>(
+        (map['provas'] as List<dynamic>).map<ProvaModelo>(
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      cartao: map['cartao'] != null ? CartaoModelo.fromMap(map['cartao'] as Map<String, dynamic>) : null,
     );
   }
 

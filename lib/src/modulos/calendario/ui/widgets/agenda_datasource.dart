@@ -1,17 +1,21 @@
+import 'package:intl/intl.dart';
+import 'package:provadelaco/src/modulos/calendario/interator/servicos/agenda_servico.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaDataSource extends CalendarDataSource {
-  AgendaDataSource(List<Appointment> source) {
+  final AgendaServico servicoAgenda;
+
+  AgendaDataSource(List<Appointment> source, this.servicoAgenda) {
     appointments = source;
   }
 
   @override
   Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
-    List<Appointment> atendimentos = [
-      Appointment(startTime: DateTime.now(), endTime: DateTime.now().add(const Duration(hours: 1))),
-      Appointment(startTime: DateTime.now(), endTime: DateTime.now().add(const Duration(hours: 2))),
-      Appointment(startTime: DateTime.now(), endTime: DateTime.now().add(const Duration(hours: 3))),
-    ];
+    List<Appointment> atendimentos = (await servicoAgenda.listar(
+      appointments,
+      DateFormat('yyyy-MM-dd').format(startDate),
+      DateFormat('yyyy-MM-dd').format(endDate),
+    ))!;
 
     appointments!.addAll(atendimentos);
 
