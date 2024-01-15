@@ -24,11 +24,18 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
   late StateSetter _setState;
   bool sucessoAoVerificarPagamento = false;
   bool aparecerModalPaga = false;
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
     iniciarVerificacaoPagamento();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void iniciarVerificacaoPagamento() {
@@ -37,7 +44,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
         if (mounted) {
           var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
 
-          Timer.periodic(const Duration(seconds: 5), (timer) {
+          _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
             verificarPagamentoServico.verificarPagamento(widget.item.id, widget.item.idFormaPagamento).then((sucesso) {
               if (sucesso) {
                 widget.aoVerificarPagamento(widget.item);

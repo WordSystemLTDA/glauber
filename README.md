@@ -36,11 +36,12 @@ Atualizações
 [x] Mudar nome app (nativo)
 [x] Mudar logo app (nativo)
 [x] Fazer com que ao clicar na propaganda, seja carregado tudo de novo (carregar)
+[x] Mudar textos da notificação agendada.
+[x] Fazer verificação caso a data mudou e cancelar notificação caso tenha mudado (zonedSchedule)
+
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
-
-[ ] Fazer verificação caso a data mudou e cancelar notificação caso tenha mudado (zonedSchedule)
-[-] Mudar textos da notificação agendada.
+[ ] Criar um botão para atualizar calendário
 
 Ideias
 

@@ -29,10 +29,18 @@ class PaginaSucessoCompra extends StatefulWidget {
 class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
   bool sucessoAoVerificarPagamento = false;
 
+  late Timer _timer;
+
   @override
   void initState() {
     super.initState();
     iniciarVerificacaoPagamento();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void iniciarVerificacaoPagamento() {
@@ -41,7 +49,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
         if (mounted) {
           var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
 
-          Timer.periodic(const Duration(seconds: 5), (timer) {
+          _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
             verificarPagamentoServico.verificarPagamento(widget.argumentos.dados.idVenda!, widget.argumentos.metodoPagamento).then((sucesso) {
               if (sucesso) {
                 setState(() {

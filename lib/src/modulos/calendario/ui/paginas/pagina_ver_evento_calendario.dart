@@ -38,9 +38,20 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
           var notificacaoAtivada = value.where((element) => element.id == int.parse(widget.argumentos.dados.appointments![0].id));
 
           if (notificacaoAtivada.isNotEmpty) {
-            setState(() {
-              ativarNotificacao = true;
-            });
+            var dataAgendadaNotificacao = notificacaoAtivada.first.payload!.isNotEmpty ? DateTime.parse(notificacaoAtivada.first.payload!) : null;
+            var startTime = widget.argumentos.dados.appointments![0].startTime as DateTime;
+            var diferencaSegundos = startTime.difference(dataAgendadaNotificacao!).inSeconds;
+
+            if (diferencaSegundos >= 5 || diferencaSegundos.isNegative) {
+              setState(() {
+                ativarNotificacao = false;
+              });
+              NotificationService().localNotificationsPlugin.cancel(int.parse(widget.argumentos.dados.appointments![0].id));
+            } else {
+              setState(() {
+                ativarNotificacao = true;
+              });
+            }
           }
         });
       }
@@ -70,18 +81,28 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  TextButton(
+                    onPressed: () async {
+                      if (await canLaunchUrl(Uri.parse(state.agendaInfo.link))) {
+                        await launchUrl(Uri.parse(state.agendaInfo.link));
+                      }
+                    },
+                    child: Text(state.agendaInfo.tituloAbrirLink),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Ativar notificação desse evento?',
-                        style: TextStyle(fontSize: 16),
+                      Text(
+                        state.agendaInfo.tituloAgendarNotificacao,
+                        style: const TextStyle(fontSize: 16),
                       ),
                       Checkbox(
                         value: ativarNotificacao,
                         onChanged: (value) {
                           var startTime = widget.argumentos.dados.appointments![0].startTime as DateTime;
                           var diferencaDataEmSegundos = startTime.difference(DateTime.now()).inSeconds;
+
+                          final dataAgendadaNotificacao = DateTime.now().add(Duration(seconds: diferencaDataEmSegundos));
 
                           if (!(diferencaDataEmSegundos.isNegative)) {
                             setState(() {
@@ -92,9 +113,9 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
                               NotificationService().showNotificationScheduled(
                                 CustomNotification(
                                   id: int.parse(widget.argumentos.dados.appointments![0].id),
-                                  title: 'Evento já disponível',
-                                  body: '${widget.argumentos.dados.appointments![0].subject} já está disponivel.',
-                                  payload: '',
+                                  title: state.agendaInfo.tituloAgendarNotificacao,
+                                  body: state.agendaInfo.corpoNotificacao,
+                                  payload: dataAgendadaNotificacao.toString(),
                                 ),
                                 Duration(seconds: diferencaDataEmSegundos),
                               );
@@ -103,9 +124,9 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
+                              SnackBar(
                                 backgroundColor: Colors.red,
-                                content: Text('Não é possível ativar notificação desse evento, pois esse evento já aconteceu.'),
+                                content: Text(state.agendaInfo.erroAgendarNotificacao),
                               ),
                             );
                             if (value == false) {
@@ -115,14 +136,6 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
                         },
                       ),
                     ],
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      if (await canLaunchUrl(Uri.parse(state.agendaInfo.link))) {
-                        await launchUrl(Uri.parse(state.agendaInfo.link));
-                      }
-                    },
-                    child: const Text('Abrir LINK'),
                   ),
                 ],
               ),

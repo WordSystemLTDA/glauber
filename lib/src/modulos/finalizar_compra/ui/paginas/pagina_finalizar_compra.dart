@@ -55,6 +55,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   TextEditingController cpfCartaoController = TextEditingController();
   TextEditingController codigoCartaoController = TextEditingController();
 
+  final _formAdicionarCartaoKey = GlobalKey<FormState>();
+  final _formCVVKey = GlobalKey<FormState>();
+
   List<CartaoModelo> cartaoMemoria = [];
 
   @override
@@ -197,162 +200,206 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                             ),
                                             child: SafeArea(
                                               child: SingleChildScrollView(
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextField(
-                                                      controller: nomeCartaoController,
-                                                      decoration: const InputDecoration(
-                                                        hintText: 'Seu nome',
-                                                        label: Text('Nome do Cartão'),
+                                                child: Form(
+                                                  key: _formAdicionarCartaoKey,
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      TextFormField(
+                                                        validator: (value) {
+                                                          if (value == null || value.isEmpty) {
+                                                            return 'Coloque o nome do cartão';
+                                                          }
+
+                                                          if (value.length < 3) {
+                                                            return 'Nome de cartão inválido';
+                                                          }
+                                                          return null;
+                                                        },
+                                                        controller: nomeCartaoController,
+                                                        decoration: const InputDecoration(
+                                                          hintText: 'Seu nome',
+                                                          errorStyle: TextStyle(fontSize: 0.00),
+                                                          label: Text('Nome do Cartão'),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    TextField(
-                                                      keyboardType: TextInputType.number,
-                                                      controller: numeroCartaoController,
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter.digitsOnly,
-                                                        CartaoBancarioInputFormatter(),
-                                                      ],
-                                                      decoration: const InputDecoration(
-                                                        hintText: '1234 1234 1234 1234',
-                                                        label: Text('Número do Cartão'),
+                                                      const SizedBox(height: 10),
+                                                      TextFormField(
+                                                        validator: (value) {
+                                                          if (value == null || value.isEmpty) {
+                                                            return 'Coloque o número do cartão';
+                                                          }
+
+                                                          if (value.length < 19) {
+                                                            return 'Número de cartão inválido';
+                                                          }
+
+                                                          return null;
+                                                        },
+                                                        keyboardType: TextInputType.number,
+                                                        controller: numeroCartaoController,
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter.digitsOnly,
+                                                          CartaoBancarioInputFormatter(),
+                                                        ],
+                                                        decoration: const InputDecoration(
+                                                          hintText: '1234 1234 1234 1234',
+                                                          label: Text('Número do Cartão'),
+                                                          errorStyle: TextStyle(fontSize: 0.00),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    TextField(
-                                                      keyboardType: TextInputType.number,
-                                                      controller: expiracaoCartaoController,
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter.digitsOnly,
-                                                        ValidadeCartaoInputFormatter(maxLength: 6),
-                                                      ],
-                                                      decoration: const InputDecoration(
-                                                        hintText: '06/2025',
-                                                        label: Text('Expiração do Cartão'),
+                                                      const SizedBox(height: 10),
+                                                      TextFormField(
+                                                        validator: (value) {
+                                                          if (value == null || value.isEmpty) {
+                                                            return 'Coloque o expiração do cartão';
+                                                          }
+
+                                                          if (value.length < 7) {
+                                                            return 'Expiração inválida';
+                                                          }
+                                                          return null;
+                                                        },
+                                                        keyboardType: TextInputType.number,
+                                                        controller: expiracaoCartaoController,
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter.digitsOnly,
+                                                          ValidadeCartaoInputFormatter(maxLength: 6),
+                                                        ],
+                                                        decoration: const InputDecoration(
+                                                          hintText: '06/2025',
+                                                          label: Text('Expiração do Cartão'),
+                                                          errorStyle: TextStyle(fontSize: 0.00),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    TextField(
-                                                      keyboardType: TextInputType.number,
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter.digitsOnly,
-                                                        CpfInputFormatter(),
-                                                      ],
-                                                      controller: cpfCartaoController,
-                                                      decoration: const InputDecoration(
-                                                        hintText: '123.123.123-12',
-                                                        label: Text('CPF do titular do Cartão'),
+                                                      const SizedBox(height: 10),
+                                                      TextFormField(
+                                                        validator: (value) {
+                                                          if (value == null || value.isEmpty) {
+                                                            return 'Coloque o CPF do titular do cartão';
+                                                          }
+
+                                                          if (value.length < 14) {
+                                                            return 'CPF inválido';
+                                                          }
+                                                          return null;
+                                                        },
+                                                        keyboardType: TextInputType.number,
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter.digitsOnly,
+                                                          CpfInputFormatter(),
+                                                        ],
+                                                        controller: cpfCartaoController,
+                                                        decoration: const InputDecoration(
+                                                          hintText: '123.123.123-12',
+                                                          label: Text('CPF do titular do Cartão'),
+                                                          errorStyle: TextStyle(fontSize: 0.00),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 20),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        setStateModalSalvarCartao(() {
-                                                          salvarCartao = salvarCartao ? false : true;
-                                                        });
-                                                      },
-                                                      child: Row(
-                                                        children: [
-                                                          Checkbox(
-                                                            value: salvarCartao,
-                                                            onChanged: (novoValor) {
-                                                              setStateModalSalvarCartao(() {
-                                                                salvarCartao = novoValor!;
-                                                              });
-                                                            },
-                                                          ),
-                                                          SizedBox(
-                                                            width: width - 100,
-                                                            child: RichText(
-                                                              textAlign: TextAlign.left,
-                                                              softWrap: true,
-                                                              text: TextSpan(
-                                                                text: "Deseja guardar esse cartão para próximas compras?",
-                                                                style: Theme.of(context).textTheme.titleSmall,
+                                                      const SizedBox(height: 20),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setStateModalSalvarCartao(() {
+                                                            salvarCartao = salvarCartao ? false : true;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            Checkbox(
+                                                              value: salvarCartao,
+                                                              onChanged: (novoValor) {
+                                                                setStateModalSalvarCartao(() {
+                                                                  salvarCartao = novoValor!;
+                                                                });
+                                                              },
+                                                            ),
+                                                            SizedBox(
+                                                              width: width - 100,
+                                                              child: RichText(
+                                                                textAlign: TextAlign.left,
+                                                                softWrap: true,
+                                                                text: TextSpan(
+                                                                  text: "Deseja guardar esse cartão para próximas compras?",
+                                                                  style: Theme.of(context).textTheme.titleSmall,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 10),
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        child: ElevatedButton(
+                                                          onPressed: () async {
+                                                            if (_formAdicionarCartaoKey.currentState!.validate()) {
+                                                              Navigator.pop(context);
+                                                              var cartaoNovo = CartaoModelo(
+                                                                nomeCartao: nomeCartaoController.text,
+                                                                numeroCartao: numeroCartaoController.text,
+                                                                expiracaoCartao: expiracaoCartaoController.text,
+                                                                cpfTitularCartao: cpfCartaoController.text,
+                                                              );
+
+                                                              if (salvarCartao) {
+                                                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                String? cartoesSalvos = prefs.getString('cartoesSalvos');
+
+                                                                if (cartoesSalvos != null) {
+                                                                  List<dynamic> cartoesSalvosLista = json.decode(cartoesSalvos);
+
+                                                                  List<CartaoModelo> cartoes = List<CartaoModelo>.from(cartoesSalvosLista.map((elemento) {
+                                                                    return CartaoModelo.fromMap(jsonDecode(elemento));
+                                                                  }));
+
+                                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                  cartoes.add(cartaoNovo);
+
+                                                                  String cartaoString = json.encode(cartoes);
+                                                                  prefs.setString('cartoesSalvos', cartaoString);
+                                                                  listarCartoesStore.listarCartoes();
+                                                                } else {
+                                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                  List<CartaoModelo> cartoes = [];
+                                                                  cartoes.add(cartaoNovo);
+
+                                                                  String cartaoString = json.encode(cartoes);
+                                                                  prefs.setString('cartoesSalvos', cartaoString);
+                                                                  listarCartoesStore.listarCartoes();
+                                                                }
+
+                                                                nomeCartaoController.text = '';
+                                                                numeroCartaoController.text = '';
+                                                                expiracaoCartaoController.text = '';
+                                                                cpfCartaoController.text = '';
+                                                              } else {
+                                                                setStateModalCartoes(() {
+                                                                  cartaoMemoria.add(cartaoNovo);
+                                                                });
+
+                                                                nomeCartaoController.text = '';
+                                                                numeroCartaoController.text = '';
+                                                                expiracaoCartaoController.text = '';
+                                                                cpfCartaoController.text = '';
+                                                              }
+                                                            }
+                                                          },
+                                                          style: ButtonStyle(
+                                                            backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                                                            foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                                            shape: MaterialStatePropertyAll(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(5.0),
                                                               ),
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      child: ElevatedButton(
-                                                        onPressed: () async {
-                                                          if (nomeCartaoController.text.isEmpty) {
-                                                            return;
-                                                          }
-
-                                                          if (numeroCartaoController.text.isEmpty) {
-                                                            return;
-                                                          }
-
-                                                          if (expiracaoCartaoController.text.isEmpty) {
-                                                            return;
-                                                          }
-
-                                                          if (cpfCartaoController.text.isEmpty) {
-                                                            return;
-                                                          }
-
-                                                          Navigator.pop(context);
-                                                          var cartaoNovo = CartaoModelo(
-                                                            nomeCartao: nomeCartaoController.text,
-                                                            numeroCartao: numeroCartaoController.text,
-                                                            expiracaoCartao: expiracaoCartaoController.text,
-                                                            cpfTitularCartao: cpfCartaoController.text,
-                                                          );
-
-                                                          if (salvarCartao) {
-                                                            SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                            String? cartoesSalvos = prefs.getString('cartoesSalvos');
-
-                                                            if (cartoesSalvos != null) {
-                                                              List<dynamic> cartoesSalvosLista = json.decode(cartoesSalvos);
-
-                                                              List<CartaoModelo> cartoes = List<CartaoModelo>.from(cartoesSalvosLista.map((elemento) {
-                                                                return CartaoModelo.fromMap(jsonDecode(elemento));
-                                                              }));
-
-                                                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                              cartoes.add(cartaoNovo);
-
-                                                              String cartaoString = json.encode(cartoes);
-                                                              prefs.setString('cartoesSalvos', cartaoString);
-                                                              listarCartoesStore.listarCartoes();
-                                                            } else {
-                                                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                              List<CartaoModelo> cartoes = [];
-                                                              cartoes.add(cartaoNovo);
-
-                                                              String cartaoString = json.encode(cartoes);
-                                                              prefs.setString('cartoesSalvos', cartaoString);
-                                                              listarCartoesStore.listarCartoes();
-                                                            }
-                                                          } else {
-                                                            setStateModalCartoes(() {
-                                                              cartaoMemoria.add(cartaoNovo);
-                                                            });
-                                                          }
-                                                        },
-                                                        style: ButtonStyle(
-                                                          backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                                                          foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                                          shape: MaterialStatePropertyAll(
-                                                            RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(5.0),
-                                                            ),
-                                                          ),
+                                                          child: const Text('Salvar'),
                                                         ),
-                                                        child: const Text('Salvar'),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 30),
-                                                  ],
+                                                      const SizedBox(height: 30),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -401,21 +448,44 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             },
                             itemCount: [...(state is! CartoesCarregadoInformacoes ? [] : state.cartoes), ...cartaoMemoria].length,
                             itemBuilder: (context, index) {
-                              var itemCartao = [...(state is! CartoesCarregadoInformacoes ? [] : state.cartoes), ...cartaoMemoria][index];
+                              CartaoModelo itemCartao = [...(state is! CartoesCarregadoInformacoes ? [] : state.cartoes), ...cartaoMemoria][index];
 
                               return CardCartao(
                                 cartao: itemCartao,
                                 aparecerVazio: false,
                                 aoExcluir: (cartao) {
-                                  listarCartoesServico.excluirCartao(cartao).then((sucessoAoExcluir) {
-                                    if (sucessoAoExcluir) {
-                                      listarCartoesStore.listarCartoes();
-                                    } else {
-                                      setStateModalCartoes(() {
-                                        cartaoMemoria.remove(cartao);
-                                      });
-                                    }
-                                  });
+                                  showDialog<void>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Exclusão de cartão.'),
+                                        content: const Text('Tem certeza que deseja excluir esse cartão?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Não'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text('Sim'),
+                                            onPressed: () {
+                                              listarCartoesServico.excluirCartao(cartao).then((sucessoAoExcluir) {
+                                                if (sucessoAoExcluir) {
+                                                  listarCartoesStore.listarCartoes();
+                                                } else {
+                                                  setStateModalCartoes(() {
+                                                    cartaoMemoria.remove(cartao);
+                                                  });
+                                                }
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 },
                                 selecionado: itemCartao == cartaoSelecionado,
                                 aoClicar: () {
@@ -440,50 +510,59 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                             ),
                                             child: SafeArea(
                                               child: SingleChildScrollView(
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextField(
-                                                      controller: codigoCartaoController,
-                                                      keyboardType: TextInputType.number,
-                                                      autofocus: true,
-                                                      decoration: const InputDecoration(
-                                                        hintText: '1234',
-                                                        label: Text('Código de Segurança'),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 20),
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          if (codigoCartaoController.text.isEmpty) {
-                                                            return;
+                                                child: Form(
+                                                  key: _formCVVKey,
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      TextFormField(
+                                                        controller: codigoCartaoController,
+                                                        keyboardType: TextInputType.number,
+                                                        autofocus: true,
+                                                        validator: (value) {
+                                                          if (value == null || value.isEmpty) {
+                                                            return 'Coloque o Código cartão';
                                                           }
 
-                                                          Navigator.pop(context);
-                                                          setState(() {
-                                                            itemCartao.codigoSeguracaoCartao = codigoCartaoController.text;
-                                                            itemCartao.parcelasCartao = '1';
-                                                            cartaoSelecionado = itemCartao;
-                                                            codigoCartaoController.text = '';
-                                                          });
+                                                          return null;
                                                         },
-                                                        style: ButtonStyle(
-                                                          backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                                                          foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                                          shape: MaterialStatePropertyAll(
-                                                            RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(5.0),
+                                                        decoration: const InputDecoration(
+                                                          hintText: '1234',
+                                                          label: Text('Código de Segurança'),
+                                                          errorStyle: TextStyle(fontSize: 0.00),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 20),
+                                                      SizedBox(
+                                                        width: double.infinity,
+                                                        child: ElevatedButton(
+                                                          onPressed: () {
+                                                            if (_formCVVKey.currentState!.validate()) {
+                                                              Navigator.pop(context);
+                                                              setState(() {
+                                                                itemCartao.codigoSeguracaoCartao = codigoCartaoController.text;
+                                                                itemCartao.parcelasCartao = parcela.toString();
+                                                                cartaoSelecionado = itemCartao;
+                                                                codigoCartaoController.text = '';
+                                                              });
+                                                            }
+                                                          },
+                                                          style: ButtonStyle(
+                                                            backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                                                            foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                                            shape: MaterialStatePropertyAll(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(5.0),
+                                                              ),
                                                             ),
                                                           ),
+                                                          child: const Text('OK'),
                                                         ),
-                                                        child: const Text('OK'),
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 30),
-                                                  ],
+                                                      const SizedBox(height: 30),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -578,21 +657,28 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                 },
                               ),
                             ),
-                            segments: [
-                              for (var i = 0; i < dados.pagamentos.length; i++)
-                                ButtonSegment(
-                                  value: dados.pagamentos[i].id,
-                                  tooltip: dados.pagamentos[i].nome,
-                                  label: Text(
-                                    dados.pagamentos[i].nome,
-                                    overflow: TextOverflow.ellipsis,
+                            segments: dados.pagamentos
+                                .map(
+                                  (itemPagamento) => ButtonSegment(
+                                    value: itemPagamento.id,
+                                    tooltip: itemPagamento.nome,
+                                    label: Text(
+                                      itemPagamento.nome,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                ),
-                            ],
+                                )
+                                .toList(),
                             selected: {metodoPagamento},
                             showSelectedIcon: false,
                             onSelectionChanged: (pagamento) {
                               setState(() {
+                                if (pagamento.first != '3') {
+                                  parcela = -1;
+                                } else {
+                                  parcela = 1;
+                                }
+
                                 metodoPagamento = pagamento.first;
                               });
                             },
@@ -714,12 +800,12 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           ],
                         ),
                       ],
-                      if (parcela != -1) ...[
+                      if (parcela != -1 && metodoPagamento == '3') ...[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
-                              'Parcelas.',
+                              'Parcelas',
                               style: TextStyle(fontSize: 16),
                             ),
                             Text(

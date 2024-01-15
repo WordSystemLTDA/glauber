@@ -18,8 +18,6 @@ class AgendaServicoImpl implements AgendaServico {
 
     final response = await client.get(url: url);
 
-    print(response.data);
-
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.data);
 

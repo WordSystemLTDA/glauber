@@ -535,6 +535,21 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                   ),
                                 ),
                               ),
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent, // Needed for invisible things to be tapped.
+                                  onTap: () {},
+                                  child: const SizedBox(
+                                    width: 150,
+                                    height: 150,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(9.0), // Configure hit area.
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Skeleton.ignore(
                                 child: SafeArea(
                                   child: Padding(

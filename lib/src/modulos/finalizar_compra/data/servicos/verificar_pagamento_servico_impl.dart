@@ -18,7 +18,6 @@ class VerificarPagamentoServicoImpl implements VerificarPagamentoServico {
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
-
     var jsonData = jsonDecode(response.data);
 
     bool sucesso = jsonData['sucesso'];
