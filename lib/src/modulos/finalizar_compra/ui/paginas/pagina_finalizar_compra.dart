@@ -206,6 +206,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                                     mainAxisSize: MainAxisSize.min,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
+                                                      const SizedBox(height: 10),
                                                       TextFormField(
                                                         validator: (value) {
                                                           if (value == null || value.isEmpty) {

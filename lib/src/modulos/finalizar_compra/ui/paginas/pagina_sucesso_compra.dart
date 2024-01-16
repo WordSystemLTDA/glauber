@@ -29,7 +29,7 @@ class PaginaSucessoCompra extends StatefulWidget {
 class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
   bool sucessoAoVerificarPagamento = false;
 
-  late Timer _timer;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -39,7 +39,9 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 

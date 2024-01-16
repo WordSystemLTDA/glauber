@@ -348,8 +348,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -358,8 +356,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -368,8 +364,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -378,8 +372,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -388,8 +380,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -398,8 +388,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -408,8 +396,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
     OrdemDeEntradaModelo(
@@ -418,8 +404,6 @@ class DadosFakes {
       nomeEvento: 'nomeEvento',
       nomeProva: 'nomeProva',
       nomeCliente: 'nomeCliente',
-      idCabeceira: '1',
-      nomeCabeceira: 'nomeCabeceira',
       parceiros: [],
     ),
   ];

@@ -36,6 +36,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
               context: context,
               builder: (context) {
                 return Dialog(
+                  insetPadding: const EdgeInsets.all(15),
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
@@ -47,13 +48,13 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                         ),
-                        Text(
-                          item.nomeCabeceira,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                        const Text(
+                          'Cabeceira',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
                         ),
                         const SizedBox(height: 10),
-                        Text("Seu HandiCap: ${item.idCabeceira == '1' ? usuarioProvider.usuario!.hcCabeceira! : usuarioProvider.usuario!.hcPezeiro!}"),
-                        const SizedBox(height: 20),
+                        Text("Seu HandiCap: ${usuarioProvider.usuario!.hcCabeceira!}"),
+                        const SizedBox(height: 5),
                         if (item.parceiros.isNotEmpty) ...[
                           const Divider(),
                           Flexible(
@@ -81,7 +82,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            itemParceiro.sorteio == '0' || itemParceiro.sorteio.isEmpty
+                                            (itemParceiro.sorteio == '0' || itemParceiro.sorteio.isEmpty)
                                                 ? Text("Inscrição: ${itemParceiro.numeroDaInscricao}")
                                                 : Text("Inscrição: ${itemParceiro.numeroDaInscricao}, Sorteio ${itemParceiro.sorteio}"),
                                           ],
@@ -95,6 +96,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                     const SizedBox(height: 20),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Column(
                                           children: [
@@ -198,11 +200,11 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
-                          const SizedBox(height: 15),
-                          Text(
-                            item.nomeCabeceira,
-                            style: const TextStyle(fontSize: 18, color: Colors.green),
-                          ),
+                          // const SizedBox(height: 15),
+                          // const Text(
+                          //   'Cabeceira',
+                          //   style: TextStyle(fontSize: 18, color: Colors.green),
+                          // ),
                         ],
                       ),
                     ),

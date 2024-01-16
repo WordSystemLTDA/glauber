@@ -29,10 +29,7 @@ class _AppBarSombraState extends State<AppBarSombra> {
         actions: [
           if (widget.aparecerIconeNotificacao ?? false) ...[
             IconButton(
-              icon: Badge.count(
-                count: 3,
-                child: const Icon(Icons.notifications_outlined),
-              ),
+              icon: const Icon(Icons.notifications_outlined),
               onPressed: () {},
             ),
           ]

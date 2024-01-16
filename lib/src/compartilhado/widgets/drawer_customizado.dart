@@ -114,138 +114,140 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
     return Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {
       return Drawer(
         width: 200,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  Center(
-                    child: (usuarioProvider.usuario != null && (usuarioProvider.usuario!.tipo == 'social' && usuarioProvider.usuario!.foto != 'semfoto'))
-                        ? CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            radius: 35,
-                            backgroundImage: Image.network(
-                              usuarioProvider.usuario!.foto!,
-                            ).image,
-                          )
-                        : CircleAvatar(
-                            backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
-                            radius: 35,
-                            child: Text(
-                              nomeUsuario(),
-                              style: const TextStyle(fontSize: 22, color: Colors.white),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    Center(
+                      child: (usuarioProvider.usuario != null && (usuarioProvider.usuario!.tipo == 'social' && usuarioProvider.usuario!.foto != 'semfoto'))
+                          ? CircleAvatar(
+                              backgroundColor: Colors.grey,
+                              radius: 35,
+                              backgroundImage: Image.network(
+                                usuarioProvider.usuario!.foto!,
+                              ).image,
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                              radius: 35,
+                              child: Text(
+                                nomeUsuario(),
+                                style: const TextStyle(fontSize: 22, color: Colors.white),
+                              ),
                             ),
-                          ),
-                  ),
-                  if (usuarioProvider.usuario != null) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 10),
-                      child: Text(
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        "#${usuarioProvider.usuario!.id} - ${usuarioProvider.usuario!.nome!}",
-                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 0),
-                      child: Text(
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        usuarioProvider.usuario!.email!,
+                    if (usuarioProvider.usuario != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, top: 10),
+                        child: Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          "#${usuarioProvider.usuario!.id} - ${usuarioProvider.usuario!.nome!}",
+                        ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, top: 0),
+                        child: Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          usuarioProvider.usuario!.email!,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    const Divider(),
+                    Column(
+                      children: [
+                        ValueListenableBuilder<ThemeMode>(
+                          valueListenable: context.read<ThemeController>(),
+                          builder: (context, state, _) {
+                            return ListTile(
+                              leading: context.read<ThemeController>().value == ThemeMode.dark ? const Icon(Icons.nightlight_round) : const Icon(Icons.wb_sunny),
+                              dense: true,
+                              title: const Text('Mudar Tema'),
+                              onTap: () {
+                                context.read<ThemeController>().onThemeSwitchEvent();
+                              },
+                            );
+                          },
+                        ),
+                        ListTile(
+                          onTap: () {
+                            widget.aoMudarPagina(0);
+                          },
+                          leading: const Icon(Icons.home_outlined),
+                          title: const Text('Início'),
+                        ),
+                        ListTile(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, AppRotas.buscar);
+                          },
+                          leading: const Icon(Icons.search),
+                          title: const Text('Buscar'),
+                        ),
+                        if (usuarioProvider.usuario != null) ...[
+                          ListTile(
+                            onTap: () {
+                              widget.aoMudarPagina(1);
+                            },
+                            leading: const Icon(Icons.sell_outlined),
+                            title: const Text('Inscrições'),
+                          ),
+                          ListTile(
+                            onTap: () {
+                              widget.aoMudarPagina(3);
+                            },
+                            leading: const Icon(Icons.person_outline),
+                            title: const Text('Perfil'),
+                          ),
+                          ListTile(
+                            onTap: () {
+                              widget.aoMudarPagina(2);
+                            },
+                            leading: const Icon(Icons.format_list_numbered_outlined),
+                            title: const Text('Ordem de Entrada'),
+                          ),
+                          ListTile(
+                            onTap: () {
+                              Navigator.pushNamed(context, AppRotas.calendario);
+                            },
+                            leading: const Icon(Icons.calendar_month_outlined),
+                            title: const Text('Calendário'),
+                          ),
+                          ListTile(
+                            onTap: () {
+                              botaoSair();
+                            },
+                            leading: const Icon(Icons.logout, color: Colors.red),
+                            title: const Text(
+                              'Sair',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            // trailing: Icon(Icons),
+                          ),
+                        ],
+                      ],
                     ),
                   ],
-                  const SizedBox(height: 10),
-                  const Divider(),
-                  Column(
-                    children: [
-                      ValueListenableBuilder<ThemeMode>(
-                        valueListenable: context.read<ThemeController>(),
-                        builder: (context, state, _) {
-                          return ListTile(
-                            leading: context.read<ThemeController>().value == ThemeMode.dark ? const Icon(Icons.nightlight_round) : const Icon(Icons.wb_sunny),
-                            dense: true,
-                            title: const Text('Mudar Tema'),
-                            onTap: () {
-                              context.read<ThemeController>().onThemeSwitchEvent();
-                            },
-                          );
-                        },
-                      ),
-                      ListTile(
-                        onTap: () {
-                          widget.aoMudarPagina(0);
-                        },
-                        leading: const Icon(Icons.home_outlined),
-                        title: const Text('Início'),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, AppRotas.buscar);
-                        },
-                        leading: const Icon(Icons.search),
-                        title: const Text('Buscar'),
-                      ),
-                      if (usuarioProvider.usuario != null) ...[
-                        ListTile(
-                          onTap: () {
-                            widget.aoMudarPagina(1);
-                          },
-                          leading: const Icon(Icons.sell_outlined),
-                          title: const Text('Inscrições'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            widget.aoMudarPagina(3);
-                          },
-                          leading: const Icon(Icons.person_outline),
-                          title: const Text('Perfil'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            widget.aoMudarPagina(2);
-                          },
-                          leading: const Icon(Icons.format_list_numbered_outlined),
-                          title: const Text('Ordem de Entrada'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRotas.calendario);
-                          },
-                          leading: const Icon(Icons.calendar_month_outlined),
-                          title: const Text('Calendário'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            botaoSair();
-                          },
-                          leading: const Icon(Icons.logout, color: Colors.red),
-                          title: const Text(
-                            'Sair',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          // trailing: Icon(Icons),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-            const Divider(),
-            Text(
-              "Ultima versão $ultimaVersao",
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12),
-            ),
-            Text(
-              "Versão instalada $versaoInstalada",
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12),
-            ),
-            const SizedBox(height: 30),
-          ],
+              const Divider(),
+              Text(
+                "Ultima versão $ultimaVersao",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+              ),
+              Text(
+                "Versão instalada $versaoInstalada",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       );
     });

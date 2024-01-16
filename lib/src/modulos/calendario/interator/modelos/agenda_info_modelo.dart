@@ -3,6 +3,7 @@ import 'dart:convert';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class AgendaInfoModelo {
   String link;
+  String cidade;
   String tituloNotificacao;
   String corpoNotificacao;
   String erroAgendarNotificacao;
@@ -11,6 +12,7 @@ class AgendaInfoModelo {
 
   AgendaInfoModelo({
     required this.link,
+    required this.cidade,
     required this.tituloNotificacao,
     required this.corpoNotificacao,
     required this.erroAgendarNotificacao,
@@ -21,6 +23,7 @@ class AgendaInfoModelo {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'link': link,
+      'cidade': cidade,
       'tituloNotificacao': tituloNotificacao,
       'corpoNotificacao': corpoNotificacao,
       'erroAgendarNotificacao': erroAgendarNotificacao,
@@ -32,6 +35,7 @@ class AgendaInfoModelo {
   factory AgendaInfoModelo.fromMap(Map<String, dynamic> map) {
     return AgendaInfoModelo(
       link: map['link'] as String,
+      cidade: map['cidade'] as String,
       tituloNotificacao: map['tituloNotificacao'] as String,
       corpoNotificacao: map['corpoNotificacao'] as String,
       erroAgendarNotificacao: map['erroAgendarNotificacao'] as String,

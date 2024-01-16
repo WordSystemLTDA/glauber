@@ -37,11 +37,36 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
 
   @override
   Widget build(BuildContext context) {
-    final agendaStore = context.read<AgendaStore>();
+    final agendaStore = context.watch<AgendaStore>();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendário'),
+        actions: [
+          if (!agendaStore.listando) ...[
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: IconButton(
+                onPressed: () {
+                  agendaStore.resetarAgenda();
+                },
+                icon: const Icon(Icons.refresh),
+              ),
+            ),
+          ],
+          if (agendaStore.listando) ...[
+            const Padding(
+              padding: EdgeInsets.only(right: 35),
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
       body: Stack(
         children: [
@@ -67,7 +92,7 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
               navigationDirection: MonthNavigationDirection.vertical,
             ),
             onTap: onTap,
-            // onViewChanged: agendaStore.viewChanged,
+            onViewChanged: agendaStore.viewChanged,
             // onDragEnd: onDragEnd,
           ),
         ],

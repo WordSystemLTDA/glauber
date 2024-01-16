@@ -21,7 +21,7 @@ class AgendaStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetarAgenda(String medico, [Function()? closeDrawers]) {
+  void resetarAgenda() {
     if (_startDate != null && _endDate != null) {
       listando = true;
       notifyListeners();
@@ -32,10 +32,6 @@ class AgendaStore extends ChangeNotifier {
         listando = false;
         notifyListeners();
       });
-
-      if (closeDrawers != null) {
-        closeDrawers();
-      }
 
       notifyListeners();
     }

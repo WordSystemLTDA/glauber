@@ -77,18 +77,19 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
 
           if (state is AgendaInfoCarregado) {
             return Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () async {
-                      if (await canLaunchUrl(Uri.parse(state.agendaInfo.link))) {
-                        await launchUrl(Uri.parse(state.agendaInfo.link));
-                      }
-                    },
-                    child: Text(state.agendaInfo.tituloAbrirLink),
-                  ),
+                  if (state.agendaInfo.cidade.isNotEmpty) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Cidade: ${state.agendaInfo.cidade}",
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -136,6 +137,17 @@ class _PaginaVerEventoCalendarioState extends State<PaginaVerEventoCalendario> {
                         },
                       ),
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: TextButton(
+                      onPressed: () async {
+                        if (await canLaunchUrl(Uri.parse(state.agendaInfo.link))) {
+                          await launchUrl(Uri.parse(state.agendaInfo.link));
+                        }
+                      },
+                      child: Text(state.agendaInfo.tituloAbrirLink),
+                    ),
                   ),
                 ],
               ),
