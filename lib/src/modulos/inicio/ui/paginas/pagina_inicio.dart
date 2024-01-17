@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/drawer_customizado.dart';
 import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
@@ -122,60 +123,91 @@ class _PaginaInicioState extends State<PaginaInicio> {
         showDialog(
           context: context,
           builder: (context) {
-            return Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Mudar Senha',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: novaSenha,
-                      decoration: const InputDecoration(hintText: 'Nova senha'),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Fechar'),
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: () {
-                            mudarSenhaServico.mudarSenha(usuarioProvider, novaSenha.text).then((sucesso) {
-                              if (sucesso) {
-                                Navigator.pop(context);
-
-                                if (mounted) {
-                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                    content: Center(child: Text('Sua senha foi mudada com sucesso.')),
-                                    showCloseIcon: true,
-                                    backgroundColor: Colors.green,
-                                  ));
-                                }
-                              }
-                            });
-                          },
-                          style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                            foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+            return PopScope(
+              canPop: false,
+              child: Dialog(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Mudar Senha',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: novaSenha,
+                        decoration: const InputDecoration(hintText: 'Nova senha'),
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Fechar'),
                           ),
-                          child: const Text('Salvar'),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              mudarSenhaServico.mudarSenha(usuarioProvider, novaSenha.text).then((sucesso) {
+                                if (sucesso) {
+                                  Navigator.pop(context);
+
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                      content: Center(child: Text('Sua senha foi mudada com sucesso.')),
+                                      showCloseIcon: true,
+                                      backgroundColor: Colors.green,
+                                    ));
+                                  }
+                                }
+                              });
+                            },
+                            style: const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
+                              foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+                            ),
+                            child: const Text('Salvar'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+            );
+          },
+        );
+      } else if (mounted && usuarioProvider != null && usuarioProvider.clienteBloqueado == true) {
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext contextDialog) {
+            return PopScope(
+              canPop: false,
+              child: AlertDialog(
+                title: const Text(
+                  'Você foi bloqueado',
+                  style: TextStyle(fontSize: 16),
+                ),
+                content: const Text('Você foi bloqueado para usar esse aplicativo, para conversar com o suporte clique em Abrir WhatsApp.'),
+                actions: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: const Text('Abrir WhatsApp'),
+                    onPressed: () async {
+                      FuncoesGlobais.abrirWhatsapp(usuarioProvider.celularSuporte!);
+                    },
+                  ),
+                ],
               ),
             );
           },

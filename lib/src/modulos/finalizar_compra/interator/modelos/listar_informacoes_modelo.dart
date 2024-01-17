@@ -9,20 +9,23 @@ import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dar
 class ListarInformacoesModelo {
   final DadosProvasModelo prova;
   final EventoModelo evento;
+  final String taxaCartao;
   final List<ParcelaDisponiveisModelo> parcelasDisponiveisCartao;
   final List<PagamentosModelo> pagamentos;
 
   ListarInformacoesModelo({
     required this.prova,
     required this.evento,
-    required this.pagamentos,
+    required this.taxaCartao,
     required this.parcelasDisponiveisCartao,
+    required this.pagamentos,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'prova': prova.toMap(),
       'evento': evento.toMap(),
+      'taxaCartao': taxaCartao,
       'parcelasDisponiveisCartao': parcelasDisponiveisCartao.map((x) => x.toMap()).toList(),
       'pagamentos': pagamentos.map((x) => x.toMap()).toList(),
     };
@@ -32,6 +35,7 @@ class ListarInformacoesModelo {
     return ListarInformacoesModelo(
       prova: DadosProvasModelo.fromMap(map['prova'] as Map<String, dynamic>),
       evento: EventoModelo.fromMap(map['evento'] as Map<String, dynamic>),
+      taxaCartao: map['taxaCartao'] as String,
       parcelasDisponiveisCartao: List<ParcelaDisponiveisModelo>.from(
         (map['parcelasDisponiveisCartao'] as List<dynamic>).map<ParcelaDisponiveisModelo>(
           (x) => ParcelaDisponiveisModelo.fromMap(x as Map<String, dynamic>),

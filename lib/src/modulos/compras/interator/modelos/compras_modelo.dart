@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:provadelaco/src/modulos/compras/interator/modelos/provas_compras_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class ComprasModelo {
   final String id;
@@ -17,6 +17,7 @@ class ComprasModelo {
   final String horaCompra;
   String pago;
   final String nomeProva;
+  final String idEvento;
   final String nomeEvento;
   final String dataEvento;
   final String horaInicio;
@@ -27,7 +28,7 @@ class ComprasModelo {
   final String idFormaPagamento;
   final String quandoInscricaoNaoPaga;
   final String mensagemQuandoInscricaoNaoPaga;
-  final List<ProvasComprasModelo> provas;
+  final List<ProvaModelo> provas;
 
   ComprasModelo({
     required this.id,
@@ -44,6 +45,7 @@ class ComprasModelo {
     required this.pago,
     required this.nomeProva,
     required this.nomeEvento,
+    required this.idEvento,
     required this.dataEvento,
     required this.horaInicio,
     required this.horaInicioF,
@@ -71,6 +73,7 @@ class ComprasModelo {
       'horaCompra': horaCompra,
       'pago': pago,
       'nomeProva': nomeProva,
+      'idEvento': idEvento,
       'nomeEvento': nomeEvento,
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
@@ -100,6 +103,7 @@ class ComprasModelo {
       horaCompra: map['horaCompra'] as String,
       pago: map['pago'] as String,
       nomeProva: map['nomeProva'] as String,
+      idEvento: map['idEvento'] as String,
       nomeEvento: map['nomeEvento'] as String,
       dataEvento: map['dataEvento'] as String,
       horaInicio: map['horaInicio'] as String,
@@ -110,9 +114,9 @@ class ComprasModelo {
       idFormaPagamento: map['idFormaPagamento'] as String,
       quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] as String,
       mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
-      provas: List<ProvasComprasModelo>.from(
-        (map['provas'] as List<dynamic>).map<ProvasComprasModelo>(
-          (x) => ProvasComprasModelo.fromMap(x as Map<String, dynamic>),
+      provas: List<ProvaModelo>.from(
+        (map['provas'] as List<dynamic>).map<ProvaModelo>(
+          (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );

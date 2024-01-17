@@ -25,7 +25,7 @@ class HomeStore extends ValueNotifier<HomeEstado> {
       var configProvider = context.read<ConfigProvider>();
       configProvider.setConfig(resposta.dadosConfig);
 
-      verificarAtualicao(context, resposta.dadosConfig);
+      verificarAtualizacao(context, resposta.dadosConfig);
 
       value = Carregado(eventos: resposta.eventos, eventosTopo: resposta.eventosTopo, propagandas: resposta.propagandas, categorias: resposta.categorias);
     } else {
@@ -33,7 +33,7 @@ class HomeStore extends ValueNotifier<HomeEstado> {
     }
   }
 
-  void verificarAtualicao(context, ConfigModelo versoes) async {
+  void verificarAtualizacao(context, ConfigModelo versoes) async {
     if (await FuncoesGlobais.appPrecisaAtualizar(versoes.versaoAppAndroid, versoes.versaoAppIos)) {
       showDialog<void>(
         context: context,

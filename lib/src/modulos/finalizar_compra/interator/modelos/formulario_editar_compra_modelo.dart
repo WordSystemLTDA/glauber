@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/cartao_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
-class FormularioCompraModelo {
+class FormularioEditarCompraModelo {
   final String idProva;
   final String idEmpresa;
   final String idEvento;
+  final String idVenda;
   final String idFormaPagamento;
   final String valorIngresso;
   final String valorTaxa;
@@ -18,10 +19,11 @@ class FormularioCompraModelo {
   final List<ProvaModelo> provas;
   final CartaoModelo? cartao;
 
-  FormularioCompraModelo({
+  FormularioEditarCompraModelo({
     required this.idProva,
     required this.idEmpresa,
     required this.idEvento,
+    required this.idVenda,
     required this.idFormaPagamento,
     required this.valorIngresso,
     required this.valorTaxa,
@@ -38,6 +40,7 @@ class FormularioCompraModelo {
       'idProva': idProva,
       'idEmpresa': idEmpresa,
       'idEvento': idEvento,
+      'idVenda': idVenda,
       'idFormaPagamento': idFormaPagamento,
       'valorIngresso': valorIngresso,
       'valorTaxa': valorTaxa,
@@ -50,11 +53,12 @@ class FormularioCompraModelo {
     };
   }
 
-  factory FormularioCompraModelo.fromMap(Map<String, dynamic> map) {
-    return FormularioCompraModelo(
+  factory FormularioEditarCompraModelo.fromMap(Map<String, dynamic> map) {
+    return FormularioEditarCompraModelo(
       idProva: map['idProva'] as String,
       idEmpresa: map['idEmpresa'] as String,
       idEvento: map['idEvento'] as String,
+      idVenda: map['idVenda'] as String,
       idFormaPagamento: map['idFormaPagamento'] as String,
       valorIngresso: map['valorIngresso'] as String,
       valorTaxa: map['valorTaxa'] as String,
@@ -63,7 +67,7 @@ class FormularioCompraModelo {
       valorTotal: map['valorTotal'] as String,
       tipoDeVenda: map['tipoDeVenda'] as String,
       provas: List<ProvaModelo>.from(
-        (map['provas'] as List<dynamic>).map<ProvaModelo>(
+        (map['provas'] as List<int>).map<ProvaModelo>(
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
@@ -73,5 +77,5 @@ class FormularioCompraModelo {
 
   String toJson() => json.encode(toMap());
 
-  factory FormularioCompraModelo.fromJson(String source) => FormularioCompraModelo.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory FormularioEditarCompraModelo.fromJson(String source) => FormularioEditarCompraModelo.fromMap(json.decode(source) as Map<String, dynamic>);
 }

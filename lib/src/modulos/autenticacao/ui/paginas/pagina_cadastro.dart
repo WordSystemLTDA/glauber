@@ -1,8 +1,13 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
+import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
 import 'package:provider/provider.dart';
 
 class PaginaCadastro extends StatefulWidget {
@@ -20,9 +25,14 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   final _hcPiseiroController = TextEditingController();
   final _senhaController = TextEditingController();
   final _confirmarSenhaController = TextEditingController();
+  final TextEditingController celularController = TextEditingController();
+
+  TextEditingController cidadeController = TextEditingController(text: 'Sem cidade');
+  SearchController pesquisaCidadeController = SearchController();
 
   String idHcCabeceira = '0';
   String idHcPiseiro = '0';
+  String idCidade = '';
 
   bool ocultarSenha = true;
   bool ocultarConfirmar = true;
@@ -77,6 +87,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     String email = _emailController.text;
     String senha = _senhaController.text;
     String confirmar = _confirmarSenhaController.text;
+    String celular = celularController.text;
+    String cidade = idCidade;
     String hcCabeceira = idHcCabeceira;
     String hcPiseiro = idHcPiseiro;
 
@@ -86,7 +98,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         backgroundColor: Colors.red,
         content: Center(child: Text('Preencha todos os campos!')),
       ));
-    } else if (hcCabeceira.isEmpty || hcPiseiro.isEmpty) {
+    } else if ((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         showCloseIcon: true,
         backgroundColor: Colors.red,
@@ -100,7 +112,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
           content: Center(child: Text('Campos de senha precisam ser iguais!')),
         ));
       } else {
-        autenticacaoStore.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro);
+        autenticacaoStore.cadastrar(nome, apelido, email, senha, celular, cidade, hcCabeceira, hcPiseiro);
       }
     }
   }
@@ -108,6 +120,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   @override
   Widget build(BuildContext context) {
     var autenticacaoStore = context.read<AutenticacaoStore>();
+    var cidadeServico = context.read<CidadeServico>();
 
     return GestureDetector(
       onTap: () {
@@ -142,7 +155,83 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   const SizedBox(height: 5),
                   TextField(
                     controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: joao@gmail.com'),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Celular'),
+                  const SizedBox(height: 5),
+                  TextField(
+                    controller: celularController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TelefoneInputFormatter(),
+                    ],
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: 'Celular',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Cidade'),
+                  const SizedBox(height: 5),
+                  SearchAnchor(
+                    viewBuilder: (suggestions) {
+                      return ListView.builder(
+                        itemCount: suggestions.length,
+                        padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                        itemBuilder: (context, index) {
+                          var item = suggestions.elementAt(index);
+
+                          return item;
+                        },
+                      );
+                    },
+                    isFullScreen: true,
+                    searchController: pesquisaCidadeController,
+                    builder: (BuildContext context, SearchController controller) {
+                      return TextField(
+                        onTap: () {
+                          pesquisaCidadeController.openView();
+                        },
+                        controller: cidadeController,
+                        readOnly: true,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      );
+                    },
+                    suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                      final keyword = controller.value.text;
+
+                      List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
+
+                      Iterable<Widget> widgets = cidades!.map((cidade) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.closeView('');
+                            setState(() {
+                              idCidade = cidade.id;
+                              cidadeController.text = cidade.nome;
+                            });
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: Card(
+                            elevation: 3.0,
+                            child: ListTile(
+                              leading: const Icon(Icons.copy_all_outlined),
+                              title: Text(cidade.nome),
+                              subtitle: Text(
+                                cidade.nomeUf,
+                                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+
+                      return widgets;
+                    },
                   ),
                   const SizedBox(height: 10),
                   Row(

@@ -21,6 +21,7 @@ class PaginaEditarUsuario extends StatefulWidget {
 }
 
 class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
+  bool salvando = false;
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController apelidoController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -116,6 +117,10 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   }
 
   void editar(usuario) {
+    setState(() {
+      salvando = true;
+    });
+
     var editarUsuarioServico = context.read<EditarUsuarioServico>();
 
     editarUsuarioServico
@@ -151,10 +156,12 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       var usuarioNovo = UsuarioModelo(
         id: usuario.usuario!.id!,
         tipoDePix: tipoDeChave,
+        celularSuporte: usuario.usuario.celularSuporte,
+        clienteBloqueado: false,
         chavePix: chavePix.text,
         nome: nomeController.text,
         sexo: sexoController.text,
-        dataNascimento: dataNascimentoNormal,
+        dataNascimento: usuario.usuario.dataNascimento == '0000-00-00' ? '0000-00-00' : dataNascimentoNormal,
         cpf: cpfController.text,
         rg: rgController.text,
         email: emailController.text,
@@ -203,6 +210,9 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
           ),
         ));
       }
+      setState(() {
+        salvando = false;
+      });
     });
   }
 
@@ -218,8 +228,12 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       sexoController.text = usuario.sexo!;
       chavePix.text = usuario.chavePix!;
       tipoDeChave = usuario.tipoDePix!.isEmpty ? 'Celular' : usuario.tipoDePix!;
-      // dataNascimentoNormal = DateFormat('yyyy-MM-dd').format(DateTime.parse(usuario.dataNascimento!)).toString();
-      // dataNascimentoController.text = DateFormat('dd/MM/yyyy').format(DateTime.parse(usuario.dataNascimento!)).toString();
+
+      if (usuario.dataNascimento! != '0000-00-00') {
+        dataNascimentoNormal = DateFormat('yyyy-MM-dd').format(DateTime.parse(usuario.dataNascimento!)).toString();
+        dataNascimentoController.text = DateFormat('dd/MM/yyyy').format(DateTime.parse(usuario.dataNascimento!)).toString();
+      }
+
       telefoneController.text = usuario.telefone!;
       celularController.text = usuario.celular!;
       senhaController.text = usuario.senha!;
@@ -261,6 +275,42 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // -----------------------------------------------------------------
+                const Text(
+                  'HandiCap`s',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        readOnly: true,
+                        enabled: false,
+                        keyboardType: TextInputType.number,
+                        controller: cabeceiraController,
+                        decoration: const InputDecoration(
+                          hintText: 'Cabeça',
+                          label: Text('Cabeça'),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        readOnly: true,
+                        enabled: false,
+                        keyboardType: TextInputType.number,
+                        controller: pezeiroController,
+                        decoration: const InputDecoration(
+                          hintText: 'Pé',
+                          label: Text('Pé'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // -----------------------------------------------------------------
+                const SizedBox(height: 20),
                 const Text(
                   'Dados',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -486,42 +536,6 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                 // -----------------------------------------------------------------
                 const SizedBox(height: 20),
                 const Text(
-                  'HandiCap`s',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        readOnly: true,
-                        enabled: false,
-                        keyboardType: TextInputType.number,
-                        controller: cabeceiraController,
-                        decoration: const InputDecoration(
-                          hintText: 'Cabeça',
-                          label: Text('Cabeça'),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        readOnly: true,
-                        enabled: false,
-                        keyboardType: TextInputType.number,
-                        controller: pezeiroController,
-                        decoration: const InputDecoration(
-                          hintText: 'Pé',
-                          label: Text('Pé'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // -----------------------------------------------------------------
-                const SizedBox(height: 20),
-                const Text(
                   'Endereço',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
@@ -705,13 +719,24 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     onPressed: () {
                       editar(usuario);
                     },
-                    child: const Text(
-                      'Salvar',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: salvando
+                        ? const Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 1,
+                              ),
+                            ),
+                          )
+                        : const Text(
+                            'Salvar',
+                            style: TextStyle(fontSize: 16),
+                          ),
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 100),
               ],
             ),
           ),

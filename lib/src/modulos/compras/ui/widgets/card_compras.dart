@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_nao_paga.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_paga.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_edicao_venda_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+// ignore: must_be_immutable
 class CardCompras extends StatefulWidget {
   final ComprasModelo item;
-  const CardCompras({super.key, required this.item});
+  Function()? atualizarLista;
+
+  CardCompras({super.key, required this.item, this.atualizarLista});
 
   @override
   State<CardCompras> createState() => _CardComprasState();
@@ -32,6 +38,7 @@ class _CardComprasState extends State<CardCompras> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     var item = widget.item;
 
     return SizedBox(
@@ -49,6 +56,7 @@ class _CardComprasState extends State<CardCompras> {
                   surfaceTintColor: Colors.white,
                   child: SizedBox(
                     width: width * 0.9,
+                    height: height * 0.8,
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
@@ -173,15 +181,17 @@ class _CardComprasState extends State<CardCompras> {
                                 var provas = item.provas[index];
 
                                 return Card(
+                                  margin: const EdgeInsets.only(bottom: 5),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(provas.nomeCabeceira),
+                                        Text(provas.nomeCabeceira!),
                                         Text(provas.nomeProva),
                                         Text(
-                                          Utils.coverterEmReal.format(double.parse(provas.total)),
+                                          Utils.coverterEmReal.format(double.parse(provas.valor)),
                                           style: const TextStyle(color: Colors.green),
                                         ),
                                       ],
@@ -191,6 +201,32 @@ class _CardComprasState extends State<CardCompras> {
                               },
                             ),
                           ),
+                          if (item.pago == 'Não') ...[
+                            const SizedBox(height: 5),
+                            Align(
+                              alignment: Alignment.center,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRotas.finalizarCompra,
+                                    arguments: PaginaFinalizarCompraArgumentos(
+                                      editarVenda: true,
+                                      dadosEdicaoVendaModelo: DadosEdicaoVendaModelo(idVenda: item.id, metodoPagamento: item.idFormaPagamento),
+                                      provas: item.provas,
+                                      idEvento: item.idEvento,
+                                    ),
+                                  ).then((value) {
+                                    if (widget.atualizarLista != null) {
+                                      widget.atualizarLista!();
+                                    }
+                                  });
+                                },
+                                child: const Text('Editar forma de Pagamento'),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),

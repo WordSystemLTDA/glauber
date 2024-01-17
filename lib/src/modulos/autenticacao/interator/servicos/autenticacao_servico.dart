@@ -7,5 +7,5 @@ abstract interface class AutenticacaoServico {
   Future<(bool, String, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLogin tipo, String nome, String hcCabeceira, String hcPiseiro);
   Future<(bool, String)> sair(UsuarioModelo? usuario, String? tokenNotificacao);
   Future<(bool, String)> excluirConta(UsuarioModelo? usuario, String? tokenNotificacao);
-  Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String hcCabeceira, String hcPiseiro);
+  Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String celular, String cidade, String hcCabeceira, String hcPiseiro);
 }

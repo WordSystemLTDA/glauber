@@ -189,7 +189,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String hcCabeceira, String hcPiseiro) async {
+  Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String celular, String cidade, String hcCabeceira, String hcPiseiro) async {
     var url = 'autenticacao/cadastrar.php';
 
     var campos = {
@@ -197,6 +197,8 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       "apelido": apelido,
       "email": email,
       "senha": senha,
+      "celular": celular,
+      "cidade": cidade,
       "hcCabeceira": hcCabeceira,
       "hcPiseiro": hcPiseiro,
     };
@@ -210,7 +212,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
     if (response.statusCode == 200) {
       return (sucesso, mensagem);
     } else {
-      return (false, 'Erro ao tentar inserir');
+      return (false, mensagem);
     }
   }
 

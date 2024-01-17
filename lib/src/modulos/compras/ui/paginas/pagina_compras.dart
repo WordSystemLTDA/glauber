@@ -51,133 +51,141 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                 ? state.compras
                 : [];
 
-        if (state is ComprasErroAoListar) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              comprasStore.listar(usuarioProvider.usuario);
-            },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: SizedBox(
-                height: height - 200,
-                child: const Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Text('Nenhuma compra foi encontrada.'),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
-
-        return Skeletonizer(
-          enabled: state is ComprasCarregando,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Pago',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Não Pago',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Lib. Reembolso',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.yellow,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Canc. / Reemb.',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: RefreshIndicator(
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: state is ComprasErroAoListar
+              ? RefreshIndicator(
                   onRefresh: () async {
                     comprasStore.listar(usuarioProvider.usuario);
                   },
-                  child: ListView.builder(
-                    itemCount: compras.length,
-                    padding: const EdgeInsets.all(10),
-                    itemBuilder: (context, index) {
-                      var item = compras[index];
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: SizedBox(
+                      height: height - 200,
+                      child: const Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text('Nenhuma compra foi encontrada.'),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : Skeletonizer(
+                  enabled: state is ComprasCarregando,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Skeleton.shade(
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                const Text(
+                                  'Pago',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Skeleton.shade(
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                const Text(
+                                  'Não Pago',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Skeleton.shade(
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                const Text(
+                                  'Lib. Reembolso',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Skeleton.shade(
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.yellow,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                const Text(
+                                  'Canc. / Reemb.',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            comprasStore.listar(usuarioProvider.usuario);
+                          },
+                          child: ListView.builder(
+                            itemCount: compras.length,
+                            padding: const EdgeInsets.all(10),
+                            itemBuilder: (context, index) {
+                              var item = compras[index];
 
-                      return CardCompras(item: item);
-                    },
+                              return CardCompras(
+                                item: item,
+                                atualizarLista: () {
+                                  if (usuarioProvider.usuario != null) {
+                                    comprasStore.listar(usuarioProvider.usuario);
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
         );
       },
     );

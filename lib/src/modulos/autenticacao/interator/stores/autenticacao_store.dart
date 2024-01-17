@@ -98,10 +98,10 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     });
   }
 
-  void cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro) async {
+  void cadastrar(nome, apelido, email, senha, celular, cidade, hcCabeceira, hcPiseiro) async {
     value = Cadastrando();
 
-    _autenticacaoServico.cadastrar(nome, apelido, email, senha, hcCabeceira, hcPiseiro).then((resposta) {
+    _autenticacaoServico.cadastrar(nome, apelido, email, senha, celular, cidade, hcCabeceira, hcPiseiro).then((resposta) {
       var (sucesso, mensagem) = resposta;
 
       if (sucesso) {

@@ -56,6 +56,13 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Suporte'),
       'ativo': true,
       'icone': const Icon(Icons.support_agent_outlined),
+      'funcao': (BuildContext context) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+
+        if (usuarioProvider.usuario != null && usuarioProvider.usuario!.celularSuporte!.isNotEmpty) {
+          FuncoesGlobais.abrirWhatsapp(usuarioProvider.usuario!.celularSuporte!);
+        }
+      }
     },
     {
       'titulo': const Text('Atualização'),
