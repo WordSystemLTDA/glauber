@@ -10,7 +10,7 @@ class ProvaModelo extends Equatable {
   final String valor;
   final String hcMinimo;
   final String hcMaximo;
-  final bool jaComprou;
+  final String jaComprou;
   final bool compraLiberada;
   String? nomeCabeceira;
   String? idCabeceira;
@@ -54,7 +54,7 @@ class ProvaModelo extends Equatable {
       valor: map['valor'] as String,
       hcMinimo: map['hcMinimo'] as String,
       hcMaximo: map['hcMaximo'] as String,
-      jaComprou: map['jaComprou'] as bool,
+      jaComprou: map['jaComprou'] as String,
       compraLiberada: map['compraLiberada'] as bool,
       nomeCabeceira: map['nomeCabeceira'] != null ? map['nomeCabeceira'] as String : null,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,

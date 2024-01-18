@@ -736,7 +736,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 50),
               ],
             ),
           ),

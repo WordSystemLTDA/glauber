@@ -157,68 +157,66 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
           },
           child: SizedBox(
             width: width,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 10,
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: _formCVVKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFormField(
-                          controller: codigoCartaoController,
-                          keyboardType: TextInputType.number,
-                          autofocus: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Coloque o Código cartão';
-                            }
+            child: SafeArea(
+              child: Form(
+                key: _formCVVKey,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    top: 10,
+                    right: 10,
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: codigoCartaoController,
+                        keyboardType: TextInputType.number,
+                        autofocus: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Coloque o Código cartão';
+                          }
 
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '1234',
-                            label: Text('Código de Segurança'),
-                            errorStyle: TextStyle(fontSize: 0.00),
-                          ),
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: '1234',
+                          label: Text('Código de Segurança'),
+                          errorStyle: TextStyle(fontSize: 0.00),
                         ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_formCVVKey.currentState!.validate()) {
-                                Navigator.pop(context);
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formCVVKey.currentState!.validate()) {
+                              Navigator.pop(context);
 
-                                cartao.codigoSeguracaoCartao = codigoCartaoController.text;
-                                cartao.parcelasCartao = widget.parcela.toString();
-                                codigoCartaoController.text = '';
+                              cartao.codigoSeguracaoCartao = codigoCartaoController.text;
+                              cartao.parcelasCartao = widget.parcela.toString();
+                              codigoCartaoController.text = '';
 
-                                widget.aoMudarCartao(cartao);
-                              }
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                              foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                              shape: MaterialStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
+                              widget.aoMudarCartao(cartao);
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                            foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                            shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
-                            child: const Text('OK'),
                           ),
+                          child: const Text('OK'),
                         ),
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
                   ),
                 ),
               ),

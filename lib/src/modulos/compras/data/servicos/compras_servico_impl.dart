@@ -15,11 +15,12 @@ class ComprasServicoImpl implements ComprasServico {
   ComprasServicoImpl(this.client);
 
   @override
-  Future<List<ComprasModelo>> listar(UsuarioModelo? usuario) async {
+  Future<List<ComprasModelo>> listar(UsuarioModelo? usuario, int pagina) async {
     var url = 'compras/listar.php';
 
     var campos = {
       'id_cliente': usuario!.id,
+      'pagina': pagina,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

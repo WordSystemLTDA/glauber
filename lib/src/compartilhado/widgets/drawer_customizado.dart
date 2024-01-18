@@ -10,6 +10,7 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provider/provider.dart';
 
 class DrawerCustomizado extends StatefulWidget {
@@ -68,6 +69,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                     final autenticacaoServico = context.read<AutenticacaoServico>();
                     final firebaseMessagingService = context.read<FirebaseMessagingService>();
                     final usuarioProvider = context.read<UsuarioProvider>();
+                    final comprasProvedor = context.read<ComprasProvedor>();
                     String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
                     autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
@@ -75,6 +77,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
 
                       if (sucessoAoExcluirToken) {
                         UsuarioServico.sair(context).then((value) {
+                          comprasProvedor.resetarCompras();
                           Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
                         });
                       }

@@ -35,8 +35,42 @@ class CardProvas extends StatefulWidget {
 class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 110;
 
-  void aoClicarNaCabeceira(ProvaModelo prova, item) {
+  void aoClicarNaCabeceira(ProvaModelo prova, NomesCabeceiraModelo item) {
     var usuarioProvider = context.read<UsuarioProvider>();
+
+    if (prova.jaComprou == '1' && item.id == '1') {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(child: Text('Você já comprou essa modalidade.')),
+          showCloseIcon: true,
+        ));
+      }
+      return;
+    }
+
+    if (prova.jaComprou == '2' && item.id == '2') {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(child: Text('Você já comprou essa modalidade.')),
+          showCloseIcon: true,
+        ));
+      }
+      return;
+    }
+
+    // Caso o usuário ja tenha comprado essa prova
+    if (prova.jaComprou == 'todos') {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(child: Text('Você já comprou essa prova.')),
+          showCloseIcon: true,
+        ));
+      }
+      return;
+    }
 
     if (!prova.compraLiberada) {
       if (mounted) {
@@ -154,21 +188,9 @@ class _CardProvasState extends State<CardProvas> {
       }
     }
 
-    // Caso o usuário ja tenha comprado essa prova
-    if (prova.jaComprou) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Você já comprou essa prova.')),
-          showCloseIcon: true,
-        ));
-      }
-      return;
-    }
-
     var provaModelo = ProvaModelo(
       id: prova.id,
-      jaComprou: false,
+      jaComprou: '0',
       nomeProva: prova.nomeProva,
       valor: prova.valor,
       hcMinimo: '0',
@@ -197,7 +219,7 @@ class _CardProvasState extends State<CardProvas> {
   bool existeNoCarrinho(prova, item) {
     return widget.provasCarrinho.contains(ProvaModelo(
       id: prova.id,
-      jaComprou: false,
+      jaComprou: '0',
       hcMinimo: '0',
       hcMaximo: '0',
       nomeProva: prova.nomeProva,
@@ -207,7 +229,7 @@ class _CardProvasState extends State<CardProvas> {
     ));
   }
 
-  Color coresJaComprou(prova) {
+  Color coresJaComprou(ProvaModelo prova) {
     var usuarioProvider = context.read<UsuarioProvider>();
 
     if (prova == null || usuarioProvider == null || usuarioProvider.usuario == null) {
@@ -234,7 +256,35 @@ class _CardProvasState extends State<CardProvas> {
       }
     }
 
-    if (prova.jaComprou) {
+    // Verificação do HandiCap Máximo e Mínimo da prova
+    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) {
+      // Verificação se o id cabeceira é o primeiro (CABECEIRA) e verifica se está de acordo com o valor maximo e minimo de handicap da prova
+
+      if (usuarioProvider.usuario!.hcCabeceira!.isEmpty && usuarioProvider.usuario!.hcPezeiro!.isEmpty) {
+        return Colors.red;
+      }
+
+      if ((!(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo))) &&
+          prova.jaComprou == '2') {
+        return Colors.red;
+      }
+
+      if ((!(double.parse(usuarioProvider.usuario!.hcPezeiro!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo))) &&
+          prova.jaComprou == '1') {
+        return Colors.red;
+      }
+
+      if ((!(double.parse(usuarioProvider.usuario!.hcCabeceira!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcCabeceira!) <= double.parse(prova.hcMaximo))) &&
+          (!(double.parse(usuarioProvider.usuario!.hcPezeiro!) >= double.parse(prova.hcMinimo) &&
+              double.parse(usuarioProvider.usuario!.hcPezeiro!) <= double.parse(prova.hcMaximo)))) {
+        return Colors.red;
+      }
+    }
+
+    if (prova.jaComprou == 'todos') {
       return Colors.red;
     }
 
@@ -300,7 +350,7 @@ class _CardProvasState extends State<CardProvas> {
               return;
             }
 
-            if (prova.jaComprou) {
+            if (prova.jaComprou == 'todos') {
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

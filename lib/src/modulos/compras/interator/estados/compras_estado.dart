@@ -4,7 +4,11 @@ sealed class ComprasEstado {}
 
 class ComprasEstadoInicial extends ComprasEstado {}
 
-class ComprasCarregando extends ComprasEstado {}
+class ComprasCarregando extends ComprasEstado {
+  final List<ComprasModelo> compras;
+
+  ComprasCarregando({required this.compras});
+}
 
 class ComprasCarregado extends ComprasEstado {
   final List<ComprasModelo> compras;

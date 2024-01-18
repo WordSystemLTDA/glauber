@@ -27,7 +27,7 @@ import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_store
 import 'package:provadelaco/src/modulos/calendario/ui/widgets/agenda_datasource.dart';
 import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
-import 'package:provadelaco/src/modulos/compras/interator/stores/compras_store.dart';
+import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_cartoes_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_informacoes_servico_impl.dart';
@@ -116,7 +116,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => ListarCartoesStore(context.read())),
       // Compras
       Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
-      ChangeNotifierProvider(create: (context) => ComprasStore(context.read())),
+      ChangeNotifierProvider(create: (context) => ComprasProvedor(context.read())),
       // Ordem de Entrada
       Provider<OrdemDeEntradaServico>(create: (context) => OrdemDeEntradaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaStore(context.read())),

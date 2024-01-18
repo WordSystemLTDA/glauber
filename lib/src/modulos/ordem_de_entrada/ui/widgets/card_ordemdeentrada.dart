@@ -23,6 +23,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
   Widget build(BuildContext context) {
     var item = widget.item;
     var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     var usuarioProvider = context.read<UsuarioProvider>();
 
     return SizedBox(
@@ -37,119 +38,125 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
               builder: (context) {
                 return Dialog(
                   insetPadding: const EdgeInsets.all(15),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Parceiros de ${item.nomeCliente}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                        ),
-                        const Text(
-                          'Cabeceira',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-                        ),
-                        const SizedBox(height: 10),
-                        Text("Seu HandiCap: ${usuarioProvider.usuario!.hcCabeceira!}"),
-                        const SizedBox(height: 5),
-                        if (item.parceiros.isNotEmpty) ...[
-                          const Divider(),
-                          Flexible(
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return const Divider();
-                              },
-                              shrinkWrap: true,
-                              itemCount: item.parceiros.length,
-                              itemBuilder: (context, index) {
-                                var itemParceiro = item.parceiros[index];
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "${itemParceiro.nomeCliente} HC: ${itemParceiro.handicapCliente}",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            (itemParceiro.sorteio == '0' || itemParceiro.sorteio.isEmpty)
-                                                ? Text("Inscrição: ${itemParceiro.numeroDaInscricao}")
-                                                : Text("Inscrição: ${itemParceiro.numeroDaInscricao}, Sorteio ${itemParceiro.sorteio}"),
-                                          ],
-                                        ),
-                                        Text(
-                                          itemParceiro.somatoria,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            const Text('1 BOI'),
-                                            Text(itemParceiro.boi1),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            const Text('2 BOI'),
-                                            Text(itemParceiro.boi2),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            const Text('3 BOI'),
-                                            Text(itemParceiro.boi3),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            const Text('4 BOI'),
-                                            Text(itemParceiro.boi4),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            const Text('Final'),
-                                            Text(itemParceiro.finalT),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            const Text('Média'),
-                                            Text(itemParceiro.medio),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                );
-                              },
-                            ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: width * 0.9,
+                      maxHeight: height * 0.8,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Parceiros de ${item.nomeCliente}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                           ),
-                        ],
-                        if (item.parceiros.isEmpty) ...[
-                          const Divider(),
                           const Text(
-                            'Ainda não há parceiros cadastrados.',
-                            textAlign: TextAlign.center,
+                            'Cabeceira',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
                           ),
+                          const SizedBox(height: 10),
+                          Text("Seu HandiCap: ${usuarioProvider.usuario!.hcCabeceira!}"),
+                          const SizedBox(height: 5),
+                          if (item.parceiros.isNotEmpty) ...[
+                            const Divider(),
+                            Flexible(
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) {
+                                  return const Divider();
+                                },
+                                shrinkWrap: true,
+                                itemCount: item.parceiros.length,
+                                itemBuilder: (context, index) {
+                                  var itemParceiro = item.parceiros[index];
+
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${itemParceiro.nomeCliente} HC: ${itemParceiro.handicapCliente}",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              (itemParceiro.sorteio == '0' || itemParceiro.sorteio.isEmpty)
+                                                  ? Text("Inscrição: ${itemParceiro.numeroDaInscricao}")
+                                                  : Text("Inscrição: ${itemParceiro.numeroDaInscricao}, Sorteio ${itemParceiro.sorteio}"),
+                                            ],
+                                          ),
+                                          Text(
+                                            itemParceiro.somatoria,
+                                            style: const TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              const Text('1 BOI'),
+                                              Text(itemParceiro.boi1),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text('2 BOI'),
+                                              Text(itemParceiro.boi2),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text('3 BOI'),
+                                              Text(itemParceiro.boi3),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text('4 BOI'),
+                                              Text(itemParceiro.boi4),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text('Final'),
+                                              Text(itemParceiro.finalT),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text('Média'),
+                                              Text(itemParceiro.medio),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                          if (item.parceiros.isEmpty) ...[
+                            const Divider(),
+                            const Text(
+                              'Ainda não há parceiros cadastrados.',
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 );

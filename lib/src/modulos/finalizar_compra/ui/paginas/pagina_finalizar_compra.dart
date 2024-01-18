@@ -68,7 +68,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         if (state is CompraRealizadaComSucesso) {
           if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
             if (mounted) {
-              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: const Text('Sucesso ao editar a forma de pagamento dessa inscrição.'),
                 backgroundColor: Colors.green,
@@ -77,6 +76,11 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                   onPressed: () {},
                 ),
               ));
+              Navigator.pushReplacementNamed(
+                context,
+                AppRotas.sucessoCompra,
+                arguments: PaginaSucessoCompraArgumentos(dados: state.dados, metodoPagamento: metodoPagamento),
+              );
             }
           } else {
             if (mounted) {
