@@ -37,6 +37,7 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     var item = widget.item;
 
     var dataInicioFiltrado = DateTime.parse(
@@ -46,201 +47,209 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
     );
 
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+      insetPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
       surfaceTintColor: Colors.white,
-      child: StatefulBuilder(
-        builder: (context, setStateDialog) {
-          _setState = setStateDialog;
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: width * 0.9,
+          maxHeight: height * 0.9,
+        ),
+        child: StatefulBuilder(
+          builder: (context, setStateDialog) {
+            _setState = setStateDialog;
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 50),
-              QrImageView(
-                data: item.codigoQr,
-                size: 250.0,
-                backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.transparent : Colors.white,
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  const SizedBox(height: 20),
+                  QrImageView(
+                    data: item.codigoQr,
+                    size: width / 2,
+                    backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.transparent : Colors.white,
+                  ),
+                  const SizedBox(height: 15),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.person,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(item.idCliente),
-                    ],
-                  ),
-                  const SizedBox(width: 10),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.airplane_ticket,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(item.id),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(item.nomeEvento),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: CustomPaint(
-                  painter: DashedPathPainter(
-                    originalPath: Path()..lineTo(width - 40, 0),
-                    pathColor: Colors.grey,
-                    strokeWidth: 2.0,
-                    dashGapLength: 10.0,
-                    dashLength: 10.0,
-                  ),
-                  size: Size(width - 40, 2.0),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Row(
-                  children: [
-                    Text(
-                      item.nomeEvento,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Data'),
-                        SizedBox(
-                          width: 200,
-                          child: Text(
-                            DateFormat.yMMMMEEEEd('pt_BR').format(DateTime.parse(item.dataEvento)),
-                            style: const TextStyle(color: Colors.grey),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.person,
+                            size: 20,
                           ),
+                          const SizedBox(width: 5),
+                          Text(item.idCliente),
+                        ],
+                      ),
+                      const SizedBox(width: 10),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.airplane_ticket,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(item.id),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(item.nomeEvento),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: CustomPaint(
+                      painter: DashedPathPainter(
+                        originalPath: Path()..lineTo(width - 40, 0),
+                        pathColor: Colors.grey,
+                        strokeWidth: 2.0,
+                        dashGapLength: 10.0,
+                        dashLength: 10.0,
+                      ),
+                      size: Size(width - 40, 2.0),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          item.nomeEvento,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Hora Inicio'),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Data'),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                DateFormat.yMMMMEEEEd('pt_BR').format(DateTime.parse(item.dataEvento)),
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text('Hora Inicio'),
+                            Text(
+                              DateFormat.jm('pt_BR').format(dataInicioFiltrado),
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.schedule,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                            SizedBox(width: 5),
+                            MostrarHoraAtual(),
+                          ],
+                        ),
                         Text(
-                          DateFormat.jm('pt_BR').format(dataInicioFiltrado),
+                          item.status,
                           style: const TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.schedule,
-                          color: Colors.grey,
-                          size: 20,
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.onBackground),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                            ),
+                            child: const Text('Fechar'),
+                          ),
                         ),
-                        SizedBox(width: 5),
-                        MostrarHoraAtual(),
+                        const SizedBox(width: 20),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              setStateDialog(() {
+                                baixandoPDF = true;
+                              });
+
+                              var comprasServico = context.read<ComprasServico>();
+
+                              comprasServico.baixarPDF(item.id).then((sucesso) {
+                                if (sucesso) {
+                                  setStateDialog(() {
+                                    baixandoPDF = false;
+                                  });
+                                }
+                              });
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                              foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                            ),
+                            child: baixandoPDF
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 1,
+                                    ),
+                                  )
+                                : const FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text('Baixar Ingresso'),
+                                  ),
+                          ),
+                        ),
                       ],
                     ),
-                    Text(
-                      item.status,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.onBackground),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
-                        child: const Text('Fechar'),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          setStateDialog(() {
-                            baixandoPDF = true;
-                          });
-
-                          var comprasServico = context.read<ComprasServico>();
-
-                          comprasServico.baixarPDF(item.id).then((sucesso) {
-                            if (sucesso) {
-                              setStateDialog(() {
-                                baixandoPDF = false;
-                              });
-                            }
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                          foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                        ),
-                        child: baixandoPDF
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 1,
-                                ),
-                              )
-                            : const FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Text('Baixar Ingresso'),
-                              ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

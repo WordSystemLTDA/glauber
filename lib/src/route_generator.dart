@@ -28,7 +28,13 @@ class RouteGenerator {
       case AppRotas.home:
         return buildRoute(const PaginaHome(), settings: settings);
       case AppRotas.inicio:
-        return buildRoute(const PaginaInicio(), settings: settings);
+        final argumentos = settings.arguments as PaginaInicioArgumentos?;
+
+        if (argumentos != null) {
+          return buildRoute(PaginaInicio(argumentos: argumentos), settings: settings);
+        } else {
+          return buildRoute(const PaginaInicio(), settings: settings);
+        }
       case AppRotas.splash:
         return buildRoute(const PaginaSplash(), settings: settings);
       case AppRotas.buscar:

@@ -234,6 +234,8 @@ class _PaginaProvasState extends State<PaginaProvas> {
   }
 
   void abrirLocalizacao(evento) {
+    var width = MediaQuery.of(context).size.width;
+
     showDialog(
       context: context,
       builder: (context) {
@@ -278,7 +280,14 @@ class _PaginaProvasState extends State<PaginaProvas> {
                       "Endereço: ",
                       style: TextStyle(fontWeight: FontWeight.w700),
                     ),
-                    Text(evento!.endereco),
+                    SizedBox(
+                      width: width / 2,
+                      child: Text(
+                        evento!.endereco,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
                 Row(
@@ -433,7 +442,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
               backgroundColor: const Color.fromARGB(255, 247, 24, 8),
               label: Row(
                 children: [
-                  Text("${provasCarrinho.length.toString()} Itens"),
+                  Text("${provasCarrinho.length.toString()} ${provasCarrinho.length == 1 ? 'Item' : 'Itens'}"),
                   const SizedBox(width: 10),
                   Text(
                     Utils.coverterEmReal.format(valorTotal),

@@ -217,7 +217,7 @@ class _CardComprasState extends State<CardCompras> {
                                 },
                               ),
                             ),
-                            if (item.pago == 'Não') ...[
+                            if (item.pago == 'Não' && item.status != 'Cancelado') ...[
                               const SizedBox(height: 5),
                               Align(
                                 alignment: Alignment.center,
@@ -277,7 +277,7 @@ class _CardComprasState extends State<CardCompras> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("#${item.id} - Nome Empresa"),
+                      Text("#${item.id} - ${item.nomeEmpresa}"),
                       const SizedBox(height: 10),
                       Text(item.nomeEvento),
                       const SizedBox(height: 10),

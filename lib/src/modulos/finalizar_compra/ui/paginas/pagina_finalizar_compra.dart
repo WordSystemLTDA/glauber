@@ -244,7 +244,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                   children: [
                     Column(
                       children: [
-                        const SizedBox(width: double.infinity, height: 20),
+                        const SizedBox(width: double.infinity, height: 0),
                         const Text(
                           'Métodos de pagamento',
                           style: TextStyle(fontSize: 16),

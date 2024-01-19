@@ -23,6 +23,8 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
 
     var response = await client.post(url: url, body: jsonEncode(campos));
 
+    print(response.data);
+
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];
@@ -41,6 +43,8 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
+
+    print(response.data);
 
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];

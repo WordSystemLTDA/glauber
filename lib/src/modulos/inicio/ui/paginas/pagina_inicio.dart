@@ -19,8 +19,15 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.da
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:provider/provider.dart';
 
+class PaginaInicioArgumentos {
+  final String? rota;
+
+  PaginaInicioArgumentos({required this.rota});
+}
+
 class PaginaInicio extends StatefulWidget {
-  const PaginaInicio({super.key});
+  final PaginaInicioArgumentos? argumentos;
+  const PaginaInicio({super.key, this.argumentos});
 
   @override
   State<PaginaInicio> createState() => _PaginaInicioState();
@@ -35,6 +42,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
   void initState() {
     super.initState();
     verificar();
+    abrirPagina();
     abrirPaginaQuandoClicaNotificacao();
   }
 
@@ -43,6 +51,38 @@ class _PaginaInicioState extends State<PaginaInicio> {
     novaSenha.dispose();
     pageController.dispose();
     super.dispose();
+  }
+
+  void abrirPagina() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted && widget.argumentos != null) {
+        var rotaApp = widget.argumentos!.rota;
+
+        if (rotaApp != null) {
+          if (rotaApp == AppRotas.compras) {
+            setState(() {
+              pageIndex = 1;
+              pageController.jumpToPage(1);
+            });
+          } else if (rotaApp == AppRotas.ordemDeEntrada) {
+            setState(() {
+              pageIndex = 2;
+              pageController.jumpToPage(2);
+            });
+          } else if (rotaApp == AppRotas.perfil) {
+            setState(() {
+              pageIndex = 3;
+              pageController.jumpToPage(3);
+            });
+          } else if (rotaApp == AppRotas.home) {
+            setState(() {
+              pageIndex = 0;
+              pageController.jumpToPage(0);
+            });
+          }
+        }
+      }
+    });
   }
 
   void funcaoMudarRota(RemoteMessage? message) {
