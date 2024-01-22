@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
+import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
+
 // ignore: must_be_immutable
 class ProvaModelo extends Equatable {
   final String id;
@@ -10,11 +12,10 @@ class ProvaModelo extends Equatable {
   final String valor;
   final String hcMinimo;
   final String hcMaximo;
-  final String jaComprou;
-  final bool compraLiberada;
+  final PermitirCompraModelo permitirCompra;
+
   String? nomeCabeceira;
   String? idCabeceira;
-  String? tempoFaltante;
 
   ProvaModelo({
     required this.id,
@@ -22,15 +23,13 @@ class ProvaModelo extends Equatable {
     required this.hcMinimo,
     required this.hcMaximo,
     required this.valor,
-    required this.jaComprou,
-    required this.compraLiberada,
+    required this.permitirCompra,
     this.nomeCabeceira,
     this.idCabeceira,
-    this.tempoFaltante,
   });
 
   @override
-  List<Object?> get props => [id, nomeProva, valor, jaComprou, idCabeceira, tempoFaltante, hcMinimo, hcMaximo, compraLiberada, nomeCabeceira];
+  List<Object?> get props => [id, nomeProva, valor, permitirCompra, idCabeceira, hcMinimo, hcMaximo, nomeCabeceira];
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -39,11 +38,9 @@ class ProvaModelo extends Equatable {
       'valor': valor,
       'hcMinimo': hcMinimo,
       'hcMaximo': hcMaximo,
-      'jaComprou': jaComprou,
-      'compraLiberada': compraLiberada,
+      'permitirCompra': permitirCompra.toMap(),
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
-      'tempoFaltante': tempoFaltante,
     };
   }
 
@@ -54,11 +51,9 @@ class ProvaModelo extends Equatable {
       valor: map['valor'] as String,
       hcMinimo: map['hcMinimo'] as String,
       hcMaximo: map['hcMaximo'] as String,
-      jaComprou: map['jaComprou'] as String,
-      compraLiberada: map['compraLiberada'] as bool,
+      permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
       nomeCabeceira: map['nomeCabeceira'] != null ? map['nomeCabeceira'] as String : null,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
-      tempoFaltante: map['tempoFaltante'] != null ? map['tempoFaltante'] as String : null,
     );
   }
 

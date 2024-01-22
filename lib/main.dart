@@ -40,6 +40,7 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finali
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_cartoes_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_pagamento_store.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_permitir_compra_provedor.dart';
 import 'package:provadelaco/src/modulos/home/data/servicos/home_servico_impl.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
@@ -102,6 +103,7 @@ void main() async {
       Provider<DenunciarServico>(create: (context) => DenunciarServicoImpl(context.read())),
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
+      ChangeNotifierProvider(create: (context) => VerificarPermitirCompraProvedor(context.read())),
       // Propagandas
       Provider<PropagandasServico>(create: (context) => PropagandasServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => PropagandasStore(context.read())),

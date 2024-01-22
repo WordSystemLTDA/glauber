@@ -5,6 +5,7 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart'
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_retorno_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
@@ -44,5 +45,17 @@ class ProvaServicoImpl implements ProvaServico {
     } else {
       return Future.error('');
     }
+  }
+
+  @override
+  Future<PermitirCompraModelo> permitirAdicionarCompra(String idEvento, String idProva, UsuarioModelo? usuario, String idCabeceira) async {
+    var idCliente = usuario != null ? usuario.id : 0;
+
+    var url = 'provas/permitir_adicionar_compra.php?id_evento=$idEvento&id_cliente=$idCliente&id_cabeceira=$idCabeceira&id_prova=$idProva';
+
+    var response = await client.get(url: url);
+    var jsonData = jsonDecode(response.data);
+
+    return PermitirCompraModelo.fromMap(jsonData);
   }
 }
