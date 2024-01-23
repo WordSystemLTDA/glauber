@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/compras/interator/estados/transferencia_estado.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/clientes_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
+import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
+import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_compras.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -15,6 +21,12 @@ class PaginaCompras extends StatefulWidget {
 
 class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveClientMixin {
   late ScrollController _scrollController;
+  bool modoTransferencia = false;
+  bool transferindo = false;
+  List<ComprasModelo> comprasTransferencia = [];
+  SearchController pesquisaClientesController = SearchController();
+  TextEditingController textoClientesController = TextEditingController();
+  String idClienteSelecionado = '0';
 
   @override
   void initState() {
@@ -27,6 +39,34 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var transferenciaProvedor = context.read<TransferenciaProvedor>();
+      transferenciaProvedor.addListener(() {
+        TransferenciaEstado state = transferenciaProvedor.value;
+
+        if (state is TransferidoComSucesso) {
+          Navigator.pop(context);
+
+          setState(() {
+            comprasTransferencia.clear();
+            idClienteSelecionado = '0';
+            textoClientesController.text = '';
+          });
+
+          listarCompras(resetar: true);
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.green,
+            content: Center(child: Text(state.mensagem)),
+          ));
+        } else if (state is ErroAoTransferir) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+            content: Center(child: Text(state.erro.toString())),
+          ));
+        }
+      });
       listarCompras();
     });
   }
@@ -53,8 +93,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   Widget build(BuildContext context) {
     super.build(context);
     var comprasStore = context.read<ComprasProvedor>();
+    var transferenciaProvedor = context.read<TransferenciaProvedor>();
     var usuarioProvider = context.read<UsuarioProvider>();
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
 
     if (usuarioProvider.usuario == null) {
       return Center(
@@ -91,129 +133,297 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
           );
         }
 
-        return Skeletonizer(
-          enabled: comprasStore.pagina == 1,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Pago',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Não Pago',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Lib. Reembolso',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.yellow,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Canc. / Reemb.',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    listarCompras(resetar: true);
-                  },
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: comprasStore.compras.length + 1,
-                    controller: _scrollController,
-                    padding: const EdgeInsets.all(10),
-                    itemBuilder: (context, index) {
-                      if (index < comprasStore.compras.length) {
-                        var item = comprasStore.compras[index];
+        return Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+          floatingActionButton: usuarioProvider.usuario!.nivel == 'Master'
+              ? SizedBox(
+                  width: width - 30,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FloatingActionButton.extended(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        backgroundColor: modoTransferencia ? Colors.green : Colors.grey,
+                        label: const Text('Transferência'),
+                        onPressed: () {
+                          setState(() {
+                            if (modoTransferencia == true) {
+                              modoTransferencia = false;
+                              comprasTransferencia.clear();
+                            } else {
+                              modoTransferencia = true;
+                            }
+                          });
+                        },
+                      ),
+                      if (comprasTransferencia.isNotEmpty) ...[
+                        FloatingActionButton.extended(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          backgroundColor: modoTransferencia ? Colors.green : Colors.grey,
+                          label: Text('Transferir ${comprasTransferencia.length} ${comprasTransferencia.length == 1 ? 'item' : 'itens'}'),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (contextModal) {
+                                return ValueListenableBuilder<TransferenciaEstado>(
+                                    valueListenable: transferenciaProvedor,
+                                    builder: (context, state, _) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          FocusScope.of(contextModal).unfocus();
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 20,
+                                            right: 20,
+                                            top: 30,
+                                            bottom: MediaQuery.of(contextModal).viewInsets.bottom,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SearchAnchor(
+                                                viewBuilder: (suggestions) {
+                                                  return ListView.builder(
+                                                    itemCount: suggestions.length,
+                                                    padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                                                    itemBuilder: (context, index) {
+                                                      var item = suggestions.elementAt(index);
 
-                        return CardCompras(
-                          item: item,
-                          atualizarLista: () {
-                            listarCompras(resetar: true);
+                                                      return item;
+                                                    },
+                                                  );
+                                                },
+                                                isFullScreen: true,
+                                                searchController: pesquisaClientesController,
+                                                builder: (BuildContext context, SearchController controller) {
+                                                  return TextField(
+                                                    onTap: () {
+                                                      pesquisaClientesController.openView();
+                                                    },
+                                                    controller: textoClientesController,
+                                                    readOnly: true,
+                                                    decoration: const InputDecoration(
+                                                      border: OutlineInputBorder(),
+                                                      label: Text('Transferir para'),
+                                                    ),
+                                                  );
+                                                },
+                                                suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                                                  final keyword = controller.value.text;
+
+                                                  List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientes(keyword);
+
+                                                  Iterable<Widget> widgets = clientes.map((cliente) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        controller.closeView('');
+                                                        setState(() {
+                                                          idClienteSelecionado = cliente.id;
+                                                          textoClientesController.text = cliente.nome;
+                                                        });
+                                                        FocusScope.of(context).unfocus();
+                                                      },
+                                                      child: Card(
+                                                        elevation: 3.0,
+                                                        child: ListTile(
+                                                          leading: Text(cliente.id),
+                                                          title: Text(cliente.nome),
+                                                          subtitle: Text(
+                                                            cliente.apelido,
+                                                            style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+
+                                                  return widgets;
+                                                },
+                                              ),
+                                              const SizedBox(height: 20),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    transferenciaProvedor.transferirCompras(comprasTransferencia, idClienteSelecionado);
+                                                  },
+                                                  style: ButtonStyle(
+                                                    backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                                                    foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                                    shape: MaterialStatePropertyAll(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(5.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: state is Transferindo
+                                                      ? const Center(
+                                                          child: SizedBox(
+                                                            width: 20,
+                                                            height: 20,
+                                                            child: CircularProgressIndicator(
+                                                              color: Colors.white,
+                                                              strokeWidth: 1,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Text('Transferir ${comprasTransferencia.length} ${comprasTransferencia.length == 1 ? 'item' : 'itens'}'),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 40),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                            );
                           },
-                        );
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 32),
-                          child: comprasStore.temMaisParaCarregar
-                              ? const Center(child: CircularProgressIndicator())
-                              : const Center(
-                                  child: Text('Você chegou no fim da lista.'),
-                                ),
-                        );
-                      }
-                    },
+                        ),
+                      ],
+                    ],
+                  ),
+                )
+              : null,
+          body: Skeletonizer(
+            enabled: comprasStore.pagina == 1,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Skeleton.shade(
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Pago',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Skeleton.shade(
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Não Pago',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Skeleton.shade(
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Lib. Reembolso',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Skeleton.shade(
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.yellow,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Canc. / Reemb.',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      listarCompras(resetar: true);
+                    },
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: comprasStore.compras.length + 1,
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(10),
+                      itemBuilder: (context, index) {
+                        if (index < comprasStore.compras.length) {
+                          var item = comprasStore.compras[index];
+
+                          return CardCompras(
+                            item: item,
+                            comprasTransferencia: comprasTransferencia,
+                            aoClicarParaTransferir: (compra) {
+                              if (comprasTransferencia.contains(compra)) {
+                                setState(() {
+                                  comprasTransferencia.remove(compra);
+                                });
+                              } else {
+                                setState(() {
+                                  comprasTransferencia.add(compra);
+                                });
+                              }
+                            },
+                            modoTransferencia: modoTransferencia,
+                            atualizarLista: () {
+                              listarCompras(resetar: true);
+                            },
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32),
+                            child: comprasStore.temMaisParaCarregar
+                                ? const Center(child: CircularProgressIndicator())
+                                : const Center(
+                                    child: Text('Você chegou no fim da lista.'),
+                                  ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

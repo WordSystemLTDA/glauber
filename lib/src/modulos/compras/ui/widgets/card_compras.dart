@@ -14,9 +14,19 @@ import 'package:skeletonizer/skeletonizer.dart';
 // ignore: must_be_immutable
 class CardCompras extends StatefulWidget {
   final ComprasModelo item;
+  final bool modoTransferencia;
+  final List<ComprasModelo> comprasTransferencia;
+  final Function(ComprasModelo compra) aoClicarParaTransferir;
   Function()? atualizarLista;
 
-  CardCompras({super.key, required this.item, this.atualizarLista});
+  CardCompras({
+    super.key,
+    required this.item,
+    required this.aoClicarParaTransferir,
+    required this.comprasTransferencia,
+    required this.modoTransferencia,
+    this.atualizarLista,
+  });
 
   @override
   State<CardCompras> createState() => _CardComprasState();
@@ -44,214 +54,224 @@ class _CardComprasState extends State<CardCompras> {
     return SizedBox(
       height: tamanhoCard,
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: widget.comprasTransferencia.contains(item) ? const BorderSide(color: Colors.green) : BorderSide.none,
+        ),
         child: InkWell(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return Dialog(
-                  insetPadding: EdgeInsets.zero,
-                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                  surfaceTintColor: Colors.white,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: width * 0.9,
-                      maxHeight: height * 0.8,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'Detalhes do seu Ingresso',
-                                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(Icons.close),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Detalhes do evento',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 100,
-                                  child: Text(
-                                    item.nomeEvento,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
-                                Text(item.horaInicioF),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Valores da venda',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            const SizedBox(height: 5),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text('Valor ingresso'),
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
-                                      style: const TextStyle(color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text('Valor taxa'),
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
-                                      style: const TextStyle(color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text('Valor desconto'),
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
-                                      style: const TextStyle(color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text('Valor total'),
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(item.valorTotal)),
-                                      style: const TextStyle(color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Detalhes da compra',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  item.pago == 'Não' ? "Não Pago" : "Pago",
-                                  style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
-                                ),
-                                Text(item.formaPagamento),
-                              ],
-                            ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(item.status),
-                                Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
-                                Text(item.horaCompra),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Provas Vinculadas',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            const SizedBox(height: 5),
-                            Flexible(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: const EdgeInsets.only(top: 5),
-                                itemCount: item.provas.length,
-                                itemBuilder: (context, index) {
-                                  var provas = item.provas[index];
+          onTap: widget.modoTransferencia && (item.status == 'Cancelado')
+              ? null
+              : () {
+                  if (widget.modoTransferencia) {
+                    widget.aoClicarParaTransferir(item);
+                    return;
+                  }
 
-                                  return Card(
-                                    margin: const EdgeInsets.only(bottom: 5),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        insetPadding: EdgeInsets.zero,
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                        surfaceTintColor: Colors.white,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: width * 0.9,
+                            maxHeight: height * 0.8,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'Detalhes do seu Ingresso',
+                                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.close),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    'Detalhes do evento',
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 100,
+                                        child: Text(
+                                          item.nomeEvento,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
+                                      Text(item.horaInicioF),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    'Valores da venda',
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(provas.nomeCabeceira!),
-                                          Text(provas.nomeProva),
+                                          const Text('Valor ingresso'),
                                           Text(
-                                            Utils.coverterEmReal.format(double.parse(provas.valor)),
+                                            Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
                                             style: const TextStyle(color: Colors.green),
                                           ),
                                         ],
                                       ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Valor taxa'),
+                                          Text(
+                                            Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
+                                            style: const TextStyle(color: Colors.green),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Valor desconto'),
+                                          Text(
+                                            Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
+                                            style: const TextStyle(color: Colors.green),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text('Valor total'),
+                                          Text(
+                                            Utils.coverterEmReal.format(double.parse(item.valorTotal)),
+                                            style: const TextStyle(color: Colors.green),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    'Detalhes da compra',
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        item.pago == 'Não' ? "Não Pago" : "Pago",
+                                        style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
+                                      ),
+                                      Text(item.formaPagamento),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(item.status),
+                                      Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
+                                      Text(item.horaCompra),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    'Provas Vinculadas',
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Flexible(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.only(top: 5),
+                                      itemCount: item.provas.length,
+                                      itemBuilder: (context, index) {
+                                        var provas = item.provas[index];
+
+                                        return Card(
+                                          margin: const EdgeInsets.only(bottom: 5),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(provas.nomeCabeceira!),
+                                                Text(provas.nomeProva),
+                                                Text(
+                                                  Utils.coverterEmReal.format(double.parse(provas.valor)),
+                                                  style: const TextStyle(color: Colors.green),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
+                                  ),
+                                  if (item.pago == 'Não' && item.status != 'Cancelado') ...[
+                                    const SizedBox(height: 5),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.pushNamed(
+                                            context,
+                                            AppRotas.finalizarCompra,
+                                            arguments: PaginaFinalizarCompraArgumentos(
+                                              editarVenda: true,
+                                              dadosEdicaoVendaModelo: DadosEdicaoVendaModelo(idVenda: item.id, metodoPagamento: item.idFormaPagamento),
+                                              provas: item.provas,
+                                              idEvento: item.idEvento,
+                                            ),
+                                          ).then((value) {
+                                            if (widget.atualizarLista != null) {
+                                              widget.atualizarLista!();
+                                            }
+                                          });
+                                        },
+                                        child: const Text('Editar forma de Pagamento'),
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
                             ),
-                            if (item.pago == 'Não' && item.status != 'Cancelado') ...[
-                              const SizedBox(height: 5),
-                              Align(
-                                alignment: Alignment.center,
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRotas.finalizarCompra,
-                                      arguments: PaginaFinalizarCompraArgumentos(
-                                        editarVenda: true,
-                                        dadosEdicaoVendaModelo: DadosEdicaoVendaModelo(idVenda: item.id, metodoPagamento: item.idFormaPagamento),
-                                        provas: item.provas,
-                                        idEvento: item.idEvento,
-                                      ),
-                                    ).then((value) {
-                                      if (widget.atualizarLista != null) {
-                                        widget.atualizarLista!();
-                                      }
-                                    });
-                                  },
-                                  child: const Text('Editar forma de Pagamento'),
-                                ),
-                              ),
-                            ],
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
+                      );
+                    },
+                  );
+                },
           child: Row(
             children: [
               Skeleton.shade(

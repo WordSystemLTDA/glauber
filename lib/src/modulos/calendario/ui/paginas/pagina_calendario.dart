@@ -74,7 +74,6 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
             view: CalendarView.month,
             controller: agendaStore.calendarioController,
             allowViewNavigation: true,
-
             showNavigationArrow: true,
             dataSource: agendaStore.agendaDataSource,
             showDatePickerButton: true,
@@ -84,8 +83,6 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
               CalendarView.day,
               CalendarView.schedule,
             ],
-
-            // appointmentBuilder: appointmentBuilder,
             showTodayButton: true,
             monthViewSettings: const MonthViewSettings(
               appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
@@ -93,7 +90,6 @@ class _PaginaCalendarioState extends State<PaginaCalendario> {
             ),
             onTap: onTap,
             onViewChanged: agendaStore.viewChanged,
-            // onDragEnd: onDragEnd,
           ),
         ],
       ),

@@ -157,6 +157,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         id: usuario.usuario!.id!,
         tipoDePix: tipoDeChave,
         celularSuporte: usuario.usuario.celularSuporte,
+        nivel: usuario.usuario.nivel,
         clienteBloqueado: false,
         chavePix: chavePix.text,
         nome: nomeController.text,

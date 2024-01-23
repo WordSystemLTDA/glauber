@@ -26,6 +26,7 @@ import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_info_
 import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_store.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/widgets/agenda_datasource.dart';
 import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
@@ -119,6 +120,7 @@ void main() async {
       // Compras
       Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ComprasProvedor(context.read())),
+      ChangeNotifierProvider(create: (context) => TransferenciaProvedor(context.read())),
       // Ordem de Entrada
       Provider<OrdemDeEntradaServico>(create: (context) => OrdemDeEntradaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaStore(context.read())),

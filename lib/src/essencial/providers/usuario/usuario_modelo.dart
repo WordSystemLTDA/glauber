@@ -33,6 +33,7 @@ class UsuarioModelo {
   String? idCidade;
   bool? clienteBloqueado;
   String? celularSuporte;
+  String? nivel;
 
   UsuarioModelo({
     required this.id,
@@ -66,6 +67,7 @@ class UsuarioModelo {
     required this.idCidade,
     required this.clienteBloqueado,
     required this.celularSuporte,
+    required this.nivel,
   });
 
   Map<String, dynamic> toMap() {
@@ -101,6 +103,7 @@ class UsuarioModelo {
       'idCidade': idCidade,
       'clienteBloqueado': clienteBloqueado,
       'celularSuporte': celularSuporte,
+      'nivel': nivel,
     };
   }
 
@@ -137,6 +140,7 @@ class UsuarioModelo {
       idCidade: map['idCidade'] != null ? map['idCidade'] as String : null,
       clienteBloqueado: map['clienteBloqueado'] != null ? map['clienteBloqueado'] as bool : null,
       celularSuporte: map['celularSuporte'] != null ? map['celularSuporte'] as String : null,
+      nivel: map['nivel'] != null ? map['nivel'] as String : null,
     );
   }
 
