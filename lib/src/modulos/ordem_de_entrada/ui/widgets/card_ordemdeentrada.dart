@@ -60,6 +60,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                         Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
@@ -71,15 +72,14 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              const Text(
-                                'Cabeceira',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-                              ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 5),
+                              Text(item.nomeEvento),
+                              const SizedBox(height: 5),
                               Text("Seu HandiCap: ${usuarioProvider.usuario!.hcCabeceira!}"),
                               const SizedBox(height: 5),
                               if (item.parceiros.isNotEmpty) ...[
                                 const Divider(),
+                                const SizedBox(height: 10),
                                 Flexible(
                                   child: ListView.separated(
                                     separatorBuilder: (context, index) {
@@ -107,7 +107,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                                   if (itemParceiro.sorteio == '0' || itemParceiro.sorteio.isEmpty) ...[
                                                     Text("HC: ${itemParceiro.handicapCliente}, Inscrição: ${itemParceiro.numeroDaInscricao}"),
                                                   ],
-                                                  if (itemParceiro.sorteio != '0' || itemParceiro.sorteio.isNotEmpty) ...[
+                                                  if (itemParceiro.sorteio != '0' && itemParceiro.sorteio.isNotEmpty) ...[
                                                     Text("HC: ${itemParceiro.handicapCliente}, Inscrição: ${itemParceiro.numeroDaInscricao}, Sorteio ${itemParceiro.sorteio}"),
                                                   ],
                                                 ],

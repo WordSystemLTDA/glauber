@@ -52,7 +52,6 @@ class RouteGenerator {
       case AppRotas.verEventoCalendario:
         final argumentos = settings.arguments as PaginaVerEventoCalendarioArgumentos;
         return buildRoute(PaginaVerEventoCalendario(argumentos: argumentos), settings: settings);
-
       case AppRotas.finalizarCompra:
         final argumentos = settings.arguments as PaginaFinalizarCompraArgumentos;
         return buildRoute(PaginaFinalizarCompra(argumentos: argumentos), settings: settings);
