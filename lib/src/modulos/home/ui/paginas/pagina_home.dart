@@ -76,7 +76,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
 
         return RefreshIndicator(
           onRefresh: () async {
-            homeStore.listar(context, categoriasIndex);
+            homeStore.atualizarLista(context, categoriasIndex);
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

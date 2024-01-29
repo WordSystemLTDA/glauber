@@ -437,7 +437,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                   action: SnackBarAction(
                     label: state.permitirCompraModelo.tituloAcao!,
                     onPressed: () {
-                      Navigator.pushNamed(context, state.permitirCompraModelo.rota!);
+                      Navigator.pushNamed(context, state.permitirCompraModelo.rota!).then((value) {
+                        provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento);
+                      });
                     },
                   ),
                   backgroundColor: Colors.red,
@@ -529,7 +531,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
               if (evento != null) {
                 return RefreshIndicator(
                   onRefresh: () async {
-                    provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento);
+                    provasStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento);
                   },
                   child: SingleChildScrollView(
                     physics: const ClampingScrollPhysics(),
@@ -563,6 +565,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                         context,
                                         imageProvider,
                                         useSafeArea: true,
+                                        immersive: false,
                                         doubleTapZoomable: true,
                                       );
                                     },

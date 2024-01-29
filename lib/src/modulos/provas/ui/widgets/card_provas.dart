@@ -174,9 +174,14 @@ class _CardProvasState extends State<CardProvas> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                prova.nomeProva,
-                                style: const TextStyle(fontSize: 18),
+                              SizedBox(
+                                width: (width - 90) - 50,
+                                child: Text(
+                                  prova.nomeProva,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
                               ),
                               SizedBox(
                                 width: (width - 90) - 50,

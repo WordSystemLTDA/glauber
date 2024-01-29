@@ -33,6 +33,21 @@ class HomeStore extends ValueNotifier<HomeEstado> {
     }
   }
 
+  void atualizarLista(BuildContext context, int categoria) async {
+    var resposta = await _homeServico.listar(categoria);
+
+    if (resposta.sucesso) {
+      var configProvider = context.read<ConfigProvider>();
+      configProvider.setConfig(resposta.dadosConfig);
+
+      verificarAtualizacao(context, resposta.dadosConfig);
+
+      value = Carregado(eventos: resposta.eventos, eventosTopo: resposta.eventosTopo, propagandas: resposta.propagandas, categorias: resposta.categorias);
+    } else {
+      value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
+    }
+  }
+
   void verificarAtualizacao(context, ConfigModelo versoes) async {
     if (await FuncoesGlobais.appPrecisaAtualizar(versoes.versaoAppAndroid, versoes.versaoAppIos)) {
       showDialog<void>(

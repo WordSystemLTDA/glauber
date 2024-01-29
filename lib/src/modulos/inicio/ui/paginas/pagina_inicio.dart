@@ -292,6 +292,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
         appBar: const AppBarSombra(
           titulo: LogoApp(width: 100),
           aparecerIconeNotificacao: true,
+          aparecerIconeCalendario: true,
         ),
         body: PageView(
           controller: pageController,
