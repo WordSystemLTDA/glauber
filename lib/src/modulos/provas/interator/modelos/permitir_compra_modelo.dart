@@ -8,12 +8,14 @@ class PermitirCompraModelo extends Equatable {
   final String mensagem;
   final String? rota;
   final String? tituloAcao;
+  final String? quantMaximaAvulsa;
 
   const PermitirCompraModelo({
     required this.liberado,
     required this.mensagem,
     this.rota,
     this.tituloAcao,
+    this.quantMaximaAvulsa,
   });
 
   @override
@@ -25,6 +27,7 @@ class PermitirCompraModelo extends Equatable {
       'mensagem': mensagem,
       'rota': rota,
       'tituloAcao': tituloAcao,
+      'quantMaximaAvulsa': quantMaximaAvulsa,
     };
   }
 
@@ -34,6 +37,7 @@ class PermitirCompraModelo extends Equatable {
       mensagem: map['mensagem'] as String,
       rota: map['rota'] != null ? map['rota'] as String : null,
       tituloAcao: map['tituloAcao'] != null ? map['tituloAcao'] as String : null,
+      quantMaximaAvulsa: map['quantMaximaAvulsa'] != null ? map['quantMaximaAvulsa'] as String : null,
     );
   }
 

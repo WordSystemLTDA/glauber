@@ -112,7 +112,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
           content: Center(child: Text('Campos de senha precisam ser iguais!')),
         ));
       } else {
-        autenticacaoStore.cadastrar(nome, apelido, email, senha, celular, cidade, hcCabeceira, hcPiseiro);
+        autenticacaoStore.cadastrar(nome.trimLeft().trimRight(), apelido.trimLeft().trimRight(), email.trimLeft().trimRight(), senha, celular, cidade, hcCabeceira, hcPiseiro);
       }
     }
   }

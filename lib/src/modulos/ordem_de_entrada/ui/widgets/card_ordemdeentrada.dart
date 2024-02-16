@@ -17,7 +17,7 @@ class CardOrdemDeEntrada extends StatefulWidget {
 }
 
 class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
-  double tamanhoCard = 120;
+  double tamanhoCard = 140;
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +77,10 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               const SizedBox(height: 5),
                               Text("Seu HandiCap: ${usuarioProvider.usuario!.hcCabeceira!}"),
                               const SizedBox(height: 5),
+                              Text(item.nomeCabeceira),
+                              const SizedBox(height: 5),
                               if (item.parceiros.isNotEmpty) ...[
                                 const Divider(),
-                                const SizedBox(height: 10),
                                 Flexible(
                                   child: ListView.separated(
                                     separatorBuilder: (context, index) {
@@ -119,47 +120,49 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                             ],
                                           ),
                                           const SizedBox(height: 20),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  const Text('1 BOI'),
-                                                  Text(itemParceiro.boi1),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text('2 BOI'),
-                                                  Text(itemParceiro.boi2),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text('3 BOI'),
-                                                  Text(itemParceiro.boi3),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text('4 BOI'),
-                                                  Text(itemParceiro.boi4),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text('Final'),
-                                                  Text(itemParceiro.finalT),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const Text('Média'),
-                                                  Text(itemParceiro.medio),
-                                                ],
-                                              ),
-                                            ],
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: Wrap(
+                                              alignment: WrapAlignment.spaceBetween,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    const Text('1 BOI'),
+                                                    Text(itemParceiro.boi1),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const Text('2 BOI'),
+                                                    Text(itemParceiro.boi2),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const Text('3 BOI'),
+                                                    Text(itemParceiro.boi3),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const Text('4 BOI'),
+                                                    Text(itemParceiro.boi4),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const Text('Final'),
+                                                    Text(itemParceiro.finalT),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    const Text('Média'),
+                                                    Text(itemParceiro.medio),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           )
                                         ],
                                       );
@@ -211,7 +214,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: width * 0.70,
+                            width: width * 0.7,
                             child: Text(
                               item.nomeEvento,
                               maxLines: 1,
@@ -237,11 +240,11 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
-                          // const SizedBox(height: 15),
-                          // const Text(
-                          //   'Cabeceira',
-                          //   style: TextStyle(fontSize: 18, color: Colors.green),
-                          // ),
+                          const SizedBox(height: 15),
+                          Text(
+                            item.nomeCabeceira,
+                            style: const TextStyle(fontSize: 18, color: Colors.green),
+                          ),
                         ],
                       ),
                     ),

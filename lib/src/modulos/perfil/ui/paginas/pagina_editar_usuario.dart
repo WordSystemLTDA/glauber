@@ -127,16 +127,16 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         .editarUsuario(
       FormularioEditarUsuarioModelo(
         id: usuario.usuario!.id!,
-        nome: nomeController.text,
+        nome: nomeController.text.trimLeft().trimRight(),
         tipoDePix: tipoDeChave,
         chavePix: chavePix.text,
-        apelido: apelidoController.text,
+        apelido: apelidoController.text.trimLeft().trimRight(),
         civil: civilController.text,
         sexo: sexoController.text,
         dataNascimento: dataNascimentoNormal,
         cpf: cpfController.text,
         rg: rgController.text,
-        email: emailController.text,
+        email: emailController.text.trimLeft().trimRight(),
         senha: senhaController.text,
         telefone: telefoneController.text,
         celular: celularController.text,
@@ -160,12 +160,12 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         nivel: usuario.usuario.nivel,
         clienteBloqueado: false,
         chavePix: chavePix.text,
-        nome: nomeController.text,
+        nome: nomeController.text.trimLeft().trimRight(),
         sexo: sexoController.text,
-        dataNascimento: usuario.usuario.dataNascimento == '0000-00-00' ? '0000-00-00' : dataNascimentoNormal,
+        dataNascimento: (usuario.usuario.dataNascimento == '0000-00-00' && dataNascimentoController.text.isEmpty) ? '0000-00-00' : dataNascimentoNormal,
         cpf: cpfController.text,
         rg: rgController.text,
-        email: emailController.text,
+        email: emailController.text.trimLeft().trimRight(),
         senha: senhaController.text,
         telefone: telefoneController.text,
         celular: celularController.text,
@@ -185,7 +185,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         primeiroAcesso: usuario.usuario!.primeiroAcesso,
         foto: usuario.usuario!.foto,
         civil: civilController.text,
-        apelido: apelidoController.text,
+        apelido: apelidoController.text.trimLeft().trimRight(),
       );
 
       if (sucesso) {
@@ -195,6 +195,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('Sucesso ao editar dados.'),
           backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
           action: SnackBarAction(
             label: 'OK',
             onPressed: () {},
@@ -205,6 +206,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(mensagem),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
           action: SnackBarAction(
             label: 'OK',
             onPressed: () {},
@@ -267,6 +269,34 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton.extended(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            onPressed: () {
+              editar(usuario);
+            },
+            label: SizedBox(
+              width: width - 100,
+              child: salvando
+                  ? const Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 1,
+                        ),
+                      ),
+                    )
+                  : const Text(
+                      'Salvar',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16),
+                    ),
+            ),
+          ),
           appBar: const AppBarSombra(
             titulo: Text("Editar Dados"),
           ),
@@ -709,35 +739,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                   ],
                 ),
                 // -----------------------------------------------------------------
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.red),
-                      foregroundColor: MaterialStatePropertyAll(Colors.white),
-                    ),
-                    onPressed: () {
-                      editar(usuario);
-                    },
-                    child: salvando
-                        ? const Center(
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 1,
-                              ),
-                            ),
-                          )
-                        : const Text(
-                            'Salvar',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 100),
               ],
             ),
           ),

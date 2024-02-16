@@ -6,9 +6,9 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
-import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
     var usuario = context.read<UsuarioProvider>().usuario;
 
     if (usuario != null && usuario.nome!.isNotEmpty) {
-      var nomeComEspaco = usuario.nome!.split(' ');
+      var nomeComEspaco = usuario.nome!.trimLeft().trimRight().split(RegExp(r"\s+")).join(' ').split(' ');
 
       if (nomeComEspaco.length > 1) {
         return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";

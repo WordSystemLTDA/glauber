@@ -6,6 +6,7 @@ import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
@@ -22,7 +23,7 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.da
 import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
-import 'package:intl/intl.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_adicionar_avulsa.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,13 +44,13 @@ class PaginaProvas extends StatefulWidget {
 
 class _PaginaProvasState extends State<PaginaProvas> {
   List<ProvaModelo> provasCarrinho = [];
-  List<double> valoresProvasCarrinho = [];
 
   TextEditingController nomeDenuncia = TextEditingController();
   TextEditingController celularDenuncia = TextEditingController();
   TextEditingController mensagemDenuncia = TextEditingController();
 
   bool concordaDenunciar = false;
+  late VerificarPermitirCompraProvedor verificarPermitirCompraProvedor;
 
   late Function() li;
 
@@ -62,16 +63,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
         setState(() {
           if (provasCarrinho.contains(prova)) {
             provasCarrinho.remove(prova);
-            valoresProvasCarrinho.remove(double.parse(prova.valor));
           } else if (valoresDuplicados.isNotEmpty) {
-            valoresProvasCarrinho.remove(double.parse(valoresDuplicados.firstOrNull!.valor));
             provasCarrinho.remove(valoresDuplicados.first);
 
             provasCarrinho.add(prova);
-            valoresProvasCarrinho.add(double.parse(prova.valor));
           } else {
             provasCarrinho.add(prova);
-            valoresProvasCarrinho.add(double.parse(prova.valor));
           }
         });
 
@@ -80,12 +77,53 @@ class _PaginaProvasState extends State<PaginaProvas> {
         setState(() {
           if (provasCarrinho.contains(prova)) {
             provasCarrinho.remove(prova);
-            valoresProvasCarrinho.remove(double.parse(prova.valor));
           } else {
             provasCarrinho.add(prova);
-            valoresProvasCarrinho.add(double.parse(prova.valor));
           }
         });
+      }
+    }
+  }
+
+  void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento) {
+    if (mounted) {
+      // Irá permitir escolher so um pacote por prova
+      if (evento.liberacaoDeCompra == '1') {
+        var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
+
+        if (provasCarrinho.contains(prova)) {
+          setState(() {
+            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
+          });
+        }
+
+        setState(() {
+          if (valoresDuplicados.isNotEmpty) {
+            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira != prova.idCabeceira);
+
+            for (var i = 0; i < quantidade; i++) {
+              provasCarrinho.add(prova);
+            }
+          } else {
+            for (var i = 0; i < quantidade; i++) {
+              provasCarrinho.add(prova);
+            }
+          }
+        });
+
+        // Poderá escolher multiplos pacotes por prova
+      } else if (evento.liberacaoDeCompra == '2') {
+        if (provasCarrinho.contains(prova)) {
+          setState(() {
+            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
+          });
+        }
+
+        for (var i = 0; i < quantidade; i++) {
+          setState(() {
+            provasCarrinho.add(prova);
+          });
+        }
       }
     }
   }
@@ -405,12 +443,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
   void initState() {
     super.initState();
 
+    verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var provasStore = context.read<ProvasStore>();
       var usuarioProvider = context.read<UsuarioProvider>();
       provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento);
-
-      var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
       li = () {
         VerificarPermitirCompraEstado state = verificarPermitirCompraProvedor.value;
@@ -419,15 +457,65 @@ class _PaginaProvasState extends State<PaginaProvas> {
           if (state.permitirCompraModelo.liberado) {
             var provaModelo = ProvaModelo(
               id: state.provaModelo.id,
-              permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: ''),
+              permitirCompra: state.provaModelo.permitirCompra,
               nomeProva: state.provaModelo.nomeProva,
               valor: state.provaModelo.valor,
-              hcMinimo: '0',
-              hcMaximo: '0',
+              hcMinimo: state.provaModelo.hcMinimo,
+              avulsa: state.provaModelo.avulsa,
+              quantMaxima: state.permitirCompraModelo.quantMaximaAvulsa == null ? state.provaModelo.quantMaxima : state.permitirCompraModelo.quantMaximaAvulsa!,
+              quantMinima: state.provaModelo.quantMinima,
+              hcMaximo: state.provaModelo.hcMaximo,
               idCabeceira: state.idCabeceira,
             );
 
-            adicionarNoCarrinho(provaModelo, state.eventoModelo);
+            if (provaModelo.avulsa == 'Sim') {
+              if (mounted) {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) {
+                    return ModalAdicionarAvulsa(
+                      prova: provaModelo,
+                      provasCarrinho: provasCarrinho,
+                      adicionarNoCarrinho: (quantidade) {
+                        var novaProva = ProvaModelo(
+                          id: provaModelo.id,
+                          nomeProva: provaModelo.nomeProva,
+                          valor: provaModelo.valor,
+                          permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+                          hcMinimo: "0",
+                          hcMaximo: "0",
+                          avulsa: provaModelo.avulsa,
+                          quantMaxima: "0",
+                          quantMinima: "0",
+                          idCabeceira: provaModelo.idCabeceira,
+                        );
+
+                        adicionarAvulsaNoCarrinho(quantidade, novaProva, state.eventoModelo);
+
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
+            } else {
+              var novaProva = ProvaModelo(
+                id: provaModelo.id,
+                nomeProva: provaModelo.nomeProva,
+                valor: provaModelo.valor,
+                permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+                hcMinimo: "0",
+                hcMaximo: "0",
+                avulsa: provaModelo.avulsa,
+                quantMaxima: "0",
+                quantMinima: "0",
+                idCabeceira: provaModelo.idCabeceira,
+              );
+
+              adicionarNoCarrinho(novaProva, state.eventoModelo);
+            }
           } else {
             if (mounted) {
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -466,22 +554,24 @@ class _PaginaProvasState extends State<PaginaProvas> {
     celularDenuncia.dispose();
     mensagemDenuncia.dispose();
 
+    if (mounted) {
+      verificarPermitirCompraProvedor.removeListener(li);
+    }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var provasStore = context.read<ProvasStore>();
-    var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    double valorTotal = valoresProvasCarrinho.fold(0, (previousValue, element) => previousValue + element);
+    double valorTotal = provasCarrinho.fold(0, (previousValue, element) => previousValue + double.parse(element.valor));
 
     return PopScope(
       onPopInvoked: (didPop) {
-        var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
         verificarPermitirCompraProvedor.removeListener(li);
       },
       child: Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {

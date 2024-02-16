@@ -1,4 +1,4 @@
-Atualizações
+======================================= ATUALIZAÇÕES ==================================================
 
 [x] Selecionar o Handicap pelo select que vem do banco de dados na hora do cadastro
 [x] Quando for login social ele, tem que abrir uma tela para selecionar o handicap dele
@@ -38,13 +38,21 @@ Atualizações
 [x] Fazer com que ao clicar na propaganda, seja carregado tudo de novo (carregar)
 [x] Mudar textos da notificação agendada.
 [x] Fazer verificação caso a data mudou e cancelar notificação caso tenha mudado (zonedSchedule)
+[X] Criar um botão para atualizar calendário
 
+[X] Fazer com que o botão de salvar na pagina de editar dados do usuario seja fixo
+[X] Verificar nome do cliente se tem espaços ou não
+[X] Deixar fixo o botão de editar forma de pagamento nas inscrições
+[X] Aparecer mensagem de erro quando for excluir a conta e tiver vendas vinculadas.
+[X] Verificar em todo app se existe algum valor que possa vir nulo (compras e ordem de entrada)
+[ ] (ARRUMAR NO APP) Se ele for 2 ou mais em qqr uma das modalidades, pe ou cabeca, ele nao pode ser menor q 2 na oposta, Por exemplo, Se ele colocar 2 na cabeca, no pe nao pode ser menor q 2 E vice versa
+[ ] Ver se quando transferir uma compra, gerar outro pagamento com o pix
+
+======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
-[ ] Criar um botão para atualizar calendário
 
-Ideias
-
+======================================= IDEIAS ========================================================
 Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do evento ou propaganda seja
 
 - Cobrir (pode cortar imagem ou não)

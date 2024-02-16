@@ -81,167 +81,176 @@ class _CardComprasState extends State<CardCompras> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                            child: Stack(
+                              children: [
+                                SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const Text(
+                                            'Detalhes do seu Ingresso',
+                                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: const Icon(Icons.close),
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
                                       const Text(
-                                        'Detalhes do seu Ingresso',
-                                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        icon: const Icon(Icons.close),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Detalhes do evento',
-                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: 100,
-                                        child: Text(
-                                          item.nomeEvento,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
-                                      Text(item.horaInicioF),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Valores da venda',
-                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Valor ingresso'),
-                                          Text(
-                                            Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
-                                            style: const TextStyle(color: Colors.green),
-                                          ),
-                                        ],
+                                        'Detalhes do evento',
+                                        style: TextStyle(fontWeight: FontWeight.w700),
                                       ),
                                       const SizedBox(height: 5),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Valor taxa'),
-                                          Text(
-                                            Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
-                                            style: const TextStyle(color: Colors.green),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Valor desconto'),
-                                          Text(
-                                            Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
-                                            style: const TextStyle(color: Colors.green),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Valor total'),
-                                          Text(
-                                            Utils.coverterEmReal.format(double.parse(item.valorTotal)),
-                                            style: const TextStyle(color: Colors.green),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Detalhes da compra',
-                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        item.pago == 'Não' ? "Não Pago" : "Pago",
-                                        style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
-                                      ),
-                                      Text(item.formaPagamento),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(item.status),
-                                      Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
-                                      Text(item.horaCompra),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Provas Vinculadas',
-                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Flexible(
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      padding: const EdgeInsets.only(top: 5),
-                                      itemCount: item.provas.length,
-                                      itemBuilder: (context, index) {
-                                        var provas = item.provas[index];
-
-                                        return Card(
-                                          margin: const EdgeInsets.only(bottom: 5),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(provas.nomeCabeceira!),
-                                                Text(provas.nomeProva),
-                                                Text(
-                                                  Utils.coverterEmReal.format(double.parse(provas.valor)),
-                                                  style: const TextStyle(color: Colors.green),
-                                                ),
-                                              ],
+                                          SizedBox(
+                                            width: 100,
+                                            child: Text(
+                                              item.nomeEvento,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                          Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataEvento))),
+                                          Text(item.horaInicioF),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text(
+                                        'Valores da venda',
+                                        style: TextStyle(fontWeight: FontWeight.w700),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Valor ingresso'),
+                                              Text(
+                                                Utils.coverterEmReal.format(double.parse(item.valorIngresso)),
+                                                style: const TextStyle(color: Colors.green),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Valor taxa'),
+                                              Text(
+                                                Utils.coverterEmReal.format(double.parse(item.valorTaxa)),
+                                                style: const TextStyle(color: Colors.green),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Valor desconto'),
+                                              Text(
+                                                Utils.coverterEmReal.format(double.parse(item.valorDesconto)),
+                                                style: const TextStyle(color: Colors.green),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text('Valor total'),
+                                              Text(
+                                                Utils.coverterEmReal.format(double.parse(item.valorTotal)),
+                                                style: const TextStyle(color: Colors.green),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text(
+                                        'Detalhes da compra',
+                                        style: TextStyle(fontWeight: FontWeight.w700),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            item.pago == 'Não' ? "Não Pago" : "Pago",
+                                            style: TextStyle(color: item.pago == 'Não' ? Colors.red : Colors.green),
+                                          ),
+                                          Text(item.formaPagamento),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(item.status),
+                                          Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
+                                          Text(item.horaCompra),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text(
+                                        'Provas Vinculadas',
+                                        style: TextStyle(fontWeight: FontWeight.w700),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Flexible(
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          padding: const EdgeInsets.only(top: 5),
+                                          itemCount: item.provas.length,
+                                          itemBuilder: (context, index) {
+                                            var provas = item.provas[index];
+
+                                            return Card(
+                                              margin: const EdgeInsets.only(bottom: 5),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(provas.nomeCabeceira!),
+                                                    Text(provas.nomeProva),
+                                                    Text(
+                                                      Utils.coverterEmReal.format(double.parse(provas.valor)),
+                                                      style: const TextStyle(color: Colors.green),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      if (item.pago == 'Não' && item.status != 'Cancelado') const SizedBox(height: 70),
+                                    ],
                                   ),
-                                  if (item.pago == 'Não' && item.status != 'Cancelado') ...[
-                                    const SizedBox(height: 5),
-                                    Align(
+                                ),
+                                if (item.pago == 'Não' && item.status != 'Cancelado') ...[
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Align(
                                       alignment: Alignment.center,
-                                      child: TextButton(
+                                      child: ElevatedButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                           Navigator.pushNamed(
@@ -262,9 +271,9 @@ class _CardComprasState extends State<CardCompras> {
                                         child: const Text('Editar forma de Pagamento'),
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ],
-                              ),
+                              ],
                             ),
                           ),
                         ),

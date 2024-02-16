@@ -75,16 +75,23 @@ class _CardProvasState extends State<CardProvas> {
     }
   }
 
-  bool existeNoCarrinho(prova, item) {
+  bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
     return widget.provasCarrinho.contains(ProvaModelo(
       id: prova.id,
-      permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: ''),
-      hcMinimo: '0',
-      hcMaximo: '0',
+      permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+      hcMinimo: "0",
+      hcMaximo: "0",
+      avulsa: prova.avulsa,
+      quantMaxima: "0",
+      quantMinima: "0",
       nomeProva: prova.nomeProva,
       valor: prova.valor,
       idCabeceira: item.id,
     ));
+  }
+
+  int quantidadeExisteCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
+    return widget.provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == item.id).length;
   }
 
   Color coresJaComprou(ProvaModelo prova) {
@@ -109,6 +116,7 @@ class _CardProvasState extends State<CardProvas> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
+      width: width,
       height: tamanhoCard,
       child: Card(
         margin: const EdgeInsets.only(bottom: 10),
@@ -233,21 +241,26 @@ class _CardProvasState extends State<CardProvas> {
                             itemBuilder: (context, index) {
                               var item = widget.nomesCabeceira![index];
 
-                              return SizedBox(
-                                width: 90,
-                                height: tamanhoCard / 2.1,
-                                child: Material(
-                                  color: coresAction(prova, item),
-                                  child: InkWell(
-                                    borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                                    onTap: () {
-                                      aoClicarNaCabeceira(prova, item);
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        item.nome,
-                                        style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                        textAlign: TextAlign.center,
+                              return Badge(
+                                isLabelVisible: quantidadeExisteCarrinho(prova, item) != 0,
+                                label: Text(quantidadeExisteCarrinho(prova, item).toString()),
+                                offset: const Offset(-2, 3),
+                                child: SizedBox(
+                                  width: 90,
+                                  height: tamanhoCard / 2.1,
+                                  child: Material(
+                                    color: coresAction(prova, item),
+                                    child: InkWell(
+                                      borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                      onTap: () {
+                                        aoClicarNaCabeceira(prova, item);
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          item.nome,
+                                          style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                   ),

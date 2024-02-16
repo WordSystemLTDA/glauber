@@ -6,9 +6,9 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
+import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
-import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provider/provider.dart';
@@ -135,12 +135,19 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                                 String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
 
                                 autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
-                                  var (sucessoAoExcluirConta, _) = resposta;
+                                  var (sucessoAoExcluirConta, mensagem) = resposta;
 
                                   if (sucessoAoExcluirConta) {
                                     UsuarioServico.sair(context).then((value) {
                                       Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
                                     });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text(mensagem),
+                                      ),
+                                    );
                                   }
                                 });
                               },
@@ -216,10 +223,14 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
     var usuarioProvider = context.read<UsuarioProvider>();
 
     if (usuarioProvider.usuario != null && usuarioProvider.usuario!.nome!.isNotEmpty) {
-      var nomeComEspaco = usuarioProvider.usuario!.nome!.split(' ');
+      var nomeComEspaco = usuarioProvider.usuario!.nome!.trimLeft().trimRight().split(RegExp(r"\s+")).join(' ').split(' ');
 
       if (nomeComEspaco.length > 1) {
-        return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";
+        if (nomeComEspaco[1][0].isNotEmpty) {
+          return "${nomeComEspaco[0][0].toUpperCase()}${nomeComEspaco[1][0].toUpperCase()}";
+        } else {
+          return "N/A";
+        }
       } else {
         return "${usuarioProvider.usuario!.nome![0].toUpperCase()}${usuarioProvider.usuario!.nome![1].toUpperCase()}";
       }

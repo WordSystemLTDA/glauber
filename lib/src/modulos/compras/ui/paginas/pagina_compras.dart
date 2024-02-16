@@ -135,7 +135,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-          floatingActionButton: usuarioProvider.usuario!.nivel == 'Master'
+          floatingActionButton: usuarioProvider.usuario != null && usuarioProvider.usuario!.nivel == 'Master'
               ? SizedBox(
                   width: width - 30,
                   child: Row(
