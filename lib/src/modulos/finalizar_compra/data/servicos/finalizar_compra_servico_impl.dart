@@ -16,8 +16,13 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
   Future<RetornoCompraModelo> inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
     var url = 'vendas/inserir.php';
 
+    var provasAvulsa = dados.provas.where((element) => element.avulsa == 'Sim').toList();
+    var provasNaoAvulsa = dados.provas.where((element) => element.avulsa != 'Sim').toList();
+
     var campos = {
       ...dados.toMap(),
+      'provasAvulsa': provasAvulsa,
+      'provasNaoAvulsa': provasNaoAvulsa,
       'usuario': usuario!.toMap(),
     };
 

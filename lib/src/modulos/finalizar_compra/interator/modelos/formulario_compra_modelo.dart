@@ -16,6 +16,7 @@ class FormularioCompraModelo {
   final String valorTotal;
   final String tipoDeVenda;
   final List<ProvaModelo> provas;
+  final String? temValorFiliacao;
   final CartaoModelo? cartao;
 
   FormularioCompraModelo({
@@ -30,6 +31,7 @@ class FormularioCompraModelo {
     required this.valorTotal,
     required this.tipoDeVenda,
     required this.provas,
+    this.temValorFiliacao,
     this.cartao,
   });
 
@@ -46,6 +48,7 @@ class FormularioCompraModelo {
       'valorTotal': valorTotal,
       'tipoDeVenda': tipoDeVenda,
       'provas': provas.map((x) => x.toMap()).toList(),
+      'temValorFiliacao': temValorFiliacao,
       'cartao': cartao?.toMap(),
     };
   }
@@ -67,6 +70,7 @@ class FormularioCompraModelo {
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      temValorFiliacao: map['temValorFiliacao'] != null ? map['temValorFiliacao'] as String : null,
       cartao: map['cartao'] != null ? CartaoModelo.fromMap(map['cartao'] as Map<String, dynamic>) : null,
     );
   }

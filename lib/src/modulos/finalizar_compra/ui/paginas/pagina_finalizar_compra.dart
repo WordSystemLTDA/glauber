@@ -55,8 +55,10 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var finalizarCompraStore = context.read<FinalizarCompraStore>();
       var listarInformacoesStore = context.read<ListarInformacoesStore>();
+      var usuarioProvider = context.read<UsuarioProvider>();
 
-      listarInformacoesStore.listarInformacoes(widget.argumentos.provas, widget.argumentos.idEvento);
+      listarInformacoesStore.listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false,
+          widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '');
 
       finalizarCompraStore.addListener(() {
         FinalizarCompraEstado state = finalizarCompraStore.value;
@@ -140,17 +142,10 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         usuarioProvider.usuario,
         FormularioEditarCompraModelo(
           idVenda: widget.argumentos.dadosEdicaoVendaModelo!.idVenda,
-          provas: widget.argumentos.provas,
           idEvento: widget.argumentos.idEvento,
           idProva: widget.argumentos.provas[0].id,
           idEmpresa: dados.evento.idEmpresa,
           idFormaPagamento: metodoPagamento,
-          valorIngresso: dados.prova.valor,
-          valorTaxa: dados.prova.taxaProva,
-          valorTaxaCartao: dados.taxaCartao,
-          valorDesconto: "0",
-          valorTotal: retornarValorTotal(dados).toString(),
-          tipoDeVenda: "Venda",
           cartao: cartaoSelecionado,
         ),
       );
@@ -158,6 +153,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       finalizarCompraStore.inserir(
         usuarioProvider.usuario,
         FormularioCompraModelo(
+          temValorFiliacao: dados.valorAdicional?.valor,
           provas: widget.argumentos.provas,
           idEvento: widget.argumentos.idEvento,
           idProva: widget.argumentos.provas[0].id,
@@ -165,7 +161,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           idFormaPagamento: metodoPagamento,
           valorIngresso: dados.prova.valor,
           valorTaxa: dados.prova.taxaProva,
-          valorTaxaCartao: dados.taxaCartao,
+          valorTaxaCartao: metodoPagamento == '3' ? dados.taxaCartao : '0',
           valorDesconto: "0",
           valorTotal: retornarValorTotal(dados).toString(),
           tipoDeVenda: "Venda",
@@ -176,11 +172,21 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   }
 
   double retornarValorTotal(ListarInformacoesModelo dados) {
+    double valorTotal = double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva);
+
     if (metodoPagamento == '3') {
-      return double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva) + double.parse(dados.taxaCartao);
-    } else {
-      return double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva);
+      valorTotal = valorTotal + double.parse(dados.taxaCartao);
     }
+
+    if (dados.valorAdicional != null) {
+      if (dados.valorAdicional!.tipo == 'soma') {
+        valorTotal = valorTotal + double.parse(dados.valorAdicional!.valor);
+      } else if (dados.valorAdicional!.tipo == 'diminuir') {
+        valorTotal = valorTotal - double.parse(dados.valorAdicional!.valor);
+      }
+    }
+
+    return valorTotal;
   }
 
   void abrirModalCartoes() {
@@ -208,6 +214,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     var width = MediaQuery.of(context).size.width;
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
     var listarInformacoesStore = context.read<ListarInformacoesStore>();
+    var usuarioProvider = context.read<UsuarioProvider>();
 
     return Scaffold(
       appBar: AppBarSombra(
@@ -232,7 +239,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
               padding: const EdgeInsets.all(10.0),
               child: RefreshIndicator(
                 onRefresh: () async {
-                  listarInformacoesStore.listarInformacoes(widget.argumentos.provas, widget.argumentos.idEvento);
+                  listarInformacoesStore.listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false,
+                      widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '');
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -442,6 +450,21 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               ),
                               Text(
                                 parcela == 1 ? 'Crédito á vista' : "${parcela}x de ${(retornarValorTotal(dados) / parcela).obterReal()}",
+                                style: const TextStyle(fontSize: 16, color: Colors.green),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (dados.valorAdicional != null) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                dados.valorAdicional!.titulo,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                "${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${double.parse(dados.valorAdicional!.valor).obterReal()}",
                                 style: const TextStyle(fontSize: 16, color: Colors.green),
                               ),
                             ],

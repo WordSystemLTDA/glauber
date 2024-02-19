@@ -9,6 +9,7 @@ class ComprasModelo {
   final String valorTaxa;
   final String valorDesconto;
   final String valorTotal;
+  final String valorFiliacao;
   final String status;
   final String codigoQr;
   final String codigoPIX;
@@ -38,6 +39,7 @@ class ComprasModelo {
     required this.valorTaxa,
     required this.valorDesconto,
     required this.valorTotal,
+    required this.valorFiliacao,
     required this.status,
     required this.codigoQr,
     required this.codigoPIX,
@@ -67,6 +69,7 @@ class ComprasModelo {
       'valorTaxa': valorTaxa,
       'valorDesconto': valorDesconto,
       'valorTotal': valorTotal,
+      'valorFiliacao': valorFiliacao,
       'status': status,
       'codigoQr': codigoQr,
       'codigoPIX': codigoPIX,
@@ -98,6 +101,7 @@ class ComprasModelo {
       valorTaxa: map['valorTaxa'] as String,
       valorDesconto: map['valorDesconto'] as String,
       valorTotal: map['valorTotal'] as String,
+      valorFiliacao: map['valorFiliacao'] as String,
       status: map['status'] as String,
       codigoQr: map['codigoQr'] as String,
       codigoPIX: map['codigoPIX'] as String,

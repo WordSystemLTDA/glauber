@@ -3,6 +3,7 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/valor_adicional_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
@@ -148,6 +149,7 @@ class DadosFakes {
     prova: DadosProvasModelo(valor: '150', taxaProva: '0.00'),
     parcelasDisponiveisCartao: [],
     taxaCartao: '0',
+    valorAdicional: ValorAdicionalModelo(tipo: "", titulo: "", valor: "1.00"),
     evento: EventoModelo(
       id: "19",
       idEmpresa: "4",
@@ -214,6 +216,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
     ComprasModelo(
       id: "187",
@@ -256,6 +259,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
     ComprasModelo(
       id: "187",
@@ -298,6 +302,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
     ComprasModelo(
       id: "187",
@@ -340,6 +345,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
     ComprasModelo(
       id: "187",
@@ -382,6 +388,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
     ComprasModelo(
       id: "187",
@@ -424,6 +431,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
     ComprasModelo(
       id: "187",
@@ -466,6 +474,7 @@ class DadosFakes {
           quantMinima: '',
         ),
       ],
+      valorFiliacao: '0',
     ),
   ];
 

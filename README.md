@@ -46,7 +46,9 @@
 [X] Aparecer mensagem de erro quando for excluir a conta e tiver vendas vinculadas.
 [X] Verificar em todo app se existe algum valor que possa vir nulo (compras e ordem de entrada)
 [ ] (ARRUMAR NO APP) Se ele for 2 ou mais em qqr uma das modalidades, pe ou cabeca, ele nao pode ser menor q 2 na oposta, Por exemplo, Se ele colocar 2 na cabeca, no pe nao pode ser menor q 2 E vice versa
-[ ] Ver se quando transferir uma compra, gerar outro pagamento com o pix
+
+[ ] Ver se quando transferir uma compra que não esteja pago, (caso seja pix) gerar outro pagamento e adicionar o valor da filiação caso o usuário não tenha comprado nenhuma prova daquele evento ainda
+[ ] Ver como fazer com o valor da filiação caso tenha comprado duas vendas diferente mas tenha pagado a venda que não tinha o valor da filiação (Ver como obrigar o competidor a pagar a filiação)
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)
@@ -59,4 +61,4 @@ Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do e
 - Esticar imagem para preencher o espaço disponível
 - Ajustar para a largura (pode cortar imagem ou não)
 - Ajustar para a altura (pode sobrar nas horizontais)
-- Aparecer imagem toda (sem se preocupar com largura ou altura, depedendo pode sobrar nas laterais)
+- Aparecer imagem toda (sem se preocupar com largura ou altura, dependendo pode sobrar nas laterais)

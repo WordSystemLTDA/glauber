@@ -218,15 +218,15 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                     ),
                   ),
                   SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ValueListenableBuilder<VerificarPagamentoEstado>(
-                            valueListenable: verificarPagamentoStore,
-                            builder: (context, state, _) {
-                              return SizedBox(
-                                width: 200,
-                                child: ElevatedButton(
+                    child: SizedBox(
+                      width: width - 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ValueListenableBuilder<VerificarPagamentoEstado>(
+                              valueListenable: verificarPagamentoStore,
+                              builder: (context, state, _) {
+                                return ElevatedButton(
                                   style: ButtonStyle(
                                     backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
                                     foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
@@ -249,26 +249,27 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                                           ),
                                         )
                                       : const Text('Verificar Pagamento'),
+                                );
+                              }),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
+                              foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
-                              );
-                            }),
-                        const SizedBox(width: 10),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                            foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
+                            onPressed: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: AppRotas.compras), (Route<dynamic> route) => false);
+                            },
+                            child: const Text('Suas compras'),
                           ),
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: AppRotas.compras), (Route<dynamic> route) => false);
-                          },
-                          child: const Text('Suas compras'),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

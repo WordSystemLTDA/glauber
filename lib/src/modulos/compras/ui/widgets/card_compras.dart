@@ -93,7 +93,7 @@ class _CardComprasState extends State<CardCompras> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           const Text(
-                                            'Detalhes do seu Ingresso',
+                                            'Detalhes da sua Inscrição',
                                             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                                           ),
                                           IconButton(
@@ -165,6 +165,19 @@ class _CardComprasState extends State<CardCompras> {
                                               ),
                                             ],
                                           ),
+                                          const SizedBox(height: 5),
+                                          if (double.parse(item.valorFiliacao) > 0) ...[
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text('Valor filiação'),
+                                                Text(
+                                                  Utils.coverterEmReal.format(double.parse(item.valorFiliacao)),
+                                                  style: const TextStyle(color: Colors.green),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                           const SizedBox(height: 5),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

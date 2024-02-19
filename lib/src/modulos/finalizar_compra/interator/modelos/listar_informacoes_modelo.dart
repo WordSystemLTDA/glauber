@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_provas_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/parcela_disponiveis_modelo.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/valor_adicional_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 
 class ListarInformacoesModelo {
@@ -12,6 +13,7 @@ class ListarInformacoesModelo {
   final String taxaCartao;
   final List<ParcelaDisponiveisModelo> parcelasDisponiveisCartao;
   final List<PagamentosModelo> pagamentos;
+  final ValorAdicionalModelo? valorAdicional;
 
   ListarInformacoesModelo({
     required this.prova,
@@ -19,6 +21,7 @@ class ListarInformacoesModelo {
     required this.taxaCartao,
     required this.parcelasDisponiveisCartao,
     required this.pagamentos,
+    this.valorAdicional,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +31,7 @@ class ListarInformacoesModelo {
       'taxaCartao': taxaCartao,
       'parcelasDisponiveisCartao': parcelasDisponiveisCartao.map((x) => x.toMap()).toList(),
       'pagamentos': pagamentos.map((x) => x.toMap()).toList(),
+      'valorAdicional': valorAdicional?.toMap(),
     };
   }
 
@@ -46,6 +50,7 @@ class ListarInformacoesModelo {
           (x) => PagamentosModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      valorAdicional: map['valorAdicional'] != null ? ValorAdicionalModelo.fromMap(map['valorAdicional'] as Map<String, dynamic>) : null,
     );
   }
 

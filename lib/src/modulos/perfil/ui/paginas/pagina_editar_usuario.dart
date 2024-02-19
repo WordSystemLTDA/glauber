@@ -270,31 +270,35 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         },
         child: Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton.extended(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            onPressed: () {
-              editar(usuario);
-            },
-            label: SizedBox(
-              width: width - 100,
-              child: salvando
-                  ? const Center(
-                      child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 1,
+          floatingActionButton: SizedBox(
+            height: 50,
+            child: FloatingActionButton.extended(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              // backgroundColor: Colors.green,
+              onPressed: () {
+                editar(usuario);
+              },
+              label: SizedBox(
+                width: width - 100,
+                child: salvando
+                    ? const Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 1,
+                          ),
                         ),
+                      )
+                    : const Text(
+                        'Salvar',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16),
                       ),
-                    )
-                  : const Text(
-                      'Salvar',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
-                    ),
+              ),
             ),
           ),
           appBar: const AppBarSombra(
