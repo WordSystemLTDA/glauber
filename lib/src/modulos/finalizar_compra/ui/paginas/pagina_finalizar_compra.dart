@@ -146,6 +146,12 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           idProva: widget.argumentos.provas[0].id,
           idEmpresa: dados.evento.idEmpresa,
           idFormaPagamento: metodoPagamento,
+          valorIngresso: dados.prova.valor,
+          valorTaxa: dados.prova.taxaProva,
+          valorTaxaCartao: metodoPagamento == '3' ? dados.taxaCartao : '0',
+          valorDesconto: "0",
+          valorTotal: retornarValorTotal(dados).toString(),
+          temValorFiliacao: dados.valorAdicional?.valor,
           cartao: cartaoSelecionado,
         ),
       );
@@ -459,9 +465,21 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                dados.valorAdicional!.titulo,
-                                style: const TextStyle(fontSize: 16),
+                              Row(
+                                children: [
+                                  Text(
+                                    dados.valorAdicional!.titulo,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  const Tooltip(
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    showDuration: Duration(seconds: 10),
+                                    message:
+                                        'Pago somente uma vez, quando pagar a inscrição contendo a filiação, os valores das inscrições serão reatribuidas sem o valor da filiação.',
+                                    child: Icon(Icons.info_outline, size: 16),
+                                  )
+                                ],
                               ),
                               Text(
                                 "${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${double.parse(dados.valorAdicional!.valor).obterReal()}",

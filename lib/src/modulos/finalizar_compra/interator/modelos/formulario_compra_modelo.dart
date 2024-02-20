@@ -14,9 +14,9 @@ class FormularioCompraModelo {
   final String valorTaxaCartao;
   final String valorDesconto;
   final String valorTotal;
+  final String? temValorFiliacao;
   final String tipoDeVenda;
   final List<ProvaModelo> provas;
-  final String? temValorFiliacao;
   final CartaoModelo? cartao;
 
   FormularioCompraModelo({

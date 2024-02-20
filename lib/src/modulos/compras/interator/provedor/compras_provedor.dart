@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_lista_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 
 class ComprasProvedor extends ChangeNotifier {
@@ -9,7 +9,7 @@ class ComprasProvedor extends ChangeNotifier {
   int pagina = 1;
   bool carregando = false;
   bool temMaisParaCarregar = true;
-  List<ComprasModelo> compras = [...DadosFakes.dadosFakesCompras];
+  List<RetornoListaCompraModelo> compras = [...DadosFakes.dadosFakesCompras];
 
   ComprasProvedor(this._servico);
 

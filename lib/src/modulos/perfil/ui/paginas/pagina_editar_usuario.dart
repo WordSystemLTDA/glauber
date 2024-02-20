@@ -7,6 +7,7 @@ import 'package:provadelaco/src/compartilhado/formatters/rg_formatter.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/formulario_editar_usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
@@ -47,6 +48,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
 
   TextEditingController cidadeController = TextEditingController();
   SearchController pesquisaCidadeController = SearchController();
+  bool ocultarSenha = true;
 
   String idHcCabeceira = '0';
   String idHcPiseiro = '0';
@@ -190,7 +192,9 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
 
       if (sucesso) {
         var usuarioProvider = context.read<UsuarioProvider>();
+
         usuarioProvider.setUsuario(usuarioNovo);
+        UsuarioServico.salvarUsuario(context, usuarioNovo);
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('Sucesso ao editar dados.'),
@@ -366,8 +370,8 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     label: Text('Apelido'),
                   ),
                 ),
-                const SizedBox(height: 10),
-                if (usuario.usuario!.tipo! == 'normal') ...[
+                if (usuario.usuario!.tipo! == 'email') ...[
+                  const SizedBox(height: 10),
                   TextField(
                     controller: emailController,
                     decoration: const InputDecoration(
@@ -514,14 +518,26 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    if (usuario.usuario!.tipo! == 'normal') ...[
-                      SizedBox(
-                        width: width * 0.60,
+                    if (usuario.usuario!.tipo! == 'email') ...[
+                      Expanded(
                         child: TextField(
                           controller: senhaController,
-                          decoration: const InputDecoration(
+                          obscureText: ocultarSenha,
+                          decoration: InputDecoration(
                             hintText: 'Senha',
-                            label: Text('Senha'),
+                            label: const Text('Senha'),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  ocultarSenha = !ocultarSenha;
+                                });
+                              },
+                              icon: ocultarSenha
+                                  ? const Icon(Icons.remove_red_eye)
+                                  : const Icon(
+                                      Icons.remove_red_eye_outlined,
+                                    ),
+                            ),
                           ),
                         ),
                       ),

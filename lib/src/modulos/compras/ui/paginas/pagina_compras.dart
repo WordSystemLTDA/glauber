@@ -389,33 +389,39 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                         if (index < comprasStore.compras.length) {
                           var item = comprasStore.compras[index];
 
-                          return CardCompras(
-                            item: item,
-                            comprasTransferencia: comprasTransferencia,
-                            aoClicarParaTransferir: (compra) {
-                              if (comprasTransferencia.contains(compra)) {
-                                setState(() {
-                                  comprasTransferencia.remove(compra);
-                                });
-                              } else {
-                                setState(() {
-                                  comprasTransferencia.add(compra);
-                                });
-                              }
-                            },
-                            modoTransferencia: modoTransferencia,
-                            atualizarLista: () {
-                              listarCompras(resetar: true);
-                            },
+                          return Card(
+                            child: ExpansionTile(
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                              collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                              title: Text("${item.nomeProva} - ${item.nomeEvento} (${item.compras.length})"),
+                              childrenPadding: const EdgeInsets.all(10),
+                              children: item.compras.map((e) {
+                                return CardCompras(
+                                  item: e,
+                                  comprasTransferencia: comprasTransferencia,
+                                  aoClicarParaTransferir: (compra) {
+                                    if (comprasTransferencia.contains(compra)) {
+                                      setState(() {
+                                        comprasTransferencia.remove(compra);
+                                      });
+                                    } else {
+                                      setState(() {
+                                        comprasTransferencia.add(compra);
+                                      });
+                                    }
+                                  },
+                                  modoTransferencia: modoTransferencia,
+                                  atualizarLista: () {
+                                    listarCompras(resetar: true);
+                                  },
+                                );
+                              }).toList(),
+                            ),
                           );
                         } else {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 32),
-                            child: comprasStore.temMaisParaCarregar
-                                ? const Center(child: CircularProgressIndicator())
-                                : const Center(
-                                    child: Text('Você chegou no fim da lista.'),
-                                  ),
+                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                           );
                         }
                       },

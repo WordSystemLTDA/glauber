@@ -9,8 +9,8 @@ import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/network/dio_cliente.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
-import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/handicap_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
@@ -26,9 +26,9 @@ import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_info_
 import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_store.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/widgets/agenda_datasource.dart';
 import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_cartoes_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_informacoes_servico_impl.dart';
@@ -57,8 +57,10 @@ import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario
 import 'package:provadelaco/src/modulos/propaganda/data/servicos/propagandas_servico_impl.dart';
 import 'package:provadelaco/src/modulos/propaganda/interator/servicos/propagandas_servico.dart';
 import 'package:provadelaco/src/modulos/propaganda/interator/stores/propagandas_store.dart';
+import 'package:provadelaco/src/modulos/provas/data/servicos/competidores_servico_impl.dart';
 import 'package:provadelaco/src/modulos/provas/data/servicos/denunciar_servico_impl.dart';
 import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
@@ -68,6 +70,13 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+extension EmailValidator on String {
+  bool isValidEmail() {
+    return RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(this);
   }
 }
 
@@ -101,6 +110,7 @@ void main() async {
       Provider<BuscarServico>(create: (context) => BuscarServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => BuscarStore(context.read())),
       // Provas
+      Provider<CompetidoresServico>(create: (context) => CompetidoresServicoImpl(context.read())),
       Provider<DenunciarServico>(create: (context) => DenunciarServicoImpl(context.read())),
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),

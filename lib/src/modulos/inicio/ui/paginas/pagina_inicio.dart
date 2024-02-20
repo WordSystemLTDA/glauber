@@ -11,7 +11,6 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
-import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
@@ -155,75 +154,75 @@ class _PaginaInicioState extends State<PaginaInicio> {
   }
 
   void verificar() {
-    var mudarSenhaServico = context.read<MudarSenhaServico>();
+    // var mudarSenhaServico = context.read<MudarSenhaServico>();
     var usuarioProvider = context.read<UsuarioProvider>().usuario;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted && usuarioProvider != null && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'normal') {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return PopScope(
-              canPop: false,
-              child: Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Mudar Senha',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: novaSenha,
-                        decoration: const InputDecoration(hintText: 'Nova senha'),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Fechar'),
-                          ),
-                          const SizedBox(width: 10),
-                          ElevatedButton(
-                            onPressed: () {
-                              mudarSenhaServico.mudarSenha(usuarioProvider, novaSenha.text).then((sucesso) {
-                                if (sucesso) {
-                                  Navigator.pop(context);
+      if (mounted && usuarioProvider != null && usuarioProvider.primeiroAcesso == 'Não' && usuarioProvider.tipo == 'email') {
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return PopScope(
+        //       canPop: false,
+        //       child: Dialog(
+        //         child: Padding(
+        //           padding: const EdgeInsets.all(20.0),
+        //           child: Column(
+        //             mainAxisSize: MainAxisSize.min,
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             children: [
+        //               const Text(
+        //                 'Mudar Senha',
+        //                 style: TextStyle(fontSize: 16),
+        //               ),
+        //               const SizedBox(height: 10),
+        //               TextField(
+        //                 controller: novaSenha,
+        //                 decoration: const InputDecoration(hintText: 'Nova senha'),
+        //               ),
+        //               const SizedBox(height: 20),
+        //               Row(
+        //                 mainAxisAlignment: MainAxisAlignment.end,
+        //                 children: [
+        //                   ElevatedButton(
+        //                     onPressed: () {
+        //                       Navigator.pop(context);
+        //                     },
+        //                     child: const Text('Fechar'),
+        //                   ),
+        //                   const SizedBox(width: 10),
+        //                   ElevatedButton(
+        //                     onPressed: () {
+        //                       mudarSenhaServico.mudarSenha(usuarioProvider, novaSenha.text).then((sucesso) {
+        //                         if (sucesso) {
+        //                           Navigator.pop(context);
 
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                      content: Center(child: Text('Sua senha foi mudada com sucesso.')),
-                                      showCloseIcon: true,
-                                      backgroundColor: Colors.green,
-                                    ));
-                                  }
-                                }
-                              });
-                            },
-                            style: const ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                              foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
-                            ),
-                            child: const Text('Salvar'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
+        //                           if (mounted) {
+        //                             ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        //                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //                               content: Center(child: Text('Sua senha foi mudada com sucesso.')),
+        //                               showCloseIcon: true,
+        //                               backgroundColor: Colors.green,
+        //                             ));
+        //                           }
+        //                         }
+        //                       });
+        //                     },
+        //                     style: const ButtonStyle(
+        //                       backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
+        //                       foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+        //                     ),
+        //                     child: const Text('Salvar'),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // );
       } else if (mounted && usuarioProvider != null && usuarioProvider.clienteBloqueado == true) {
         showDialog<void>(
           context: context,
