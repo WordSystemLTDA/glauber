@@ -18,7 +18,6 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verifi
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
@@ -483,7 +482,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           id: provaModelo.id,
                           nomeProva: provaModelo.nomeProva,
                           valor: provaModelo.valor,
-                          permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+                          permitirCompra: provaModelo.permitirCompra,
                           hcMinimo: "0",
                           hcMaximo: "0",
                           avulsa: provaModelo.avulsa,
@@ -505,7 +504,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 id: provaModelo.id,
                 nomeProva: provaModelo.nomeProva,
                 valor: provaModelo.valor,
-                permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+                permitirCompra: provaModelo.permitirCompra,
                 hcMinimo: "0",
                 hcMaximo: "0",
                 avulsa: provaModelo.avulsa,
@@ -800,7 +799,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                       idEvento: widget.argumentos.idEvento,
                                       provasCarrinho: provasCarrinho,
                                       aoClicarNaProva: (prova) {
-                                        adicionarNoCarrinho(prova, evento);
+                                        // adicionarNoCarrinho(prova, evento);
                                       },
                                     );
                                   },

@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
@@ -44,21 +45,23 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         TransferenciaEstado state = transferenciaProvedor.value;
 
         if (state is TransferidoComSucesso) {
-          Navigator.pop(context);
+          if (mounted) {
+            Navigator.pop(context);
 
-          setState(() {
-            comprasTransferencia.clear();
-            idClienteSelecionado = '0';
-            textoClientesController.text = '';
-          });
+            setState(() {
+              comprasTransferencia.clear();
+              idClienteSelecionado = '0';
+              textoClientesController.text = '';
+            });
 
-          listarCompras(resetar: true);
+            listarCompras(resetar: true);
 
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            showCloseIcon: true,
-            backgroundColor: Colors.green,
-            content: Center(child: Text(state.mensagem)),
-          ));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              showCloseIcon: true,
+              backgroundColor: Colors.green,
+              content: Center(child: Text(state.mensagem)),
+            ));
+          }
         } else if (state is ErroAoTransferir) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             showCloseIcon: true,
@@ -384,38 +387,105 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: comprasStore.compras.length + 1,
                       controller: _scrollController,
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
                       itemBuilder: (context, index) {
                         if (index < comprasStore.compras.length) {
                           var item = comprasStore.compras[index];
 
-                          return Card(
-                            child: ExpansionTile(
+                          return SizedBox(
+                            width: width,
+                            child: Card(
                               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                              collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                              title: Text("${item.nomeProva} - ${item.nomeEvento} (${item.compras.length})"),
-                              childrenPadding: const EdgeInsets.all(10),
-                              children: item.compras.map((e) {
-                                return CardCompras(
-                                  item: e,
-                                  comprasTransferencia: comprasTransferencia,
-                                  aoClicarParaTransferir: (compra) {
-                                    if (comprasTransferencia.contains(compra)) {
-                                      setState(() {
-                                        comprasTransferencia.remove(compra);
-                                      });
-                                    } else {
-                                      setState(() {
-                                        comprasTransferencia.add(compra);
-                                      });
-                                    }
-                                  },
-                                  modoTransferencia: modoTransferencia,
-                                  atualizarLista: () {
-                                    listarCompras(resetar: true);
-                                  },
-                                );
-                              }).toList(),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 0,
+                                    top: 0,
+                                    child: Container(
+                                      width: 5,
+                                      height: 90,
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(5),
+                                          bottomLeft: Radius.circular(5),
+                                        ),
+                                      ),
+                                      child: const VerticalDivider(color: Colors.grey, thickness: 5),
+                                    ),
+                                  ),
+                                  ExpansionTile(
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                                    collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                                    tilePadding: const EdgeInsets.only(right: 20),
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.nomeProva,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            item.nomeEvento,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(fontSize: 13),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Inscrições: ${item.compras.length}'),
+                                              Text(
+                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
+                                                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // childrenPadding: const EdgeInsets.all(10),
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(bottom: 10, top: 0),
+                                        child: Divider(
+                                          height: 1,
+                                        ),
+                                      ),
+                                      ...item.compras.map((e) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(left: 7, right: 7),
+                                          child: CardCompras(
+                                            item: e,
+                                            comprasTransferencia: comprasTransferencia,
+                                            aoClicarParaTransferir: (compra) {
+                                              if (comprasTransferencia.contains(compra)) {
+                                                setState(() {
+                                                  comprasTransferencia.remove(compra);
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  comprasTransferencia.add(compra);
+                                                });
+                                              }
+                                            },
+                                            modoTransferencia: modoTransferencia,
+                                            atualizarLista: () {
+                                              listarCompras(resetar: true);
+                                            },
+                                          ),
+                                        );
+                                      }),
+                                      const SizedBox(height: 7),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         } else {

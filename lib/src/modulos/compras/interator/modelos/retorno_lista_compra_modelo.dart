@@ -7,12 +7,14 @@ class RetornoListaCompraModelo {
   final String id;
   final String nomeProva;
   final String nomeEvento;
+  final String somaTotal;
   final List<ComprasModelo> compras;
 
   RetornoListaCompraModelo({
     required this.id,
     required this.nomeProva,
     required this.nomeEvento,
+    required this.somaTotal,
     required this.compras,
   });
 
@@ -21,6 +23,7 @@ class RetornoListaCompraModelo {
       'id': id,
       'nomeProva': nomeProva,
       'nomeEvento': nomeEvento,
+      'somaTotal': somaTotal,
       'compras': compras.map((x) => x.toMap()).toList(),
     };
   }
@@ -30,6 +33,7 @@ class RetornoListaCompraModelo {
       id: map['id'] as String,
       nomeProva: map['nomeProva'] as String,
       nomeEvento: map['nomeEvento'] as String,
+      somaTotal: map['somaTotal'] as String,
       compras: List<ComprasModelo>.from(
         (map['compras'] as List<dynamic>).map<ComprasModelo>(
           (x) => ComprasModelo.fromMap(x as Map<String, dynamic>),

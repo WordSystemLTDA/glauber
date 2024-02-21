@@ -1,8 +1,6 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/card_parceiros.dart';
 
 class ModalAdicionarAvulsa extends StatefulWidget {
   final Function(int quantidade) adicionarNoCarrinho;
@@ -23,7 +21,7 @@ class ModalAdicionarAvulsa extends StatefulWidget {
 class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
   int quantidade = 0;
 
-  List<CompetidoresModelo> listaCompetidores = [];
+  // List<CompetidoresModelo> listaCompetidores = [];
 
   @override
   void initState() {
@@ -59,18 +57,18 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: listaCompetidores.length,
-                  padding: EdgeInsets.zero,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    var item = listaCompetidores[index];
+                // ListView.builder(
+                //   shrinkWrap: true,
+                //   itemCount: listaCompetidores.length,
+                //   padding: EdgeInsets.zero,
+                //   physics: const NeverScrollableScrollPhysics(),
+                //   itemBuilder: (context, index) {
+                //     var item = listaCompetidores[index];
 
-                    return CardParceiros(item: item);
-                  },
-                ),
-                const SizedBox(height: 20),
+                //     return CardParceiros(item: item);
+                //   },
+                // ),
+                // const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -82,7 +80,7 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
                           if (quantidade > int.parse(widget.prova.quantMinima)) {
                             setState(() {
                               quantidade = quantidade - 1;
-                              listaCompetidores.removeLast();
+                              // listaCompetidores.removeLast();
                             });
                           } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
                             widget.adicionarNoCarrinho(0);
@@ -110,9 +108,7 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
                           if (quantidade < int.parse(widget.prova.quantMaxima)) {
                             setState(() {
                               quantidade = quantidade + 1;
-                              listaCompetidores.add(
-                                CompetidoresModelo(id: '', nome: '', apelido: ''),
-                              );
+                              // listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
                             });
                           }
                         },

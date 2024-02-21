@@ -7,7 +7,6 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_permitir_compra_provedor.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -78,7 +77,7 @@ class _CardProvasState extends State<CardProvas> {
   bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
     return widget.provasCarrinho.contains(ProvaModelo(
       id: prova.id,
-      permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+      permitirCompra: prova.permitirCompra,
       hcMinimo: "0",
       hcMaximo: "0",
       avulsa: prova.avulsa,

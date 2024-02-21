@@ -41,7 +41,7 @@ class ComprasServicoImpl implements ComprasServico {
 
   @override
   Future<List<ClientesModelo>> listarClientes(String pesquisa) async {
-    var url = 'compras/listar_clientes.php';
+    var url = 'compras/listar_clientes.php?pesquisa=$pesquisa';
 
     var campos = {
       'pesquisa': pesquisa,

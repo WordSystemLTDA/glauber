@@ -176,7 +176,7 @@ class DadosFakes {
   );
 
   static final List<RetornoListaCompraModelo> dadosFakesCompras = [
-    RetornoListaCompraModelo(id: 'id', nomeEvento: 'nomeEvento', nomeProva: '', compras: [
+    RetornoListaCompraModelo(id: 'id', nomeEvento: 'nomeEvento', nomeProva: '', somaTotal: '', compras: [
       ComprasModelo(
         id: "187",
         valorIngresso: "150.00",
