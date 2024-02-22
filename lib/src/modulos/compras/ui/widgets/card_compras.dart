@@ -166,7 +166,7 @@ class _CardComprasState extends State<CardCompras> {
                                             ],
                                           ),
                                           const SizedBox(height: 5),
-                                          if (double.parse(item.valorFiliacao) > 0) ...[
+                                          if (double.tryParse(item.valorFiliacao) != null && double.parse(item.valorFiliacao) > 0) ...[
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [

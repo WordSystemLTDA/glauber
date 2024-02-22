@@ -1,9 +1,11 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/card_parceiros.dart';
 
 class ModalAdicionarAvulsa extends StatefulWidget {
-  final Function(int quantidade) adicionarNoCarrinho;
+  final Function(int quantidade, List<CompetidoresModelo> listaCompetidores) adicionarNoCarrinho;
   final ProvaModelo prova;
   final List<ProvaModelo> provasCarrinho;
 
@@ -21,17 +23,46 @@ class ModalAdicionarAvulsa extends StatefulWidget {
 class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
   int quantidade = 0;
 
-  // List<CompetidoresModelo> listaCompetidores = [];
+  List<CompetidoresModelo> listaCompetidores = [];
 
   @override
   void initState() {
     super.initState();
     if (mounted) {
-      if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty) {
-        quantidade = int.parse(widget.prova.quantMinima);
-      } else {
-        quantidade = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).length;
-      }
+      mudarQuantidade();
+    }
+  }
+
+  // mudar quantidade que irá aparecer dependendo se ja tem ou não selecionado
+  void mudarQuantidade() {
+    if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty) {
+      quantidade = int.parse(widget.prova.quantMinima);
+    } else {
+      quantidade = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).length;
+    }
+
+    for (var i = 0; i < quantidade; i++) {
+      listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
+    }
+  }
+
+  void adicionarQuantidade() {
+    if (quantidade < int.parse(widget.prova.quantMaxima)) {
+      setState(() {
+        quantidade = quantidade + 1;
+        listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
+      });
+    }
+  }
+
+  void removerQuantidade() {
+    if (quantidade > int.parse(widget.prova.quantMinima)) {
+      setState(() {
+        quantidade = quantidade - 1;
+        listaCompetidores.removeLast();
+      });
+    } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
+      widget.adicionarNoCarrinho(0, []);
     }
   }
 
@@ -48,27 +79,37 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.only(
-              left: 10,
+              left: 15,
               top: 10,
-              right: 10,
+              right: 15,
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ListView.builder(
-                //   shrinkWrap: true,
-                //   itemCount: listaCompetidores.length,
-                //   padding: EdgeInsets.zero,
-                //   physics: const NeverScrollableScrollPhysics(),
-                //   itemBuilder: (context, index) {
-                //     var item = listaCompetidores[index];
+                if (listaCompetidores.isNotEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.only(left: 5, bottom: 10),
+                    child: Text(
+                      'Seus Parceiros',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: listaCompetidores.length,
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      var item = listaCompetidores[index];
 
-                //     return CardParceiros(item: item);
-                //   },
-                // ),
-                // const SizedBox(height: 20),
+                      return CardParceiros(item: item);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                ],
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -77,14 +118,7 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
                         color: quantidade > int.parse(widget.prova.quantMinima) ? Colors.red : Colors.grey,
                         iconSize: 34,
                         onPressed: () {
-                          if (quantidade > int.parse(widget.prova.quantMinima)) {
-                            setState(() {
-                              quantidade = quantidade - 1;
-                              // listaCompetidores.removeLast();
-                            });
-                          } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
-                            widget.adicionarNoCarrinho(0);
-                          }
+                          removerQuantidade();
                         },
                         icon: quantidade > int.parse(widget.prova.quantMinima) ||
                                 widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
@@ -105,12 +139,7 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
                         color: quantidade < int.parse(widget.prova.quantMaxima) ? Colors.green : Colors.grey,
                         iconSize: 34,
                         onPressed: () {
-                          if (quantidade < int.parse(widget.prova.quantMaxima)) {
-                            setState(() {
-                              quantidade = quantidade + 1;
-                              // listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
-                            });
-                          }
+                          adicionarQuantidade();
                         },
                         icon: const Icon(Icons.add_circle_outline_outlined),
                       ),
@@ -124,7 +153,7 @@ class _ModalAdicionarAvulsaState extends State<ModalAdicionarAvulsa> {
                     onPressed: quantidade == 0
                         ? null
                         : () {
-                            widget.adicionarNoCarrinho(quantidade);
+                            widget.adicionarNoCarrinho(quantidade, listaCompetidores);
                           },
                     style: ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(quantidade == 0 ? Colors.grey : Colors.green),

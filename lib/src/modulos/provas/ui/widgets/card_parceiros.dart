@@ -13,6 +13,8 @@ class CardParceiros extends StatefulWidget {
 }
 
 class _CardParceirosState extends State<CardParceiros> {
+  SearchController searchController = SearchController();
+
   @override
   Widget build(BuildContext context) {
     var competidoresServico = context.read<CompetidoresServico>();
@@ -31,6 +33,7 @@ class _CardParceirosState extends State<CardParceiros> {
         );
       },
       isFullScreen: true,
+      searchController: searchController,
       builder: (BuildContext context, SearchController controller) {
         return Card(
           elevation: 3.0,

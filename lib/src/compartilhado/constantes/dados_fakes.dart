@@ -102,8 +102,9 @@ class DadosFakes {
     ),
   ];
 
-  static List<ProvaModelo> dadosFakesProvas = [
-    ProvaModelo(
+  static List<ProvaModelo> dadosFakesProvas = List.generate(
+    2,
+    (index) => ProvaModelo(
       avulsa: '',
       quantMaxima: '',
       quantMinima: '',
@@ -114,32 +115,9 @@ class DadosFakes {
       idCabeceira: null,
       hcMinimo: '1.00',
       hcMaximo: '7.00',
+      somatoriaHandicaps: '0',
     ),
-    ProvaModelo(
-      avulsa: '',
-      quantMaxima: '',
-      quantMinima: '',
-      id: '31',
-      nomeProva: 'WARM UP #6 E #9',
-      valor: '150.00',
-      permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: ''),
-      idCabeceira: null,
-      hcMinimo: '1.00',
-      hcMaximo: '7.00',
-    ),
-    ProvaModelo(
-      avulsa: '',
-      quantMaxima: '',
-      quantMinima: '',
-      id: '31',
-      nomeProva: 'WARM UP #6 E #9',
-      valor: '150.00',
-      permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: ''),
-      idCabeceira: null,
-      hcMinimo: '1.00',
-      hcMaximo: '7.00',
-    ),
-  ];
+  );
 
   static List<NomesCabeceiraModelo> dadosFakesNomesCabeceira = [
     NomesCabeceiraModelo(id: '1', nome: 'Cabeceiro'),
@@ -205,6 +183,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -212,10 +193,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',
@@ -248,6 +226,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -255,10 +236,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',
@@ -291,6 +269,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -298,10 +279,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',
@@ -334,6 +312,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -341,10 +322,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',
@@ -377,6 +355,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -384,10 +365,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',
@@ -420,6 +398,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -427,10 +408,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',
@@ -463,6 +441,9 @@ class DadosFakes {
         mensagemQuandoInscricaoNaoPaga: "",
         provas: [
           ProvaModelo(
+            avulsa: '',
+            quantMaxima: '',
+            quantMinima: '',
             id: '31',
             nomeProva: 'WARM UP #6 E #9',
             valor: '150.00',
@@ -470,10 +451,7 @@ class DadosFakes {
             idCabeceira: null,
             hcMinimo: '1.00',
             hcMaximo: '7.00',
-            nomeCabeceira: 'Piseiro',
-            avulsa: '',
-            quantMaxima: '',
-            quantMinima: '',
+            somatoriaHandicaps: '0',
           ),
         ],
         valorFiliacao: '0',

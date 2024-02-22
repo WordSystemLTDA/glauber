@@ -45,13 +45,15 @@
 [X] Deixar fixo o botão de editar forma de pagamento nas inscrições
 [X] Aparecer mensagem de erro quando for excluir a conta e tiver vendas vinculadas.
 [X] Verificar em todo app se existe algum valor que possa vir nulo (compras e ordem de entrada)
-[ ] (ARRUMAR NO APP) Se ele for 2 ou mais em qqr uma das modalidades, pe ou cabeca, ele nao pode ser menor q 2 na oposta, Por exemplo, Se ele colocar 2 na cabeca, no pe nao pode ser menor q 2 E vice versa
+[X] Mudar a forma de mostrar cards compras (vinculados)
+[X] Verificação de e-mail
+[X] (ARRUMAR NO APP) Se ele for 2 ou mais em qqr uma das modalidades, pe ou cabeca, ele nao pode ser menor q 2 na oposta, Por exemplo, Se ele colocar 2 na cabeca, no pe nao pode ser menor q 2 E vice versa
 
 [ ] Ver se quando transferir uma compra que não esteja pago, (caso seja pix) gerar outro pagamento e adicionar o valor da filiação caso o usuário não tenha comprado nenhuma prova daquele evento ainda
 [ ] Ver como fazer com o valor da filiação caso tenha comprado duas vendas diferente mas tenha pagado a venda que não tinha o valor da filiação (Ver como obrigar o competidor a pagar a filiação)
 
-[ ] Mudar a forma de mostrar cards compras (vinculados)
-[ ] Verificação de e-mail
+[ ] Arrumar botão de atualização
+
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)

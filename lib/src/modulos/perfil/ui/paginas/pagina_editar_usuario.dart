@@ -186,6 +186,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         tipo: usuario.usuario!.tipo,
         primeiroAcesso: usuario.usuario!.primeiroAcesso,
         foto: usuario.usuario!.foto,
+        somaDeHandicaps: usuario.usuario!.somaDeHandicaps,
         civil: civilController.text,
         apelido: apelidoController.text.trimLeft().trimRight(),
       );

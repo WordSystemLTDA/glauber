@@ -322,11 +322,17 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                             overflow: TextOverflow.ellipsis,
                             "HC Cabeça: ${usuarioProvider.usuario!.hcCabeceira!.isEmpty ? 'Nenhum' : usuarioProvider.usuario!.hcCabeceira}",
                           ),
-                          const SizedBox(width: 30),
+                          const SizedBox(width: 20),
                           Text(
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             "HC Pé: ${usuarioProvider.usuario!.hcPezeiro!.isEmpty ? 'Nenhum' : usuarioProvider.usuario!.hcPezeiro}",
+                          ),
+                          const SizedBox(width: 20),
+                          Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            "Somatória: ${usuarioProvider.usuario!.somaDeHandicaps}",
                           ),
                         ],
                       ),

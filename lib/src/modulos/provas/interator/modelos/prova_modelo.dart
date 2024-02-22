@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
 
 // ignore: must_be_immutable
@@ -15,9 +16,11 @@ class ProvaModelo extends Equatable {
   final String quantMinima;
   final String quantMaxima;
   final PermitirCompraModelo permitirCompra;
+  final String? somatoriaHandicaps;
 
   String? nomeCabeceira;
   String? idCabeceira;
+  List<CompetidoresModelo>? competidores;
 
   ProvaModelo({
     required this.id,
@@ -29,12 +32,28 @@ class ProvaModelo extends Equatable {
     required this.quantMinima,
     required this.quantMaxima,
     required this.permitirCompra,
+    this.somatoriaHandicaps,
     this.nomeCabeceira,
     this.idCabeceira,
+    this.competidores,
   });
 
   @override
-  List<Object?> get props => [id, nomeProva, valor, hcMinimo, hcMaximo, avulsa, quantMinima, quantMaxima, permitirCompra, nomeCabeceira, idCabeceira];
+  List<Object?> get props => [
+        id,
+        nomeProva,
+        valor,
+        hcMinimo,
+        hcMaximo,
+        avulsa,
+        quantMinima,
+        quantMaxima,
+        permitirCompra,
+        somatoriaHandicaps,
+        nomeCabeceira,
+        idCabeceira,
+        competidores,
+      ];
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -47,8 +66,10 @@ class ProvaModelo extends Equatable {
       'quantMinima': quantMinima,
       'quantMaxima': quantMaxima,
       'permitirCompra': permitirCompra.toMap(),
+      'somatoriaHandicaps': somatoriaHandicaps,
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
+      'competidores': competidores!.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -63,8 +84,16 @@ class ProvaModelo extends Equatable {
       quantMinima: map['quantMinima'] as String,
       quantMaxima: map['quantMaxima'] as String,
       permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
+      somatoriaHandicaps: map['somatoriaHandicaps'] != null ? map['somatoriaHandicaps'] as String : null,
       nomeCabeceira: map['nomeCabeceira'] != null ? map['nomeCabeceira'] as String : null,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
+      competidores: map['competidores'] != null
+          ? List<CompetidoresModelo>.from(
+              (map['competidores'] as List<dynamic>).map<CompetidoresModelo?>(
+                (x) => CompetidoresModelo.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
     );
   }
 

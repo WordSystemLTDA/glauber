@@ -18,14 +18,12 @@ class CardProvas extends StatefulWidget {
   final List<ProvaModelo> provasCarrinho;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final String idEvento;
-  final Function(ProvaModelo prova) aoClicarNaProva;
 
   const CardProvas({
     super.key,
     required this.prova,
     required this.idEvento,
     required this.verificando,
-    required this.aoClicarNaProva,
     required this.nomesCabeceira,
     required this.evento,
     required this.provasCarrinho,
@@ -75,18 +73,22 @@ class _CardProvasState extends State<CardProvas> {
   }
 
   bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
-    return widget.provasCarrinho.contains(ProvaModelo(
-      id: prova.id,
-      permitirCompra: prova.permitirCompra,
-      hcMinimo: "0",
-      hcMaximo: "0",
-      avulsa: prova.avulsa,
-      quantMaxima: "0",
-      quantMinima: "0",
-      nomeProva: prova.nomeProva,
-      valor: prova.valor,
-      idCabeceira: item.id,
-    ));
+    return widget.provasCarrinho.contains(
+      ProvaModelo(
+        id: prova.id,
+        permitirCompra: prova.permitirCompra,
+        hcMinimo: "0",
+        hcMaximo: "0",
+        avulsa: prova.avulsa,
+        quantMaxima: "0",
+        quantMinima: "0",
+        nomeProva: prova.nomeProva,
+        valor: prova.valor,
+        idCabeceira: item.id,
+        somatoriaHandicaps: prova.somatoriaHandicaps,
+        competidores: prova.competidores,
+      ),
+    );
   }
 
   int quantidadeExisteCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
