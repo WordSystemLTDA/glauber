@@ -53,6 +53,7 @@
 [ ] Ver como fazer com o valor da filiação caso tenha comprado duas vendas diferente mas tenha pagado a venda que não tinha o valor da filiação (Ver como obrigar o competidor a pagar a filiação)
 
 [ ] Arrumar botão de atualização
+[ ] Arrumar ordem de entrada repetida
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)
