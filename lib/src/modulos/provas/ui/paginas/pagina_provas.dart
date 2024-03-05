@@ -19,8 +19,8 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_mo
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_adicionar_avulsa.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_detalhes_compra.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_localizacao.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_pagamentos_disponiveis.dart';
 import 'package:provider/provider.dart';
@@ -462,7 +462,8 @@ class _PaginaProvasState extends State<PaginaProvas> {
     );
   }
 
-  void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento) {
+  void adicionarNoCarrinho(ProvaModelo prova, List<CompetidoresModelo> listaCompetidores, EventoModelo evento) {
+    prova.competidores = listaCompetidores;
     if (mounted) {
       setState(() {
         // Irá permitir escolher so um pacote por prova
@@ -508,7 +509,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
       if (evento.liberacaoDeCompra == '1') {
         var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
 
-        if (provasCarrinho.contains(prova)) {
+        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
           setState(() {
             provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
           });
@@ -534,7 +535,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
 
         // Poderá escolher multiplos pacotes por prova
       } else if (evento.liberacaoDeCompra == '2') {
-        if (provasCarrinho.contains(prova)) {
+        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
           setState(() {
             provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
           });
@@ -626,13 +627,16 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 showDragHandle: true,
                 isScrollControlled: true,
                 context: context,
-                builder: (context) {
-                  return ModalAdicionarAvulsa(
+                builder: (contextModal) {
+                  return ModalDetalhesCompra(
                     prova: provaModelo,
+                    parceirosSelecao: state.permitirCompraModelo.parceirosSelecao,
                     provasCarrinho: provasCarrinho,
                     adicionarNoCarrinho: (quantidade, listaCompetidores) {
-                      print(provaModelo.competidores);
-                      print(listaCompetidores);
+                      if (listaCompetidores.where((element) => element.id == '').isNotEmpty) {
+                        return false;
+                      }
+
                       var novaProva = ProvaModelo(
                         id: provaModelo.id,
                         nomeProva: provaModelo.nomeProva,
@@ -651,28 +655,73 @@ class _PaginaProvasState extends State<PaginaProvas> {
                       adicionarAvulsaNoCarrinho(quantidade, listaCompetidores, novaProva, state.eventoModelo);
 
                       Navigator.pop(context);
+
+                      return true;
                     },
                   );
                 },
               );
             }
           } else {
-            var novaProva = ProvaModelo(
-              id: provaModelo.id,
-              nomeProva: provaModelo.nomeProva,
-              valor: provaModelo.valor,
-              permitirCompra: provaModelo.permitirCompra,
-              hcMinimo: "0",
-              hcMaximo: "0",
-              avulsa: provaModelo.avulsa,
-              quantMaxima: "0",
-              quantMinima: "0",
-              idCabeceira: provaModelo.idCabeceira,
-              somatoriaHandicaps: provaModelo.somatoriaHandicaps,
-              competidores: provaModelo.competidores,
-            );
+            if (int.tryParse(state.permitirCompraModelo.parceirosSelecao!) != null ? int.parse(state.permitirCompraModelo.parceirosSelecao!) == 0 : false) {
+              var novaProva = ProvaModelo(
+                id: provaModelo.id,
+                nomeProva: provaModelo.nomeProva,
+                valor: provaModelo.valor,
+                permitirCompra: provaModelo.permitirCompra,
+                hcMinimo: "0",
+                hcMaximo: "0",
+                avulsa: provaModelo.avulsa,
+                quantMaxima: "0",
+                quantMinima: "0",
+                idCabeceira: provaModelo.idCabeceira,
+                somatoriaHandicaps: provaModelo.somatoriaHandicaps,
+                competidores: provaModelo.competidores,
+              );
 
-            adicionarNoCarrinho(novaProva, state.eventoModelo);
+              adicionarNoCarrinho(novaProva, [], state.eventoModelo);
+            } else {
+              if (mounted) {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (contextModal) {
+                    return ModalDetalhesCompra(
+                      prova: provaModelo,
+                      parceirosSelecao: state.permitirCompraModelo.parceirosSelecao,
+                      provasCarrinho: provasCarrinho,
+                      adicionarNoCarrinho: (quantidade, listaCompetidores) {
+                        if (listaCompetidores.where((element) => element.id == '').isNotEmpty) {
+                          return false;
+                        }
+
+                        var novaProva = ProvaModelo(
+                          id: provaModelo.id,
+                          nomeProva: provaModelo.nomeProva,
+                          valor: provaModelo.valor,
+                          permitirCompra: provaModelo.permitirCompra,
+                          hcMinimo: "0",
+                          hcMaximo: "0",
+                          avulsa: provaModelo.avulsa,
+                          quantMaxima: "0",
+                          quantMinima: "0",
+                          idCabeceira: provaModelo.idCabeceira,
+                          somatoriaHandicaps: provaModelo.somatoriaHandicaps,
+                          competidores: listaCompetidores,
+                        );
+
+                        adicionarNoCarrinho(novaProva, listaCompetidores, state.eventoModelo);
+
+                        Navigator.pop(context);
+
+                        return true;
+                      },
+                    );
+                  },
+                );
+              }
+            }
           }
         } else {
           if (mounted) {

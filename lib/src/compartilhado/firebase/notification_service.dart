@@ -8,8 +8,8 @@ import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_final
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class CustomNotification {
   final int id;
@@ -112,10 +112,10 @@ class NotificationService {
           AppRotas.navigatorKey?.currentState?.pushNamed(
             rotaApp,
             arguments: PaginaFinalizarCompraArgumentos(
+              idEvento: message['idEvento'],
               provas: List<ProvaModelo>.from(jsonDecode(message['provas']).map((elemento) {
                 return ProvaModelo.fromMap(elemento);
               })),
-              idEvento: message['idEvento'],
             ),
           );
         } else if (rotaApp == AppRotas.provas) {

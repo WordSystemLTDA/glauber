@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:provadelaco/src/modulos/compras/interator/modelos/parceiros_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
 class ComprasModelo {
@@ -30,11 +31,12 @@ class ComprasModelo {
   final String idFormaPagamento;
   final String quandoInscricaoNaoPaga;
   final String mensagemQuandoInscricaoNaoPaga;
+  final String permitirEditarParceiros;
   final List<ProvaModelo> provas;
+  final List<ParceirosCompraModelo> parceiros;
 
   ComprasModelo({
     required this.id,
-    required this.nomeEmpresa,
     required this.valorIngresso,
     required this.valorTaxa,
     required this.valorDesconto,
@@ -48,18 +50,21 @@ class ComprasModelo {
     required this.horaCompra,
     required this.pago,
     required this.nomeProva,
-    required this.nomeEvento,
+    required this.nomeEmpresa,
     required this.idEvento,
+    required this.nomeEvento,
     required this.dataEvento,
     required this.horaInicio,
     required this.horaInicioF,
     required this.horaTermino,
+    required this.numeroCelular,
     required this.formaPagamento,
     required this.idFormaPagamento,
     required this.quandoInscricaoNaoPaga,
     required this.mensagemQuandoInscricaoNaoPaga,
-    required this.numeroCelular,
+    required this.permitirEditarParceiros,
     required this.provas,
+    required this.parceiros,
   });
 
   Map<String, dynamic> toMap() {
@@ -90,7 +95,9 @@ class ComprasModelo {
       'idFormaPagamento': idFormaPagamento,
       'quandoInscricaoNaoPaga': quandoInscricaoNaoPaga,
       'mensagemQuandoInscricaoNaoPaga': mensagemQuandoInscricaoNaoPaga,
+      'permitirEditarParceiros': permitirEditarParceiros,
       'provas': provas.map((x) => x.toMap()).toList(),
+      'parceiros': parceiros.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -122,9 +129,15 @@ class ComprasModelo {
       idFormaPagamento: map['idFormaPagamento'] as String,
       quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] as String,
       mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
+      permitirEditarParceiros: map['permitirEditarParceiros'] as String,
       provas: List<ProvaModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvaModelo>(
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      parceiros: List<ParceirosCompraModelo>.from(
+        (map['parceiros'] as List<dynamic>).map<ParceirosCompraModelo>(
+          (x) => ParceirosCompraModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );

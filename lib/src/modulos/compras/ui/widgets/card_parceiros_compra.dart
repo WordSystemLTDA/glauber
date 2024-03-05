@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/parceiros_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
 
-class CardParceiros extends StatefulWidget {
-  final CompetidoresModelo item;
-  const CardParceiros({super.key, required this.item});
+class CardParceirosCompra extends StatefulWidget {
+  final ComprasModelo item;
+  final ParceirosCompraModelo parceiro;
+
+  const CardParceirosCompra({super.key, required this.item, required this.parceiro});
 
   @override
-  State<CardParceiros> createState() => _CardParceirosState();
+  State<CardParceirosCompra> createState() => _CardParceirosCompraState();
 }
 
-class _CardParceirosState extends State<CardParceiros> {
+class _CardParceirosCompraState extends State<CardParceirosCompra> {
   SearchController searchController = SearchController();
 
   @override
   Widget build(BuildContext context) {
     var competidoresServico = context.read<CompetidoresServico>();
+    var comprasServico = context.read<ComprasServico>();
     var item = widget.item;
+    var parceiro = widget.parceiro;
 
     return SearchAnchor(
       viewBuilder: (suggestions) {
@@ -36,36 +43,38 @@ class _CardParceirosState extends State<CardParceiros> {
       searchController: searchController,
       builder: (BuildContext context, SearchController controller) {
         return Card(
+          margin: const EdgeInsets.only(bottom: 5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          elevation: 3.0,
           child: InkWell(
             borderRadius: BorderRadius.circular(5),
             onTap: () {
-              controller.openView();
+              if (item.permitirEditarParceiros == 'Sim') {
+                controller.openView();
+              }
             },
             child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 20, top: 10, bottom: 10),
+              padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (item.nome.isEmpty) Text(item.nome.isEmpty ? 'Selecione um Parceiro' : ''),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(parceiro.nomeModalidade),
+                      const SizedBox(height: 5),
+                      Text(parceiro.nomeProva),
+                      const SizedBox(height: 5),
                       Text(
-                        item.id,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(item.nome, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500)),
-                          Text(item.apelido),
-                        ],
+                        parceiro.nomeParceiro,
+                        style: const TextStyle(color: Colors.green),
                       ),
                     ],
                   ),
-                  const Icon(Icons.arrow_forward_ios_outlined, size: 16),
+                  if (item.permitirEditarParceiros == 'Sim')
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.edit),
+                    ),
                 ],
               ),
             ),
@@ -81,14 +90,27 @@ class _CardParceirosState extends State<CardParceiros> {
           return Card(
             elevation: 3.0,
             child: ListTile(
-              onTap: () {
+              onTap: () async {
                 controller.closeView('');
-                setState(() {
-                  item.id = competidor.id;
-                  item.nome = competidor.nome;
-                  item.apelido = competidor.apelido;
-                });
                 FocusScope.of(context).unfocus();
+
+                await comprasServico.editarParceiro(parceiro.id, competidor.id).then((value) {
+                  var (sucesso, mensagem) = value;
+                  if (sucesso) {
+                    setState(() {
+                      parceiro.nomeParceiro = competidor.nome;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(mensagem),
+                      backgroundColor: Colors.green,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(mensagem),
+                      backgroundColor: Colors.red,
+                    ));
+                  }
+                });
               },
               leading: Text(competidor.id),
               title: Text(competidor.nome),

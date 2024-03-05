@@ -14,6 +14,9 @@ class ListarInformacoesServicoImpl implements ListarInformacoesServico {
   @override
   Future<(bool, String, ListarInformacoesModelo)> listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
     var url = 'vendas/listar_informacoes.php';
+    for (var element in provas) {
+      element.competidores = [];
+    }
 
     var campos = {
       'provas': provas,
@@ -23,7 +26,7 @@ class ListarInformacoesServicoImpl implements ListarInformacoesServico {
       'idVenda': idVenda,
     };
 
-    var response = await client.post(url: url, body: jsonEncode(campos));
+    var response = await client.post(url: url, body: json.encode(campos));
 
     var jsonData = jsonDecode(response.data);
 

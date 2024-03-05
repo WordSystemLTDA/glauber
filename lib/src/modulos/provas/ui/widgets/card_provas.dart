@@ -73,22 +73,22 @@ class _CardProvasState extends State<CardProvas> {
   }
 
   bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
-    return widget.provasCarrinho.contains(
-      ProvaModelo(
-        id: prova.id,
-        permitirCompra: prova.permitirCompra,
-        hcMinimo: "0",
-        hcMaximo: "0",
-        avulsa: prova.avulsa,
-        quantMaxima: "0",
-        quantMinima: "0",
-        nomeProva: prova.nomeProva,
-        valor: prova.valor,
-        idCabeceira: item.id,
-        somatoriaHandicaps: prova.somatoriaHandicaps,
-        competidores: prova.competidores,
-      ),
+    var provaNova = ProvaModelo(
+      id: prova.id,
+      permitirCompra: prova.permitirCompra,
+      hcMinimo: "0",
+      hcMaximo: "0",
+      avulsa: prova.avulsa,
+      quantMaxima: "0",
+      quantMinima: "0",
+      nomeProva: prova.nomeProva,
+      valor: prova.valor,
+      idCabeceira: item.id,
+      somatoriaHandicaps: prova.somatoriaHandicaps,
+      competidores: prova.competidores,
     );
+
+    return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;
   }
 
   int quantidadeExisteCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {

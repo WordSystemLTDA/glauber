@@ -5,6 +5,7 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/ui/widgets/card_parceiros_compra.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_nao_paga.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_paga.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_edicao_venda_modelo.dart';
@@ -240,7 +241,9 @@ class _CardComprasState extends State<CardCompras> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(provas.nomeCabeceira!),
+                                                    const SizedBox(height: 5),
                                                     Text(provas.nomeProva),
+                                                    const SizedBox(height: 5),
                                                     Text(
                                                       Utils.coverterEmReal.format(double.parse(provas.valor)),
                                                       style: const TextStyle(color: Colors.green),
@@ -252,6 +255,27 @@ class _CardComprasState extends State<CardCompras> {
                                           },
                                         ),
                                       ),
+                                      if (item.parceiros.isNotEmpty) ...[
+                                        const SizedBox(height: 20),
+                                        const Text(
+                                          'Seus Parceiros',
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Flexible(
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            padding: const EdgeInsets.only(top: 5),
+                                            itemCount: item.parceiros.length,
+                                            itemBuilder: (context, index) {
+                                              var parceiro = item.parceiros[index];
+
+                                              return CardParceirosCompra(item: item, parceiro: parceiro);
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                       if (item.pago == 'Não' && item.status != 'Cancelado') const SizedBox(height: 70),
                                     ],
                                   ),

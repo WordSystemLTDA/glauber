@@ -108,4 +108,25 @@ class ComprasServicoImpl implements ComprasServico {
 
     return (sucesso, mensagem);
   }
+
+  @override
+  Future<(bool, String)> editarParceiro(String idParceiro, String idNovoParceiro) async {
+    var url = 'compras/editar_parceiro.php';
+
+    var campos = {
+      'id_parceiro': idParceiro,
+      'id_novo_parceiro': idNovoParceiro,
+    };
+
+    Response response = await client.post(
+      url: url,
+      body: jsonEncode(campos),
+    );
+
+    var jsonData = jsonDecode(response.data);
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+
+    return (sucesso, mensagem);
+  }
 }

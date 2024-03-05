@@ -46,9 +46,9 @@ class FormularioCompraModelo {
       'valorTaxaCartao': valorTaxaCartao,
       'valorDesconto': valorDesconto,
       'valorTotal': valorTotal,
+      'temValorFiliacao': temValorFiliacao,
       'tipoDeVenda': tipoDeVenda,
       'provas': provas.map((x) => x.toMap()).toList(),
-      'temValorFiliacao': temValorFiliacao,
       'cartao': cartao?.toMap(),
     };
   }
@@ -64,13 +64,13 @@ class FormularioCompraModelo {
       valorTaxaCartao: map['valorTaxaCartao'] as String,
       valorDesconto: map['valorDesconto'] as String,
       valorTotal: map['valorTotal'] as String,
+      temValorFiliacao: map['temValorFiliacao'] != null ? map['temValorFiliacao'] as String : null,
       tipoDeVenda: map['tipoDeVenda'] as String,
       provas: List<ProvaModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvaModelo>(
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
-      temValorFiliacao: map['temValorFiliacao'] != null ? map['temValorFiliacao'] as String : null,
       cartao: map['cartao'] != null ? CartaoModelo.fromMap(map['cartao'] as Map<String, dynamic>) : null,
     );
   }
