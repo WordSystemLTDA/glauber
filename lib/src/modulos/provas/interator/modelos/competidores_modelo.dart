@@ -8,11 +8,15 @@ class CompetidoresModelo extends Equatable {
   String id;
   String nome;
   String apelido;
+  String nomeCidade;
+  String siglaEstado;
 
   CompetidoresModelo({
     required this.id,
     required this.nome,
     required this.apelido,
+    required this.nomeCidade,
+    required this.siglaEstado,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +24,8 @@ class CompetidoresModelo extends Equatable {
       'id': id,
       'nome': nome,
       'apelido': apelido,
+      'nomeCidade': nomeCidade,
+      'siglaEstado': siglaEstado,
     };
   }
 
@@ -28,6 +34,8 @@ class CompetidoresModelo extends Equatable {
       id: map['id'] as String,
       nome: map['nome'] as String,
       apelido: map['apelido'] as String,
+      nomeCidade: map['nomeCidade'] as String,
+      siglaEstado: map['siglaEstado'] as String,
     );
   }
 
@@ -40,5 +48,7 @@ class CompetidoresModelo extends Equatable {
         id,
         nome,
         apelido,
+        nomeCidade,
+        siglaEstado,
       ];
 }

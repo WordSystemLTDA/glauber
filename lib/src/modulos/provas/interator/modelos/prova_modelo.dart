@@ -16,6 +16,7 @@ class ProvaModelo extends Equatable {
   final String quantMinima;
   final String quantMaxima;
   final PermitirCompraModelo permitirCompra;
+  final String permitirSorteio;
   final String? somatoriaHandicaps;
 
   String? nomeCabeceira;
@@ -32,6 +33,7 @@ class ProvaModelo extends Equatable {
     required this.quantMinima,
     required this.quantMaxima,
     required this.permitirCompra,
+    required this.permitirSorteio,
     this.somatoriaHandicaps,
     this.nomeCabeceira,
     this.idCabeceira,
@@ -66,6 +68,7 @@ class ProvaModelo extends Equatable {
       'quantMinima': quantMinima,
       'quantMaxima': quantMaxima,
       'permitirCompra': permitirCompra.toMap(),
+      'permitirSorteio': permitirSorteio,
       'somatoriaHandicaps': somatoriaHandicaps,
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
@@ -84,12 +87,13 @@ class ProvaModelo extends Equatable {
       quantMinima: map['quantMinima'] as String,
       quantMaxima: map['quantMaxima'] as String,
       permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
+      permitirSorteio: map['permitirSorteio'] as String,
       somatoriaHandicaps: map['somatoriaHandicaps'] != null ? map['somatoriaHandicaps'] as String : null,
       nomeCabeceira: map['nomeCabeceira'] != null ? map['nomeCabeceira'] as String : null,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
       competidores: map['competidores'] != null
           ? List<CompetidoresModelo>.from(
-              (map['competidores'] as List<dynamic>).map<CompetidoresModelo?>(
+              (map['competidores'] as List<int>).map<CompetidoresModelo?>(
                 (x) => CompetidoresModelo.fromMap(x as Map<String, dynamic>),
               ),
             )

@@ -14,8 +14,11 @@ class ListarInformacoesServicoImpl implements ListarInformacoesServico {
   @override
   Future<(bool, String, ListarInformacoesModelo)> listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
     var url = 'vendas/listar_informacoes.php';
-    for (var element in provas) {
-      element.competidores = [];
+
+    if (editando) {
+      for (var element in provas) {
+        element.competidores = [];
+      }
     }
 
     var campos = {

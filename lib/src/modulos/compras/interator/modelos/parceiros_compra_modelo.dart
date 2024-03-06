@@ -4,22 +4,31 @@ import 'dart:convert';
 class ParceirosCompraModelo {
   final String id;
   String nomeParceiro;
+  String idParceiro;
   final String nomeProva;
   final String nomeModalidade;
+  final String nomeCidade;
+  final String siglaEstado;
 
   ParceirosCompraModelo({
     required this.id,
     required this.nomeParceiro,
+    required this.idParceiro,
     required this.nomeProva,
     required this.nomeModalidade,
+    required this.nomeCidade,
+    required this.siglaEstado,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
       'nomeParceiro': nomeParceiro,
+      'idParceiro': idParceiro,
       'nomeProva': nomeProva,
       'nomeModalidade': nomeModalidade,
+      'nomeCidade': nomeCidade,
+      'siglaEstado': siglaEstado,
     };
   }
 
@@ -27,8 +36,11 @@ class ParceirosCompraModelo {
     return ParceirosCompraModelo(
       id: map['id'] as String,
       nomeParceiro: map['nomeParceiro'] as String,
+      idParceiro: map['idParceiro'] as String,
       nomeProva: map['nomeProva'] as String,
       nomeModalidade: map['nomeModalidade'] as String,
+      nomeCidade: map['nomeCidade'] as String,
+      siglaEstado: map['siglaEstado'] as String,
     );
   }
 

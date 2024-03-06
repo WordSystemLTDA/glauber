@@ -271,7 +271,7 @@ class _CardComprasState extends State<CardCompras> {
                                             itemBuilder: (context, index) {
                                               var parceiro = item.parceiros[index];
 
-                                              return CardParceirosCompra(item: item, parceiro: parceiro);
+                                              return CardParceirosCompra(item: item, parceiro: parceiro, parceiros: item.parceiros);
                                             },
                                           ),
                                         ),
@@ -352,7 +352,7 @@ class _CardComprasState extends State<CardCompras> {
                         children: [
                           Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
                           Text(item.horaCompra),
-                          Text(item.status),
+                          Text(item.pago == 'Não' ? 'Pendente' : 'Pago'),
                         ],
                       )
                     ],

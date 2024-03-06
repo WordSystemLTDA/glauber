@@ -4,14 +4,14 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_mo
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_parceiros.dart';
 
-class ModalDetalhesCompra extends StatefulWidget {
+class ModalDetalhesProva extends StatefulWidget {
   final bool Function(int quantidade, List<CompetidoresModelo> listaCompetidores) adicionarNoCarrinho;
   final ProvaModelo prova;
   final String? parceirosSelecao;
 
   final List<ProvaModelo> provasCarrinho;
 
-  const ModalDetalhesCompra({
+  const ModalDetalhesProva({
     super.key,
     required this.adicionarNoCarrinho,
     required this.prova,
@@ -20,10 +20,10 @@ class ModalDetalhesCompra extends StatefulWidget {
   });
 
   @override
-  State<ModalDetalhesCompra> createState() => _ModalDetalhesCompraState();
+  State<ModalDetalhesProva> createState() => _ModalDetalhesProvaState();
 }
 
-class _ModalDetalhesCompraState extends State<ModalDetalhesCompra> {
+class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   int quantidade = 0;
 
   List<CompetidoresModelo> listaCompetidores = [];
@@ -49,11 +49,11 @@ class _ModalDetalhesCompraState extends State<ModalDetalhesCompra> {
     } else {
       if (widget.parceirosSelecao != null && int.parse(widget.parceirosSelecao!) > 0 && widget.prova.avulsa == 'Não') {
         for (var i = 0; i < int.parse(widget.parceirosSelecao!); i++) {
-          listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
+          listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
         }
       } else {
         for (var i = 0; i < quantidade; i++) {
-          listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
+          listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
         }
       }
     }
@@ -63,7 +63,7 @@ class _ModalDetalhesCompraState extends State<ModalDetalhesCompra> {
     if (quantidade < int.parse(widget.prova.quantMaxima)) {
       setState(() {
         quantidade = quantidade + 1;
-        listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: ''));
+        listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
       });
     }
   }
@@ -117,50 +117,56 @@ class _ModalDetalhesCompraState extends State<ModalDetalhesCompra> {
                     itemBuilder: (context, index) {
                       var item = listaCompetidores[index];
 
-                      return CardParceiros(item: item);
+                      return CardParceiros(
+                        item: item,
+                        permitirSorteio: widget.prova.permitirSorteio,
+                        listaCompetidores: listaCompetidores,
+                      );
                     },
                   ),
-                ],
-                if (widget.prova.avulsa == 'Sim') ...[
                   const SizedBox(height: 20),
                   const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: IconButton(
-                          color: quantidade > int.parse(widget.prova.quantMinima) ? Colors.red : Colors.grey,
-                          iconSize: 34,
-                          onPressed: () {
-                            removerQuantidade();
-                          },
-                          icon: quantidade > int.parse(widget.prova.quantMinima) ||
-                                  widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
-                              ? const Icon(Icons.remove_circle_outline_outlined)
-                              : const Icon(Icons.delete_outline_outlined, color: Colors.red),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: Text(
-                          quantidade.toString(),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          color: quantidade < int.parse(widget.prova.quantMaxima) ? Colors.green : Colors.grey,
-                          iconSize: 34,
-                          onPressed: () {
-                            adicionarQuantidade();
-                          },
-                          icon: const Icon(Icons.add_circle_outline_outlined),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: IconButton(
+                        color: quantidade > int.parse(widget.prova.quantMinima) ? Colors.red : Colors.grey,
+                        iconSize: 34,
+                        onPressed: () {
+                          if (widget.prova.avulsa == 'Sim') {
+                            removerQuantidade();
+                          }
+                        },
+                        icon: quantidade > int.parse(widget.prova.quantMinima) ||
+                                widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
+                            ? const Icon(Icons.remove_circle_outline_outlined)
+                            : const Icon(Icons.delete_outline_outlined, color: Colors.red),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: Text(
+                        quantidade.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Expanded(
+                      child: IconButton(
+                        color: quantidade < int.parse(widget.prova.quantMaxima) ? Colors.green : Colors.grey,
+                        iconSize: 34,
+                        onPressed: () {
+                          if (widget.prova.avulsa == 'Sim') {
+                            adicionarQuantidade();
+                          }
+                        },
+                        icon: const Icon(Icons.add_circle_outline_outlined),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,

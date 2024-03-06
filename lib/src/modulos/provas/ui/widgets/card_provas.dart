@@ -86,6 +86,7 @@ class _CardProvasState extends State<CardProvas> {
       idCabeceira: item.id,
       somatoriaHandicaps: prova.somatoriaHandicaps,
       competidores: prova.competidores,
+      permitirSorteio: prova.permitirSorteio,
     );
 
     return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;
@@ -189,7 +190,7 @@ class _CardProvasState extends State<CardProvas> {
                                   prova.nomeProva,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ),
                               SizedBox(

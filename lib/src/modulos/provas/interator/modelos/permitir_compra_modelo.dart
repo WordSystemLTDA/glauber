@@ -10,6 +10,7 @@ class PermitirCompraModelo extends Equatable {
   final String? tituloAcao;
   final String? quantMaximaAvulsa;
   final String? parceirosSelecao;
+  final String? permVincularParceiro;
 
   const PermitirCompraModelo({
     required this.liberado,
@@ -18,6 +19,7 @@ class PermitirCompraModelo extends Equatable {
     this.tituloAcao,
     this.quantMaximaAvulsa,
     this.parceirosSelecao,
+    this.permVincularParceiro,
   });
 
   @override
@@ -31,6 +33,7 @@ class PermitirCompraModelo extends Equatable {
       'tituloAcao': tituloAcao,
       'quantMaximaAvulsa': quantMaximaAvulsa,
       'parceirosSelecao': parceirosSelecao,
+      'permVincularParceiro': permVincularParceiro,
     };
   }
 
@@ -42,6 +45,7 @@ class PermitirCompraModelo extends Equatable {
       tituloAcao: map['tituloAcao'] != null ? map['tituloAcao'] as String : null,
       quantMaximaAvulsa: map['quantMaximaAvulsa'] != null ? map['quantMaximaAvulsa'] as String : null,
       parceirosSelecao: map['parceirosSelecao'] != null ? map['parceirosSelecao'] as String : null,
+      permVincularParceiro: map['permVincularParceiro'] != null ? map['permVincularParceiro'] as String : null,
     );
   }
 

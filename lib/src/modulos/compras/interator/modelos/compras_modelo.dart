@@ -32,6 +32,7 @@ class ComprasModelo {
   final String quandoInscricaoNaoPaga;
   final String mensagemQuandoInscricaoNaoPaga;
   final String permitirEditarParceiros;
+  final String permVincularParceiro;
   final List<ProvaModelo> provas;
   final List<ParceirosCompraModelo> parceiros;
 
@@ -63,6 +64,7 @@ class ComprasModelo {
     required this.quandoInscricaoNaoPaga,
     required this.mensagemQuandoInscricaoNaoPaga,
     required this.permitirEditarParceiros,
+    required this.permVincularParceiro,
     required this.provas,
     required this.parceiros,
   });
@@ -96,6 +98,7 @@ class ComprasModelo {
       'quandoInscricaoNaoPaga': quandoInscricaoNaoPaga,
       'mensagemQuandoInscricaoNaoPaga': mensagemQuandoInscricaoNaoPaga,
       'permitirEditarParceiros': permitirEditarParceiros,
+      'permVincularParceiro': permVincularParceiro,
       'provas': provas.map((x) => x.toMap()).toList(),
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
     };
@@ -130,6 +133,7 @@ class ComprasModelo {
       quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] as String,
       mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
       permitirEditarParceiros: map['permitirEditarParceiros'] as String,
+      permVincularParceiro: map['permVincularParceiro'] as String,
       provas: List<ProvaModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvaModelo>(
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),

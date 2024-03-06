@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 
 class CardParceiros extends StatefulWidget {
   final CompetidoresModelo item;
-  const CardParceiros({super.key, required this.item});
+  final String permitirSorteio;
+  final List<CompetidoresModelo> listaCompetidores;
+
+  const CardParceiros({super.key, required this.item, required this.permitirSorteio, required this.listaCompetidores});
 
   @override
   State<CardParceiros> createState() => _CardParceirosState();
@@ -45,27 +48,71 @@ class _CardParceirosState extends State<CardParceiros> {
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 10, right: 20, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (item.nome.isEmpty) Text(item.nome.isEmpty ? 'Selecione um Parceiro' : ''),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        item.id,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      if (item.nome.isEmpty) Text(item.nome.isEmpty ? 'Selecione um Parceiro' : ''),
+                      Row(
                         children: [
-                          Text(item.nome, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500)),
-                          Text(item.apelido),
+                          Text(
+                            item.id,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(item.nome, style: const TextStyle(fontWeight: FontWeight.w500)),
+                              Text(
+                                item.apelido,
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                              if (item.nome.isNotEmpty)
+                                Text(
+                                  "${item.nomeCidade} - ${item.siglaEstado}",
+                                  style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                                ),
+                            ],
+                          ),
                         ],
                       ),
+                      const Icon(Icons.arrow_forward_ios_outlined, size: 16),
                     ],
                   ),
-                  const Icon(Icons.arrow_forward_ios_outlined, size: 16),
+                  // if (widget.permitirSorteio == 'Sim' && item.id == '')
+                  //   SizedBox(
+                  //     height: 30,
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         setState(() {
+                  //           sorteio = !sorteio;
+                  //         });
+                  //       },
+                  //       child: Row(
+                  //         children: [
+                  //           SizedBox(
+                  //             width: 20,
+                  //             height: 24,
+                  //             child: Checkbox(
+                  //               value: sorteio,
+                  //               onChanged: (value) {
+                  //                 if (value != null) {
+                  //                   setState(() {
+                  //                     sorteio = value;
+                  //                   });
+                  //                 }
+                  //               },
+                  //             ),
+                  //           ),
+                  //           const SizedBox(width: 10),
+                  //           const Text('Sorteio'),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
                 ],
               ),
             ),
@@ -80,21 +127,38 @@ class _CardParceirosState extends State<CardParceiros> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
+            color: widget.listaCompetidores.contains(competidor) ? const Color(0xFFfbe5ea) : null,
+            shape: widget.listaCompetidores.contains(competidor)
+                ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
+                : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: ListTile(
               onTap: () {
-                controller.closeView('');
-                setState(() {
-                  item.id = competidor.id;
-                  item.nome = competidor.nome;
-                  item.apelido = competidor.apelido;
-                });
-                FocusScope.of(context).unfocus();
+                if (!(widget.listaCompetidores.contains(competidor))) {
+                  controller.closeView('');
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    item.id = competidor.id;
+                    item.nome = competidor.nome;
+                    item.apelido = competidor.apelido;
+                    item.nomeCidade = competidor.nomeCidade;
+                    item.siglaEstado = competidor.siglaEstado;
+                  });
+                }
               },
               leading: Text(competidor.id),
               title: Text(competidor.nome),
-              subtitle: Text(
-                competidor.apelido,
-                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    competidor.apelido,
+                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                    style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                  ),
+                ],
               ),
             ),
           );

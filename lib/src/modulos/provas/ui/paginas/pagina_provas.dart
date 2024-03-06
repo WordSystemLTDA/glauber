@@ -20,7 +20,7 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.da
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_detalhes_compra.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_detalhes_prova.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_localizacao.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_pagamentos_disponiveis.dart';
 import 'package:provider/provider.dart';
@@ -248,36 +248,40 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               ],
                             ),
                           ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            child: Row(
-                              children: [
-                                ActionChip(
-                                  avatar: const Icon(Icons.location_on_outlined),
-                                  label: const Text('Localização'),
-                                  onPressed: () {
-                                    abrirLocalizacao(evento);
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                                ActionChip(
-                                  avatar: const Icon(Icons.payment_outlined),
-                                  label: const Text('Pagamentos'),
-                                  onPressed: () {
-                                    abrirPagamentosDisponiveis(state.pagamentosDisponiveis!);
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                                ActionChip(
-                                  avatar: const Icon(Icons.warning_amber),
-                                  label: const Text('Termos de Uso'),
-                                  onPressed: () {
-                                    abrirTermosDeUso();
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                              ],
+                          SizedBox(
+                            width: width,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ActionChip(
+                                    avatar: const Icon(Icons.location_on_outlined),
+                                    label: const Text('Localização'),
+                                    onPressed: () {
+                                      abrirLocalizacao(evento);
+                                    },
+                                  ),
+                                  // const SizedBox(width: 10),
+                                  // ActionChip(
+                                  //   avatar: const Icon(Icons.payment_outlined),
+                                  //   label: const Text('Pagamentos'),
+                                  //   onPressed: () {
+                                  //     abrirPagamentosDisponiveis(state.pagamentosDisponiveis!);
+                                  //   },
+                                  // ),
+                                  const SizedBox(width: 10),
+                                  ActionChip(
+                                    avatar: const Icon(Icons.warning_amber),
+                                    label: const Text('Termos de Uso'),
+                                    onPressed: () {
+                                      abrirTermosDeUso();
+                                    },
+                                  ),
+                                  // const SizedBox(width: 10),
+                                ],
+                              ),
                             ),
                           ),
                           if (provas.isNotEmpty && nomesCabeceira != null) ...[
@@ -463,38 +467,54 @@ class _PaginaProvasState extends State<PaginaProvas> {
   }
 
   void adicionarNoCarrinho(ProvaModelo prova, List<CompetidoresModelo> listaCompetidores, EventoModelo evento) {
-    prova.competidores = listaCompetidores;
+    var novaProva = ProvaModelo(
+      id: prova.id,
+      nomeProva: prova.nomeProva,
+      valor: prova.valor,
+      hcMinimo: prova.hcMinimo,
+      hcMaximo: prova.hcMaximo,
+      permitirSorteio: prova.permitirSorteio,
+      avulsa: prova.avulsa,
+      quantMinima: prova.quantMinima,
+      quantMaxima: prova.quantMaxima,
+      permitirCompra: prova.permitirCompra,
+      idCabeceira: prova.idCabeceira,
+      competidores: prova.competidores,
+      nomeCabeceira: prova.nomeCabeceira,
+      somatoriaHandicaps: prova.somatoriaHandicaps,
+    );
+
     if (mounted) {
       setState(() {
         // Irá permitir escolher so um pacote por prova
         if (evento.liberacaoDeCompra == '1') {
-          var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
+          var valoresDuplicados = provasCarrinho.where((element) => element.id == novaProva.id);
 
-          if (provasCarrinho.contains(prova)) {
+          if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
             setState(() {
-              provasCarrinho.remove(prova);
+              provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
             });
           } else if (valoresDuplicados.isNotEmpty) {
             setState(() {
-              provasCarrinho.remove(valoresDuplicados.first);
+              provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
 
-              provasCarrinho.add(prova);
+              provasCarrinho.add(novaProva);
             });
           } else {
             setState(() {
-              provasCarrinho.add(prova);
+              provasCarrinho.add(novaProva);
             });
           }
 
           // Poderá escolher multiplos pacotes por prova
         } else if (evento.liberacaoDeCompra == '2') {
-          if (provasCarrinho.contains(prova)) {
+          if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
             setState(() {
-              provasCarrinho.remove(prova);
+              provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
             });
           } else {
             setState(() {
-              provasCarrinho.add(prova);
+              provasCarrinho.add(novaProva);
             });
           }
         }
@@ -504,46 +524,62 @@ class _PaginaProvasState extends State<PaginaProvas> {
 
   void adicionarAvulsaNoCarrinho(int quantidade, List<CompetidoresModelo> competidores, ProvaModelo prova, EventoModelo evento) {
     if (mounted) {
-      prova.competidores = competidores;
+      var novaProva = ProvaModelo(
+        id: prova.id,
+        nomeProva: prova.nomeProva,
+        valor: prova.valor,
+        hcMinimo: prova.hcMinimo,
+        permitirSorteio: prova.permitirSorteio,
+        hcMaximo: prova.hcMaximo,
+        avulsa: prova.avulsa,
+        quantMinima: prova.quantMinima,
+        quantMaxima: prova.quantMaxima,
+        permitirCompra: prova.permitirCompra,
+        idCabeceira: prova.idCabeceira,
+        competidores: prova.competidores,
+        nomeCabeceira: prova.nomeCabeceira,
+        somatoriaHandicaps: prova.somatoriaHandicaps,
+      );
+
       // Irá permitir escolher so um pacote por prova
       if (evento.liberacaoDeCompra == '1') {
-        var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
+        var valoresDuplicados = provasCarrinho.where((element) => element.id == novaProva.id);
 
-        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
+        if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
           setState(() {
-            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
+            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
           });
         }
 
         if (valoresDuplicados.isNotEmpty) {
           setState(() {
-            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira != prova.idCabeceira);
+            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira != novaProva.idCabeceira);
           });
 
           for (var i = 0; i < quantidade; i++) {
             setState(() {
-              provasCarrinho.add(prova);
+              provasCarrinho.add(novaProva);
             });
           }
         } else {
           for (var i = 0; i < quantidade; i++) {
             setState(() {
-              provasCarrinho.add(prova);
+              provasCarrinho.add(novaProva);
             });
           }
         }
 
         // Poderá escolher multiplos pacotes por prova
       } else if (evento.liberacaoDeCompra == '2') {
-        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
+        if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
           setState(() {
-            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
+            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
           });
         }
 
         for (var i = 0; i < quantidade; i++) {
           setState(() {
-            provasCarrinho.add(prova);
+            provasCarrinho.add(novaProva);
           });
         }
       }
@@ -610,6 +646,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
             id: state.provaModelo.id,
             permitirCompra: state.provaModelo.permitirCompra,
             nomeProva: state.provaModelo.nomeProva,
+            permitirSorteio: state.provaModelo.permitirSorteio,
             valor: state.provaModelo.valor,
             hcMinimo: state.provaModelo.hcMinimo,
             avulsa: state.provaModelo.avulsa,
@@ -628,7 +665,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 isScrollControlled: true,
                 context: context,
                 builder: (contextModal) {
-                  return ModalDetalhesCompra(
+                  return ModalDetalhesProva(
                     prova: provaModelo,
                     parceirosSelecao: state.permitirCompraModelo.parceirosSelecao,
                     provasCarrinho: provasCarrinho,
@@ -641,6 +678,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         id: provaModelo.id,
                         nomeProva: provaModelo.nomeProva,
                         valor: provaModelo.valor,
+                        permitirSorteio: provaModelo.permitirSorteio,
                         permitirCompra: provaModelo.permitirCompra,
                         hcMinimo: "0",
                         hcMaximo: "0",
@@ -668,6 +706,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 id: provaModelo.id,
                 nomeProva: provaModelo.nomeProva,
                 valor: provaModelo.valor,
+                permitirSorteio: provaModelo.permitirSorteio,
                 permitirCompra: provaModelo.permitirCompra,
                 hcMinimo: "0",
                 hcMaximo: "0",
@@ -687,12 +726,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
                   isScrollControlled: true,
                   context: context,
                   builder: (contextModal) {
-                    return ModalDetalhesCompra(
+                    return ModalDetalhesProva(
                       prova: provaModelo,
                       parceirosSelecao: state.permitirCompraModelo.parceirosSelecao,
                       provasCarrinho: provasCarrinho,
                       adicionarNoCarrinho: (quantidade, listaCompetidores) {
-                        if (listaCompetidores.where((element) => element.id == '').isNotEmpty) {
+                        if (state.permitirCompraModelo.permVincularParceiro == 'Sim' && listaCompetidores.where((element) => element.id == '').isNotEmpty) {
                           return false;
                         }
 
@@ -700,6 +739,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           id: provaModelo.id,
                           nomeProva: provaModelo.nomeProva,
                           valor: provaModelo.valor,
+                          permitirSorteio: provaModelo.permitirSorteio,
                           permitirCompra: provaModelo.permitirCompra,
                           hcMinimo: "0",
                           hcMaximo: "0",

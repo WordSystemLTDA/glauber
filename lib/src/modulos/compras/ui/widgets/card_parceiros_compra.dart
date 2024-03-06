@@ -10,8 +10,9 @@ import 'package:provider/provider.dart';
 class CardParceirosCompra extends StatefulWidget {
   final ComprasModelo item;
   final ParceirosCompraModelo parceiro;
+  final List<ParceirosCompraModelo> parceiros;
 
-  const CardParceirosCompra({super.key, required this.item, required this.parceiro});
+  const CardParceirosCompra({super.key, required this.item, required this.parceiro, required this.parceiros});
 
   @override
   State<CardParceirosCompra> createState() => _CardParceirosCompraState();
@@ -68,6 +69,8 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                         parceiro.nomeParceiro,
                         style: const TextStyle(color: Colors.green),
                       ),
+                      const SizedBox(height: 5),
+                      Text("${parceiro.nomeCidade} - ${parceiro.siglaEstado}"),
                     ],
                   ),
                   if (item.permitirEditarParceiros == 'Sim')
@@ -89,28 +92,36 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
+            color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? const Color(0xFFfbe5ea) : null,
+            shape: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty
+                ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
+                : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            // color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Colors.red : null,
             child: ListTile(
               onTap: () async {
-                controller.closeView('');
-                FocusScope.of(context).unfocus();
+                if (widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty) {
+                  controller.closeView('');
+                  FocusScope.of(context).unfocus();
 
-                await comprasServico.editarParceiro(parceiro.id, competidor.id).then((value) {
-                  var (sucesso, mensagem) = value;
-                  if (sucesso) {
-                    setState(() {
-                      parceiro.nomeParceiro = competidor.nome;
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(mensagem),
-                      backgroundColor: Colors.green,
-                    ));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(mensagem),
-                      backgroundColor: Colors.red,
-                    ));
-                  }
-                });
+                  await comprasServico.editarParceiro(parceiro.id, competidor.id).then((value) {
+                    var (sucesso, mensagem) = value;
+                    if (sucesso) {
+                      setState(() {
+                        parceiro.idParceiro = competidor.id;
+                        parceiro.nomeParceiro = competidor.nome;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(mensagem),
+                        backgroundColor: Colors.green,
+                      ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(mensagem),
+                        backgroundColor: Colors.red,
+                      ));
+                    }
+                  });
+                }
               },
               leading: Text(competidor.id),
               title: Text(competidor.nome),
