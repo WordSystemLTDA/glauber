@@ -55,13 +55,14 @@
 [ ] Arrumar botão de atualização
 [ ] Arrumar ordem de entrada repetida
 [ ] Fazer logs de transfêrencia no banco de dados
-[X] Remover prova do carrinho caso for pacote fechado
-[ ] Fazer um tabbar em compras (Anteriores, Atuais, Canceladas) <--- Mostrar nessa ordem no tabbar
-[ ] Selecionar os inscrições e gerar 1 pagamaneto para inscrições (pix)
-[ ] Colocar um checkbox de selecionar sorteio na hora de selecionar parceiros
-[ ] Colocar mensagem na hora de selecionar parceiros e não ter todos os parceiros selecionados (rever)
-[X] Verificação permitir vincular parceiro na prova (caso perm_vincular_parceiro for igual a Sim, deixar selecionar os parceiros como opcional.)
-[ ] Sorteio deve so um
+[X] Ação de Remover prova do carrinho caso for pacote fechado
+[X] Fazer um tabbar em compras (Anteriores, Atuais, Canceladas) <--- Mostrar nessa ordem no tabbar
+[ ] Selecionar os inscrições e gerar 1 pagamento para inscrições (pix)
+[X] Colocar mensagem na hora de selecionar parceiros e não ter todos os parceiros selecionados (rever)
+[X] Verificação permitir vincular parceiro na prova (caso perm_vincular_parceiro for igual a Sim, deixar selecionar os parceiros como obrigatorio.)
+[X] Colocar um checkbox de selecionar sorteio na hora de selecionar parceiros e deve ser somente um
+[X] Quantidade máxima de inscrições na PROVA
+[X] Descrição na prova no meio do card
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)

@@ -7,7 +7,7 @@ import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/clientes_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_lista_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -17,12 +17,14 @@ class ComprasServicoImpl implements ComprasServico {
   ComprasServicoImpl(this.client);
 
   @override
-  Future<List<RetornoListaCompraModelo>> listar(UsuarioModelo? usuario, int pagina) async {
+  Future<RetornoComprasModelo> listar(UsuarioModelo? usuario, int pagina1, int pagina2, int pagina3) async {
     var url = 'compras/listar.php';
 
     var campos = {
       'id_cliente': usuario!.id,
-      'pagina': pagina,
+      'pagina1': pagina1,
+      'pagina2': pagina2,
+      'pagina3': pagina3,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));
@@ -31,11 +33,9 @@ class ComprasServicoImpl implements ComprasServico {
     bool sucesso = jsonData['sucesso'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return List<RetornoListaCompraModelo>.from(jsonData['dados'].map((elemento) {
-        return RetornoListaCompraModelo.fromMap(elemento);
-      }));
+      return RetornoComprasModelo.fromMap(jsonData['dados']);
     } else {
-      return [];
+      return RetornoComprasModelo(anteriores: [], atuais: [], canceladas: []);
     }
   }
 

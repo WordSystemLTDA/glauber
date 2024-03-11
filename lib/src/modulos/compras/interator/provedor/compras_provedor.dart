@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_lista_compra_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 
 class ComprasProvedor extends ChangeNotifier {
   final ComprasServico _servico;
-  int pagina = 1;
+  int pagina1 = 1;
+  int pagina2 = 1;
+  int pagina3 = 1;
   bool carregando = false;
   bool temMaisParaCarregar = true;
-  List<RetornoListaCompraModelo> compras = [...DadosFakes.dadosFakesCompras];
+  RetornoComprasModelo compras = RetornoComprasModelo(anteriores: [], atuais: [], canceladas: []);
 
   ComprasProvedor(this._servico);
 
@@ -17,9 +18,15 @@ class ComprasProvedor extends ChangeNotifier {
     if (carregando) return;
 
     if (resetar) {
-      compras.clear();
-      compras.addAll(DadosFakes.dadosFakesCompras);
-      pagina = 1;
+      compras.anteriores.clear();
+
+      compras.atuais.clear();
+
+      compras.canceladas.clear();
+
+      pagina1 = 1;
+      pagina2 = 1;
+      pagina3 = 1;
       temMaisParaCarregar = true;
       notifyListeners();
     }
@@ -29,28 +36,51 @@ class ComprasProvedor extends ChangeNotifier {
     carregando = true;
     notifyListeners();
 
-    await _servico.listar(usuario, pagina).then((comprasServico) {
-      if (pagina == 1) {
-        compras.clear();
+    await _servico.listar(usuario, pagina1, pagina2, pagina3).then((comprasServico) {
+      if (pagina1 == 1) {
+        compras.anteriores.clear();
+      }
+      if (pagina2 == 1) {
+        compras.atuais.clear();
+      }
+      if (pagina2 == 1) {
+        compras.canceladas.clear();
       }
 
-      if (comprasServico.length < 15) {
+      if (comprasServico.anteriores.length < 15) {
+        temMaisParaCarregar = false;
+        notifyListeners();
+      }
+      if (comprasServico.atuais.length < 15) {
+        temMaisParaCarregar = false;
+        notifyListeners();
+      }
+      if (comprasServico.canceladas.length < 15) {
         temMaisParaCarregar = false;
         notifyListeners();
       }
 
-      compras.addAll(comprasServico);
+      compras = comprasServico;
+      // compras.addAll(comprasServico);
       carregando = false;
     });
 
-    pagina++;
+    pagina1++;
+    pagina2++;
+    pagina3++;
     notifyListeners();
   }
 
   void resetarCompras() {
-    compras.clear();
-    compras.addAll(DadosFakes.dadosFakesCompras);
-    pagina = 1;
+    compras.anteriores.clear();
+
+    compras.atuais.clear();
+
+    compras.canceladas.clear();
+
+    pagina1 = 1;
+    pagina2 = 1;
+    pagina3 = 1;
     temMaisParaCarregar = true;
     notifyListeners();
   }

@@ -70,12 +70,16 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                         style: const TextStyle(color: Colors.green),
                       ),
                       const SizedBox(height: 5),
-                      Text("${parceiro.nomeCidade} - ${parceiro.siglaEstado}"),
+                      if (parceiro.nomeCidade.isNotEmpty) Text("${parceiro.nomeCidade} - ${parceiro.siglaEstado}"),
                     ],
                   ),
                   if (item.permitirEditarParceiros == 'Sim')
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (item.permitirEditarParceiros == 'Sim') {
+                          controller.openView();
+                        }
+                      },
                       icon: const Icon(Icons.edit),
                     ),
                 ],

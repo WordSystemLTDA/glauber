@@ -17,7 +17,9 @@ class ProvaModelo extends Equatable {
   final String quantMaxima;
   final PermitirCompraModelo permitirCompra;
   final String permitirSorteio;
+  final String? descricao;
   final String? somatoriaHandicaps;
+  final bool? sorteio;
 
   String? nomeCabeceira;
   String? idCabeceira;
@@ -34,7 +36,9 @@ class ProvaModelo extends Equatable {
     required this.quantMaxima,
     required this.permitirCompra,
     required this.permitirSorteio,
+    this.descricao,
     this.somatoriaHandicaps,
+    this.sorteio,
     this.nomeCabeceira,
     this.idCabeceira,
     this.competidores,
@@ -69,10 +73,12 @@ class ProvaModelo extends Equatable {
       'quantMaxima': quantMaxima,
       'permitirCompra': permitirCompra.toMap(),
       'permitirSorteio': permitirSorteio,
+      'descricao': descricao,
       'somatoriaHandicaps': somatoriaHandicaps,
+      'sorteio': sorteio,
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
-      'competidores': competidores!.map((x) => x.toMap()).toList(),
+      'competidores': competidores?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -88,12 +94,14 @@ class ProvaModelo extends Equatable {
       quantMaxima: map['quantMaxima'] as String,
       permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
       permitirSorteio: map['permitirSorteio'] as String,
+      descricao: map['descricao'] != null ? map['descricao'] as String : null,
       somatoriaHandicaps: map['somatoriaHandicaps'] != null ? map['somatoriaHandicaps'] as String : null,
+      sorteio: map['sorteio'] != null ? map['sorteio'] as bool : null,
       nomeCabeceira: map['nomeCabeceira'] != null ? map['nomeCabeceira'] as String : null,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
       competidores: map['competidores'] != null
           ? List<CompetidoresModelo>.from(
-              (map['competidores'] as List<int>).map<CompetidoresModelo?>(
+              (map['competidores'] as List<dynamic>).map<CompetidoresModelo?>(
                 (x) => CompetidoresModelo.fromMap(x as Map<String, dynamic>),
               ),
             )

@@ -6,10 +6,9 @@ import 'package:provider/provider.dart';
 
 class CardParceiros extends StatefulWidget {
   final CompetidoresModelo item;
-  final String permitirSorteio;
   final List<CompetidoresModelo> listaCompetidores;
 
-  const CardParceiros({super.key, required this.item, required this.permitirSorteio, required this.listaCompetidores});
+  const CardParceiros({super.key, required this.item, required this.listaCompetidores});
 
   @override
   State<CardParceiros> createState() => _CardParceirosState();
@@ -57,10 +56,11 @@ class _CardParceirosState extends State<CardParceiros> {
                       if (item.nome.isEmpty) Text(item.nome.isEmpty ? 'Selecione um Parceiro' : ''),
                       Row(
                         children: [
-                          Text(
-                            item.id,
-                            style: const TextStyle(fontSize: 12),
-                          ),
+                          if (item.nome.isNotEmpty)
+                            Text(
+                              item.id,
+                              style: const TextStyle(fontSize: 12),
+                            ),
                           const SizedBox(width: 15),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,37 +82,6 @@ class _CardParceirosState extends State<CardParceiros> {
                       const Icon(Icons.arrow_forward_ios_outlined, size: 16),
                     ],
                   ),
-                  // if (widget.permitirSorteio == 'Sim' && item.id == '')
-                  //   SizedBox(
-                  //     height: 30,
-                  //     child: GestureDetector(
-                  //       onTap: () {
-                  //         setState(() {
-                  //           sorteio = !sorteio;
-                  //         });
-                  //       },
-                  //       child: Row(
-                  //         children: [
-                  //           SizedBox(
-                  //             width: 20,
-                  //             height: 24,
-                  //             child: Checkbox(
-                  //               value: sorteio,
-                  //               onChanged: (value) {
-                  //                 if (value != null) {
-                  //                   setState(() {
-                  //                     sorteio = value;
-                  //                   });
-                  //                 }
-                  //               },
-                  //             ),
-                  //           ),
-                  //           const SizedBox(width: 10),
-                  //           const Text('Sorteio'),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
                 ],
               ),
             ),

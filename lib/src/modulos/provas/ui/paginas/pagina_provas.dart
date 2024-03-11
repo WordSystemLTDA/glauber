@@ -15,7 +15,6 @@ import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verifi
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
@@ -466,7 +465,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     );
   }
 
-  void adicionarNoCarrinho(ProvaModelo prova, List<CompetidoresModelo> listaCompetidores, EventoModelo evento) {
+  void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento, String quantParceiros) {
     var novaProva = ProvaModelo(
       id: prova.id,
       nomeProva: prova.nomeProva,
@@ -482,6 +481,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
       competidores: prova.competidores,
       nomeCabeceira: prova.nomeCabeceira,
       somatoriaHandicaps: prova.somatoriaHandicaps,
+      sorteio: prova.sorteio,
     );
 
     if (mounted) {
@@ -493,11 +493,14 @@ class _PaginaProvasState extends State<PaginaProvas> {
           if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
             setState(() {
               provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+
+              if (int.tryParse(quantParceiros) != null && quantParceiros != '0') {
+                provasCarrinho.add(novaProva);
+              }
             });
           } else if (valoresDuplicados.isNotEmpty) {
             setState(() {
               provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
-
               provasCarrinho.add(novaProva);
             });
           } else {
@@ -522,7 +525,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     }
   }
 
-  void adicionarAvulsaNoCarrinho(int quantidade, List<CompetidoresModelo> competidores, ProvaModelo prova, EventoModelo evento) {
+  void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento) {
     if (mounted) {
       var novaProva = ProvaModelo(
         id: prova.id,
@@ -539,6 +542,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         competidores: prova.competidores,
         nomeCabeceira: prova.nomeCabeceira,
         somatoriaHandicaps: prova.somatoriaHandicaps,
+        sorteio: prova.sorteio,
       );
 
       // Irá permitir escolher so um pacote por prova
@@ -667,13 +671,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 builder: (contextModal) {
                   return ModalDetalhesProva(
                     prova: provaModelo,
-                    parceirosSelecao: state.permitirCompraModelo.parceirosSelecao,
+                    quantParceiros: state.permitirCompraModelo.quantParceiros,
                     provasCarrinho: provasCarrinho,
-                    adicionarNoCarrinho: (quantidade, listaCompetidores) {
-                      if (listaCompetidores.where((element) => element.id == '').isNotEmpty) {
-                        return false;
-                      }
-
+                    adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
                       var novaProva = ProvaModelo(
                         id: provaModelo.id,
                         nomeProva: provaModelo.nomeProva,
@@ -685,12 +685,31 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         avulsa: provaModelo.avulsa,
                         quantMaxima: "0",
                         quantMinima: "0",
+                        sorteio: sorteio,
                         idCabeceira: provaModelo.idCabeceira,
                         somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                         competidores: listaCompetidores,
                       );
 
-                      adicionarAvulsaNoCarrinho(quantidade, listaCompetidores, novaProva, state.eventoModelo);
+                      if (quantidade == 0) {
+                        setState(() {
+                          provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+                        });
+                        Navigator.pop(context);
+                        return true;
+                      }
+
+                      // if ((provaModelo.permitirSorteio == 'Sim' && sorteio == false) &&
+                      //     state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
+                      //     listaCompetidores.where((element) => element.id == '').isNotEmpty) {
+                      //   return false;
+                      // }
+                      if (state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
+                          ((provaModelo.permitirSorteio == 'Sim' && sorteio == true) ? false : listaCompetidores.where((element) => element.id == '').isNotEmpty)) {
+                        return false;
+                      }
+
+                      adicionarAvulsaNoCarrinho(quantidade, novaProva, state.eventoModelo);
 
                       Navigator.pop(context);
 
@@ -701,7 +720,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
               );
             }
           } else {
-            if (int.tryParse(state.permitirCompraModelo.parceirosSelecao!) != null ? int.parse(state.permitirCompraModelo.parceirosSelecao!) == 0 : false) {
+            if (int.tryParse(state.permitirCompraModelo.quantParceiros!) != null ? int.parse(state.permitirCompraModelo.quantParceiros!) == 0 : false) {
               var novaProva = ProvaModelo(
                 id: provaModelo.id,
                 nomeProva: provaModelo.nomeProva,
@@ -713,12 +732,13 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 avulsa: provaModelo.avulsa,
                 quantMaxima: "0",
                 quantMinima: "0",
+                sorteio: false,
                 idCabeceira: provaModelo.idCabeceira,
                 somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                 competidores: provaModelo.competidores,
               );
 
-              adicionarNoCarrinho(novaProva, [], state.eventoModelo);
+              adicionarNoCarrinho(novaProva, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
             } else {
               if (mounted) {
                 showModalBottomSheet(
@@ -728,13 +748,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                   builder: (contextModal) {
                     return ModalDetalhesProva(
                       prova: provaModelo,
-                      parceirosSelecao: state.permitirCompraModelo.parceirosSelecao,
+                      quantParceiros: state.permitirCompraModelo.quantParceiros,
                       provasCarrinho: provasCarrinho,
-                      adicionarNoCarrinho: (quantidade, listaCompetidores) {
-                        if (state.permitirCompraModelo.permVincularParceiro == 'Sim' && listaCompetidores.where((element) => element.id == '').isNotEmpty) {
-                          return false;
-                        }
-
+                      adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
                         var novaProva = ProvaModelo(
                           id: provaModelo.id,
                           nomeProva: provaModelo.nomeProva,
@@ -746,12 +762,26 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           avulsa: provaModelo.avulsa,
                           quantMaxima: "0",
                           quantMinima: "0",
+                          sorteio: sorteio,
                           idCabeceira: provaModelo.idCabeceira,
                           somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                           competidores: listaCompetidores,
                         );
 
-                        adicionarNoCarrinho(novaProva, listaCompetidores, state.eventoModelo);
+                        if (quantidade == 0) {
+                          setState(() {
+                            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+                          });
+                          Navigator.pop(context);
+                          return true;
+                        }
+
+                        if (state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
+                            ((provaModelo.permitirSorteio == 'Sim' && sorteio == true) ? false : listaCompetidores.where((element) => element.id == '').isNotEmpty)) {
+                          return false;
+                        }
+
+                        adicionarNoCarrinho(novaProva, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
 
                         Navigator.pop(context);
 

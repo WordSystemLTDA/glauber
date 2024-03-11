@@ -5,17 +5,16 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.da
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_parceiros.dart';
 
 class ModalDetalhesProva extends StatefulWidget {
-  final bool Function(int quantidade, List<CompetidoresModelo> listaCompetidores) adicionarNoCarrinho;
+  final bool Function(int quantidade, List<CompetidoresModelo> listaCompetidores, bool sorteio) adicionarNoCarrinho;
   final ProvaModelo prova;
-  final String? parceirosSelecao;
-
+  final String? quantParceiros;
   final List<ProvaModelo> provasCarrinho;
 
   const ModalDetalhesProva({
     super.key,
     required this.adicionarNoCarrinho,
     required this.prova,
-    this.parceirosSelecao,
+    this.quantParceiros,
     required this.provasCarrinho,
   });
 
@@ -25,6 +24,8 @@ class ModalDetalhesProva extends StatefulWidget {
 
 class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   int quantidade = 0;
+  bool sorteio = true;
+  String mensagemAlerta = '';
 
   List<CompetidoresModelo> listaCompetidores = [];
 
@@ -46,14 +47,17 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
 
     if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
       listaCompetidores = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.competidores!;
+      if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio != null) {
+        sorteio = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio!;
+      }
     } else {
-      if (widget.parceirosSelecao != null && int.parse(widget.parceirosSelecao!) > 0 && widget.prova.avulsa == 'Não') {
-        for (var i = 0; i < int.parse(widget.parceirosSelecao!); i++) {
-          listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
+      if (widget.quantParceiros != null && int.parse(widget.quantParceiros!) > 0 && widget.prova.avulsa == 'Não') {
+        for (var i = 0; i < int.parse(widget.quantParceiros!); i++) {
+          listaCompetidores.add(CompetidoresModelo(id: widget.prova.permitirSorteio == 'Sim' ? '0' : '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
         }
       } else {
         for (var i = 0; i < quantidade; i++) {
-          listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
+          listaCompetidores.add(CompetidoresModelo(id: widget.prova.permitirSorteio == 'Sim' ? '0' : '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
         }
       }
     }
@@ -63,7 +67,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
     if (quantidade < int.parse(widget.prova.quantMaxima)) {
       setState(() {
         quantidade = quantidade + 1;
-        listaCompetidores.add(CompetidoresModelo(id: '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
+        listaCompetidores.add(CompetidoresModelo(id: widget.prova.permitirSorteio == 'Sim' ? '0' : '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
       });
     }
   }
@@ -75,7 +79,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
         listaCompetidores.removeLast();
       });
     } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
-      widget.adicionarNoCarrinho(0, []);
+      widget.adicionarNoCarrinho(0, [], sorteio);
     }
   }
 
@@ -119,7 +123,6 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
 
                       return CardParceiros(
                         item: item,
-                        permitirSorteio: widget.prova.permitirSorteio,
                         listaCompetidores: listaCompetidores,
                       );
                     },
@@ -135,9 +138,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                         color: quantidade > int.parse(widget.prova.quantMinima) ? Colors.red : Colors.grey,
                         iconSize: 34,
                         onPressed: () {
-                          if (widget.prova.avulsa == 'Sim') {
-                            removerQuantidade();
-                          }
+                          removerQuantidade();
                         },
                         icon: quantidade > int.parse(widget.prova.quantMinima) ||
                                 widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
@@ -168,17 +169,91 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                if (widget.prova.permitirSorteio == 'Sim') ...[
+                  SizedBox(
+                    width: width,
+                    height: 30,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (!sorteio == false) {
+                          for (var element in listaCompetidores) {
+                            if (element.id == '0') {
+                              setState(() {
+                                element.id = '';
+                              });
+                            }
+                          }
+                        } else {
+                          for (var element in listaCompetidores) {
+                            if (element.id == '') {
+                              setState(() {
+                                element.id = '0';
+                              });
+                            }
+                          }
+                        }
+
+                        setState(() {
+                          sorteio = !sorteio;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 24,
+                            child: Checkbox(
+                              value: sorteio,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setState(() {
+                                    sorteio = value;
+                                  });
+
+                                  if (value == false) {
+                                    for (var element in listaCompetidores) {
+                                      if (element.id == '0') {
+                                        setState(() {
+                                          element.id = '';
+                                        });
+                                      }
+                                    }
+                                  } else {
+                                    for (var element in listaCompetidores) {
+                                      if (element.id == '') {
+                                        setState(() {
+                                          element.id = '0';
+                                        });
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          const Text('Sorteio'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: quantidade == 0
                         ? null
                         : () {
-                            var retorno = widget.adicionarNoCarrinho(quantidade, listaCompetidores);
+                            var retorno = widget.adicionarNoCarrinho(quantidade, listaCompetidores, sorteio);
                             if (retorno == false) {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                content: Text('Selecione todos os parceiros, antes de continuar.'),
-                              ));
+                              // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              //   content: Text('Selecione todos os parceiros, antes de continuar.'),
+                              // ));
+
+                              setState(() {
+                                mensagemAlerta = 'Selecione todos os parceiros, antes de continuar.';
+                              });
                             }
                           },
                     style: ButtonStyle(
@@ -195,6 +270,13 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                         : 'Salvar $quantidade ${quantidade == 1 ? 'item' : 'itens'} ${(double.parse(widget.prova.valor) * quantidade).obterReal()}'),
                   ),
                 ),
+                if (mensagemAlerta.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    mensagemAlerta,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
                 const SizedBox(height: 30),
               ],
             ),

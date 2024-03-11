@@ -193,6 +193,16 @@ class _CardProvasState extends State<CardProvas> {
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ),
+                              if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
+                                SizedBox(
+                                  width: (width - 90) - 50,
+                                  child: Text(
+                                    prova.descricao!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                               SizedBox(
                                 width: (width - 90) - 50,
                                 child: Row(
