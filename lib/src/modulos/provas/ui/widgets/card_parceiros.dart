@@ -22,6 +22,8 @@ class _CardParceirosState extends State<CardParceiros> {
     var competidoresServico = context.read<CompetidoresServico>();
     var item = widget.item;
 
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return SearchAnchor(
       viewBuilder: (suggestions) {
         return ListView.builder(
@@ -115,7 +117,15 @@ class _CardParceirosState extends State<CardParceiros> {
                 }
               },
               leading: Text(competidor.id),
-              title: Text(competidor.nome),
+              title: Text(
+                competidor.nome,
+                style: TextStyle(
+                    color: widget.listaCompetidores.contains(competidor)
+                        ? Colors.black
+                        : isDarkMode
+                            ? Colors.white
+                            : null),
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

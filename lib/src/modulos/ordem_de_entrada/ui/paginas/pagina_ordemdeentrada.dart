@@ -57,7 +57,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
           if (state is OrdemDeEntradaErroAoListar) {
             return RefreshIndicator(
               onRefresh: () async {
-                ordemDeEntradaStore.listar(usuarioProvider.usuario);
+                ordemDeEntradaStore.atualizarLista(usuarioProvider.usuario);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -79,7 +79,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
             enabled: state is OrdemDeEntradaCarregando,
             child: RefreshIndicator(
               onRefresh: () async {
-                ordemDeEntradaStore.listar(usuarioProvider.usuario);
+                ordemDeEntradaStore.atualizarLista(usuarioProvider.usuario);
               },
               child: ListView.builder(
                 itemCount: ordemdeentradas.length,

@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo2.dart';
 
 class PermitirCompraModelo extends Equatable {
   final bool liberado;
@@ -11,6 +12,7 @@ class PermitirCompraModelo extends Equatable {
   final String? quantMaximaAvulsa;
   final String? quantParceiros;
   final String? permVincularParceiro;
+  final List<CompetidoresModelo2>? competidoresJaSelecionados;
 
   const PermitirCompraModelo({
     required this.liberado,
@@ -20,6 +22,7 @@ class PermitirCompraModelo extends Equatable {
     this.quantMaximaAvulsa,
     this.quantParceiros,
     this.permVincularParceiro,
+    this.competidoresJaSelecionados,
   });
 
   @override
@@ -34,6 +37,7 @@ class PermitirCompraModelo extends Equatable {
       'quantMaximaAvulsa': quantMaximaAvulsa,
       'quantParceiros': quantParceiros,
       'permVincularParceiro': permVincularParceiro,
+      'competidoresJaSelecionados': competidoresJaSelecionados?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -46,6 +50,13 @@ class PermitirCompraModelo extends Equatable {
       quantMaximaAvulsa: map['quantMaximaAvulsa'] != null ? map['quantMaximaAvulsa'] as String : null,
       quantParceiros: map['quantParceiros'] != null ? map['quantParceiros'] as String : null,
       permVincularParceiro: map['permVincularParceiro'] != null ? map['permVincularParceiro'] as String : null,
+      competidoresJaSelecionados: map['competidoresJaSelecionados'] != null
+          ? List<CompetidoresModelo2>.from(
+              (map['competidoresJaSelecionados'] as List<dynamic>).map<CompetidoresModelo2?>(
+                (x) => CompetidoresModelo2.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
     );
   }
 

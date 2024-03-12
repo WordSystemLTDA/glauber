@@ -28,6 +28,8 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
     var item = widget.item;
     var parceiro = widget.parceiro;
 
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return SearchAnchor(
       viewBuilder: (suggestions) {
         return ListView.builder(
@@ -128,10 +130,27 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                 }
               },
               leading: Text(competidor.id),
-              title: Text(competidor.nome),
-              subtitle: Text(
-                competidor.apelido,
-                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+              title: Text(
+                competidor.nome,
+                style: TextStyle(
+                    color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty
+                        ? Colors.black
+                        : isDarkMode
+                            ? Colors.white
+                            : null),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    competidor.apelido,
+                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                    style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                  ),
+                ],
               ),
             ),
           );

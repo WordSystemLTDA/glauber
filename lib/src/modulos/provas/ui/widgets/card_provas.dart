@@ -7,26 +7,33 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_permitir_compra_provedor.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_detalhes_prova.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CardProvas extends StatefulWidget {
   final ProvaModelo prova;
   final EventoModelo evento;
-  final bool verificando;
+  // final bool verificando;
   final List<ProvaModelo> provasCarrinho;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final String idEvento;
+  final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros) adicionarNoCarrinho;
+  final Function(int quantidade, ProvaModelo prova, EventoModelo evento) adicionarAvulsaNoCarrinho;
 
   const CardProvas({
     super.key,
     required this.prova,
     required this.idEvento,
-    required this.verificando,
+    // required this.verificando,
     required this.nomesCabeceira,
     required this.evento,
     required this.provasCarrinho,
+    required this.adicionarAvulsaNoCarrinho,
+    required this.adicionarNoCarrinho,
   });
 
   @override
@@ -35,8 +42,12 @@ class CardProvas extends StatefulWidget {
 
 class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 110;
+  bool verificando = false;
 
   void aoClicarNaCabeceira(ProvaModelo prova, NomesCabeceiraModelo item) async {
+    setState(() {
+      verificando = true;
+    });
     var usuarioProvider = context.read<UsuarioProvider>();
     var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
@@ -55,10 +66,194 @@ class _CardProvasState extends State<CardProvas> {
     }
 
     var jaExisteCarrinho = existeNoCarrinho(prova, item);
-    verificarPermitirCompraProvedor.verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item.id, jaExisteCarrinho);
+    await verificarPermitirCompraProvedor
+        .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item.id, jaExisteCarrinho)
+        .then((state) {
+      if (state.permitirCompraModelo.liberado) {
+        var provaModelo = ProvaModelo(
+          id: state.provaModelo.id,
+          permitirCompra: state.provaModelo.permitirCompra,
+          nomeProva: state.provaModelo.nomeProva,
+          permitirSorteio: state.provaModelo.permitirSorteio,
+          valor: state.provaModelo.valor,
+          hcMinimo: state.provaModelo.hcMinimo,
+          avulsa: state.provaModelo.avulsa,
+          quantMaxima: state.permitirCompraModelo.quantMaximaAvulsa == null ? state.provaModelo.quantMaxima : state.permitirCompraModelo.quantMaximaAvulsa!,
+          quantMinima: state.provaModelo.quantMinima,
+          hcMaximo: state.provaModelo.hcMaximo,
+          idCabeceira: state.idCabeceira,
+          somatoriaHandicaps: state.provaModelo.somatoriaHandicaps,
+          competidores: state.provaModelo.competidores,
+        );
+
+        if (provaModelo.avulsa == 'Sim') {
+          if (mounted) {
+            showModalBottomSheet(
+              showDragHandle: true,
+              isScrollControlled: true,
+              context: context,
+              builder: (contextModal) {
+                return ModalDetalhesProva(
+                  prova: provaModelo,
+                  quantParceiros: state.permitirCompraModelo.quantParceiros,
+                  provasCarrinho: widget.provasCarrinho,
+                  adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
+                    var novaProva = ProvaModelo(
+                      id: provaModelo.id,
+                      nomeProva: provaModelo.nomeProva,
+                      valor: provaModelo.valor,
+                      permitirSorteio: provaModelo.permitirSorteio,
+                      permitirCompra: provaModelo.permitirCompra,
+                      hcMinimo: "0",
+                      hcMaximo: "0",
+                      avulsa: provaModelo.avulsa,
+                      quantMaxima: "0",
+                      quantMinima: "0",
+                      sorteio: sorteio,
+                      idCabeceira: provaModelo.idCabeceira,
+                      somatoriaHandicaps: provaModelo.somatoriaHandicaps,
+                      competidores: listaCompetidores,
+                    );
+
+                    if (quantidade == 0) {
+                      setState(() {
+                        widget.provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+                      });
+                      Navigator.pop(context);
+                      return true;
+                    }
+
+                    if (state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
+                        ((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
+                            ? false
+                            : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                      return false;
+                    }
+
+                    widget.adicionarAvulsaNoCarrinho(quantidade, novaProva, state.eventoModelo);
+
+                    Navigator.pop(context);
+
+                    return true;
+                  },
+                );
+              },
+            );
+          }
+        } else {
+          if (int.tryParse(state.permitirCompraModelo.quantParceiros!) != null ? int.parse(state.permitirCompraModelo.quantParceiros!) == 0 : false) {
+            var novaProva = ProvaModelo(
+              id: provaModelo.id,
+              nomeProva: provaModelo.nomeProva,
+              valor: provaModelo.valor,
+              permitirSorteio: provaModelo.permitirSorteio,
+              permitirCompra: provaModelo.permitirCompra,
+              hcMinimo: "0",
+              hcMaximo: "0",
+              avulsa: provaModelo.avulsa,
+              quantMaxima: "0",
+              quantMinima: "0",
+              sorteio: false,
+              idCabeceira: provaModelo.idCabeceira,
+              somatoriaHandicaps: provaModelo.somatoriaHandicaps,
+              competidores: provaModelo.competidores,
+            );
+
+            widget.adicionarNoCarrinho(novaProva, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
+          } else {
+            if (mounted) {
+              showModalBottomSheet(
+                showDragHandle: true,
+                isScrollControlled: true,
+                context: context,
+                builder: (contextModal) {
+                  return ModalDetalhesProva(
+                    prova: provaModelo,
+                    quantParceiros: state.permitirCompraModelo.quantParceiros,
+                    provasCarrinho: widget.provasCarrinho,
+                    adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
+                      var novaProva = ProvaModelo(
+                        id: provaModelo.id,
+                        nomeProva: provaModelo.nomeProva,
+                        valor: provaModelo.valor,
+                        permitirSorteio: provaModelo.permitirSorteio,
+                        permitirCompra: provaModelo.permitirCompra,
+                        hcMinimo: "0",
+                        hcMaximo: "0",
+                        avulsa: provaModelo.avulsa,
+                        quantMaxima: "0",
+                        quantMinima: "0",
+                        sorteio: sorteio,
+                        idCabeceira: provaModelo.idCabeceira,
+                        somatoriaHandicaps: provaModelo.somatoriaHandicaps,
+                        competidores: listaCompetidores,
+                      );
+
+                      if (quantidade == 0) {
+                        setState(() {
+                          widget.provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+                        });
+                        Navigator.pop(context);
+                        return true;
+                      }
+
+                      if (state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
+                          ((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
+                              ? false
+                              : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                        return false;
+                      }
+
+                      widget.adicionarNoCarrinho(novaProva, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
+
+                      Navigator.pop(context);
+
+                      return true;
+                    },
+                  );
+                },
+              );
+            }
+          }
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          if (state.permitirCompraModelo.rota != null) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Center(child: Text(state.permitirCompraModelo.mensagem)),
+              action: SnackBarAction(
+                label: state.permitirCompraModelo.tituloAcao!,
+                onPressed: () {
+                  if (state.permitirCompraModelo.rota! == '/compras') {
+                    Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: state.permitirCompraModelo.rota!)).then((value) {
+                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                    });
+                  } else {
+                    Navigator.pushNamed(context, state.permitirCompraModelo.rota!).then((value) {
+                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                    });
+                  }
+                },
+              ),
+            ));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Center(child: Text(state.permitirCompraModelo.mensagem)),
+              showCloseIcon: true,
+              backgroundColor: Colors.red,
+            ));
+          }
+        }
+      }
+    }).whenComplete(() {
+      setState(() {
+        verificando = false;
+      });
+    });
   }
 
-  Color? coresAction(prova, item) {
+  Color? coresAction(ProvaModelo prova, NomesCabeceiraModelo item) {
     if (existeNoCarrinho(prova, item)) {
       if (Theme.of(context).brightness == Brightness.light) {
         return Colors.green;
@@ -110,6 +305,54 @@ class _CardProvasState extends State<CardProvas> {
     }
   }
 
+  void aoClicarNoCard(ProvaModelo prova) {
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    if (usuarioProvider.usuario == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(child: Text('Você precisa estar logado para fazer compras.')),
+          showCloseIcon: true,
+        ));
+
+        Navigator.pushNamed(context, AppRotas.login);
+      }
+      return;
+    }
+
+    if (prova.permitirCompra.liberado == false) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        if (prova.permitirCompra.rota != null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(child: Text(prova.permitirCompra.mensagem)),
+            action: SnackBarAction(
+              label: prova.permitirCompra.tituloAcao!,
+              onPressed: () {
+                if (prova.permitirCompra.rota! == '/compras') {
+                  Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: prova.permitirCompra.rota!)).then((value) {
+                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                  });
+                } else {
+                  Navigator.pushNamed(context, prova.permitirCompra.rota!).then((value) {
+                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                  });
+                }
+              },
+            ),
+          ));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(child: Text(prova.permitirCompra.mensagem)),
+            showCloseIcon: true,
+            backgroundColor: Colors.red,
+          ));
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var prova = widget.prova;
@@ -125,38 +368,12 @@ class _CardProvasState extends State<CardProvas> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            var usuarioProvider = context.read<UsuarioProvider>();
-
-            if (usuarioProvider.usuario == null) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Center(child: Text('Você precisa estar logado para fazer compras.')),
-                  showCloseIcon: true,
-                ));
-
-                Navigator.pushNamed(context, AppRotas.login);
-              }
-              return;
-            }
-
-            if (prova.permitirCompra.liberado == false) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Center(child: Text(prova.permitirCompra.mensagem)),
-                  showCloseIcon: true,
-                  backgroundColor: Colors.red,
-                ));
-              }
-              return;
-            }
-            // widget.aoClicarNaProva(prova);
+            aoClicarNoCard(prova);
           },
           borderRadius: BorderRadius.circular(5),
           child: Stack(
             children: [
-              if (widget.verificando) ...[
+              if (verificando) ...[
                 const Center(child: CircularProgressIndicator()),
               ],
               Row(
@@ -200,6 +417,7 @@ class _CardProvasState extends State<CardProvas> {
                                     prova.descricao!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
                                   ),
                                 ),
                               ],

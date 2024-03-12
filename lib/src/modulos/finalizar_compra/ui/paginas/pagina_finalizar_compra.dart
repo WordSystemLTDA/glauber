@@ -474,9 +474,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                   const SizedBox(width: 5),
                                   const Tooltip(
                                     triggerMode: TooltipTriggerMode.tap,
-                                    showDuration: Duration(seconds: 10),
-                                    message:
-                                        'Pago somente uma vez, quando pagar a inscrição contendo a filiação, os valores das inscrições serão reatribuidas sem o valor da filiação.',
+                                    showDuration: Duration(minutes: 5),
+                                    message: 'Esse valor é PAGO somente UMA VEZ, caso desejar comprar outras inscrições, você deve pagar essa inscrição primeiro para continuar.',
                                     child: Icon(Icons.info_outline, size: 16),
                                   )
                                 ],

@@ -24,7 +24,7 @@ class ModalDetalhesProva extends StatefulWidget {
 
 class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   int quantidade = 0;
-  bool sorteio = true;
+  bool sorteio = false;
   String mensagemAlerta = '';
 
   List<CompetidoresModelo> listaCompetidores = [];
@@ -51,13 +51,47 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
         sorteio = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio!;
       }
     } else {
+      if (widget.prova.permitirCompra.competidoresJaSelecionados != null) {
+        for (var i = 0; i < widget.prova.permitirCompra.competidoresJaSelecionados!.length; i++) {
+          var itemNovo = widget.prova.permitirCompra.competidoresJaSelecionados![i];
+          var novoCompetidor = CompetidoresModelo(
+            id: itemNovo.id,
+            nome: itemNovo.nome,
+            apelido: itemNovo.apelido,
+            nomeCidade: itemNovo.nomeCidade,
+            siglaEstado: itemNovo.siglaEstado,
+            jaExistente: itemNovo.jaExistente,
+          );
+
+          listaCompetidores.add(novoCompetidor);
+        }
+      }
+
       if (widget.quantParceiros != null && int.parse(widget.quantParceiros!) > 0 && widget.prova.avulsa == 'Não') {
-        for (var i = 0; i < int.parse(widget.quantParceiros!); i++) {
-          listaCompetidores.add(CompetidoresModelo(id: widget.prova.permitirSorteio == 'Sim' ? '0' : '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
+        for (var i = 0;
+            i <
+                int.parse(widget.quantParceiros!) -
+                    (widget.prova.permitirCompra.competidoresJaSelecionados != null ? widget.prova.permitirCompra.competidoresJaSelecionados!.length : 0);
+            i++) {
+          listaCompetidores.add(CompetidoresModelo(
+            id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
+            nome: '',
+            apelido: '',
+            nomeCidade: '',
+            siglaEstado: '',
+            jaExistente: false,
+          ));
         }
       } else {
         for (var i = 0; i < quantidade; i++) {
-          listaCompetidores.add(CompetidoresModelo(id: widget.prova.permitirSorteio == 'Sim' ? '0' : '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
+          listaCompetidores.add(CompetidoresModelo(
+            id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
+            nome: '',
+            apelido: '',
+            nomeCidade: '',
+            siglaEstado: '',
+            jaExistente: false,
+          ));
         }
       }
     }
@@ -67,7 +101,14 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
     if (quantidade < int.parse(widget.prova.quantMaxima)) {
       setState(() {
         quantidade = quantidade + 1;
-        listaCompetidores.add(CompetidoresModelo(id: widget.prova.permitirSorteio == 'Sim' ? '0' : '', nome: '', apelido: '', nomeCidade: '', siglaEstado: ''));
+        listaCompetidores.add(CompetidoresModelo(
+          id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
+          nome: '',
+          apelido: '',
+          nomeCidade: '',
+          siglaEstado: '',
+          jaExistente: false,
+        ));
       });
     }
   }
@@ -232,7 +273,8 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          const Text('Sorteio'),
+                          const Text('HABILITAR SORTEIO'),
+                          // const Text('Caso não tenha parceiro, marque essa opção'),
                         ],
                       ),
                     ),
@@ -252,7 +294,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                               // ));
 
                               setState(() {
-                                mensagemAlerta = 'Selecione todos os parceiros, antes de continuar.';
+                                mensagemAlerta = 'Selecione todos os parceiros, antes de continuar. Caso não tenha parceiro, habilite a opção Sorteio.';
                               });
                             }
                           },
@@ -274,6 +316,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                   const SizedBox(height: 10),
                   Text(
                     mensagemAlerta,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.red),
                   ),
                 ],

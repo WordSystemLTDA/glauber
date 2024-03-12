@@ -49,8 +49,8 @@
 [X] Verificação de e-mail
 [X] (ARRUMAR NO APP) Se ele for 2 ou mais em qqr uma das modalidades, pe ou cabeca, ele nao pode ser menor q 2 na oposta, Por exemplo, Se ele colocar 2 na cabeca, no pe nao pode ser menor q 2 E vice versa
 
-[ ] Ver se quando transferir uma compra que não esteja pago, (caso seja pix) gerar outro pagamento e adicionar o valor da filiação caso o usuário não tenha comprado nenhuma prova daquele evento ainda
-[ ] Ver como fazer com o valor da filiação caso tenha comprado duas vendas diferente mas tenha pagado a venda que não tinha o valor da filiação (Ver como obrigar o competidor a pagar a filiação)
+[X] Ver se quando transferir uma compra que não esteja pago, (caso seja pix) gerar outro pagamento e adicionar o valor da filiação caso o usuário não tenha comprado nenhuma prova daquele evento ainda
+[X] Ver como fazer com o valor da filiação caso tenha comprado duas vendas diferente mas tenha pagado a venda que não tinha o valor da filiação (Ver como obrigar o competidor a pagar a filiação)
 
 [ ] Arrumar botão de atualização
 [ ] Arrumar ordem de entrada repetida
@@ -63,6 +63,10 @@
 [X] Colocar um checkbox de selecionar sorteio na hora de selecionar parceiros e deve ser somente um
 [X] Quantidade máxima de inscrições na PROVA
 [X] Descrição na prova no meio do card
+
+[ ] Listar os parceiros na hora de selecionar, somente se o pagamento da venda dele for como Sim e o Status for como Pendente
+[ ] Na hora de selecionar o parceiro não permitir selecionar ele caso já tenha passado o limite de vinculaçoes, se a quantidade vinculações for igual ao de (quant_parceiros -> PACOTE FECHADO OU quant_maxima -> AVULSA) não permitir mais selecionar aquele parceiro.
+[ ] Vincular Parceiro não pode listar vendas que está canceladas
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)
