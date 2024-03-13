@@ -289,7 +289,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
         ),
         drawerEnableOpenDragGesture: false,
         appBar: const AppBarSombra(
-          titulo: LogoApp(width: 100),
+          titulo: LogoApp(width: 90),
           aparecerIconeNotificacao: true,
           aparecerIconeCalendario: true,
         ),

@@ -64,9 +64,10 @@
 [X] Quantidade máxima de inscrições na PROVA
 [X] Descrição na prova no meio do card
 
-[ ] Listar os parceiros na hora de selecionar, somente se o pagamento da venda dele for como Sim e o Status for como Pendente
-[ ] Na hora de selecionar o parceiro não permitir selecionar ele caso já tenha passado o limite de vinculaçoes, se a quantidade vinculações for igual ao de (quant_parceiros -> PACOTE FECHADO OU quant_maxima -> AVULSA) não permitir mais selecionar aquele parceiro.
-[ ] Vincular Parceiro não pode listar vendas que está canceladas
+[X] Listar os parceiros na hora de selecionar, somente se o pagamento da venda dele for como Sim e o Status for como Pendente
+[X] Na hora de selecionar o parceiro não permitir selecionar ele caso já tenha passado o limite de vinculaçoes, se a quantidade vinculações for igual ao de (quant_parceiros -> PACOTE FECHADO OU quant_maxima -> AVULSA) não permitir mais selecionar aquele parceiro.
+[X] Vincular Parceiro não pode listar vendas que está canceladas
+[X] Trocar as ordens do handicap na listagem de parceiros na ordem de entrada
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [-] Arrumar mensagem de erros do app (mensagem virá somente da api)

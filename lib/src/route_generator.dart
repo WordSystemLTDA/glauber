@@ -15,6 +15,7 @@ import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordem
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
+import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:provadelaco/src/modulos/splash/ui/paginas/pagina_splash.dart';
 
@@ -49,6 +50,9 @@ class RouteGenerator {
         return buildRoute(const PaginaEditarUsuario(), settings: settings);
       case AppRotas.calendario:
         return buildRoute(const PaginaCalendario(), settings: settings);
+      case AppRotas.aovivo:
+        final argumentos = settings.arguments as PaginaAoVivoArgumentos;
+        return buildRoute(PaginaAoVivo(argumentos: argumentos), settings: settings);
       case AppRotas.verEventoCalendario:
         final argumentos = settings.arguments as PaginaVerEventoCalendarioArgumentos;
         return buildRoute(PaginaVerEventoCalendario(argumentos: argumentos), settings: settings);

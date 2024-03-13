@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provider/provider.dart';
 
 class AppBarSombra extends StatefulWidget implements PreferredSizeWidget {
   final Widget titulo;
@@ -17,6 +19,8 @@ class AppBarSombra extends StatefulWidget implements PreferredSizeWidget {
 class _AppBarSombraState extends State<AppBarSombra> {
   @override
   Widget build(BuildContext context) {
+    var usuarioProvider = context.read<UsuarioProvider>();
+
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
@@ -27,7 +31,24 @@ class _AppBarSombraState extends State<AppBarSombra> {
       ]),
       child: AppBar(
         elevation: 0.0,
-        title: widget.titulo,
+        centerTitle: true,
+        title: Column(
+          children: [
+            widget.titulo,
+            if (usuarioProvider.usuario != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.people_outline, size: 20),
+                  const SizedBox(width: 5),
+                  Text(
+                    "ID: ${usuarioProvider.usuario!.id!}",
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              )
+          ],
+        ),
         actions: [
           if (widget.aparecerIconeCalendario ?? false) ...[
             IconButton(

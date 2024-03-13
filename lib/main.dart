@@ -49,6 +49,7 @@ import 'package:provadelaco/src/modulos/inicio/data/servicos/mudar_senha_servico
 import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/data/servicos/ordermdeentrada_servico_impl.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_prova_store.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
 import 'package:provadelaco/src/modulos/perfil/data/servicos/cidade_servico_impl.dart';
 import 'package:provadelaco/src/modulos/perfil/data/servicos/editar_usuario_servico_impl.dart';
@@ -63,6 +64,7 @@ import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.d
 import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
+import 'package:provadelaco/src/modulos/provas/interator/stores/provas_aovivo_store.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provider/provider.dart';
 
@@ -114,6 +116,7 @@ void main() async {
       Provider<DenunciarServico>(create: (context) => DenunciarServicoImpl(context.read())),
       Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
+      ChangeNotifierProvider(create: (context) => ProvasAoVivoStore(context.read())),
       ChangeNotifierProvider(create: (context) => VerificarPermitirCompraProvedor(context.read())),
       // Propagandas
       Provider<PropagandasServico>(create: (context) => PropagandasServicoImpl(context.read())),
@@ -126,6 +129,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => FinalizarCompraStore(context.read())),
       ChangeNotifierProvider(create: (context) => VerificarPagamentoStore(context.read())),
       ChangeNotifierProvider(create: (context) => ListarInformacoesStore(context.read())),
+
       ChangeNotifierProvider(create: (context) => ListarCartoesStore(context.read())),
       // Compras
       Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
@@ -134,6 +138,7 @@ void main() async {
       // Ordem de Entrada
       Provider<OrdemDeEntradaServico>(create: (context) => OrdemDeEntradaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaStore(context.read())),
+      ChangeNotifierProvider(create: (context) => OrdemDeEntradaProvaStore(context.read())),
       // Calendário
       Provider<AgendaServico>(create: (context) => AgendaServicoImpl(context.read())),
       Provider<AgendaDataSource>(create: (context) => AgendaDataSource([], context.read())),

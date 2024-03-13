@@ -110,6 +110,7 @@ class DadosFakes {
       quantMinima: '',
       permitirSorteio: '',
       id: '31',
+      habilitarAoVivo: '',
       nomeProva: 'WARM UP #6 E #9',
       valor: '150.00',
       permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: '', permVincularParceiro: ''),

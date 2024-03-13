@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/parceiros_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
@@ -92,8 +93,8 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
       },
       suggestionsBuilder: (BuildContext context, SearchController controller) async {
         final keyword = controller.value.text;
-
-        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(keyword);
+        var usuarioProvider = context.read<UsuarioProvider>();
+        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(usuarioProvider.usuario, keyword, parceiro.idProva);
 
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
@@ -130,6 +131,16 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                 }
               },
               leading: Text(competidor.id),
+              trailing: competidor.ativo == 'Não'
+                  ? const Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Competidor já'),
+                        Text('Fez todas as inscrições'),
+                      ],
+                    )
+                  : null,
               title: Text(
                 competidor.nome,
                 style: TextStyle(

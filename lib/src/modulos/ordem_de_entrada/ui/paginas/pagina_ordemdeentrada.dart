@@ -87,7 +87,10 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
                 itemBuilder: (context, index) {
                   var item = ordemdeentradas[index];
 
-                  return CardOrdemDeEntrada(item: item);
+                  return CardOrdemDeEntrada(
+                    item: item,
+                    mostrarOpcoes: false,
+                  );
                 },
               ),
             ),

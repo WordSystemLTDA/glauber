@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
@@ -15,6 +16,7 @@ import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dar
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
+import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_localizacao.dart';
@@ -46,7 +48,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var provasStore = context.read<ProvasStore>();
       var usuarioProvider = context.read<UsuarioProvider>();
-      provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento);
+      provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento, '');
     });
   }
 
@@ -106,7 +108,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
             if (evento != null) {
               return RefreshIndicator(
                 onRefresh: () async {
-                  provasStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento);
+                  provasStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento, '');
                 },
                 child: SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
@@ -238,14 +240,36 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                     abrirLocalizacao(evento);
                                   },
                                 ),
-                                // const SizedBox(width: 10),
-                                // ActionChip(
-                                //   avatar: const Icon(Icons.payment_outlined),
-                                //   label: const Text('Pagamentos'),
-                                //   onPressed: () {
-                                //     abrirPagamentosDisponiveis(state.pagamentosDisponiveis!);
-                                //   },
-                                // ),
+                                const SizedBox(width: 10),
+                                ActionChip(
+                                  // avatar: const Icon(Icons.live_tv_rounded),
+
+                                  label: SizedBox(
+                                    height: 20,
+                                    child: Row(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      // mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Lottie.asset(
+                                          'assets/lotties/aovivo.json',
+                                          width: 20,
+                                          height: 20,
+                                          repeat: true,
+                                        ),
+                                        const Text('AO VIVO'),
+                                      ],
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRotas.aovivo,
+                                      arguments: PaginaAoVivoArgumentos(
+                                        idEvento: widget.argumentos.idEvento,
+                                      ),
+                                    );
+                                  },
+                                ),
                                 const SizedBox(width: 10),
                                 ActionChip(
                                   avatar: const Icon(Icons.warning_amber),
@@ -281,6 +305,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               return CardProvas(
                                 prova: prova,
                                 evento: evento,
+                                mostrarOpcoes: true,
                                 nomesCabeceira: nomesCabeceira,
                                 idEvento: widget.argumentos.idEvento,
                                 provasCarrinho: provasCarrinho,
@@ -446,6 +471,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
       nomeProva: prova.nomeProva,
       valor: prova.valor,
       hcMinimo: prova.hcMinimo,
+      habilitarAoVivo: '',
       hcMaximo: prova.hcMaximo,
       permitirSorteio: prova.permitirSorteio,
       avulsa: prova.avulsa,
@@ -509,6 +535,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         hcMinimo: prova.hcMinimo,
         permitirSorteio: prova.permitirSorteio,
         hcMaximo: prova.hcMaximo,
+        habilitarAoVivo: '',
         avulsa: prova.avulsa,
         quantMinima: prova.quantMinima,
         quantMaxima: prova.quantMaxima,

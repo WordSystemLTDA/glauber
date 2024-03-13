@@ -5,6 +5,7 @@ class ParceirosCompraModelo {
   final String id;
   String nomeParceiro;
   String idParceiro;
+  final String idProva;
   final String nomeProva;
   final String nomeModalidade;
   final String nomeCidade;
@@ -14,6 +15,7 @@ class ParceirosCompraModelo {
     required this.id,
     required this.nomeParceiro,
     required this.idParceiro,
+    required this.idProva,
     required this.nomeProva,
     required this.nomeModalidade,
     required this.nomeCidade,
@@ -25,6 +27,7 @@ class ParceirosCompraModelo {
       'id': id,
       'nomeParceiro': nomeParceiro,
       'idParceiro': idParceiro,
+      'idProva': idProva,
       'nomeProva': nomeProva,
       'nomeModalidade': nomeModalidade,
       'nomeCidade': nomeCidade,
@@ -37,6 +40,7 @@ class ParceirosCompraModelo {
       id: map['id'] as String,
       nomeParceiro: map['nomeParceiro'] as String,
       idParceiro: map['idParceiro'] as String,
+      idProva: map['idProva'] as String,
       nomeProva: map['nomeProva'] as String,
       nomeModalidade: map['nomeModalidade'] as String,
       nomeCidade: map['nomeCidade'] as String,

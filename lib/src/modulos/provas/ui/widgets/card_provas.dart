@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -10,6 +12,7 @@ import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dar
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
+import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_detalhes_prova.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -23,6 +26,8 @@ class CardProvas extends StatefulWidget {
   final String idEvento;
   final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros) adicionarNoCarrinho;
   final Function(int quantidade, ProvaModelo prova, EventoModelo evento) adicionarAvulsaNoCarrinho;
+  final bool mostrarOpcoes;
+  final Function(ProvaModelo prova)? aoSelecionarProvaAoVivo;
 
   const CardProvas({
     super.key,
@@ -34,6 +39,8 @@ class CardProvas extends StatefulWidget {
     required this.provasCarrinho,
     required this.adicionarAvulsaNoCarrinho,
     required this.adicionarNoCarrinho,
+    required this.mostrarOpcoes,
+    this.aoSelecionarProvaAoVivo,
   });
 
   @override
@@ -45,9 +52,6 @@ class _CardProvasState extends State<CardProvas> {
   bool verificando = false;
 
   void aoClicarNaCabeceira(ProvaModelo prova, NomesCabeceiraModelo item) async {
-    setState(() {
-      verificando = true;
-    });
     var usuarioProvider = context.read<UsuarioProvider>();
     var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
@@ -64,6 +68,10 @@ class _CardProvasState extends State<CardProvas> {
       }
       return;
     }
+
+    setState(() {
+      verificando = true;
+    });
 
     var jaExisteCarrinho = existeNoCarrinho(prova, item);
     await verificarPermitirCompraProvedor
@@ -83,6 +91,7 @@ class _CardProvasState extends State<CardProvas> {
           hcMaximo: state.provaModelo.hcMaximo,
           idCabeceira: state.idCabeceira,
           somatoriaHandicaps: state.provaModelo.somatoriaHandicaps,
+          habilitarAoVivo: '',
           competidores: state.provaModelo.competidores,
         );
 
@@ -95,6 +104,7 @@ class _CardProvasState extends State<CardProvas> {
               builder: (contextModal) {
                 return ModalDetalhesProva(
                   prova: provaModelo,
+                  evento: widget.evento,
                   quantParceiros: state.permitirCompraModelo.quantParceiros,
                   provasCarrinho: widget.provasCarrinho,
                   adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
@@ -105,6 +115,7 @@ class _CardProvasState extends State<CardProvas> {
                       permitirSorteio: provaModelo.permitirSorteio,
                       permitirCompra: provaModelo.permitirCompra,
                       hcMinimo: "0",
+                      habilitarAoVivo: '',
                       hcMaximo: "0",
                       avulsa: provaModelo.avulsa,
                       quantMaxima: "0",
@@ -151,6 +162,7 @@ class _CardProvasState extends State<CardProvas> {
               hcMinimo: "0",
               hcMaximo: "0",
               avulsa: provaModelo.avulsa,
+              habilitarAoVivo: '',
               quantMaxima: "0",
               quantMinima: "0",
               sorteio: false,
@@ -169,6 +181,7 @@ class _CardProvasState extends State<CardProvas> {
                 builder: (contextModal) {
                   return ModalDetalhesProva(
                     prova: provaModelo,
+                    evento: widget.evento,
                     quantParceiros: state.permitirCompraModelo.quantParceiros,
                     provasCarrinho: widget.provasCarrinho,
                     adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
@@ -184,6 +197,7 @@ class _CardProvasState extends State<CardProvas> {
                         quantMaxima: "0",
                         quantMinima: "0",
                         sorteio: sorteio,
+                        habilitarAoVivo: '',
                         idCabeceira: provaModelo.idCabeceira,
                         somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                         competidores: listaCompetidores,
@@ -227,11 +241,11 @@ class _CardProvasState extends State<CardProvas> {
                 onPressed: () {
                   if (state.permitirCompraModelo.rota! == '/compras') {
                     Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: state.permitirCompraModelo.rota!)).then((value) {
-                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
                     });
                   } else {
                     Navigator.pushNamed(context, state.permitirCompraModelo.rota!).then((value) {
-                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
                     });
                   }
                 },
@@ -278,6 +292,7 @@ class _CardProvasState extends State<CardProvas> {
       quantMinima: "0",
       nomeProva: prova.nomeProva,
       valor: prova.valor,
+      habilitarAoVivo: '',
       idCabeceira: item.id,
       somatoriaHandicaps: prova.somatoriaHandicaps,
       competidores: prova.competidores,
@@ -332,11 +347,11 @@ class _CardProvasState extends State<CardProvas> {
               onPressed: () {
                 if (prova.permitirCompra.rota! == '/compras') {
                   Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: prova.permitirCompra.rota!)).then((value) {
-                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
                   });
                 } else {
                   Navigator.pushNamed(context, prova.permitirCompra.rota!).then((value) {
-                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento);
+                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
                   });
                 }
               },
@@ -350,7 +365,37 @@ class _CardProvasState extends State<CardProvas> {
           ));
         }
       }
+    } else {
+      if (prova.habilitarAoVivo == 'Sim' && widget.mostrarOpcoes) {
+        Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
+      }
     }
+  }
+
+  Widget _getIconButton(color, icon) {
+    return Container(
+      width: 120,
+      height: 90,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+        border: Border.all(width: 1, color: const Color.fromARGB(255, 255, 159, 152)),
+        color: const Color(0xFFfbe5ea),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: Colors.black,
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            'Súmula',
+            style: TextStyle(color: Colors.black),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -360,151 +405,237 @@ class _CardProvasState extends State<CardProvas> {
 
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return SizedBox(
-      width: width,
-      height: tamanhoCard,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: InkWell(
-          onTap: () {
-            aoClicarNoCard(prova);
-          },
-          borderRadius: BorderRadius.circular(5),
-          child: Stack(
-            children: [
-              if (verificando) ...[
-                const Center(child: CircularProgressIndicator()),
-              ],
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 5,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                bottomLeft: Radius.circular(8),
-                              ),
-                            ),
-                            child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: (width - 90) - 50,
-                                child: Text(
-                                  prova.nomeProva,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 16),
+    return SwipeActionCell(
+      key: ObjectKey(prova),
+      trailingActions: prova.habilitarAoVivo == 'Sim' && widget.mostrarOpcoes
+          ? <SwipeAction>[
+              SwipeAction(
+                color: Colors.transparent,
+                content: _getIconButton(Colors.red, Icons.live_tv_outlined),
+                onTap: (handler) {
+                  Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
+                },
+              ),
+            ]
+          : null,
+      child: SizedBox(
+        width: width,
+        height: tamanhoCard,
+        child: Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          child: InkWell(
+            onTap: () {
+              aoClicarNoCard(prova);
+            },
+            borderRadius: BorderRadius.circular(5),
+            child: Stack(
+              children: [
+                if (verificando) ...[
+                  const Center(child: CircularProgressIndicator()),
+                ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          Skeleton.shade(
+                            child: Container(
+                              width: 5,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8),
                                 ),
                               ),
-                              if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
+                              child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 SizedBox(
                                   width: (width - 90) - 50,
                                   child: Text(
-                                    prova.descricao!,
+                                    prova.nomeProva,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
+                                  SizedBox(
+                                    width: (width - 90) - 50,
+                                    child: Text(
+                                      prova.descricao!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                                SizedBox(
+                                  width: (width - 90) - 50,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        Utils.coverterEmReal.format(double.parse(prova.valor)),
+                                        style: const TextStyle(fontSize: 18, color: Colors.green),
+                                      ),
+                                      if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Text(
+                                            "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
+                                            style: const TextStyle(fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ],
-                              SizedBox(
-                                width: (width - 90) - 50,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(prova.valor)),
-                                      style: const TextStyle(fontSize: 18, color: Colors.green),
-                                    ),
-                                    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Text(
-                                          "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 90,
-                    height: tamanhoCard,
-                    child: Material(
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        margin: EdgeInsets.zero,
-                        elevation: 5,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                        ),
-                        child: SizedBox(
-                          height: tamanhoCard,
-                          child: ListView.separated(
-                            separatorBuilder: (context, index) {
-                              return Divider(height: 1, color: Theme.of(context).colorScheme.background);
-                            },
-                            padding: const EdgeInsets.only(bottom: 1),
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: widget.nomesCabeceira!.length,
-                            itemBuilder: (context, index) {
-                              var item = widget.nomesCabeceira![index];
-
-                              return Badge(
-                                isLabelVisible: quantidadeExisteCarrinho(prova, item) != 0,
-                                label: Text(quantidadeExisteCarrinho(prova, item).toString()),
-                                offset: const Offset(-2, 3),
-                                child: SizedBox(
-                                  width: 90,
-                                  height: tamanhoCard / 2.1,
-                                  child: Material(
-                                    color: coresAction(prova, item),
-                                    child: InkWell(
-                                      borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                                      onTap: () {
-                                        aoClicarNaCabeceira(prova, item);
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          item.nome,
-                                          style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                          textAlign: TextAlign.center,
+                    if (!widget.mostrarOpcoes) ...[
+                      SizedBox(
+                        width: 90,
+                        height: tamanhoCard,
+                        child: Material(
+                          child: Card(
+                            clipBehavior: Clip.hardEdge,
+                            margin: EdgeInsets.zero,
+                            elevation: 5,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+                            ),
+                            child: SizedBox(
+                                height: tamanhoCard,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+                                        border: Border.all(width: 1, color: const Color.fromARGB(255, 255, 159, 152)),
+                                        color: const Color(0xFFfbe5ea),
+                                      ),
+                                      width: 90,
+                                      height: tamanhoCard - 10,
+                                      child: Material(
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (widget.aoSelecionarProvaAoVivo != null) {
+                                              widget.aoSelecionarProvaAoVivo!(prova);
+                                            }
+                                          },
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Lottie.asset(
+                                                      'assets/lotties/aovivo.json',
+                                                      width: 20,
+                                                      height: 20,
+                                                      repeat: true,
+                                                    ),
+                                                    const Text(
+                                                      'Ver',
+                                                      // style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Text(
+                                                  'AO VIVO',
+                                                  // style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  ],
+                                )),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                    ],
+                    if (widget.mostrarOpcoes) ...[
+                      SizedBox(
+                        width: 90,
+                        height: tamanhoCard,
+                        child: Material(
+                          child: Card(
+                            clipBehavior: Clip.hardEdge,
+                            margin: EdgeInsets.zero,
+                            elevation: 5,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+                            ),
+                            child: SizedBox(
+                              height: tamanhoCard,
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) {
+                                  return Divider(height: 1, color: Theme.of(context).colorScheme.background);
+                                },
+                                padding: const EdgeInsets.only(bottom: 1),
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: widget.nomesCabeceira!.length,
+                                itemBuilder: (context, index) {
+                                  var item = widget.nomesCabeceira![index];
+
+                                  return Badge(
+                                    isLabelVisible: quantidadeExisteCarrinho(prova, item) != 0,
+                                    label: Text(quantidadeExisteCarrinho(prova, item).toString()),
+                                    offset: const Offset(-2, 3),
+                                    child: SizedBox(
+                                      width: 90,
+                                      height: tamanhoCard / 2.1,
+                                      child: Material(
+                                        color: coresAction(prova, item),
+                                        child: InkWell(
+                                          borderRadius:
+                                              index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                          onTap: () {
+                                            aoClicarNaCabeceira(prova, item);
+                                          },
+                                          child: Center(
+                                            child: Text(
+                                              item.nome,
+                                              style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

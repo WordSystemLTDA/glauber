@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/orderdeentrada_estado.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/parceiros_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
 
 class OrdemDeEntradaStore extends ValueNotifier<OrdemDeEntradaEstado> {
@@ -12,7 +12,7 @@ class OrdemDeEntradaStore extends ValueNotifier<OrdemDeEntradaEstado> {
   void listar(UsuarioModelo? usuario) async {
     value = OrdemDeEntradaCarregando();
 
-    List<OrdemDeEntradaModelo> ordemdeentradas = await _servico.listar(usuario);
+    List<ParceirosModelos> ordemdeentradas = await _servico.listar(usuario);
 
     if (ordemdeentradas.isNotEmpty) {
       value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
@@ -22,7 +22,7 @@ class OrdemDeEntradaStore extends ValueNotifier<OrdemDeEntradaEstado> {
   }
 
   void atualizarLista(UsuarioModelo? usuario) async {
-    List<OrdemDeEntradaModelo> ordemdeentradas = await _servico.listar(usuario);
+    List<ParceirosModelos> ordemdeentradas = await _servico.listar(usuario);
 
     if (ordemdeentradas.isNotEmpty) {
       value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);

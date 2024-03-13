@@ -16,10 +16,10 @@ class ProvaServicoImpl implements ProvaServico {
   ProvaServicoImpl(this.client);
 
   @override
-  Future<ProvaRetornoModelo> listar(UsuarioModelo? usuario, String idEvento) async {
+  Future<ProvaRetornoModelo> listar(UsuarioModelo? usuario, String idEvento, String tipo) async {
     var idCliente = usuario != null ? usuario.id : 0;
 
-    var url = 'provas/listar.php?id_evento=$idEvento&id_cliente=$idCliente';
+    var url = 'provas/listar.php?id_evento=$idEvento&id_cliente=$idCliente&tipo=$tipo';
 
     var response = await client.get(url: url);
     var jsonData = jsonDecode(response.data);

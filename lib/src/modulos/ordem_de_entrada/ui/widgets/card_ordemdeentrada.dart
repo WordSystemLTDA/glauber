@@ -6,10 +6,12 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class CardOrdemDeEntrada extends StatefulWidget {
   final OrdemDeEntradaModelo item;
+  final bool mostrarOpcoes;
 
   const CardOrdemDeEntrada({
     super.key,
     required this.item,
+    required this.mostrarOpcoes,
   });
 
   @override
@@ -17,10 +19,9 @@ class CardOrdemDeEntrada extends StatefulWidget {
 }
 
 class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
-  double tamanhoCard = 140;
-
   @override
   Widget build(BuildContext context) {
+    double tamanhoCard = widget.mostrarOpcoes ? 107 : 140;
     var item = widget.item;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
@@ -75,7 +76,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               const SizedBox(height: 5),
                               Text(item.nomeEvento),
                               const SizedBox(height: 5),
-                              Text("Seu HandiCap: ${usuarioProvider.usuario!.hcCabeceira!}"),
+                              Text("Seu HandiCap: ${item.nomeCabeceira == 'Pezeiro' ? usuarioProvider.usuario!.hcPezeiro : usuarioProvider.usuario!.hcCabeceira!}"),
                               const SizedBox(height: 5),
                               Text(item.nomeCabeceira),
                               const SizedBox(height: 5),
@@ -216,7 +217,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                           SizedBox(
                             width: width * 0.7,
                             child: Text(
-                              item.nomeEvento,
+                              widget.mostrarOpcoes ? item.nomeCliente : item.nomeEvento,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -231,16 +232,18 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
-                          SizedBox(
-                            width: width * 0.70,
-                            child: Text(
-                              item.nomeProva,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 16),
+                          if (widget.mostrarOpcoes == false) ...[
+                            SizedBox(
+                              width: width * 0.70,
+                              child: Text(
+                                item.nomeProva,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 16),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 15),
+                          ],
+                          SizedBox(height: widget.mostrarOpcoes ? 5 : 15),
                           Text(
                             item.nomeCabeceira,
                             style: const TextStyle(fontSize: 18, color: Colors.green),

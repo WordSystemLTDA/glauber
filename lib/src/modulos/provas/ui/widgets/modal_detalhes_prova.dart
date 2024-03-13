@@ -1,5 +1,6 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_parceiros.dart';
@@ -7,6 +8,7 @@ import 'package:provadelaco/src/modulos/provas/ui/widgets/card_parceiros.dart';
 class ModalDetalhesProva extends StatefulWidget {
   final bool Function(int quantidade, List<CompetidoresModelo> listaCompetidores, bool sorteio) adicionarNoCarrinho;
   final ProvaModelo prova;
+  final EventoModelo evento;
   final String? quantParceiros;
   final List<ProvaModelo> provasCarrinho;
 
@@ -14,6 +16,7 @@ class ModalDetalhesProva extends StatefulWidget {
     super.key,
     required this.adicionarNoCarrinho,
     required this.prova,
+    required this.evento,
     this.quantParceiros,
     required this.provasCarrinho,
   });
@@ -60,6 +63,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             apelido: itemNovo.apelido,
             nomeCidade: itemNovo.nomeCidade,
             siglaEstado: itemNovo.siglaEstado,
+            ativo: itemNovo.ativo,
             jaExistente: itemNovo.jaExistente,
           );
 
@@ -79,6 +83,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             apelido: '',
             nomeCidade: '',
             siglaEstado: '',
+            ativo: 'Sim',
             jaExistente: false,
           ));
         }
@@ -90,6 +95,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             apelido: '',
             nomeCidade: '',
             siglaEstado: '',
+            ativo: 'Sim',
             jaExistente: false,
           ));
         }
@@ -107,6 +113,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
           apelido: '',
           nomeCidade: '',
           siglaEstado: '',
+          ativo: 'Sim',
           jaExistente: false,
         ));
       });
@@ -164,6 +171,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
 
                       return CardParceiros(
                         item: item,
+                        idProva: widget.prova.id,
                         listaCompetidores: listaCompetidores,
                       );
                     },

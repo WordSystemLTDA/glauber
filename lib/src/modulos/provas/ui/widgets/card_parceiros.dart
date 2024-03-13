@@ -1,14 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
 
 class CardParceiros extends StatefulWidget {
   final CompetidoresModelo item;
+  final String idProva;
   final List<CompetidoresModelo> listaCompetidores;
 
-  const CardParceiros({super.key, required this.item, required this.listaCompetidores});
+  const CardParceiros({
+    super.key,
+    required this.item,
+    required this.idProva,
+    required this.listaCompetidores,
+  });
 
   @override
   State<CardParceiros> createState() => _CardParceirosState();
@@ -92,19 +100,20 @@ class _CardParceirosState extends State<CardParceiros> {
       },
       suggestionsBuilder: (BuildContext context, SearchController controller) async {
         final keyword = controller.value.text;
+        var usuarioProvider = context.read<UsuarioProvider>();
 
-        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(keyword);
+        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(usuarioProvider.usuario, keyword, widget.idProva);
 
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
-            color: widget.listaCompetidores.contains(competidor) ? const Color(0xFFfbe5ea) : null,
-            shape: widget.listaCompetidores.contains(competidor)
+            color: (competidor.ativo == 'Não' || widget.listaCompetidores.contains(competidor)) ? const Color(0xFFfbe5ea) : null,
+            shape: (competidor.ativo == 'Não' || widget.listaCompetidores.contains(competidor))
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
                 : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: ListTile(
               onTap: () {
-                if (!(widget.listaCompetidores.contains(competidor))) {
+                if (competidor.ativo == 'Sim' && !(widget.listaCompetidores.contains(competidor))) {
                   controller.closeView('');
                   FocusScope.of(context).unfocus();
                   setState(() {
@@ -117,6 +126,16 @@ class _CardParceirosState extends State<CardParceiros> {
                 }
               },
               leading: Text(competidor.id),
+              trailing: competidor.ativo == 'Não'
+                  ? const Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Competidor já'),
+                        Text('Fez todas as inscrições'),
+                      ],
+                    )
+                  : null,
               title: Text(
                 competidor.nome,
                 style: TextStyle(
@@ -133,10 +152,11 @@ class _CardParceirosState extends State<CardParceiros> {
                     competidor.apelido,
                     style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                   ),
-                  Text(
-                    "${competidor.nomeCidade} - ${competidor.siglaEstado}",
-                    style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
-                  ),
+                  if (competidor.nomeCidade.isNotEmpty)
+                    Text(
+                      "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                      style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                    ),
                 ],
               ),
             ),

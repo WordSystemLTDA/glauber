@@ -3,10 +3,10 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart'
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 
-class ProvasStore extends ValueNotifier<ProvasEstado> {
+class ProvasAoVivoStore extends ValueNotifier<ProvasEstado> {
   final ProvaServico _provaServico;
 
-  ProvasStore(this._provaServico) : super(EstadoInicial());
+  ProvasAoVivoStore(this._provaServico) : super(EstadoInicial());
 
   void listar(UsuarioModelo? usuario, String idEvento, String tipo) async {
     value = ProvasCarregando();

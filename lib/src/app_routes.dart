@@ -18,6 +18,7 @@ class AppRotas {
   static const sucessoCompra = '/sucessoCompra';
   static const calendario = '/calendario';
   static const verEventoCalendario = '/verEventoCalendario';
+  static const aovivo = '/aovivo';
 
   static const paginaInicial = splash;
 
