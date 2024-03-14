@@ -143,7 +143,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                     ),
                     if (usuarioProvider.usuario != null) ...[
                       Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 10),
+                        padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
                         child: Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -151,11 +151,12 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 0),
+                        padding: const EdgeInsets.only(left: 5, right: 5, top: 0),
                         child: Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           usuarioProvider.usuario!.email!,
+                          style: const TextStyle(fontSize: 11),
                         ),
                       ),
                     ],

@@ -13,6 +13,7 @@ class PermitirCompraModelo extends Equatable {
   final String? quantParceiros;
   final String? permVincularParceiro;
   final List<CompetidoresModelo2>? competidoresJaSelecionados;
+  final String? idCabeceiraInvalido;
 
   const PermitirCompraModelo({
     required this.liberado,
@@ -23,6 +24,7 @@ class PermitirCompraModelo extends Equatable {
     this.quantParceiros,
     this.permVincularParceiro,
     this.competidoresJaSelecionados,
+    this.idCabeceiraInvalido,
   });
 
   @override
@@ -38,6 +40,7 @@ class PermitirCompraModelo extends Equatable {
       'quantParceiros': quantParceiros,
       'permVincularParceiro': permVincularParceiro,
       'competidoresJaSelecionados': competidoresJaSelecionados?.map((x) => x.toMap()).toList(),
+      'idCabeceiraInvalido': idCabeceiraInvalido,
     };
   }
 
@@ -57,6 +60,7 @@ class PermitirCompraModelo extends Equatable {
               ),
             )
           : null,
+      idCabeceiraInvalido: map['idCabeceiraInvalido'] != null ? map['idCabeceiraInvalido'] as String : null,
     );
   }
 

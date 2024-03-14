@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 
 class FuncoesGlobais {
   static void abrirWhatsapp(String celular) async {
@@ -11,6 +11,18 @@ class FuncoesGlobais {
     var whatsapp = "${ConstantesGlobal.urlWhatsapp}$celularFiltrado";
 
     await launchUrl(Uri.parse(whatsapp));
+  }
+
+  static void abrirLinkAtualizacao(String atualizacaoAndroid, String atualizacaoIos) async {
+    if (Platform.isAndroid) {
+      await launchUrl(Uri.parse(atualizacaoAndroid)).onError((error, stackTrace) {
+        return false;
+      });
+    } else if (Platform.isIOS) {
+      await launchUrl(Uri.parse(atualizacaoIos)).onError((error, stackTrace) {
+        return false;
+      });
+    }
   }
 
   static Future<String> getVersaoInstalada() async {

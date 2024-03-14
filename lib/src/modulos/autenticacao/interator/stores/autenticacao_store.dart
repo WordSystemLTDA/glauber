@@ -1,12 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -33,6 +33,10 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
       });
     } else {
       await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
+        if (usuario == null) {
+          return;
+        }
+
         await _autenticacaoServico.entrar(email, senha, tiposLogin, usuario, tokenNotificacao).then((resposta) {
           var (sucesso, _, usuarioRetorno) = resposta;
 

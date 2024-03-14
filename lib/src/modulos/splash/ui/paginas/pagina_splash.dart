@@ -21,7 +21,6 @@ class _PaginaSplashState extends State<PaginaSplash> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // InformacoesApp.getLogoApp(context, widthClara: 200, widthEscura: 140),
             SizedBox(height: 25),
             CircularProgressIndicator(),
           ],
@@ -34,6 +33,7 @@ class _PaginaSplashState extends State<PaginaSplash> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      verificarLogin();
       initializeFirebaseMessaging();
       checkForNotifications();
     });
@@ -45,7 +45,6 @@ class _PaginaSplashState extends State<PaginaSplash> {
 
   checkForNotifications() async {
     await Provider.of<NotificationService>(context, listen: false).checkForNotifications();
-    verificarLogin();
   }
 
   void verificarLogin() async {

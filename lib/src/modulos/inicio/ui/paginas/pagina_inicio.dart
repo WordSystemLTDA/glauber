@@ -292,6 +292,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
           titulo: LogoApp(width: 90),
           aparecerIconeNotificacao: true,
           aparecerIconeCalendario: true,
+          aparecerIdUsuario: true,
         ),
         body: PageView(
           controller: pageController,

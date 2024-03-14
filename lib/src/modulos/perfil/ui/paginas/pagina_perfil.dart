@@ -69,6 +69,17 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'titulo': const Text('Atualização'),
       'ativo': true,
       'icone': const Icon(Icons.system_update_outlined),
+      'funcao': (BuildContext context) {
+        var usuarioProvider = context.read<UsuarioProvider>();
+
+        if (usuarioProvider.usuario != null &&
+            usuarioProvider.usuario!.atualizacaoAndroid != null &&
+            usuarioProvider.usuario!.atualizacaoAndroid!.isNotEmpty &&
+            usuarioProvider.usuario!.atualizacaoIos != null &&
+            usuarioProvider.usuario!.atualizacaoIos!.isNotEmpty) {
+          FuncoesGlobais.abrirLinkAtualizacao(usuarioProvider.usuario!.atualizacaoAndroid!, usuarioProvider.usuario!.atualizacaoIos!);
+        }
+      }
     },
     {
       'titulo': const Text('Sugestões'),
@@ -327,12 +338,6 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             "HC Pé: ${usuarioProvider.usuario!.hcPezeiro!.isEmpty ? 'Nenhum' : usuarioProvider.usuario!.hcPezeiro}",
-                          ),
-                          const SizedBox(width: 20),
-                          Text(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            "Somatória: ${usuarioProvider.usuario!.somaDeHandicaps}",
                           ),
                         ],
                       ),

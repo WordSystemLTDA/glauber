@@ -11,7 +11,15 @@ class VerificarPermitirCompraProvedor extends ValueNotifier<VerificarPermitirCom
   VerificarPermitirCompraProvedor(this._servico) : super(VerificarPermitirCompraEstadoInicial());
 
   Future<SucessoAoVerificarPermitirCompra> verificarPermitirCompra(
-      ProvaModelo provaModelo, EventoModelo eventoModelo, String idEvento, String idProva, UsuarioModelo usuario, String idCabeceira, bool jaExisteCarrinho) async {
+    ProvaModelo provaModelo,
+    EventoModelo eventoModelo,
+    String idEvento,
+    String idProva,
+    UsuarioModelo usuario,
+    String idCabeceira,
+    bool jaExisteCarrinho,
+    String quantidadeCarrinho,
+  ) async {
     value = VerificandoPermitirCompra(idProvaVerificando: idProva, idCabeceiraVerificando: idCabeceira);
 
     if (jaExisteCarrinho) {
@@ -22,7 +30,7 @@ class VerificarPermitirCompraProvedor extends ValueNotifier<VerificarPermitirCom
         permitirCompraModelo: provaModelo.permitirCompra,
       );
     } else {
-      var permitirCompra = await _servico.permitirAdicionarCompra(idEvento, idProva, usuario, idCabeceira);
+      var permitirCompra = await _servico.permitirAdicionarCompra(idEvento, idProva, usuario, idCabeceira, quantidadeCarrinho);
 
       return SucessoAoVerificarPermitirCompra(
         provaModelo: provaModelo,

@@ -32,9 +32,9 @@ class RouteGenerator {
         final argumentos = settings.arguments as PaginaInicioArgumentos?;
 
         if (argumentos != null) {
-          return buildRoute(PaginaInicio(argumentos: argumentos), settings: settings);
+          return buildRoute(PaginaInicio(argumentos: argumentos), settings: settings, telaInicio: true);
         } else {
-          return buildRoute(const PaginaInicio(), settings: settings);
+          return buildRoute(const PaginaInicio(), settings: settings, telaInicio: true);
         }
       case AppRotas.splash:
         return buildRoute(const PaginaSplash(), settings: settings);
@@ -76,8 +76,22 @@ class RouteGenerator {
     }
   }
 
-  static MaterialPageRoute buildRoute(Widget child, {required RouteSettings settings}) {
-    return MaterialPageRoute(settings: settings, builder: (BuildContext context) => child);
+  static dynamic buildRoute(Widget child, {required RouteSettings settings, bool telaInicio = false}) {
+    if (telaInicio) {
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return child;
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      );
+    } else {
+      return MaterialPageRoute(settings: settings, builder: (BuildContext context) => child);
+    }
   }
 
   static Route<dynamic> _errorRoute() {

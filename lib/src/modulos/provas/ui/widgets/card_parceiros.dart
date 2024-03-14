@@ -80,7 +80,7 @@ class _CardParceirosState extends State<CardParceiros> {
                                 item.apelido,
                                 style: const TextStyle(color: Colors.green),
                               ),
-                              if (item.nome.isNotEmpty)
+                              if (item.nomeCidade.isNotEmpty)
                                 Text(
                                   "${item.nomeCidade} - ${item.siglaEstado}",
                                   style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),

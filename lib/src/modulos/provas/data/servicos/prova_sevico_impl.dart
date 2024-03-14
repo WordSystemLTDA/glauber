@@ -48,10 +48,10 @@ class ProvaServicoImpl implements ProvaServico {
   }
 
   @override
-  Future<PermitirCompraModelo> permitirAdicionarCompra(String idEvento, String idProva, UsuarioModelo? usuario, String idCabeceira) async {
+  Future<PermitirCompraModelo> permitirAdicionarCompra(String idEvento, String idProva, UsuarioModelo? usuario, String idCabeceira, String quantidadeCarrinho) async {
     var idCliente = usuario != null ? usuario.id : 0;
 
-    var url = 'provas/permitir_adicionar_compra.php?id_evento=$idEvento&id_cliente=$idCliente&id_cabeceira=$idCabeceira&id_prova=$idProva';
+    var url = 'provas/permitir_adicionar_compra.php?id_evento=$idEvento&id_cliente=$idCliente&id_cabeceira=$idCabeceira&id_prova=$idProva&quantidade_carrinho=$quantidadeCarrinho';
 
     var response = await client.get(url: url);
     var jsonData = jsonDecode(response.data);

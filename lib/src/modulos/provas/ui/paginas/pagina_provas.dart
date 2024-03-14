@@ -205,7 +205,10 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Container(
                                       width: 90,
-                                      decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      decoration: const BoxDecoration(
+                                        color: Color.fromARGB(106, 0, 0, 0),
+                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      ),
                                       child: IconButton(
                                         icon: const Row(
                                           children: [
@@ -305,7 +308,6 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               return CardProvas(
                                 prova: prova,
                                 evento: evento,
-                                mostrarOpcoes: true,
                                 nomesCabeceira: nomesCabeceira,
                                 idEvento: widget.argumentos.idEvento,
                                 provasCarrinho: provasCarrinho,
@@ -314,6 +316,11 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                 },
                                 adicionarNoCarrinho: (prova, evento, quantParceiros) {
                                   adicionarNoCarrinho(prova, evento, quantParceiros);
+                                },
+                                removerDoCarrinho: (prova) {
+                                  setState(() {
+                                    provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
+                                  });
                                 },
                               );
                             },

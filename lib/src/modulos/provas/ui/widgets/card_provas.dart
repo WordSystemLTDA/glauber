@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -26,20 +25,19 @@ class CardProvas extends StatefulWidget {
   final String idEvento;
   final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros) adicionarNoCarrinho;
   final Function(int quantidade, ProvaModelo prova, EventoModelo evento) adicionarAvulsaNoCarrinho;
-  final bool mostrarOpcoes;
+  final Function(ProvaModelo prova) removerDoCarrinho;
   final Function(ProvaModelo prova)? aoSelecionarProvaAoVivo;
 
   const CardProvas({
     super.key,
     required this.prova,
     required this.idEvento,
-    // required this.verificando,
     required this.nomesCabeceira,
     required this.evento,
     required this.provasCarrinho,
     required this.adicionarAvulsaNoCarrinho,
     required this.adicionarNoCarrinho,
-    required this.mostrarOpcoes,
+    required this.removerDoCarrinho,
     this.aoSelecionarProvaAoVivo,
   });
 
@@ -74,8 +72,9 @@ class _CardProvasState extends State<CardProvas> {
     });
 
     var jaExisteCarrinho = existeNoCarrinho(prova, item);
+    var quantidadeCarrinho = widget.provasCarrinho.where((element) => element.id == prova.id).length.toString();
     await verificarPermitirCompraProvedor
-        .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item.id, jaExisteCarrinho)
+        .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item.id, jaExisteCarrinho, quantidadeCarrinho)
         .then((state) {
       if (state.permitirCompraModelo.liberado) {
         var provaModelo = ProvaModelo(
@@ -127,17 +126,14 @@ class _CardProvasState extends State<CardProvas> {
                     );
 
                     if (quantidade == 0) {
-                      setState(() {
-                        widget.provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
-                      });
+                      widget.removerDoCarrinho(novaProva);
                       Navigator.pop(context);
                       return true;
                     }
 
-                    if (state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
-                        ((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
-                            ? false
-                            : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                    if (((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
+                        ? false
+                        : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                       return false;
                     }
 
@@ -152,7 +148,8 @@ class _CardProvasState extends State<CardProvas> {
             );
           }
         } else {
-          if (int.tryParse(state.permitirCompraModelo.quantParceiros!) != null ? int.parse(state.permitirCompraModelo.quantParceiros!) == 0 : false) {
+          if (state.permitirCompraModelo.permVincularParceiro == 'Não' ||
+              (int.tryParse(state.permitirCompraModelo.quantParceiros!) != null ? int.parse(state.permitirCompraModelo.quantParceiros!) == 0 : false)) {
             var novaProva = ProvaModelo(
               id: provaModelo.id,
               nomeProva: provaModelo.nomeProva,
@@ -204,17 +201,14 @@ class _CardProvasState extends State<CardProvas> {
                       );
 
                       if (quantidade == 0) {
-                        setState(() {
-                          widget.provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
-                        });
+                        widget.removerDoCarrinho(novaProva);
                         Navigator.pop(context);
                         return true;
                       }
 
-                      if (state.permitirCompraModelo.permVincularParceiro == 'Sim' &&
-                          ((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
-                              ? false
-                              : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                      if (((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
+                          ? false
+                          : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                         return false;
                       }
 
@@ -366,7 +360,7 @@ class _CardProvasState extends State<CardProvas> {
         }
       }
     } else {
-      if (prova.habilitarAoVivo == 'Sim' && widget.mostrarOpcoes) {
+      if (prova.habilitarAoVivo == 'Sim') {
         Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
       }
     }
@@ -375,7 +369,8 @@ class _CardProvasState extends State<CardProvas> {
   Widget _getIconButton(color, icon) {
     return Container(
       width: 120,
-      height: 90,
+      height: 120,
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
         border: Border.all(width: 1, color: const Color.fromARGB(255, 255, 159, 152)),
@@ -407,17 +402,15 @@ class _CardProvasState extends State<CardProvas> {
 
     return SwipeActionCell(
       key: ObjectKey(prova),
-      trailingActions: prova.habilitarAoVivo == 'Sim' && widget.mostrarOpcoes
-          ? <SwipeAction>[
-              SwipeAction(
-                color: Colors.transparent,
-                content: _getIconButton(Colors.red, Icons.live_tv_outlined),
-                onTap: (handler) {
-                  Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
-                },
-              ),
-            ]
-          : null,
+      trailingActions: <SwipeAction>[
+        SwipeAction(
+          color: Colors.transparent,
+          content: _getIconButton(Colors.red, Icons.live_tv_outlined),
+          onTap: (handler) {
+            Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
+          },
+        ),
+      ],
       child: SizedBox(
         width: width,
         height: tamanhoCard,
@@ -506,132 +499,67 @@ class _CardProvasState extends State<CardProvas> {
                         ],
                       ),
                     ),
-                    if (!widget.mostrarOpcoes) ...[
-                      SizedBox(
-                        width: 90,
-                        height: tamanhoCard,
-                        child: Material(
-                          child: Card(
-                            clipBehavior: Clip.hardEdge,
-                            margin: EdgeInsets.zero,
-                            elevation: 5,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                            ),
-                            child: SizedBox(
-                                height: tamanhoCard,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                                        border: Border.all(width: 1, color: const Color.fromARGB(255, 255, 159, 152)),
-                                        color: const Color(0xFFfbe5ea),
-                                      ),
-                                      width: 90,
-                                      height: tamanhoCard - 10,
-                                      child: Material(
-                                        child: InkWell(
-                                          onTap: () {
-                                            if (widget.aoSelecionarProvaAoVivo != null) {
-                                              widget.aoSelecionarProvaAoVivo!(prova);
-                                            }
-                                          },
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Lottie.asset(
-                                                      'assets/lotties/aovivo.json',
-                                                      width: 20,
-                                                      height: 20,
-                                                      repeat: true,
-                                                    ),
-                                                    const Text(
-                                                      'Ver',
-                                                      // style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Text(
-                                                  'AO VIVO',
-                                                  // style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
+                    SizedBox(
+                      width: 90,
+                      height: tamanhoCard,
+                      child: Material(
+                        child: Card(
+                          clipBehavior: Clip.hardEdge,
+                          margin: EdgeInsets.zero,
+                          elevation: 5,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
                           ),
-                        ),
-                      ),
-                    ],
-                    if (widget.mostrarOpcoes) ...[
-                      SizedBox(
-                        width: 90,
-                        height: tamanhoCard,
-                        child: Material(
-                          child: Card(
-                            clipBehavior: Clip.hardEdge,
-                            margin: EdgeInsets.zero,
-                            elevation: 5,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                            ),
-                            child: SizedBox(
-                              height: tamanhoCard,
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return Divider(height: 1, color: Theme.of(context).colorScheme.background);
-                                },
-                                padding: const EdgeInsets.only(bottom: 1),
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: widget.nomesCabeceira!.length,
-                                itemBuilder: (context, index) {
-                                  var item = widget.nomesCabeceira![index];
+                          child: SizedBox(
+                            height: tamanhoCard,
+                            child: ListView.separated(
+                              separatorBuilder: (context, index) {
+                                return Divider(height: 1, color: Theme.of(context).colorScheme.background);
+                              },
+                              padding: const EdgeInsets.only(bottom: 1),
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: widget.nomesCabeceira!.length,
+                              itemBuilder: (context, index) {
+                                var item = widget.nomesCabeceira![index];
 
-                                  return Badge(
-                                    isLabelVisible: quantidadeExisteCarrinho(prova, item) != 0,
-                                    label: Text(quantidadeExisteCarrinho(prova, item).toString()),
-                                    offset: const Offset(-2, 3),
-                                    child: SizedBox(
-                                      width: 90,
-                                      height: tamanhoCard / 2.1,
-                                      child: Material(
-                                        color: coresAction(prova, item),
-                                        child: InkWell(
-                                          borderRadius:
-                                              index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                                          onTap: () {
-                                            aoClicarNaCabeceira(prova, item);
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              item.nome,
-                                              style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                              textAlign: TextAlign.center,
+                                return Badge(
+                                  isLabelVisible: quantidadeExisteCarrinho(prova, item) != 0,
+                                  label: Text(quantidadeExisteCarrinho(prova, item).toString()),
+                                  offset: const Offset(-2, 3),
+                                  child: SizedBox(
+                                    width: 90,
+                                    height: tamanhoCard / 2.1,
+                                    child: Material(
+                                      color: coresAction(prova, item),
+                                      child: InkWell(
+                                        borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                        onTap: () {
+                                          aoClicarNaCabeceira(prova, item);
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            item.nome,
+                                            style: TextStyle(
+                                              color: prova.permitirCompra.liberado == false ||
+                                                      (prova.permitirCompra.idCabeceiraInvalido != null && prova.permitirCompra.idCabeceiraInvalido! == item.id)
+                                                  ? Colors.grey
+                                                  : existeNoCarrinho(prova, item)
+                                                      ? Colors.white
+                                                      : (isDarkMode ? Colors.white : Colors.black),
                                             ),
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ],

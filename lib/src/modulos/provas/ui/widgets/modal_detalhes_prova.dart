@@ -43,7 +43,11 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   // mudar quantidade que irá aparecer dependendo se ja tem ou não selecionado
   void mudarQuantidade() {
     if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty) {
-      quantidade = int.parse(widget.prova.quantMinima);
+      if (widget.prova.avulsa == 'Sim') {
+        quantidade = int.parse(widget.prova.quantMinima);
+      } else {
+        quantidade = 1;
+      }
     } else {
       quantidade = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).length;
     }
@@ -121,13 +125,19 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   }
 
   void removerQuantidade() {
-    if (quantidade > int.parse(widget.prova.quantMinima)) {
-      setState(() {
-        quantidade = quantidade - 1;
-        listaCompetidores.removeLast();
-      });
-    } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
-      widget.adicionarNoCarrinho(0, [], sorteio);
+    if (widget.prova.avulsa == 'Sim') {
+      if (quantidade > int.parse(widget.prova.quantMinima)) {
+        setState(() {
+          quantidade = quantidade - 1;
+          listaCompetidores.removeLast();
+        });
+      } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
+        widget.adicionarNoCarrinho(0, [], sorteio);
+      }
+    } else {
+      if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
+        widget.adicionarNoCarrinho(0, [], sorteio);
+      }
     }
   }
 
@@ -184,12 +194,12 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                   children: [
                     Expanded(
                       child: IconButton(
-                        color: quantidade > int.parse(widget.prova.quantMinima) ? Colors.red : Colors.grey,
+                        color: (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima))) ? Colors.red : Colors.grey,
                         iconSize: 34,
                         onPressed: () {
                           removerQuantidade();
                         },
-                        icon: quantidade > int.parse(widget.prova.quantMinima) ||
+                        icon: (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima))) ||
                                 widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
                             ? const Icon(Icons.remove_circle_outline_outlined)
                             : const Icon(Icons.delete_outline_outlined, color: Colors.red),

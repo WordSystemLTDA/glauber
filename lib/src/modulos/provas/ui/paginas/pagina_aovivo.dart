@@ -9,7 +9,7 @@ import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemd
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/widgets/card_ordemdeentrada_prova.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_aovivo_store.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas_aovivo.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -303,10 +303,10 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                 itemBuilder: (context, index) {
                                   var prova = provas[index];
 
-                                  return CardProvas(
+                                  return CardProvasAoVivo(
                                     prova: prova,
                                     evento: evento,
-                                    mostrarOpcoes: false,
+                                    // mostrarOpcoes: false,
                                     nomesCabeceira: nomesCabeceira,
                                     idEvento: widget.argumentos.idEvento,
                                     provasCarrinho: const [],
@@ -323,6 +323,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                     adicionarNoCarrinho: (prova, evento, quantParceiros) {
                                       // adicionarNoCarrinho(prova, evento, quantParceiros);
                                     },
+                                    removerDoCarrinho: (prova) {},
                                   );
                                 },
                               ),
@@ -333,17 +334,42 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                               onRefresh: () async {
                                 provasAoVivoStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento, 'aovivo');
                               },
-                              child: const SingleChildScrollView(
+                              child: SingleChildScrollView(
                                 child: SizedBox(
                                   height: 500,
                                   child: Padding(
-                                    padding: EdgeInsets.only(top: 20),
+                                    padding: const EdgeInsets.only(top: 20),
                                     child: Align(
                                       alignment: Alignment.center,
-                                      child: Text(
-                                        'Não há provas AO VIVO para esse evento.',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
+                                      child: provaSelecionada == '0'
+                                          ? const Padding(
+                                              padding: EdgeInsets.only(top: 50),
+                                              child: Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Text(
+                                                  'Não há provas AO VIVO para esse evento.',
+                                                  style: TextStyle(fontSize: 16),
+                                                ),
+                                              ),
+                                            )
+                                          : const Padding(
+                                              padding: EdgeInsets.only(top: 50),
+                                              child: Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      'Nenhuma ordem de entrada',
+                                                      style: TextStyle(fontSize: 17),
+                                                    ),
+                                                    Text(
+                                                      'foi encontrada para essa prova.',
+                                                      style: TextStyle(fontSize: 17),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                     ),
                                   ),
                                 ),

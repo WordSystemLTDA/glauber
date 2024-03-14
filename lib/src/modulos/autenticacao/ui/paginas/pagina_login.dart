@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
@@ -8,7 +9,6 @@ import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class PaginaLogin extends StatefulWidget {
   const PaginaLogin({super.key});
@@ -20,6 +20,7 @@ class PaginaLogin extends StatefulWidget {
 class _PaginaLoginState extends State<PaginaLogin> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
+
   bool ocultarSenha = true;
 
   void entrarComEmail() async {
