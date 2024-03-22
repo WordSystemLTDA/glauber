@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
@@ -12,6 +13,7 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DrawerCustomizado extends StatefulWidget {
   final Function(int index) aoMudarPagina;
@@ -164,6 +166,21 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                     const Divider(),
                     Column(
                       children: [
+                        if (kIsWeb) ...[
+                          ListTile(
+                            onTap: () async {
+                              // widget.aoMudarPagina(0);
+                              if (await canLaunchUrl(Uri.parse('https://gsequine.com.br/sistema/index.php'))) {
+                                await launchUrl(
+                                  Uri.parse('https://gsequine.com.br/sistema/index.php'),
+                                  webOnlyWindowName: '_self',
+                                );
+                              }
+                            },
+                            leading: const Icon(Icons.admin_panel_settings),
+                            title: const Text('Painel Admin'),
+                          ),
+                        ],
                         ValueListenableBuilder<ThemeMode>(
                           valueListenable: context.read<ThemeController>(),
                           builder: (context, state, _) {
@@ -238,18 +255,20 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                   ],
                 ),
               ),
-              const Divider(),
-              Text(
-                "Ultima versão $ultimaVersao",
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-              Text(
-                "Versão instalada $versaoInstalada",
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 10),
+              if (!kIsWeb) ...[
+                const Divider(),
+                Text(
+                  "Ultima versão $ultimaVersao",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 12),
+                ),
+                Text(
+                  "Versão instalada $versaoInstalada",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 12),
+                ),
+                const SizedBox(height: 10),
+              ],
             ],
           ),
         ),

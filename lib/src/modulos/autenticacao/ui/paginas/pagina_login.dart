@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:provadelaco/src/app_routes.dart';
@@ -26,7 +27,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
   void entrarComEmail() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
     final firebaseMessagingService = context.read<FirebaseMessagingService>();
-    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+
+    String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
       if (mounted) {
@@ -50,7 +52,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
   void entrarSocial(TiposLogin tipoLogin) async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
     final FirebaseMessagingService firebaseMessagingService = context.read<FirebaseMessagingService>();
-    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+    String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (mounted) {
       autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, tokenNotificacao);
@@ -224,7 +226,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             },
                           ),
                           const SizedBox(height: 10),
-                          if (Platform.isIOS) ...[
+                          if (!kIsWeb && Platform.isIOS) ...[
                             SignInButton(
                               Buttons.AppleDark,
                               shape: RoundedRectangleBorder(

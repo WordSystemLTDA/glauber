@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
@@ -65,7 +66,7 @@ class _PaginaSplashState extends State<PaginaSplash> {
           final autenticacaoServico = context.read<AutenticacaoServico>();
           final firebaseMessagingService = context.read<FirebaseMessagingService>();
 
-          String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+          String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
           autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
             var (sucesso, _, usuarioRetorno) = resposta;

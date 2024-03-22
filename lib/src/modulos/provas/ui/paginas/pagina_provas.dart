@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -245,24 +246,13 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                 ),
                                 const SizedBox(width: 10),
                                 ActionChip(
-                                  // avatar: const Icon(Icons.live_tv_rounded),
-
-                                  label: SizedBox(
+                                  avatar: Lottie.asset(
+                                    'assets/lotties/aovivo.json',
+                                    width: 20,
                                     height: 20,
-                                    child: Row(
-                                      // crossAxisAlignment: CrossAxisAlignment.start,
-                                      // mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Lottie.asset(
-                                          'assets/lotties/aovivo.json',
-                                          width: 20,
-                                          height: 20,
-                                          repeat: true,
-                                        ),
-                                        const Text('AO VIVO'),
-                                      ],
-                                    ),
+                                    repeat: true,
                                   ),
+                                  label: const Text('AO VIVO'),
                                   onPressed: () {
                                     Navigator.pushNamed(
                                       context,
@@ -350,7 +340,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               ),
                               margin: EdgeInsets.zero,
                               child: Padding(
-                                padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (Platform.isAndroid ? 50 : 20)),
+                                padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (!kIsWeb && Platform.isAndroid ? 50 : 20)),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
