@@ -10,6 +10,7 @@ class ModalDetalhesProva extends StatefulWidget {
   final ProvaModelo prova;
   final EventoModelo evento;
   final String? quantParceiros;
+  final String permVincularParceiro;
   final List<ProvaModelo> provasCarrinho;
 
   const ModalDetalhesProva({
@@ -18,6 +19,7 @@ class ModalDetalhesProva extends StatefulWidget {
     required this.prova,
     required this.evento,
     this.quantParceiros,
+    required this.permVincularParceiro,
     required this.provasCarrinho,
   });
 
@@ -52,13 +54,15 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       quantidade = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).length;
     }
 
-    if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
+    if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty &&
+        widget.permVincularParceiro == 'Sim') {
       listaCompetidores = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.competidores!;
+
       if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio != null) {
         sorteio = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio!;
       }
     } else {
-      if (widget.prova.permitirCompra.competidoresJaSelecionados != null) {
+      if (widget.prova.permitirCompra.competidoresJaSelecionados != null && widget.permVincularParceiro == 'Sim') {
         for (var i = 0; i < widget.prova.permitirCompra.competidoresJaSelecionados!.length; i++) {
           var itemNovo = widget.prova.permitirCompra.competidoresJaSelecionados![i];
           var novoCompetidor = CompetidoresModelo(
@@ -91,7 +95,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             jaExistente: false,
           ));
         }
-      } else {
+      } else if (widget.permVincularParceiro == 'Sim') {
         for (var i = 0; i < quantidade; i++) {
           listaCompetidores.add(CompetidoresModelo(
             id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
@@ -111,15 +115,17 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
     if (quantidade < int.parse(widget.prova.quantMaxima)) {
       setState(() {
         quantidade = quantidade + 1;
-        listaCompetidores.add(CompetidoresModelo(
-          id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
-          nome: '',
-          apelido: '',
-          nomeCidade: '',
-          siglaEstado: '',
-          ativo: 'Sim',
-          jaExistente: false,
-        ));
+        if (widget.permVincularParceiro == 'Sim') {
+          listaCompetidores.add(CompetidoresModelo(
+            id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
+            nome: '',
+            apelido: '',
+            nomeCidade: '',
+            siglaEstado: '',
+            ativo: 'Sim',
+            jaExistente: false,
+          ));
+        }
       });
     }
   }
@@ -129,7 +135,9 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       if (quantidade > int.parse(widget.prova.quantMinima)) {
         setState(() {
           quantidade = quantidade - 1;
-          listaCompetidores.removeLast();
+          if (widget.permVincularParceiro == 'Sim') {
+            listaCompetidores.removeLast();
+          }
         });
       } else if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty) {
         widget.adicionarNoCarrinho(0, [], sorteio);
@@ -163,7 +171,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (listaCompetidores.isNotEmpty) ...[
+                if (listaCompetidores.isNotEmpty && widget.permVincularParceiro == 'Sim') ...[
                   const Padding(
                     padding: EdgeInsets.only(left: 5, bottom: 10),
                     child: Text(
@@ -228,7 +236,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                if (widget.prova.permitirSorteio == 'Sim') ...[
+                if (widget.prova.permitirSorteio == 'Sim' && widget.permVincularParceiro == 'Sim') ...[
                   SizedBox(
                     width: width,
                     height: 30,
@@ -307,12 +315,12 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                         : () {
                             var retorno = widget.adicionarNoCarrinho(quantidade, listaCompetidores, sorteio);
                             if (retorno == false) {
-                              // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              //   content: Text('Selecione todos os parceiros, antes de continuar.'),
-                              // ));
-
                               setState(() {
-                                mensagemAlerta = 'Selecione todos os parceiros, antes de continuar. Caso não tenha parceiro, habilite a opção Sorteio.';
+                                if (widget.prova.permitirSorteio == 'Sim') {
+                                  mensagemAlerta = 'Selecione todos os parceiros, antes de continuar. Caso não tenha parceiro, habilite a opção Sorteio.';
+                                } else {
+                                  mensagemAlerta = 'Selecione todos os parceiros, antes de continuar.';
+                                }
                               });
                             }
                           },

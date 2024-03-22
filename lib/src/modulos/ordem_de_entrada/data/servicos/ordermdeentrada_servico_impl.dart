@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/parceiros_modelo.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/prova_parceiros_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
 import 'package:share_plus/share_plus.dart';
@@ -16,7 +16,7 @@ class OrdemDeEntradaServicoImpl implements OrdemDeEntradaServico {
   OrdemDeEntradaServicoImpl(this.client);
 
   @override
-  Future<List<ParceirosModelos>> listar(UsuarioModelo? usuario) async {
+  Future<List<OrdemDeEntradaModelo>> listar(UsuarioModelo? usuario) async {
     var idCliente = usuario!.id;
     var url = "ordem_de_entrada/listar.php?id_cliente=$idCliente";
 
@@ -26,8 +26,8 @@ class OrdemDeEntradaServicoImpl implements OrdemDeEntradaServico {
     bool sucesso = jsonData['sucesso'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return List<ParceirosModelos>.from(jsonData['dados'].map((elemento) {
-        return ParceirosModelos.fromMap(elemento);
+      return List<OrdemDeEntradaModelo>.from(jsonData['dados'].map((elemento) {
+        return OrdemDeEntradaModelo.fromMap(elemento);
       }));
     } else {
       return [];

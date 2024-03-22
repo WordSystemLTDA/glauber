@@ -105,6 +105,7 @@ class _CardProvasState extends State<CardProvas> {
                   prova: provaModelo,
                   evento: widget.evento,
                   quantParceiros: state.permitirCompraModelo.quantParceiros,
+                  permVincularParceiro: state.permitirCompraModelo.permVincularParceiro!,
                   provasCarrinho: widget.provasCarrinho,
                   adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
                     var novaProva = ProvaModelo(
@@ -131,7 +132,7 @@ class _CardProvasState extends State<CardProvas> {
                       return true;
                     }
 
-                    if (((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
+                    if ((state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
                         ? false
                         : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                       return false;
@@ -180,6 +181,7 @@ class _CardProvasState extends State<CardProvas> {
                     prova: provaModelo,
                     evento: widget.evento,
                     quantParceiros: state.permitirCompraModelo.quantParceiros,
+                    permVincularParceiro: state.permitirCompraModelo.permVincularParceiro!,
                     provasCarrinho: widget.provasCarrinho,
                     adicionarNoCarrinho: (quantidade, listaCompetidores, sorteio) {
                       var novaProva = ProvaModelo(
@@ -206,7 +208,7 @@ class _CardProvasState extends State<CardProvas> {
                         return true;
                       }
 
-                      if (((provaModelo.permitirSorteio == 'Sim' && sorteio == true)
+                      if ((state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
                           ? false
                           : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                         return false;
@@ -420,6 +422,22 @@ class _CardProvasState extends State<CardProvas> {
           child: InkWell(
             onTap: () {
               aoClicarNoCard(prova);
+            },
+            onLongPress: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "ID da Prova: ${prova.id}",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                },
+              );
             },
             borderRadius: BorderRadius.circular(5),
             child: Stack(

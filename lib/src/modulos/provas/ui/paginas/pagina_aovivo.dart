@@ -82,152 +82,193 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                   physics: const ClampingScrollPhysics(),
                   child: Skeletonizer(
                     enabled: state is ProvasCarregando,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 700),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 250,
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: CachedNetworkImage(
-                                    imageUrl: evento.foto,
-                                    fit: BoxFit.cover,
-                                    progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                      child: SizedBox(
-                                        width: 40,
-                                        height: 40,
-                                        child: CircularProgressIndicator(value: downloadProgress.progress),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
-                                  ),
-                                ),
-                                Skeleton.ignore(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      final imageProvider = Image.network(evento.foto).image;
-                                      showImageViewer(
-                                        context,
-                                        imageProvider,
-                                        useSafeArea: true,
-                                        immersive: false,
-                                        doubleTapZoomable: true,
-                                      );
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Container(
-                                        height: 300,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            end: const Alignment(0.0, -0.6),
-                                            begin: const Alignment(0.0, 0),
-                                            colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
-                                          ),
-                                        ),
-                                      ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 250,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: CachedNetworkImage(
+                                  imageUrl: evento.foto,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                    child: SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: CircularProgressIndicator(value: downloadProgress.progress),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
-                                        Text(
-                                          evento.nomeEvento,
-                                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
-                                        ),
-                                        Text(
-                                          DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
-                                          style: const TextStyle(color: Colors.white, fontSize: 14),
-                                        ),
-                                        const SizedBox(height: 5),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.translucent, // Needed for invisible things to be tapped.
-                                    onTap: () {},
-                                    child: const SizedBox(
-                                      width: 150,
-                                      height: 150,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(9.0), // Configure hit area.
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Skeleton.ignore(
-                                  child: SafeArea(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Container(
-                                        width: provaSelecionada == '0' ? 90 : 180,
-                                        decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
-                                        child: IconButton(
-                                          icon: Row(
-                                            children: [
-                                              const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
-                                              const SizedBox(width: 10),
-                                              Text(provaSelecionada == '0' ? 'Voltar' : 'Ver Provas AO VIVO', style: const TextStyle(color: Colors.white, fontSize: 14)),
-                                            ],
-                                          ),
-                                          onPressed: () {
-                                            if (provaSelecionada == '0') {
-                                              Navigator.pop(context);
-                                            } else {
-                                              setState(() {
-                                                provaSelecionada = '0';
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (provas.isNotEmpty) ...[
-                            const Padding(
-                              padding: EdgeInsets.only(left: 10, top: 10),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Provas AO VIVO!',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
                                 ),
                               ),
+                              Skeleton.ignore(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    final imageProvider = Image.network(evento.foto).image;
+                                    showImageViewer(
+                                      context,
+                                      imageProvider,
+                                      useSafeArea: true,
+                                      immersive: false,
+                                      doubleTapZoomable: true,
+                                    );
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      height: 300,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          end: const Alignment(0.0, -0.6),
+                                          begin: const Alignment(0.0, 0),
+                                          colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
+                                      Text(
+                                        evento.nomeEvento,
+                                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+                                      ),
+                                      Text(
+                                        DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 5),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent, // Needed for invisible things to be tapped.
+                                  onTap: () {},
+                                  child: const SizedBox(
+                                    width: 150,
+                                    height: 150,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(9.0), // Configure hit area.
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Skeleton.ignore(
+                                child: SafeArea(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Container(
+                                      width: provaSelecionada == '0' ? 90 : 180,
+                                      decoration: const BoxDecoration(color: Color.fromARGB(106, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      child: IconButton(
+                                        icon: Row(
+                                          children: [
+                                            const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                                            const SizedBox(width: 10),
+                                            Text(provaSelecionada == '0' ? 'Voltar' : 'Ver Provas AO VIVO', style: const TextStyle(color: Colors.white, fontSize: 14)),
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          if (provaSelecionada == '0') {
+                                            Navigator.pop(context);
+                                          } else {
+                                            setState(() {
+                                              provaSelecionada = '0';
+                                            });
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (provas.isNotEmpty) ...[
+                          const Padding(
+                            padding: EdgeInsets.only(left: 10, top: 10),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Provas AO VIVO!',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
                             ),
-                            if (provaSelecionada != '0') ...[
-                              ValueListenableBuilder<OrdemDeEntradaEstadoProva>(
-                                valueListenable: ordemDeEntradaProvaStore,
-                                builder: (context, state, _) {
-                                  if (state is OrdemDeEntradaCarregando) {
+                          ),
+                          if (provaSelecionada != '0') ...[
+                            ValueListenableBuilder<OrdemDeEntradaEstadoProva>(
+                              valueListenable: ordemDeEntradaProvaStore,
+                              builder: (context, state, _) {
+                                if (state is OrdemDeEntradaCarregando) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
+
+                                if (state is OrdemDeEntradaCarregado) {
+                                  if (state.ordemdeentradas.isEmpty) {
                                     return const Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: Center(
-                                        child: CircularProgressIndicator(),
+                                      padding: EdgeInsets.only(top: 50),
+                                      child: Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Nenhuma ordem de entrada',
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                            Text(
+                                              'foi encontrada para essa prova.',
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   }
+                                  return ListView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: state.ordemdeentradas.length,
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.all(15),
+                                    itemBuilder: (context, index) {
+                                      var item = state.ordemdeentradas[index];
 
-                                  if (state is OrdemDeEntradaCarregado) {
-                                    if (state.ordemdeentradas.isEmpty) {
-                                      return const Padding(
+                                      return CardOrdemDeEntradaProva(
+                                        item: item,
+                                        mostrarOpcoes: true,
+                                      );
+                                    },
+                                  );
+                                }
+
+                                return RefreshIndicator(
+                                  onRefresh: () async {
+                                    ordemDeEntradaProvaStore.atualizarLista(usuarioProvider.usuario, provaSelecionada);
+                                  },
+                                  child: SingleChildScrollView(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    child: SizedBox(
+                                      height: height - 200,
+                                      child: const Padding(
                                         padding: EdgeInsets.only(top: 50),
                                         child: Align(
                                           alignment: Alignment.topCenter,
@@ -244,140 +285,96 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                             ],
                                           ),
                                         ),
-                                      );
-                                    }
-                                    return ListView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemCount: state.ordemdeentradas.length,
-                                      shrinkWrap: true,
-                                      padding: const EdgeInsets.all(15),
-                                      itemBuilder: (context, index) {
-                                        var item = state.ordemdeentradas[index];
-
-                                        return CardOrdemDeEntradaProva(
-                                          item: item,
-                                          mostrarOpcoes: true,
-                                        );
-                                      },
-                                    );
-                                  }
-
-                                  return RefreshIndicator(
-                                    onRefresh: () async {
-                                      ordemDeEntradaProvaStore.atualizarLista(usuarioProvider.usuario, provaSelecionada);
-                                    },
-                                    child: SingleChildScrollView(
-                                      physics: const AlwaysScrollableScrollPhysics(),
-                                      child: SizedBox(
-                                        height: height - 200,
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(top: 50),
-                                          child: Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Nenhuma ordem de entrada',
-                                                  style: TextStyle(fontSize: 17),
-                                                ),
-                                                Text(
-                                                  'foi encontrada para essa prova.',
-                                                  style: TextStyle(fontSize: 17),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
-                            if (provaSelecionada == '0') ...[
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                padding: const EdgeInsets.all(10),
-                                itemCount: provas.length,
-                                itemBuilder: (context, index) {
-                                  var prova = provas[index];
-
-                                  return CardProvasAoVivo(
-                                    prova: prova,
-                                    evento: evento,
-                                    // mostrarOpcoes: false,
-                                    nomesCabeceira: nomesCabeceira,
-                                    idEvento: widget.argumentos.idEvento,
-                                    provasCarrinho: const [],
-                                    aoSelecionarProvaAoVivo: (prova) {
-                                      setState(() {
-                                        provaSelecionada = prova.id;
-                                      });
-
-                                      ordemDeEntradaProvaStore.listar(usuarioProvider.usuario, prova.id);
-                                    },
-                                    adicionarAvulsaNoCarrinho: (quantidade, prova, evento) {
-                                      // adicionarAvulsaNoCarrinho(quantidade, prova, evento);
-                                    },
-                                    adicionarNoCarrinho: (prova, evento, quantParceiros) {
-                                      // adicionarNoCarrinho(prova, evento, quantParceiros);
-                                    },
-                                    removerDoCarrinho: (prova) {},
-                                  );
-                                },
-                              ),
-                            ],
-                          ],
-                          if (provas.isEmpty) ...[
-                            RefreshIndicator(
-                              onRefresh: () async {
-                                provasAoVivoStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento, 'aovivo');
+                                  ),
+                                );
                               },
-                              child: SingleChildScrollView(
-                                child: SizedBox(
-                                  height: 500,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 20),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: provaSelecionada == '0'
-                                          ? const Padding(
-                                              padding: EdgeInsets.only(top: 50),
-                                              child: Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Text(
-                                                  'Não há provas AO VIVO para esse evento.',
-                                                  style: TextStyle(fontSize: 16),
-                                                ),
-                                              ),
-                                            )
-                                          : const Padding(
-                                              padding: EdgeInsets.only(top: 50),
-                                              child: Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      'Nenhuma ordem de entrada',
-                                                      style: TextStyle(fontSize: 17),
-                                                    ),
-                                                    Text(
-                                                      'foi encontrada para essa prova.',
-                                                      style: TextStyle(fontSize: 17),
-                                                    ),
-                                                  ],
-                                                ),
+                            ),
+                          ],
+                          if (provaSelecionada == '0') ...[
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(10),
+                              itemCount: provas.length,
+                              itemBuilder: (context, index) {
+                                var prova = provas[index];
+
+                                return CardProvasAoVivo(
+                                  prova: prova,
+                                  evento: evento,
+                                  // mostrarOpcoes: false,
+                                  nomesCabeceira: nomesCabeceira,
+                                  idEvento: widget.argumentos.idEvento,
+                                  provasCarrinho: const [],
+                                  aoSelecionarProvaAoVivo: (prova) {
+                                    setState(() {
+                                      provaSelecionada = prova.id;
+                                    });
+
+                                    ordemDeEntradaProvaStore.listar(usuarioProvider.usuario, prova.id);
+                                  },
+                                  adicionarAvulsaNoCarrinho: (quantidade, prova, evento) {
+                                    // adicionarAvulsaNoCarrinho(quantidade, prova, evento);
+                                  },
+                                  adicionarNoCarrinho: (prova, evento, quantParceiros) {
+                                    // adicionarNoCarrinho(prova, evento, quantParceiros);
+                                  },
+                                  removerDoCarrinho: (prova) {},
+                                );
+                              },
+                            ),
+                          ],
+                        ],
+                        if (provas.isEmpty) ...[
+                          RefreshIndicator(
+                            onRefresh: () async {
+                              provasAoVivoStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento, 'aovivo');
+                            },
+                            child: SingleChildScrollView(
+                              child: SizedBox(
+                                height: 500,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: provaSelecionada == '0'
+                                        ? const Padding(
+                                            padding: EdgeInsets.only(top: 50),
+                                            child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: Text(
+                                                'Não há provas AO VIVO para esse evento.',
+                                                style: TextStyle(fontSize: 16),
                                               ),
                                             ),
-                                    ),
+                                          )
+                                        : const Padding(
+                                            padding: EdgeInsets.only(top: 50),
+                                            child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'Nenhuma ordem de entrada',
+                                                    style: TextStyle(fontSize: 17),
+                                                  ),
+                                                  Text(
+                                                    'foi encontrada para essa prova.',
+                                                    style: TextStyle(fontSize: 17),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         ],
-                      ),
+                      ],
                     ),
                   ),
                 ),
