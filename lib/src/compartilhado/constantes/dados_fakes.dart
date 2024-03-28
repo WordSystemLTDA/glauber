@@ -166,6 +166,7 @@ class DadosFakes {
           (index) => ComprasModelo(
             id: "187",
             permVincularParceiro: '',
+            idEmpresa: '1',
             valorIngresso: "150.00",
             valorTaxa: "0.00",
             valorDesconto: "0.00",

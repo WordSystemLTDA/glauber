@@ -21,6 +21,7 @@ class ComprasModelo {
   final String nomeProva;
   final String nomeEmpresa;
   final String idEvento;
+  final String idEmpresa;
   final String nomeEvento;
   final String dataEvento;
   final String horaInicio;
@@ -53,6 +54,7 @@ class ComprasModelo {
     required this.nomeProva,
     required this.nomeEmpresa,
     required this.idEvento,
+    required this.idEmpresa,
     required this.nomeEvento,
     required this.dataEvento,
     required this.horaInicio,
@@ -87,6 +89,7 @@ class ComprasModelo {
       'nomeProva': nomeProva,
       'nomeEmpresa': nomeEmpresa,
       'idEvento': idEvento,
+      'idEmpresa': idEmpresa,
       'nomeEvento': nomeEvento,
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
@@ -122,6 +125,7 @@ class ComprasModelo {
       nomeProva: map['nomeProva'] as String,
       nomeEmpresa: map['nomeEmpresa'] as String,
       idEvento: map['idEvento'] as String,
+      idEmpresa: map['idEmpresa'] as String,
       nomeEvento: map['nomeEvento'] as String,
       dataEvento: map['dataEvento'] as String,
       horaInicio: map['horaInicio'] as String,

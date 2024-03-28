@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -16,16 +17,22 @@ import 'package:skeletonizer/skeletonizer.dart';
 class CardCompras extends StatefulWidget {
   final ComprasModelo item;
   final bool modoTransferencia;
+  final bool modoGerarPagamento;
   final List<ComprasModelo> comprasTransferencia;
+  final List<ComprasModelo> comprasPagamentos;
   final Function(ComprasModelo compra) aoClicarParaTransferir;
+  final Function(ComprasModelo compra) aoClicarParaGerarPagamento;
   Function()? atualizarLista;
 
   CardCompras({
     super.key,
     required this.item,
-    required this.aoClicarParaTransferir,
-    required this.comprasTransferencia,
     required this.modoTransferencia,
+    required this.modoGerarPagamento,
+    required this.comprasTransferencia,
+    required this.comprasPagamentos,
+    required this.aoClicarParaTransferir,
+    required this.aoClicarParaGerarPagamento,
     this.atualizarLista,
   });
 
@@ -57,14 +64,19 @@ class _CardComprasState extends State<CardCompras> {
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
-          side: widget.comprasTransferencia.contains(item) ? const BorderSide(color: Colors.green) : BorderSide.none,
+          side: widget.comprasTransferencia.contains(item) || widget.comprasPagamentos.contains(item) ? const BorderSide(color: Colors.green) : BorderSide.none,
         ),
         child: InkWell(
-          onTap: widget.modoTransferencia && (item.status == 'Cancelado')
+          onTap: (widget.modoTransferencia || widget.modoGerarPagamento) && (item.status == 'Cancelado')
               ? null
               : () {
                   if (widget.modoTransferencia) {
                     widget.aoClicarParaTransferir(item);
+                    return;
+                  }
+
+                  if (widget.modoGerarPagamento) {
+                    widget.aoClicarParaGerarPagamento(item);
                     return;
                   }
 

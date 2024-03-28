@@ -27,6 +27,8 @@ class FinalizarCompraStore extends ValueNotifier<FinalizarCompraEstado> {
 
     var dadosRetorno = await _servico.inserir(usuario, dados);
 
+    print(dadosRetorno.mensagem);
+
     if (dadosRetorno.sucesso) {
       value = CompraRealizadaComSucesso(dados: dadosRetorno.dados);
     } else {

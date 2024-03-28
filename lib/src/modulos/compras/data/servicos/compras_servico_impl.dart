@@ -8,6 +8,7 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart'
 import 'package:provadelaco/src/modulos/compras/interator/modelos/clientes_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_compras_modelo.dart';
+import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_gerar_pagamentos.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -107,6 +108,28 @@ class ComprasServicoImpl implements ComprasServico {
     String mensagem = jsonData['mensagem'];
 
     return (sucesso, mensagem);
+  }
+
+  @override
+  Future<(bool, String, RetornoGerarPagamentos)> gerarPagamentos(List<ComprasModelo> comprasPagamentos, UsuarioModelo? usuario) async {
+    var url = 'compras/gerar_pagamentos.php';
+
+    var campos = {
+      'comprasPagamentos': comprasPagamentos,
+      'usuario': usuario?.toMap(),
+    };
+
+    Response response = await client.post(
+      url: url,
+      body: jsonEncode(campos),
+    );
+
+    var jsonData = jsonDecode(response.data);
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+    RetornoGerarPagamentos retornoGerarPagamentos = RetornoGerarPagamentos.fromMap(jsonData['dados']);
+
+    return (sucesso, mensagem, retornoGerarPagamentos);
   }
 
   @override
