@@ -270,10 +270,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               backgroundColor: const Color.fromARGB(255, 247, 24, 8),
-              label: const Text(
-                'Entrar',
-                style: TextStyle(fontSize: 14),
-              ),
+              label: const Text('Entrar', style: TextStyle(fontSize: 14)),
             ),
           ),
         ),

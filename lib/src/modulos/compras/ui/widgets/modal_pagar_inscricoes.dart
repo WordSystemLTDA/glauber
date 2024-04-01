@@ -28,9 +28,9 @@ class ModalPagarInscricoes extends StatefulWidget {
 
 class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
   // ignore: unused_field
-  late StateSetter _setState;
+  StateSetter? _setState;
   bool sucessoAoVerificarPagamento = false;
-  late Timer _timer;
+  Timer? _timer;
   String idCliente = '';
   String txid = '';
   String codigoPIX = '';
@@ -43,7 +43,9 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 
@@ -55,12 +57,12 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
       var (sucesso, mensagem, retorno) = value;
 
       if (sucesso) {
-        iniciarVerificacaoPagamento();
         setState(() {
           codigoPIX = retorno.codigoPIX;
           idCliente = retorno.idCliente;
           txid = retorno.txid;
         });
+        iniciarVerificacaoPagamento();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
       }
@@ -68,27 +70,26 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
   }
 
   void iniciarVerificacaoPagamento() {
-    if (codigoPIX.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        if (mounted) {
-          var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
-
-          setState(() {
-            _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-              verificarPagamentoServico.verificarPagamentoGerado(txid, widget.comprasPagamentos.first.idFormaPagamento).then((sucesso) {
-                if (sucesso) {
-                  widget.aoVerificarPagamento();
-                  _setState(() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
+        var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
+        setState(() {
+          _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+            await verificarPagamentoServico.verificarPagamentoGerado(txid, widget.comprasPagamentos.first.idFormaPagamento).then((sucesso) {
+              if (sucesso) {
+                widget.aoVerificarPagamento();
+                if (_setState != null) {
+                  _setState!(() {
                     sucessoAoVerificarPagamento = true;
                   });
-                  timer.cancel();
                 }
-              });
+                timer.cancel();
+              }
             });
           });
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   @override
@@ -104,7 +105,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: width * 0.9,
-            maxHeight: height * 0.9,
+            maxHeight: height * 0.5,
           ),
           child: StatefulBuilder(
             builder: (context, setStateDialog) {
@@ -133,6 +134,8 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
         ),
         child: StatefulBuilder(
           builder: (context, setStateDialog) {
+            _setState = setStateDialog;
+
             if (sucessoAoVerificarPagamento) {
               return Padding(
                 padding: const EdgeInsets.all(15.0),

@@ -305,9 +305,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
-                                                                double.tryParse(item.somaTotal) != null
-                                                                    ? double.tryParse(item.somaTotal)!.obterReal()
-                                                                    : '',
+                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
                                                                 style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                                               )
                                                             ],
@@ -342,16 +340,16 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             aoClicarParaGerarPagamento: (compra) {
                                                               if (compra.pago == 'Sim') {
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  showCloseIcon: true,
                                                                   content: Text(
                                                                     'Você só pode selecionar inscrições que não foram pagas.',
                                                                   ),
                                                                 ));
                                                                 return;
                                                               }
-                                                              if ((compra.idFormaPagamento != '1' &&
-                                                                  compra.idFormaPagamento != '4' &&
-                                                                  compra.idFormaPagamento != '5')) {
+                                                              if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  showCloseIcon: true,
                                                                   content: Text(
                                                                     'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
                                                                   ),
@@ -362,6 +360,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                               if (comprasPagamentos.isNotEmpty) {
                                                                 if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    showCloseIcon: true,
                                                                     content: Text(
                                                                       'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
                                                                     ),
@@ -370,6 +369,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
                                                                 if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    showCloseIcon: true,
                                                                     content: Text(
                                                                       'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
                                                                     ),
@@ -500,9 +500,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
-                                                                double.tryParse(item.somaTotal) != null
-                                                                    ? double.tryParse(item.somaTotal)!.obterReal()
-                                                                    : '',
+                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
                                                                 style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                                               )
                                                             ],
@@ -537,9 +535,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             modoTransferencia: modoTransferencia,
                                                             aoClicarParaGerarPagamento: (compra) {
                                                               if (compra.pago == 'Sim' ||
-                                                                  (compra.idFormaPagamento != '1' &&
-                                                                      compra.idFormaPagamento != '4' &&
-                                                                      compra.idFormaPagamento != '5')) {
+                                                                  (compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
                                                                 return;
                                                               }
 
@@ -663,9 +659,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
-                                                                double.tryParse(item.somaTotal) != null
-                                                                    ? double.tryParse(item.somaTotal)!.obterReal()
-                                                                    : '',
+                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
                                                                 style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                                               )
                                                             ],
@@ -744,205 +738,223 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
     return SizedBox(
       width: width - 30,
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            height: 40,
-            child: FloatingActionButton.extended(
-              heroTag: null,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
-              label: const Text('Gerar Pagamentos'),
-              onPressed: () {
-                setState(() {
-                  if (modoGerarPagamento == true) {
-                    modoGerarPagamento = false;
-                    comprasPagamentos.clear();
-                  } else {
-                    modoGerarPagamento = true;
-                  }
-                });
-              },
-            ),
-          ),
-          if (comprasPagamentos.isNotEmpty) ...[
-            SizedBox(
-              height: 40,
-              child: FloatingActionButton.extended(
-                heroTag: null,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
-                label: Text('Pagar ${comprasPagamentos.length} Inscrições'),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return ModalPagarInscricoes(
-                        comprasPagamentos: comprasPagamentos,
-                        aoVerificarPagamento: () {
-                          listarCompras();
-                        },
-                      );
-                    },
-                  );
-                },
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                height: 40,
+                child: FloatingActionButton.extended(
+                  heroTag: null,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
+                  label: const Text('Gerar Pagamentos'),
+                  onPressed: () {
+                    setState(() {
+                      if (modoGerarPagamento == true) {
+                        modoGerarPagamento = false;
+                        comprasPagamentos.clear();
+                      } else {
+                        modoGerarPagamento = true;
+                      }
+                    });
+                  },
+                ),
               ),
-            ),
-          ],
-          if (usuarioProvider.usuario != null && usuarioProvider.usuario!.nivel == 'Master') ...[
-            SizedBox(
-              height: 40,
-              child: FloatingActionButton.extended(
-                heroTag: null,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                backgroundColor: modoTransferencia ? Colors.green : Colors.grey,
-                label: const Text('Transferência'),
-                onPressed: () {
-                  setState(() {
-                    if (modoTransferencia == true) {
-                      modoTransferencia = false;
-                      comprasTransferencia.clear();
-                    } else {
-                      modoTransferencia = true;
-                    }
-                  });
-                },
-              ),
-            ),
-          ],
-          if (comprasTransferencia.isNotEmpty && usuarioProvider.usuario != null && usuarioProvider.usuario!.nivel == 'Master') ...[
-            SizedBox(
-              height: 40,
-              child: FloatingActionButton.extended(
-                heroTag: null,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                backgroundColor: modoTransferencia ? Colors.green : Colors.grey,
-                label: Text('Transferir ${comprasTransferencia.length} ${comprasTransferencia.length == 1 ? 'item' : 'itens'}'),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (contextModal) {
-                      return ValueListenableBuilder<TransferenciaEstado>(
-                        valueListenable: transferenciaProvedor,
-                        builder: (context, state, _) {
-                          return GestureDetector(
-                            onTap: () {
-                              FocusScope.of(contextModal).unfocus();
+              if (comprasPagamentos.isNotEmpty) ...[
+                SizedBox(
+                  height: 40,
+                  child: FloatingActionButton.extended(
+                    heroTag: null,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
+                    label: Text('Pagar ${comprasPagamentos.length} Inscrições'),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ModalPagarInscricoes(
+                            comprasPagamentos: comprasPagamentos,
+                            aoVerificarPagamento: () {
+                              listarCompras();
                             },
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 20,
-                                right: 20,
-                                top: 30,
-                                bottom: MediaQuery.of(contextModal).viewInsets.bottom,
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SearchAnchor(
-                                    viewBuilder: (suggestions) {
-                                      return ListView.builder(
-                                        itemCount: suggestions.length,
-                                        padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                                        itemBuilder: (context, index) {
-                                          var item = suggestions.elementAt(index);
-
-                                          return item;
-                                        },
-                                      );
-                                    },
-                                    isFullScreen: true,
-                                    searchController: pesquisaClientesController,
-                                    builder: (BuildContext context, SearchController controller) {
-                                      return TextField(
-                                        onTap: () {
-                                          pesquisaClientesController.openView();
-                                        },
-                                        controller: textoClientesController,
-                                        readOnly: true,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          label: Text('Transferir para'),
-                                        ),
-                                      );
-                                    },
-                                    suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                                      final keyword = controller.value.text;
-
-                                      List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientes(keyword);
-
-                                      Iterable<Widget> widgets = clientes.map((cliente) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            controller.closeView('');
-                                            setState(() {
-                                              idClienteSelecionado = cliente.id;
-                                              textoClientesController.text = cliente.nome;
-                                            });
-                                            FocusScope.of(context).unfocus();
-                                          },
-                                          child: Card(
-                                            elevation: 3.0,
-                                            child: ListTile(
-                                              leading: Text(cliente.id),
-                                              title: Text(cliente.nome),
-                                              subtitle: Text(
-                                                cliente.apelido,
-                                                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      });
-
-                                      return widgets;
-                                    },
-                                  ),
-                                  const SizedBox(height: 20),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        transferenciaProvedor.transferirCompras(comprasTransferencia, idClienteSelecionado);
-                                      },
-                                      style: ButtonStyle(
-                                        backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                                        foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                        shape: MaterialStatePropertyAll(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(5.0),
-                                          ),
-                                        ),
-                                      ),
-                                      child: state is Transferindo
-                                          ? const Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child: CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                  strokeWidth: 1,
-                                                ),
-                                              ),
-                                            )
-                                          : Text('Transferir ${comprasTransferencia.length} ${comprasTransferencia.length == 1 ? 'item' : 'itens'}'),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 40),
-                                ],
-                              ),
-                            ),
                           );
                         },
                       );
                     },
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (usuarioProvider.usuario != null && usuarioProvider.usuario!.nivel == 'Master') ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: SizedBox(
+                    height: 40,
+                    child: FloatingActionButton.extended(
+                      heroTag: null,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: modoTransferencia ? Colors.green : Colors.grey,
+                      label: const Text('Transferência'),
+                      onPressed: () {
+                        setState(() {
+                          if (modoTransferencia == true) {
+                            modoTransferencia = false;
+                            comprasTransferencia.clear();
+                          } else {
+                            modoTransferencia = true;
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+              if (comprasTransferencia.isNotEmpty && usuarioProvider.usuario != null && usuarioProvider.usuario!.nivel == 'Master') ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: SizedBox(
+                    height: 40,
+                    child: FloatingActionButton.extended(
+                      heroTag: null,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      backgroundColor: modoTransferencia ? Colors.green : Colors.grey,
+                      label: Text('Transferir ${comprasTransferencia.length} ${comprasTransferencia.length == 1 ? 'item' : 'itens'}'),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (contextModal) {
+                            return ValueListenableBuilder<TransferenciaEstado>(
+                              valueListenable: transferenciaProvedor,
+                              builder: (context, state, _) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    FocusScope.of(contextModal).unfocus();
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 20,
+                                      right: 20,
+                                      top: 30,
+                                      bottom: MediaQuery.of(contextModal).viewInsets.bottom,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SearchAnchor(
+                                          viewBuilder: (suggestions) {
+                                            return ListView.builder(
+                                              itemCount: suggestions.length,
+                                              padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                                              itemBuilder: (context, index) {
+                                                var item = suggestions.elementAt(index);
+
+                                                return item;
+                                              },
+                                            );
+                                          },
+                                          isFullScreen: true,
+                                          searchController: pesquisaClientesController,
+                                          builder: (BuildContext context, SearchController controller) {
+                                            return TextField(
+                                              onTap: () {
+                                                pesquisaClientesController.openView();
+                                              },
+                                              controller: textoClientesController,
+                                              readOnly: true,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                label: Text('Transferir para'),
+                                              ),
+                                            );
+                                          },
+                                          suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                                            final keyword = controller.value.text;
+
+                                            List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientes(keyword);
+
+                                            Iterable<Widget> widgets = clientes.map((cliente) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  controller.closeView('');
+                                                  setState(() {
+                                                    idClienteSelecionado = cliente.id;
+                                                    textoClientesController.text = cliente.nome;
+                                                  });
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                                child: Card(
+                                                  elevation: 3.0,
+                                                  child: ListTile(
+                                                    leading: Text(cliente.id),
+                                                    title: Text(cliente.nome),
+                                                    subtitle: Text(
+                                                      cliente.apelido,
+                                                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+
+                                            return widgets;
+                                          },
+                                        ),
+                                        const SizedBox(height: 20),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              transferenciaProvedor.transferirCompras(comprasTransferencia, idClienteSelecionado);
+                                            },
+                                            style: ButtonStyle(
+                                              backgroundColor: const MaterialStatePropertyAll(Colors.green),
+                                              foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                              shape: MaterialStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5.0),
+                                                ),
+                                              ),
+                                            ),
+                                            child: state is Transferindo
+                                                ? const Center(
+                                                    child: SizedBox(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child: CircularProgressIndicator(
+                                                        color: Colors.white,
+                                                        strokeWidth: 1,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Text('Transferir ${comprasTransferencia.length} ${comprasTransferencia.length == 1 ? 'item' : 'itens'}'),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 40),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ],
       ),
     );
