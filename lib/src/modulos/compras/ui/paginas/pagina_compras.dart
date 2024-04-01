@@ -305,7 +305,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
-                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
+                                                                double.tryParse(item.somaTotal) != null
+                                                                    ? double.tryParse(item.somaTotal)!.obterReal()
+                                                                    : '',
                                                                 style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                                               )
                                                             ],
@@ -338,8 +340,42 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                               }
                                                             },
                                                             aoClicarParaGerarPagamento: (compra) {
-                                                              if (compra.pago == 'Sim' ||
-                                                                  (compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
+                                                              if (compra.pago == 'Sim') {
+                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  content: Text(
+                                                                    'Você só pode selecionar inscrições que não foram pagas.',
+                                                                  ),
+                                                                ));
+                                                                return;
+                                                              }
+                                                              if ((compra.idFormaPagamento != '1' &&
+                                                                  compra.idFormaPagamento != '4' &&
+                                                                  compra.idFormaPagamento != '5')) {
+                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  content: Text(
+                                                                    'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
+                                                                  ),
+                                                                ));
+                                                                return;
+                                                              }
+
+                                                              if (comprasPagamentos.isNotEmpty) {
+                                                                if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    content: Text(
+                                                                      'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
+                                                                    ),
+                                                                  ));
+                                                                }
+
+                                                                if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    content: Text(
+                                                                      'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
+                                                                    ),
+                                                                  ));
+                                                                }
+
                                                                 return;
                                                               }
 
@@ -464,7 +500,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
-                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
+                                                                double.tryParse(item.somaTotal) != null
+                                                                    ? double.tryParse(item.somaTotal)!.obterReal()
+                                                                    : '',
                                                                 style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                                               )
                                                             ],
@@ -499,7 +537,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             modoTransferencia: modoTransferencia,
                                                             aoClicarParaGerarPagamento: (compra) {
                                                               if (compra.pago == 'Sim' ||
-                                                                  (compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
+                                                                  (compra.idFormaPagamento != '1' &&
+                                                                      compra.idFormaPagamento != '4' &&
+                                                                      compra.idFormaPagamento != '5')) {
                                                                 return;
                                                               }
 
@@ -623,7 +663,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
-                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
+                                                                double.tryParse(item.somaTotal) != null
+                                                                    ? double.tryParse(item.somaTotal)!.obterReal()
+                                                                    : '',
                                                                 style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                                               )
                                                             ],
@@ -739,7 +781,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                     builder: (context) {
                       return ModalPagarInscricoes(
                         comprasPagamentos: comprasPagamentos,
-                        aoVerificarPagamento: () {},
+                        aoVerificarPagamento: () {
+                          listarCompras();
+                        },
                       );
                     },
                   );

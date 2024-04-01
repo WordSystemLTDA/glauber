@@ -73,15 +73,17 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
         if (mounted) {
           var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
 
-          _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-            verificarPagamentoServico.verificarPagamentoGerado(txid, widget.comprasPagamentos.first.idFormaPagamento).then((sucesso) {
-              if (sucesso) {
-                widget.aoVerificarPagamento();
-                _setState(() {
-                  sucessoAoVerificarPagamento = true;
-                });
-                timer.cancel();
-              }
+          setState(() {
+            _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+              verificarPagamentoServico.verificarPagamentoGerado(txid, widget.comprasPagamentos.first.idFormaPagamento).then((sucesso) {
+                if (sucesso) {
+                  widget.aoVerificarPagamento();
+                  _setState(() {
+                    sucessoAoVerificarPagamento = true;
+                  });
+                  timer.cancel();
+                }
+              });
             });
           });
         }
@@ -108,6 +110,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
             builder: (context, setStateDialog) {
               return const Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Gerando Pagamento'),
                   CircularProgressIndicator(),
@@ -192,10 +195,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
-                            Icons.person,
-                            size: 20,
-                          ),
+                          const Icon(Icons.person, size: 20),
                           const SizedBox(width: 5),
                           Text(idCliente),
                         ],
@@ -203,10 +203,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
                       const SizedBox(width: 10),
                       const Row(
                         children: [
-                          Icon(
-                            Icons.airplane_ticket,
-                            size: 20,
-                          ),
+                          Icon(Icons.airplane_ticket, size: 20),
                           SizedBox(width: 5),
                           // Text(id),
                         ],
