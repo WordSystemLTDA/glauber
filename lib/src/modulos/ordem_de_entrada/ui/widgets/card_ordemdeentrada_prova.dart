@@ -69,6 +69,8 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
             SizedBox(
               width: double.infinity,
               child: Wrap(
+                spacing: 8.0, // gap between adjacent chips
+                runSpacing: 4.0, // gap between lines
                 alignment: WrapAlignment.spaceBetween,
                 children: [
                   Column(
@@ -106,6 +108,13 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                       const Text('Média'),
                       Text(itemParceiro.medio),
                     ],
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      'Ranking: ${itemParceiro.ranking}',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),

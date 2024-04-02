@@ -14,6 +14,7 @@ class ParceirosModelos {
   final String boi4;
   final String finalT;
   final String medio;
+  final String ranking;
 
   ParceirosModelos({
     required this.id,
@@ -28,6 +29,7 @@ class ParceirosModelos {
     required this.boi4,
     required this.finalT,
     required this.medio,
+    required this.ranking,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +46,7 @@ class ParceirosModelos {
       'boi4': boi4,
       'finalT': finalT,
       'medio': medio,
+      'ranking': ranking,
     };
   }
 
@@ -61,6 +64,7 @@ class ParceirosModelos {
       boi4: map['boi4'] as String,
       finalT: map['finalT'] as String,
       medio: map['medio'] as String,
+      ranking: map['ranking'] as String,
     );
   }
 

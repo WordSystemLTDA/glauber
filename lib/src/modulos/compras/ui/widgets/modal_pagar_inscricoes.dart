@@ -39,6 +39,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
   void initState() {
     super.initState();
     gerarPagamento();
+    // iniciarVerificacaoPagamento();
   }
 
   @override

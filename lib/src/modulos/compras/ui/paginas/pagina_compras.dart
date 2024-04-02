@@ -153,10 +153,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                             ),
                           ),
                           const SizedBox(width: 5),
-                          const Text(
-                            'Pago',
-                            style: TextStyle(fontSize: 12),
-                          ),
+                          const Text('Pago', style: TextStyle(fontSize: 12)),
                         ],
                       ),
                       Row(
@@ -172,10 +169,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                             ),
                           ),
                           const SizedBox(width: 5),
-                          const Text(
-                            'Não Pago',
-                            style: TextStyle(fontSize: 12),
-                          ),
+                          const Text('Não Pago', style: TextStyle(fontSize: 12)),
                         ],
                       ),
                       Row(
@@ -365,6 +359,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                       'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
                                                                     ),
                                                                   ));
+                                                                  return;
                                                                 }
 
                                                                 if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
@@ -374,9 +369,8 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                       'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
                                                                     ),
                                                                   ));
+                                                                  return;
                                                                 }
-
-                                                                return;
                                                               }
 
                                                               if (comprasPagamentos.contains(compra)) {
@@ -501,7 +495,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                               Text('Inscrições: ${item.compras.length}'),
                                                               Text(
                                                                 double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
-                                                                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                                                style: const TextStyle(fontWeight: FontWeight.w500),
                                                               )
                                                             ],
                                                           ),
@@ -534,9 +528,45 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             },
                                                             modoTransferencia: modoTransferencia,
                                                             aoClicarParaGerarPagamento: (compra) {
-                                                              if (compra.pago == 'Sim' ||
-                                                                  (compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
+                                                              if (compra.pago == 'Sim') {
+                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  showCloseIcon: true,
+                                                                  content: Text(
+                                                                    'Você só pode selecionar inscrições que não foram pagas.',
+                                                                  ),
+                                                                ));
                                                                 return;
+                                                              }
+                                                              if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
+                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                  showCloseIcon: true,
+                                                                  content: Text(
+                                                                    'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
+                                                                  ),
+                                                                ));
+                                                                return;
+                                                              }
+
+                                                              if (comprasPagamentos.isNotEmpty) {
+                                                                if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    showCloseIcon: true,
+                                                                    content: Text(
+                                                                      'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
+                                                                    ),
+                                                                  ));
+                                                                  return;
+                                                                }
+
+                                                                if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                    showCloseIcon: true,
+                                                                    content: Text(
+                                                                      'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
+                                                                    ),
+                                                                  ));
+                                                                  return;
+                                                                }
                                                               }
 
                                                               if (comprasPagamentos.contains(compra)) {
@@ -742,6 +772,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // if (comprasStore.compras.anteriores.isNotEmpty && comprasStore.compras.atuais.isNotEmpty) ...[
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -780,7 +811,8 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                           return ModalPagarInscricoes(
                             comprasPagamentos: comprasPagamentos,
                             aoVerificarPagamento: () {
-                              listarCompras();
+                              listarCompras(resetar: true);
+                              Navigator.pop(context);
                             },
                           );
                         },
@@ -791,6 +823,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
               ],
             ],
           ),
+          // ],
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

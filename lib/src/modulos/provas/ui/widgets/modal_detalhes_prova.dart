@@ -63,6 +63,8 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       }
     } else {
       if (widget.prova.permitirCompra.competidoresJaSelecionados != null && widget.permVincularParceiro == 'Sim') {
+        quantidade = widget.prova.permitirCompra.competidoresJaSelecionados!.length;
+
         for (var i = 0; i < widget.prova.permitirCompra.competidoresJaSelecionados!.length; i++) {
           var itemNovo = widget.prova.permitirCompra.competidoresJaSelecionados![i];
           var novoCompetidor = CompetidoresModelo(
@@ -96,7 +98,9 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
           ));
         }
       } else if (widget.permVincularParceiro == 'Sim') {
-        for (var i = 0; i < quantidade; i++) {
+        for (var i = 0;
+            i < quantidade - (widget.prova.permitirCompra.competidoresJaSelecionados != null ? widget.prova.permitirCompra.competidoresJaSelecionados!.length : 0);
+            i++) {
           listaCompetidores.add(CompetidoresModelo(
             id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
             nome: '',

@@ -11,6 +11,7 @@ import 'package:provadelaco/src/essencial/network/dio_cliente.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/handicap_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
@@ -100,6 +101,7 @@ void main() async {
       // Autenticação
       Provider<HandiCapServico>(create: (context) => HandiCapServicoImpl(context.read())),
       Provider<AutenticacaoServico>(create: (context) => AutenticacaoServicoImpl(context.read())),
+      Provider(create: (context) => ListarDadosServicosImpl(context.read())),
       ChangeNotifierProvider(create: (context) => AutenticacaoStore(context.read())),
       ChangeNotifierProvider(create: (context) => HandiCapStore(context.read())),
       // Home

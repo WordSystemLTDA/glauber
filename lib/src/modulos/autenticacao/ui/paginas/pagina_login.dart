@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/widgets/logo_app.dart';
+import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
@@ -23,6 +26,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
   final _senhaController = TextEditingController();
 
   bool ocultarSenha = true;
+  String celularSuporte = '';
 
   void entrarComEmail() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
@@ -63,6 +67,13 @@ class _PaginaLoginState extends State<PaginaLogin> {
   void initState() {
     super.initState();
     final autenticacaoStore = context.read<AutenticacaoStore>();
+    final listarDadosServicosImpl = context.read<ListarDadosServicosImpl>();
+
+    listarDadosServicosImpl.listarDados().then((value) {
+      setState(() {
+        celularSuporte = value.celularSuporte;
+      });
+    });
 
     autenticacaoStore.addListener(() {
       AutenticacaoEstado state = autenticacaoStore.value;
@@ -98,6 +109,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
 
     return ValueListenableBuilder<AutenticacaoEstado>(
@@ -169,9 +181,11 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                 context: context,
                                 builder: (context) {
                                   return Dialog(
+                                    insetPadding: EdgeInsets.zero,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                     child: SizedBox(
-                                      width: 300,
-                                      height: 230,
+                                      width: width - 50,
+                                      height: 250,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Column(
@@ -184,10 +198,35 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                               decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
                                             ),
                                             const SizedBox(height: 10),
-                                            ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text('Recuperar'),
-                                            )
+                                            Center(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {},
+                                                    child: const Text('Recuperar'),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      if (celularSuporte.isNotEmpty) {
+                                                        FuncoesGlobais.abrirWhatsapp(celularSuporte);
+                                                      }
+                                                    },
+                                                    child: const Row(
+                                                      children: [
+                                                        FaIcon(
+                                                          FontAwesomeIcons.whatsapp,
+                                                          color: Colors.green,
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        Text('Entrar em contato via WhatsApp'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
