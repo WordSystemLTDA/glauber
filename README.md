@@ -63,7 +63,7 @@
 - [x] Vincular Parceiro não pode listar vendas que está canceladas
 - [x] Trocar as ordens do handicap na listagem de parceiros na ordem de entrada
 - [x] Arrumar mensagem de erros do app (mensagem virá somente da api)
-
+- [x] Trocar os handicaps na ordem de entrada (somente os parceiros)
 - [ ] Arrumar ordem de entrada repetida
 - [ ] Fazer logs de transfêrencia no banco de dados
 

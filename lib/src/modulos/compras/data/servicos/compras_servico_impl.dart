@@ -133,12 +133,13 @@ class ComprasServicoImpl implements ComprasServico {
   }
 
   @override
-  Future<(bool, String)> editarParceiro(String idParceiro, String idNovoParceiro) async {
+  Future<(bool, String)> editarParceiro(String idParceiro, String idNovoParceiro, String modalidade) async {
     var url = 'compras/editar_parceiro.php';
 
     var campos = {
       'id_parceiro': idParceiro,
       'id_novo_parceiro': idNovoParceiro,
+      'modalidade': modalidade,
     };
 
     Response response = await client.post(

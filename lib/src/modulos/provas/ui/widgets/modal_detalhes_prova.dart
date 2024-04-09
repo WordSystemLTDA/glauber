@@ -62,7 +62,9 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
         sorteio = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio!;
       }
     } else {
-      if (widget.prova.permitirCompra.competidoresJaSelecionados != null && widget.permVincularParceiro == 'Sim') {
+      if (widget.prova.permitirCompra.competidoresJaSelecionados != null &&
+          widget.prova.permitirCompra.competidoresJaSelecionados!.isNotEmpty &&
+          widget.permVincularParceiro == 'Sim') {
         quantidade = widget.prova.permitirCompra.competidoresJaSelecionados!.length;
 
         for (var i = 0; i < widget.prova.permitirCompra.competidoresJaSelecionados!.length; i++) {

@@ -79,7 +79,7 @@ class _CardProvasState extends State<CardProvas> {
       if (state.permitirCompraModelo.liberado) {
         var provaModelo = ProvaModelo(
           id: state.provaModelo.id,
-          permitirCompra: state.provaModelo.permitirCompra,
+          permitirCompra: state.permitirCompraModelo,
           nomeProva: state.provaModelo.nomeProva,
           permitirSorteio: state.provaModelo.permitirSorteio,
           valor: state.provaModelo.valor,

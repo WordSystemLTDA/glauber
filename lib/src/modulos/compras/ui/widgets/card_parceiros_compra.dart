@@ -99,18 +99,18 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
-            color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? const Color(0xFFfbe5ea) : null,
-            shape: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty
+            color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) ? const Color(0xFFfbe5ea) : null,
+            shape: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty)
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
                 : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             // color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Colors.red : null,
             child: ListTile(
               onTap: () async {
-                if (widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty) {
+                if (competidor.ativo == 'Sim' && widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty) {
                   controller.closeView('');
                   FocusScope.of(context).unfocus();
 
-                  await comprasServico.editarParceiro(parceiro.id, competidor.id).then((value) {
+                  await comprasServico.editarParceiro(parceiro.id, competidor.id, parceiro.nomeModalidade).then((value) {
                     var (sucesso, mensagem) = value;
                     if (sucesso) {
                       setState(() {
