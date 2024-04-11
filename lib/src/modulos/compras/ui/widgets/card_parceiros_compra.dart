@@ -97,6 +97,8 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
         List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(usuarioProvider.usuario, keyword, parceiro.idProva);
 
         Iterable<Widget> widgets = competidores.map((competidor) {
+          print(widget.parceiros.first.toMap());
+          // print(competidor.toMap());
           return Card(
             elevation: 3.0,
             color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) ? const Color(0xFFfbe5ea) : null,
@@ -157,10 +159,11 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                     competidor.apelido,
                     style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                   ),
-                  Text(
-                    "${competidor.nomeCidade} - ${competidor.siglaEstado}",
-                    style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
-                  ),
+                  if (competidor.nomeCidade.isNotEmpty)
+                    Text(
+                      "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                      style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                    ),
                 ],
               ),
             ),

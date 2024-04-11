@@ -76,6 +76,8 @@ class _CardParceirosState extends State<CardParceiros> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(item.nome, style: const TextStyle(fontWeight: FontWeight.w500)),
+                              // Text(item.jaExistente! ? 'JA' : 'nao', style: const TextStyle(fontWeight: FontWeight.w500)),
+                              // Text(item.idParceiroTrocado!, style: const TextStyle(fontWeight: FontWeight.w500)),
                               Text(
                                 item.apelido,
                                 style: const TextStyle(color: Colors.green),
@@ -107,13 +109,13 @@ class _CardParceirosState extends State<CardParceiros> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
-            color: (competidor.ativo == 'Não' || widget.listaCompetidores.contains(competidor)) ? const Color(0xFFfbe5ea) : null,
-            shape: (competidor.ativo == 'Não' || widget.listaCompetidores.contains(competidor))
+            color: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) ? const Color(0xFFfbe5ea) : null,
+            shape: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty)
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
                 : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: ListTile(
               onTap: () {
-                if (competidor.ativo == 'Sim' && !(widget.listaCompetidores.contains(competidor))) {
+                if (competidor.ativo == 'Sim' && (widget.listaCompetidores.where((element) => element.id == competidor.id).isEmpty)) {
                   controller.closeView('');
                   FocusScope.of(context).unfocus();
                   setState(() {
@@ -122,6 +124,7 @@ class _CardParceirosState extends State<CardParceiros> {
                     item.apelido = competidor.apelido;
                     item.nomeCidade = competidor.nomeCidade;
                     item.siglaEstado = competidor.siglaEstado;
+                    item.jaExistente = false;
                   });
                 }
               },
@@ -139,7 +142,7 @@ class _CardParceirosState extends State<CardParceiros> {
               title: Text(
                 competidor.nome,
                 style: TextStyle(
-                    color: widget.listaCompetidores.contains(competidor)
+                    color: widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty
                         ? Colors.black
                         : isDarkMode
                             ? Colors.white

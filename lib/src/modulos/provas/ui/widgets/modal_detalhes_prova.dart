@@ -77,6 +77,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             siglaEstado: itemNovo.siglaEstado,
             ativo: itemNovo.ativo,
             jaExistente: itemNovo.jaExistente,
+            idParceiroTrocado: itemNovo.idParceiroTrocado,
           );
 
           listaCompetidores.add(novoCompetidor);
