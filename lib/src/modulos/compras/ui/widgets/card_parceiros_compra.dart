@@ -97,8 +97,6 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
         List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(usuarioProvider.usuario, keyword, parceiro.idProva);
 
         Iterable<Widget> widgets = competidores.map((competidor) {
-          print(widget.parceiros.first.toMap());
-          // print(competidor.toMap());
           return Card(
             elevation: 3.0,
             color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) ? const Color(0xFFfbe5ea) : null,
