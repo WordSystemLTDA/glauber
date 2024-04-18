@@ -85,59 +85,61 @@ class _PaginaInicioState extends State<PaginaInicio> {
   }
 
   void funcaoMudarRota(RemoteMessage? message) {
-    if (message != null) {
-      String rotaApp = message.data['rota'] ?? '';
+    if (mounted) {
+      if (message != null) {
+        String rotaApp = message.data['rota'] ?? '';
 
-      if (rotaApp.isNotEmpty) {
-        if (rotaApp == AppRotas.compras) {
-          setState(() {
-            pageIndex = 1;
-            pageController.jumpToPage(1);
-          });
-        } else if (rotaApp == AppRotas.ordemDeEntrada) {
-          setState(() {
-            pageIndex = 2;
-            pageController.jumpToPage(2);
-          });
-        } else if (rotaApp == AppRotas.perfil) {
-          setState(() {
-            pageIndex = 3;
-            pageController.jumpToPage(3);
-          });
-        } else if (rotaApp == AppRotas.home) {
-          setState(() {
-            pageIndex = 0;
-            pageController.jumpToPage(0);
-          });
-        } else if (rotaApp == AppRotas.finalizarCompra) {
-          Navigator.pushNamed(
-            context,
-            rotaApp,
-            arguments: PaginaFinalizarCompraArgumentos(
-              provas: List<ProvaModelo>.from(jsonDecode(message.data['provas']).map((elemento) {
-                return ProvaModelo.fromMap(elemento);
-              })),
-              idEvento: message.data['idEvento'],
-            ),
-          );
-        } else if (rotaApp == AppRotas.provas) {
-          Navigator.pushNamed(
-            context,
-            rotaApp,
-            arguments: PaginaProvasArgumentos(
-              idEvento: message.data['idEvento'],
-            ),
-          );
-        } else if (rotaApp == AppRotas.propaganda) {
-          Navigator.pushNamed(
-            context,
-            rotaApp,
-            arguments: PaginaPropagandaArgumentos(
-              idPropaganda: message.data['idPropaganda'],
-            ),
-          );
-        } else {
-          Navigator.pushNamed(context, rotaApp);
+        if (rotaApp.isNotEmpty) {
+          if (rotaApp == AppRotas.compras) {
+            setState(() {
+              pageIndex = 1;
+              pageController.jumpToPage(1);
+            });
+          } else if (rotaApp == AppRotas.ordemDeEntrada) {
+            setState(() {
+              pageIndex = 2;
+              pageController.jumpToPage(2);
+            });
+          } else if (rotaApp == AppRotas.perfil) {
+            setState(() {
+              pageIndex = 3;
+              pageController.jumpToPage(3);
+            });
+          } else if (rotaApp == AppRotas.home) {
+            setState(() {
+              pageIndex = 0;
+              pageController.jumpToPage(0);
+            });
+          } else if (rotaApp == AppRotas.finalizarCompra) {
+            Navigator.pushNamed(
+              context,
+              rotaApp,
+              arguments: PaginaFinalizarCompraArgumentos(
+                provas: List<ProvaModelo>.from(jsonDecode(message.data['provas']).map((elemento) {
+                  return ProvaModelo.fromMap(elemento);
+                })),
+                idEvento: message.data['idEvento'],
+              ),
+            );
+          } else if (rotaApp == AppRotas.provas) {
+            Navigator.pushNamed(
+              context,
+              rotaApp,
+              arguments: PaginaProvasArgumentos(
+                idEvento: message.data['idEvento'],
+              ),
+            );
+          } else if (rotaApp == AppRotas.propaganda) {
+            Navigator.pushNamed(
+              context,
+              rotaApp,
+              arguments: PaginaPropagandaArgumentos(
+                idPropaganda: message.data['idPropaganda'],
+              ),
+            );
+          } else {
+            Navigator.pushNamed(context, rotaApp);
+          }
         }
       }
     }

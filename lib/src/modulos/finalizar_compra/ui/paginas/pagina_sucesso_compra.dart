@@ -116,7 +116,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: AppRotas.compras), (Route<dynamic> route) => false);
                   },
-                  child: const Text('Suas compras'),
+                  child: const Text('Suas inscrições'),
                 ),
               ],
             ),
@@ -162,10 +162,10 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                     onPressed: () {
                       Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: AppRotas.compras), (Route<dynamic> route) => false);
                     },
-                    child: const Text('Suas compras'),
+                    child: const Text('Suas inscrições'),
                   ),
                 ],
-                if (dados.tipoRetorno == 'verificacao') ...[
+                if (dados.tipoRetorno == 'verificacao' || dados.tipoRetorno == 'naoverificar') ...[
                   const SizedBox(height: 25),
                   QrImageView(
                     data: dados.codigoPix!,
@@ -223,7 +223,8 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ValueListenableBuilder<VerificarPagamentoEstado>(
+                          if (dados.tipoRetorno == 'verificacao') ...[
+                            ValueListenableBuilder<VerificarPagamentoEstado>(
                               valueListenable: verificarPagamentoStore,
                               builder: (context, state, _) {
                                 return ElevatedButton(
@@ -250,8 +251,10 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                                         )
                                       : const Text('Verificar Pagamento'),
                                 );
-                              }),
-                          const SizedBox(width: 10),
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                          ],
                           ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
@@ -264,9 +267,13 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                             ),
                             onPressed: () {
                               Navigator.pushNamedAndRemoveUntil(
-                                  context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: AppRotas.compras), (Route<dynamic> route) => false);
+                                context,
+                                AppRotas.inicio,
+                                arguments: PaginaInicioArgumentos(rota: AppRotas.compras),
+                                (Route<dynamic> route) => false,
+                              );
                             },
-                            child: const Text('Suas compras'),
+                            child: const Text('Suas inscrições'),
                           ),
                         ],
                       ),

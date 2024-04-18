@@ -72,7 +72,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                     final firebaseMessagingService = context.read<FirebaseMessagingService>();
                     final usuarioProvider = context.read<UsuarioProvider>();
                     final comprasProvedor = context.read<ComprasProvedor>();
-                    String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                    String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
                     autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
                       var (sucessoAoExcluirToken, _) = resposta;

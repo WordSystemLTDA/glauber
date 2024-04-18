@@ -24,7 +24,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
   late StateSetter _setState;
   bool sucessoAoVerificarPagamento = false;
   bool aparecerModalPaga = false;
-  late Timer _timer;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -34,12 +34,14 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 
   void iniciarVerificacaoPagamento() {
-    if (widget.item.quandoInscricaoNaoPaga == 'mostrar_qrcode_pix') {
+    if (widget.item.quandoInscricaoNaoPaga == 'mostrar_qrcode_pix' && widget.item.idFormaPagamento != '6') {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (mounted) {
           var verificarPagamentoServico = context.read<VerificarPagamentoServico>();

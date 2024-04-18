@@ -109,23 +109,27 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                 if (competidor.ativo == 'Sim' && widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty) {
                   controller.closeView('');
                   FocusScope.of(context).unfocus();
+                  var usuarioProvider = context.read<UsuarioProvider>();
 
-                  await comprasServico.editarParceiro(parceiro.id, competidor.id, parceiro.nomeModalidade).then((value) {
+                  await comprasServico.editarParceiro(usuarioProvider.usuario, parceiro.id, parceiro.idParceiro, competidor.id, parceiro.nomeModalidade).then((value) {
                     var (sucesso, mensagem) = value;
+
                     if (sucesso) {
-                      setState(() {
-                        parceiro.idParceiro = competidor.id;
-                        parceiro.nomeParceiro = competidor.nome;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(mensagem),
-                        backgroundColor: Colors.green,
-                      ));
+                      if (mounted) {
+                        setState(() {
+                          parceiro.idParceiro = competidor.id;
+                          parceiro.nomeParceiro = competidor.nome;
+                        });
+                      }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(mensagem),
-                        backgroundColor: Colors.red,
-                      ));
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(mensagem),
+                            backgroundColor: Colors.red,
+                          ));
+                        }
+                      });
                     }
                   });
                 }

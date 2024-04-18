@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
@@ -143,7 +144,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                                 final autenticacaoServico = context.read<AutenticacaoServico>();
                                 final firebaseMessagingService = context.read<FirebaseMessagingService>();
                                 var usuarioProvider = context.read<UsuarioProvider>();
-                                String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                                String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
                                 autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
                                   var (sucessoAoExcluirConta, mensagem) = resposta;
@@ -207,7 +208,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                       final firebaseMessagingService = context.read<FirebaseMessagingService>();
                       final usuarioProvider = context.read<UsuarioProvider>();
                       final comprasProvedor = context.read<ComprasProvedor>();
-                      String? tokenNotificacao = await firebaseMessagingService.getDeviceFirebaseToken();
+                      String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
                       autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
                         var (sucessoAoExcluirToken, _) = resposta;
