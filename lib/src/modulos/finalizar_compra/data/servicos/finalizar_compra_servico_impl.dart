@@ -19,6 +19,8 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
     var provasAvulsa = dados.provas.where((element) => element.avulsa == 'Sim').toList();
     var provasNaoAvulsa = dados.provas.where((element) => element.avulsa != 'Sim').toList();
 
+    print(provasAvulsa.length);
+
     var campos = {
       ...dados.toMap(),
       'provasAvulsa': provasAvulsa,

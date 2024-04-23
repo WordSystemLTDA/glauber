@@ -156,6 +156,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         ),
       );
     } else {
+      print(widget.argumentos.provas[0].toMap());
       finalizarCompraStore.inserir(
         usuarioProvider.usuario,
         FormularioCompraModelo(

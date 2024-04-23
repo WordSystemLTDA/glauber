@@ -109,13 +109,15 @@ class _CardParceirosState extends State<CardParceiros> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
-            color: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) ? const Color(0xFFfbe5ea) : null,
-            shape: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty)
+            color: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) && competidor.id != '0'
+                ? const Color(0xFFfbe5ea)
+                : null,
+            shape: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
                 : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: ListTile(
               onTap: () {
-                if (competidor.ativo == 'Sim' && (widget.listaCompetidores.where((element) => element.id == competidor.id).isEmpty)) {
+                if ((competidor.ativo == 'Sim' && (widget.listaCompetidores.where((element) => element.id == competidor.id).isEmpty)) || competidor.id == '0') {
                   controller.closeView('');
                   FocusScope.of(context).unfocus();
                   setState(() {

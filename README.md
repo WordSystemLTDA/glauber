@@ -67,6 +67,9 @@
 - [ ] Arrumar ordem de entrada repetida
 - [ ] Fazer logs de transfêrencia no banco de dados
 
+- [ ] Botão de mudar várias inscrições ao mesmo tempo (Pagamento)
+- [ ] Limite de handicap nos parceiros (na hora de escolher)
+
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
 

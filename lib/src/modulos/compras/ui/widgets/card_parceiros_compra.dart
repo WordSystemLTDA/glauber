@@ -107,31 +107,66 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
             child: ListTile(
               onTap: () async {
                 if (competidor.ativo == 'Sim' && widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty) {
-                  controller.closeView('');
-                  FocusScope.of(context).unfocus();
-                  var usuarioProvider = context.read<UsuarioProvider>();
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext contextDialog) {
+                      return AlertDialog(
+                        title: const Text('Substituir'),
+                        content: const SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              Text("Deseja realmente substituir esse parceiro?"),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancelar'),
+                            onPressed: () {
+                              Navigator.of(contextDialog).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Sim'),
+                            onPressed: () async {
+                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                                if (mounted) {
+                                  controller.closeView('');
+                                  FocusScope.of(context).unfocus();
+                                  var usuarioProvider = context.read<UsuarioProvider>();
 
-                  await comprasServico.editarParceiro(usuarioProvider.usuario, parceiro.id, parceiro.idParceiro, competidor.id, parceiro.nomeModalidade).then((value) {
-                    var (sucesso, mensagem) = value;
+                                  await comprasServico
+                                      .editarParceiro(usuarioProvider.usuario, parceiro.id, parceiro.idParceiro, competidor.id, parceiro.nomeModalidade)
+                                      .then((value) {
+                                    var (sucesso, mensagem) = value;
 
-                    if (sucesso) {
-                      if (mounted) {
-                        setState(() {
-                          parceiro.idParceiro = competidor.id;
-                          parceiro.nomeParceiro = competidor.nome;
-                        });
-                      }
-                    } else {
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(mensagem),
-                            backgroundColor: Colors.red,
-                          ));
-                        }
-                      });
-                    }
-                  });
+                                    if (sucesso) {
+                                      if (mounted) {
+                                        setState(() {
+                                          parceiro.idParceiro = competidor.id;
+                                          parceiro.nomeParceiro = competidor.nome;
+                                        });
+                                        Navigator.pop(context);
+                                      }
+                                    } else {
+                                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text(mensagem),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                        }
+                                      });
+                                    }
+                                  });
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
               },
               leading: Text(competidor.id),
