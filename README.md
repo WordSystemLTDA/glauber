@@ -69,6 +69,7 @@
 
 - [ ] Botão de mudar várias inscrições ao mesmo tempo (Pagamento)
 - [ ] Limite de handicap nos parceiros (na hora de escolher)
+- [ ] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
@@ -81,3 +82,19 @@ Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do e
 - Ajustar para a largura (pode cortar imagem ou não)
 - Ajustar para a altura (pode sobrar nas horizontais)
 - Aparecer imagem toda (sem se preocupar com largura ou altura, dependendo pode sobrar nas laterais)
+
+===================================== DESENVOLVIMENTO PARA PROVA DE 3 TAMBORES ===================================
+
+(BOTES OPÇÕES) LAÇO EM DUPLA - 3 TAMBORES - LAÇO INDIVIDUAL
+
+Perguntas
+VOCÊ É COMPETIDOR LAÇO EM DUPLA
+VOCÊ É COMPETIDOR DE 3 TAMBORES
+VOCÊ PARTICIPA DE LAÇO INDIVIDUAL
+
+Menu categorias
+Laço em dupla, 3 tambores
+
+no evento criar coluna, qual tipo de evento (prova de laço (padrão), ou 3 tambores, aparecer pergunta se é pra você ou para outra pessoa)
+
+criar cadastro de cavalos (cliente pode ter mais de um cavalo) campos - nome, nascimento, registro, sexo, raça, propietario, cidade
