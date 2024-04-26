@@ -341,7 +341,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                 ));
                                                                 return;
                                                               }
-                                                              if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
+                                                              if ((compra.idFormaPagamento != '1' &&
+                                                                  compra.idFormaPagamento != '4' &&
+                                                                  compra.idFormaPagamento != '5' &&
+                                                                  compra.idFormaPagamento != '6')) {
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                   showCloseIcon: true,
                                                                   content: Text(
@@ -537,7 +540,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                 ));
                                                                 return;
                                                               }
-                                                              if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5')) {
+                                                              if ((compra.idFormaPagamento != '1' &&
+                                                                  compra.idFormaPagamento != '4' &&
+                                                                  compra.idFormaPagamento != '5' &&
+                                                                  compra.idFormaPagamento != '6')) {
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                   showCloseIcon: true,
                                                                   content: Text(

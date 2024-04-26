@@ -168,84 +168,78 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
         width: width,
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.only(
-              left: 15,
-              top: 10,
-              right: 15,
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
+            padding: EdgeInsets.only(left: 15, top: 10, right: 15, bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Stack(
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (listaCompetidores.isNotEmpty && widget.permVincularParceiro == 'Sim') ...[
-                      const Padding(
-                        padding: EdgeInsets.only(left: 5, bottom: 10),
-                        child: Text(
-                          'Seus Parceiros',
-                          style: TextStyle(fontSize: 16),
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (listaCompetidores.isNotEmpty && widget.permVincularParceiro == 'Sim') ...[
+                        const Padding(
+                          padding: EdgeInsets.only(left: 5, bottom: 10),
+                          child: Text('Seus Parceiros', style: TextStyle(fontSize: 16)),
                         ),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: listaCompetidores.length,
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var item = listaCompetidores[index];
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: listaCompetidores.length,
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var item = listaCompetidores[index];
 
-                          return CardParceiros(
-                            item: item,
-                            idProva: widget.prova.id,
-                            listaCompetidores: listaCompetidores,
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      const Divider(),
-                    ],
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: IconButton(
-                            color: (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima))) ? Colors.red : Colors.grey,
-                            iconSize: 34,
-                            onPressed: () {
-                              removerQuantidade();
-                            },
-                            icon: (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima))) ||
-                                    widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
-                                ? const Icon(Icons.remove_circle_outline_outlined)
-                                : const Icon(Icons.delete_outline_outlined, color: Colors.red),
-                          ),
+                            return CardParceiros(
+                              item: item,
+                              idProva: widget.prova.id,
+                              listaCompetidores: listaCompetidores,
+                            );
+                          },
                         ),
-                        SizedBox(
-                          width: 100,
-                          child: Text(
-                            quantidade.toString(),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                        ),
-                        Expanded(
-                          child: IconButton(
-                            color: quantidade < int.parse(widget.prova.quantMaxima) ? Colors.green : Colors.grey,
-                            iconSize: 34,
-                            onPressed: () {
-                              if (widget.prova.avulsa == 'Sim') {
-                                adicionarQuantidade();
-                              }
-                            },
-                            icon: const Icon(Icons.add_circle_outline_outlined),
-                          ),
-                        ),
+                        const SizedBox(height: 20),
+                        const Divider(),
                       ],
-                    ),
-                    SizedBox(height: mensagemAlerta.isNotEmpty ? 140 : 90),
-                  ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: IconButton(
+                              color: (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima))) ? Colors.red : Colors.grey,
+                              iconSize: 34,
+                              onPressed: () {
+                                removerQuantidade();
+                              },
+                              icon: (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima))) ||
+                                      widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isEmpty
+                                  ? const Icon(Icons.remove_circle_outline_outlined)
+                                  : const Icon(Icons.delete_outline_outlined, color: Colors.red),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: Text(
+                              quantidade.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Expanded(
+                            child: IconButton(
+                              color: quantidade < int.parse(widget.prova.quantMaxima) ? Colors.green : Colors.grey,
+                              iconSize: 34,
+                              onPressed: () {
+                                if (widget.prova.avulsa == 'Sim') {
+                                  adicionarQuantidade();
+                                }
+                              },
+                              icon: const Icon(Icons.add_circle_outline_outlined),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: mensagemAlerta.isNotEmpty ? 140 : 90),
+                    ],
+                  ),
                 ),
                 Positioned(
                   bottom: 0,
