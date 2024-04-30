@@ -193,6 +193,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                               item: item,
                               idProva: widget.prova.id,
                               listaCompetidores: listaCompetidores,
+                              idCabeceira: widget.prova.idCabeceira,
                             );
                           },
                         ),

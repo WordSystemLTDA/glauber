@@ -208,6 +208,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -217,6 +218,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -226,6 +228,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -235,6 +238,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -244,6 +248,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -253,6 +258,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -262,6 +268,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
     OrdemDeEntradaModelo(
       id: '',
@@ -271,6 +278,7 @@ class DadosFakes {
       nomeCliente: 'nomeCliente',
       parceiros: [],
       nomeCabeceira: '',
+      idCabeceira: '',
     ),
   ];
 }

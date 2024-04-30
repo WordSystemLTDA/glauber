@@ -76,7 +76,7 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                               const SizedBox(height: 5),
                               Text(item.nomeEvento),
                               const SizedBox(height: 5),
-                              Text("Seu HandiCap: ${item.nomeCabeceira == 'Pezeiro' ? usuarioProvider.usuario!.hcPezeiro : usuarioProvider.usuario!.hcCabeceira!}"),
+                              Text("Seu HandiCap: ${item.idCabeceira == '2' ? usuarioProvider.usuario!.hcPezeiro : usuarioProvider.usuario!.hcCabeceira!}"),
                               const SizedBox(height: 5),
                               Text(item.nomeCabeceira),
                               const SizedBox(height: 5),

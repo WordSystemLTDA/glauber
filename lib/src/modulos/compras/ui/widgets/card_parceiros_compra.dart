@@ -94,7 +94,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
       suggestionsBuilder: (BuildContext context, SearchController controller) async {
         final keyword = controller.value.text;
         var usuarioProvider = context.read<UsuarioProvider>();
-        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(usuarioProvider.usuario, keyword, parceiro.idProva);
+        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(parceiro.idModalidade, usuarioProvider.usuario, keyword, parceiro.idProva);
 
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(

@@ -191,6 +191,9 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
         apelido: apelidoController.text.trimLeft().trimRight(),
         atualizacaoAndroid: usuario.usuario!.atualizacaoAndroid,
         atualizacaoIos: usuario.usuario!.atualizacaoIos,
+        ativoProva: usuario.usuario!.ativoProva,
+        cabeceiroProvas: usuario.usuario!.cabeceiroProvas,
+        pezeiroProvas: usuario.usuario!.pezeiroProvas,
       );
 
       if (sucesso) {

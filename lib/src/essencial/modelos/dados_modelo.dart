@@ -5,11 +5,17 @@ class DadosModelo {
   final String celularSuporte;
   final String atualizacaoAndroid;
   final String atualizacaoIos;
+  final String possuiCadastro2;
+  final String possuiCadastro1;
+  final String ativoCadastro;
 
   DadosModelo({
     required this.celularSuporte,
     required this.atualizacaoAndroid,
     required this.atualizacaoIos,
+    required this.possuiCadastro2,
+    required this.possuiCadastro1,
+    required this.ativoCadastro,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +23,9 @@ class DadosModelo {
       'celularSuporte': celularSuporte,
       'atualizacaoAndroid': atualizacaoAndroid,
       'atualizacaoIos': atualizacaoIos,
+      'possuiCadastro2': possuiCadastro2,
+      'possuiCadastro1': possuiCadastro1,
+      'ativoCadastro': ativoCadastro,
     };
   }
 
@@ -25,6 +34,9 @@ class DadosModelo {
       celularSuporte: map['celularSuporte'] as String,
       atualizacaoAndroid: map['atualizacaoAndroid'] as String,
       atualizacaoIos: map['atualizacaoIos'] as String,
+      possuiCadastro2: map['possuiCadastro2'] as String,
+      possuiCadastro1: map['possuiCadastro1'] as String,
+      ativoCadastro: map['ativoCadastro'] as String,
     );
   }
 

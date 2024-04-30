@@ -8,6 +8,7 @@ class ParceirosCompraModelo {
   final String idProva;
   final String nomeProva;
   final String nomeModalidade;
+  final String idModalidade;
   final String nomeCidade;
   final String siglaEstado;
 
@@ -18,6 +19,7 @@ class ParceirosCompraModelo {
     required this.idProva,
     required this.nomeProva,
     required this.nomeModalidade,
+    required this.idModalidade,
     required this.nomeCidade,
     required this.siglaEstado,
   });
@@ -30,6 +32,7 @@ class ParceirosCompraModelo {
       'idProva': idProva,
       'nomeProva': nomeProva,
       'nomeModalidade': nomeModalidade,
+      'idModalidade': idModalidade,
       'nomeCidade': nomeCidade,
       'siglaEstado': siglaEstado,
     };
@@ -43,6 +46,7 @@ class ParceirosCompraModelo {
       idProva: map['idProva'] as String,
       nomeProva: map['nomeProva'] as String,
       nomeModalidade: map['nomeModalidade'] as String,
+      idModalidade: map['idModalidade'] as String,
       nomeCidade: map['nomeCidade'] as String,
       siglaEstado: map['siglaEstado'] as String,
     );

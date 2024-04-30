@@ -37,6 +37,9 @@ class UsuarioModelo {
   String? somaDeHandicaps;
   String? atualizacaoAndroid;
   String? atualizacaoIos;
+  String? cabeceiroProvas;
+  String? pezeiroProvas;
+  String? ativoProva;
 
   UsuarioModelo({
     required this.id,
@@ -74,6 +77,9 @@ class UsuarioModelo {
     required this.somaDeHandicaps,
     required this.atualizacaoAndroid,
     required this.atualizacaoIos,
+    required this.ativoProva,
+    required this.cabeceiroProvas,
+    required this.pezeiroProvas,
   });
 
   Map<String, dynamic> toMap() {
@@ -113,6 +119,9 @@ class UsuarioModelo {
       'somaDeHandicaps': somaDeHandicaps,
       'atualizacaoAndroid': atualizacaoAndroid,
       'atualizacaoIos': atualizacaoIos,
+      'cabeceiroProvas': cabeceiroProvas,
+      'pezeiroProvas': pezeiroProvas,
+      'ativoProva': ativoProva,
     };
   }
 
@@ -153,6 +162,9 @@ class UsuarioModelo {
       somaDeHandicaps: map['somaDeHandicaps'] != null ? map['somaDeHandicaps'] as String : null,
       atualizacaoAndroid: map['atualizacaoAndroid'] != null ? map['atualizacaoAndroid'] as String : null,
       atualizacaoIos: map['atualizacaoIos'] != null ? map['atualizacaoIos'] as String : null,
+      cabeceiroProvas: map['cabeceiroProvas'] != null ? map['cabeceiroProvas'] as String : null,
+      pezeiroProvas: map['pezeiroProvas'] != null ? map['pezeiroProvas'] as String : null,
+      ativoProva: map['ativoProva'] != null ? map['ativoProva'] as String : null,
     );
   }
 

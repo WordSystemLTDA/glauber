@@ -283,7 +283,11 @@ class _CardComprasState extends State<CardCompras> {
                                             itemBuilder: (context, index) {
                                               var parceiro = item.parceiros[index];
 
-                                              return CardParceirosCompra(item: item, parceiro: parceiro, parceiros: item.parceiros);
+                                              return CardParceirosCompra(
+                                                item: item,
+                                                parceiro: parceiro,
+                                                parceiros: item.parceiros,
+                                              );
                                             },
                                           ),
                                         ),

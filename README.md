@@ -71,6 +71,8 @@
 - [ ] Limite de handicap nos parceiros (na hora de escolher)
 - [ ] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
 
+- [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
+
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
 
@@ -98,3 +100,9 @@ Laço em dupla, 3 tambores
 no evento criar coluna, qual tipo de evento (prova de laço (padrão), ou 3 tambores, aparecer pergunta se é pra você ou para outra pessoa)
 
 criar cadastro de cavalos (cliente pode ter mais de um cavalo) campos - nome, nascimento, registro, sexo, raça, propietario, cidade
+
+1 -
+Deseja confirmar sua inscrição laçando a cabeça?
+
+2 -
+Tem certeza que deseja fazer o pagamento via PIX?

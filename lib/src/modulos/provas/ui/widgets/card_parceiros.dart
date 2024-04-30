@@ -10,12 +10,14 @@ class CardParceiros extends StatefulWidget {
   final CompetidoresModelo item;
   final String idProva;
   final List<CompetidoresModelo> listaCompetidores;
+  final String? idCabeceira;
 
   const CardParceiros({
     super.key,
     required this.item,
     required this.idProva,
     required this.listaCompetidores,
+    this.idCabeceira,
   });
 
   @override
@@ -104,7 +106,7 @@ class _CardParceirosState extends State<CardParceiros> {
         final keyword = controller.value.text;
         var usuarioProvider = context.read<UsuarioProvider>();
 
-        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(usuarioProvider.usuario, keyword, widget.idProva);
+        List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(widget.idCabeceira, usuarioProvider.usuario, keyword, widget.idProva);
 
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(

@@ -11,9 +11,9 @@ class CompetidoresServicoImpl implements CompetidoresServico {
   CompetidoresServicoImpl(this.client);
 
   @override
-  Future<List<CompetidoresModelo>> listarCompetidores(UsuarioModelo? usuario, String pesquisa, String idProva) async {
+  Future<List<CompetidoresModelo>> listarCompetidores(String? idCabeceira, UsuarioModelo? usuario, String pesquisa, String idProva) async {
     var idCliente = usuario != null ? usuario.id : 0;
-    var url = 'compras/listar_clientes.php?pesquisa=$pesquisa&id_prova=$idProva&id_cliente=$idCliente';
+    var url = 'compras/listar_clientes.php?pesquisa=$pesquisa&id_prova=$idProva&id_cliente=$idCliente&id_cabeceira=$idCabeceira';
 
     var response = await client.get(url: url);
     var jsonData = jsonDecode(response.data);

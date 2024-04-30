@@ -49,9 +49,52 @@ class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 110;
   bool verificando = false;
 
-  void aoClicarNaCabeceira(ProvaModelo prova, NomesCabeceiraModelo item) async {
+  void aoClicarNaCabeceira(ProvaModelo prova, NomesCabeceiraModelo item, bool confirmar) async {
     var usuarioProvider = context.read<UsuarioProvider>();
     var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
+
+    if (usuarioProvider.usuario!.ativoProva == 'Sim' && confirmar) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext contextDialog) {
+          return AlertDialog(
+            title: const Text('Confirmação'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                    item.id == '1'
+                        ? (usuarioProvider.usuario!.cabeceiroProvas ?? '')
+                        : item.id == '2'
+                            ? (usuarioProvider.usuario!.pezeiroProvas ?? '')
+                            : '',
+                    textAlign: TextAlign.justify,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Não'),
+                onPressed: () {
+                  Navigator.of(contextDialog).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Sim'),
+                onPressed: () async {
+                  Navigator.of(contextDialog).pop();
+                  aoClicarNaCabeceira(prova, item, false);
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+      return;
+    }
 
     // Caso o usuário não esteja logado
     if (usuarioProvider.usuario == null) {
@@ -552,7 +595,7 @@ class _CardProvasState extends State<CardProvas> {
                                       child: InkWell(
                                         borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
                                         onTap: () {
-                                          aoClicarNaCabeceira(prova, item);
+                                          aoClicarNaCabeceira(prova, item, true);
                                         },
                                         child: Center(
                                           child: Text(

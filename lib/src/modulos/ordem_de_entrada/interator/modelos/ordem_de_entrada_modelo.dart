@@ -10,6 +10,7 @@ class OrdemDeEntradaModelo {
   final String nomeProva;
   final String nomeCliente;
   final String nomeCabeceira;
+  final String idCabeceira;
 
   final List<ParceirosModelos> parceiros;
 
@@ -20,6 +21,7 @@ class OrdemDeEntradaModelo {
     required this.nomeProva,
     required this.nomeCliente,
     required this.nomeCabeceira,
+    required this.idCabeceira,
     required this.parceiros,
   });
 
@@ -31,6 +33,7 @@ class OrdemDeEntradaModelo {
       'nomeProva': nomeProva,
       'nomeCliente': nomeCliente,
       'nomeCabeceira': nomeCabeceira,
+      'idCabeceira': idCabeceira,
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
     };
   }
@@ -43,6 +46,7 @@ class OrdemDeEntradaModelo {
       nomeProva: map['nomeProva'] as String,
       nomeCliente: map['nomeCliente'] as String,
       nomeCabeceira: map['nomeCabeceira'] as String,
+      idCabeceira: map['idCabeceira'] as String,
       parceiros: List<ParceirosModelos>.from(
         (map['parceiros'] as List<dynamic>).map<ParceirosModelos>(
           (x) => ParceirosModelos.fromMap(x as Map<String, dynamic>),

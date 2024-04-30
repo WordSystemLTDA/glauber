@@ -27,6 +27,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
   bool ocultarSenha = true;
   String celularSuporte = '';
+  String possuiCadastro2 = '';
+  String possuiCadastro1 = '';
+  String ativoCadastro = '';
 
   void entrarComEmail() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
@@ -72,6 +75,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
     listarDadosServicosImpl.listarDados().then((value) {
       setState(() {
         celularSuporte = value.celularSuporte;
+        ativoCadastro = value.ativoCadastro;
+        possuiCadastro1 = value.possuiCadastro1;
+        possuiCadastro2 = value.possuiCadastro2;
       });
     });
 
@@ -124,177 +130,278 @@ class _PaginaLoginState extends State<PaginaLogin> {
               Scaffold(
                 body: SafeArea(
                   child: Center(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const LogoApp(width: 230),
-                          const SizedBox(height: 50),
-                          TextField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(hintText: 'E-mail'),
-                          ),
-                          const SizedBox(height: 20),
-                          TextField(
-                            obscureText: ocultarSenha,
-                            controller: _senhaController,
-                            decoration: const InputDecoration(
-                              hintText: 'Senha',
-                              // suffix: IconButton(
-                              //   onPressed: () {
-                              //     setState(() {
-                              //       ocultarSenha = !ocultarSenha;
-                              //     });
-                              //   },
-                              //   icon: ocultarSenha ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
-                              // ),
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        final listarDadosServicosImpl = context.read<ListarDadosServicosImpl>();
+
+                        listarDadosServicosImpl.listarDados().then((value) {
+                          setState(() {
+                            celularSuporte = value.celularSuporte;
+                            ativoCadastro = value.ativoCadastro;
+                            possuiCadastro1 = value.possuiCadastro1;
+                            possuiCadastro2 = value.possuiCadastro2;
+                          });
+                        });
+                      },
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const LogoApp(width: 230),
+                            const SizedBox(height: 50),
+                            TextField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(hintText: 'E-mail'),
                             ),
-                          ),
-                          const SizedBox(height: 30),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor: const MaterialStatePropertyAll(Color.fromARGB(255, 247, 24, 8)),
-                                foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                            const SizedBox(height: 20),
+                            TextField(
+                              obscureText: ocultarSenha,
+                              controller: _senhaController,
+                              decoration: const InputDecoration(
+                                hintText: 'Senha',
+                                // suffix: IconButton(
+                                //   onPressed: () {
+                                //     setState(() {
+                                //       ocultarSenha = !ocultarSenha;
+                                //     });
+                                //   },
+                                //   icon: ocultarSenha ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
+                                // ),
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: const MaterialStatePropertyAll(Color.fromARGB(255, 247, 24, 8)),
+                                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              onPressed: () {
-                                entrarComEmail();
-                              },
-                              child: const Text(
-                                'Entrar',
-                                style: TextStyle(fontSize: 18),
+                                onPressed: () {
+                                  entrarComEmail();
+                                },
+                                child: const Text(
+                                  'Entrar',
+                                  style: TextStyle(fontSize: 18),
+                                ),
                               ),
                             ),
-                          ),
-                          ListTile(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    insetPadding: EdgeInsets.zero,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                    child: SizedBox(
-                                      width: width - 50,
-                                      height: 250,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Text('E-mail'),
-                                            const SizedBox(height: 10),
-                                            const TextField(
-                                              decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Center(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  ElevatedButton(
-                                                    onPressed: () {},
-                                                    child: const Text('Recuperar'),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      if (celularSuporte.isNotEmpty) {
-                                                        FuncoesGlobais.abrirWhatsapp(celularSuporte);
-                                                      }
-                                                    },
-                                                    child: const Row(
-                                                      children: [
-                                                        FaIcon(
-                                                          FontAwesomeIcons.whatsapp,
-                                                          color: Colors.green,
-                                                        ),
-                                                        SizedBox(width: 10),
-                                                        Text('Entrar em contato via WhatsApp'),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
+                            ListTile(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      insetPadding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                      child: SizedBox(
+                                        width: width - 50,
+                                        height: 250,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Text('E-mail'),
+                                              const SizedBox(height: 10),
+                                              const TextField(
+                                                decoration: InputDecoration(border: OutlineInputBorder(), hintText: 'E-mail'),
                                               ),
-                                            ),
-                                          ],
+                                              const SizedBox(height: 10),
+                                              Center(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: () {},
+                                                      child: const Text('Recuperar'),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        if (celularSuporte.isNotEmpty) {
+                                                          FuncoesGlobais.abrirWhatsapp(celularSuporte);
+                                                        }
+                                                      },
+                                                      child: const Row(
+                                                        children: [
+                                                          FaIcon(
+                                                            FontAwesomeIcons.whatsapp,
+                                                            color: Colors.green,
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text('Entrar em contato via WhatsApp'),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            title: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Esqueceu sua senha? ',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  'Clique aqui',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 14,
+                                    );
+                                  },
+                                );
+                              },
+                              title: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Esqueceu sua senha? ',
+                                    style: TextStyle(fontSize: 14),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    'Clique aqui',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          SignInButton(
-                            Buttons.GoogleDark,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                            text: 'Entrar com o Google',
-                            onPressed: () {
-                              entrarSocial(TiposLogin.google);
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          if (!kIsWeb && Platform.isIOS) ...[
+                            const SizedBox(height: 20),
                             SignInButton(
-                              Buttons.AppleDark,
+                              Buttons.GoogleDark,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                              text: 'Entrar com a Apple',
-                              onPressed: () async {
-                                entrarSocial(TiposLogin.apple);
+                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                              text: 'Entrar com o Google',
+                              onPressed: () {
+                                entrarSocial(TiposLogin.google);
                               },
                             ),
-                          ],
-                          const SizedBox(height: 20),
-                          ListTile(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                            },
-                            title: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Não está cadastrado? ',
-                                  style: TextStyle(fontSize: 14),
+                            const SizedBox(height: 10),
+                            if (!kIsWeb && Platform.isIOS) ...[
+                              SignInButton(
+                                Buttons.AppleDark,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
-                                Text('Cadastre-se', style: TextStyle(color: Colors.blue, fontSize: 14)),
-                              ],
+                                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                                text: 'Entrar com a Apple',
+                                onPressed: () async {
+                                  entrarSocial(TiposLogin.apple);
+                                },
+                              ),
+                            ],
+                            const SizedBox(height: 20),
+                            ListTile(
+                              onTap: () {
+                                if (ativoCadastro == 'Sim') {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext contextDialog) {
+                                      return AlertDialog(
+                                        title: const Text('Cadastro'),
+                                        content: SingleChildScrollView(
+                                          child: ListBody(
+                                            children: <Widget>[
+                                              Text(
+                                                possuiCadastro1,
+                                                style: const TextStyle(fontSize: 18),
+                                                textAlign: TextAlign.justify,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Não'),
+                                            onPressed: () {
+                                              Navigator.of(contextDialog).pop();
+                                              Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text('Sim'),
+                                            onPressed: () async {
+                                              Navigator.of(contextDialog).pop();
+                                              if (mounted) {
+                                                showDialog<String>(
+                                                  context: context,
+                                                  builder: (BuildContext contextDialog) {
+                                                    return AlertDialog(
+                                                      title: const Text('Cadastro'),
+                                                      content: SingleChildScrollView(
+                                                        child: ListBody(
+                                                          children: <Widget>[
+                                                            Text(
+                                                              possuiCadastro2,
+                                                              style: const TextStyle(fontSize: 18),
+                                                              textAlign: TextAlign.justify,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        SizedBox(
+                                                          width: 110,
+                                                          child: TextButton(
+                                                            child: const Row(
+                                                              children: [
+                                                                FaIcon(FontAwesomeIcons.whatsapp),
+                                                                SizedBox(width: 5),
+                                                                Text('Suporte'),
+                                                              ],
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.of(contextDialog).pop();
+                                                              if (celularSuporte.isNotEmpty) {
+                                                                FuncoesGlobais.abrirWhatsapp(celularSuporte);
+                                                              }
+                                                            },
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          child: const Text('OK'),
+                                                          onPressed: () async {
+                                                            Navigator.of(contextDialog).pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  return;
+                                }
+
+                                Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                              },
+                              title: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Não está cadastrado? ',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  Text('Cadastre-se', style: TextStyle(color: Colors.blue, fontSize: 14)),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
