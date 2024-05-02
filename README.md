@@ -74,6 +74,8 @@
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario
 
+- [ ] Fazer logs de tudo, de todas as ações feitas no aplicativo
+
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
 

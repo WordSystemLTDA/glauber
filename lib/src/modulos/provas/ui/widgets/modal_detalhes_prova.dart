@@ -65,7 +65,11 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       if (widget.prova.permitirCompra.competidoresJaSelecionados != null &&
           widget.prova.permitirCompra.competidoresJaSelecionados!.isNotEmpty &&
           widget.permVincularParceiro == 'Sim') {
-        quantidade = widget.prova.permitirCompra.competidoresJaSelecionados!.length;
+        if (widget.prova.avulsa == 'Sim') {
+          quantidade = widget.prova.permitirCompra.competidoresJaSelecionados!.length;
+        } else {
+          quantidade = 1;
+        }
 
         for (var i = 0; i < widget.prova.permitirCompra.competidoresJaSelecionados!.length; i++) {
           var itemNovo = widget.prova.permitirCompra.competidoresJaSelecionados![i];

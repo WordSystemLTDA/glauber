@@ -66,7 +66,14 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                     children: [
                       Text(parceiro.nomeModalidade),
                       const SizedBox(height: 5),
-                      Text(parceiro.nomeProva),
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          parceiro.nomeProva,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
                       const SizedBox(height: 5),
                       Text(
                         parceiro.nomeParceiro,
