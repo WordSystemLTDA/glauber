@@ -75,6 +75,7 @@
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario
 
 - [ ] Fazer logs de tudo, de todas as ações feitas no aplicativo
+- [ ] Listagem de parceiros nas compras, rever por id_cabeceira e id_pezeiro (está puxando tudo junto)
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
