@@ -66,10 +66,12 @@
 - [x] Trocar os handicaps na ordem de entrada (somente os parceiros)
 - [ ] Arrumar ordem de entrada repetida
 - [ ] Fazer logs de transfêrencia no banco de dados
-
 - [ ] Botão de mudar várias inscrições ao mesmo tempo (Pagamento)
 - [ ] Limite de handicap nos parceiros (na hora de escolher)
 - [ ] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
+- [ ] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova)
+
+-- ERROS --
 
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario
@@ -79,7 +81,6 @@
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
-
 ======================================= IDEIAS ========================================================
 Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do evento ou propaganda seja
 
