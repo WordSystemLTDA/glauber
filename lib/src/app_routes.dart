@@ -19,6 +19,8 @@ class AppRotas {
   static const calendario = '/calendario';
   static const verEventoCalendario = '/verEventoCalendario';
   static const aovivo = '/aovivo';
+  static const animais = '/animais';
+  static const animaisCadastrar = '/animais/cadastrar/';
 
   static const paginaInicial = splash;
 

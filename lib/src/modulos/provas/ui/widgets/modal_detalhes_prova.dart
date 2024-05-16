@@ -38,6 +38,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   void initState() {
     super.initState();
     if (mounted) {
+      print(widget.prova.id);
       mudarQuantidade();
     }
   }
@@ -76,6 +77,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
           var novoCompetidor = CompetidoresModelo(
             id: itemNovo.id,
             nome: itemNovo.nome,
+            idProva: widget.prova.id,
             apelido: itemNovo.apelido,
             nomeCidade: itemNovo.nomeCidade,
             siglaEstado: itemNovo.siglaEstado,
@@ -99,6 +101,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             nome: '',
             apelido: '',
             nomeCidade: '',
+            idProva: widget.prova.id,
             siglaEstado: '',
             ativo: 'Sim',
             jaExistente: false,
@@ -113,6 +116,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             nome: '',
             apelido: '',
             nomeCidade: '',
+            idProva: widget.prova.id,
             siglaEstado: '',
             ativo: 'Sim',
             jaExistente: false,
@@ -131,6 +135,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             id: widget.prova.permitirSorteio == 'Sim' ? '0' : '',
             nome: '',
             apelido: '',
+            idProva: widget.prova.id,
             nomeCidade: '',
             siglaEstado: '',
             ativo: 'Sim',

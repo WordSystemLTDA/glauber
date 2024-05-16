@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/modulos/animais/paginas/pagina_animais.dart';
+import 'package:provadelaco/src/modulos/animais/paginas/pagina_inserir_animais.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
@@ -50,6 +52,10 @@ class RouteGenerator {
         return buildRoute(const PaginaEditarUsuario(), settings: settings);
       case AppRotas.calendario:
         return buildRoute(const PaginaCalendario(), settings: settings);
+      case AppRotas.animais:
+        return buildRoute(const PaginaAnimais(), settings: settings);
+      case AppRotas.animaisCadastrar:
+        return buildRoute(const PaginaInserirAnimais(), settings: settings);
       case AppRotas.aovivo:
         final argumentos = settings.arguments as PaginaAoVivoArgumentos;
         return buildRoute(PaginaAoVivo(argumentos: argumentos), settings: settings);

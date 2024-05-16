@@ -156,6 +156,12 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         ),
       );
     } else {
+      // widget.argumentos.provas.map((e) => print(e.toMap()));
+      // log('opa', error: widget.argumentos.provas);
+      // print(widget.argumentos.provas.where((element) => element.id == '188').length);
+      // print(widget.argumentos.provas.where((element) => element.id == '189').length);
+
+      // return;
       finalizarCompraStore.inserir(
         usuarioProvider.usuario,
         FormularioCompraModelo(
@@ -303,6 +309,57 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               selected: {metodoPagamento},
                               showSelectedIcon: false,
                               onSelectionChanged: (pagamento) {
+                                if (pagamento.first == '1' || pagamento.first == '4' || pagamento.first == '5' || pagamento.first == '6') {
+                                  if (dados.ativoPagamento == 'Sim') {
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (BuildContext contextDialog) {
+                                        return AlertDialog(
+                                          title: const Text('Alerta'),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                RichText(
+                                                  textAlign: TextAlign.justify,
+                                                  text: TextSpan(
+                                                    text: 'O pagamento deve ser realizado em até',
+                                                    style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white),
+                                                    children: <TextSpan>[
+                                                      TextSpan(text: " ${dados.tempoCancel} minutos", style: const TextStyle(fontWeight: FontWeight.bold)),
+                                                      const TextSpan(text: '. Ápos isso, o pedido será'),
+                                                      const TextSpan(text: ' cancelado automaticamente', style: TextStyle(color: Colors.red)),
+                                                      const TextSpan(text: '.'),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('OK'),
+                                              onPressed: () {
+                                                setState(() {
+                                                  if (pagamento.first != '3') {
+                                                    parcela = -1;
+                                                  } else {
+                                                    parcela = 1;
+                                                  }
+
+                                                  metodoPagamento = pagamento.first;
+                                                });
+                                                Navigator.of(contextDialog).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+
+                                    return;
+                                  }
+                                }
+
                                 setState(() {
                                   if (pagamento.first != '3') {
                                     parcela = -1;

@@ -53,49 +53,6 @@ class _CardProvasState extends State<CardProvas> {
     var usuarioProvider = context.read<UsuarioProvider>();
     var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
-    if (usuarioProvider.usuario!.ativoProva == 'Sim' && confirmar) {
-      showDialog<String>(
-        context: context,
-        builder: (BuildContext contextDialog) {
-          return AlertDialog(
-            title: const Text('Confirmação'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text(
-                    item.id == '1'
-                        ? (usuarioProvider.usuario!.cabeceiroProvas ?? '')
-                        : item.id == '2'
-                            ? (usuarioProvider.usuario!.pezeiroProvas ?? '')
-                            : '',
-                    textAlign: TextAlign.justify,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Não'),
-                onPressed: () {
-                  Navigator.of(contextDialog).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Sim'),
-                onPressed: () async {
-                  Navigator.of(contextDialog).pop();
-                  aoClicarNaCabeceira(prova, item, false);
-                },
-              ),
-            ],
-          );
-        },
-      );
-
-      return;
-    }
-
     // Caso o usuário não esteja logado
     if (usuarioProvider.usuario == null) {
       if (mounted) {
@@ -120,6 +77,49 @@ class _CardProvasState extends State<CardProvas> {
         .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item.id, jaExisteCarrinho, quantidadeCarrinho)
         .then((state) {
       if (state.permitirCompraModelo.liberado) {
+        if (usuarioProvider.usuario!.ativoProva == 'Sim' && confirmar) {
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext contextDialog) {
+              return AlertDialog(
+                title: const Text('Confirmação'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text(
+                        item.id == '1'
+                            ? (usuarioProvider.usuario!.cabeceiroProvas ?? '')
+                            : item.id == '2'
+                                ? (usuarioProvider.usuario!.pezeiroProvas ?? '')
+                                : '',
+                        textAlign: TextAlign.justify,
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Não'),
+                    onPressed: () {
+                      Navigator.of(contextDialog).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Sim'),
+                    onPressed: () async {
+                      Navigator.of(contextDialog).pop();
+                      aoClicarNaCabeceira(prova, item, false);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+
+          return;
+        }
+
         var provaModelo = ProvaModelo(
           id: state.provaModelo.id,
           permitirCompra: state.permitirCompraModelo,

@@ -130,6 +130,9 @@ class DadosFakes {
     prova: DadosProvasModelo(valor: '150', taxaProva: '0.00'),
     parcelasDisponiveisCartao: [],
     taxaCartao: '0',
+    ativoPagamento: '',
+    pagamentoPix: '',
+    tempoCancel: '',
     valorAdicional: ValorAdicionalModelo(tipo: "", titulo: "", valor: "1.00"),
     evento: EventoModelo(
       id: "19",

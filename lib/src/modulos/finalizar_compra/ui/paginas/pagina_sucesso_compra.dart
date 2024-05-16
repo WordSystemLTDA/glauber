@@ -219,7 +219,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   ),
                   SafeArea(
                     child: SizedBox(
-                      width: width - 50,
+                      width: width,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

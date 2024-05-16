@@ -70,8 +70,11 @@
 - [ ] Limite de handicap nos parceiros (na hora de escolher)
 - [ ] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
 - [ ] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova)
+- [x] ao clicar na forma de pagamento PIX aparecer um alerta
+- [x] permissão de bloquear as vendas, mas quem tem inscrições vinculadas (parceiros) pode comprar
+- [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho
 
--- ERROS --
+======================================= ERROS =========================================================
 
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
@@ -32,6 +33,14 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'icone': const Icon(Icons.edit_outlined),
       'funcao': (BuildContext context) {
         Navigator.pushNamed(context, AppRotas.editarUsuario);
+      }
+    },
+    {
+      'titulo': const Text('Animais'),
+      'ativo': true,
+      'icone': const FaIcon(FontAwesomeIcons.horse),
+      'funcao': (BuildContext context) {
+        Navigator.pushNamed(context, AppRotas.animais);
       }
     },
     {
@@ -353,7 +362,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
               valueListenable: context.read<ThemeController>(),
               builder: (context, state, _) {
                 return ListTile(
-                  leading: context.read<ThemeController>().value == ThemeMode.dark ? const Icon(Icons.nightlight_round) : const Icon(Icons.wb_sunny),
+                  leading: context.read<ThemeController>().value == ThemeMode.dark ? const Icon(Icons.nightlight_outlined) : const Icon(Icons.wb_sunny_outlined),
                   title: const Text('Mudar Tema'),
                   onTap: () {
                     context.read<ThemeController>().onThemeSwitchEvent();

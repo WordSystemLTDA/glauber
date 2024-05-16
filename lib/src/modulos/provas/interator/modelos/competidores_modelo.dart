@@ -11,6 +11,7 @@ class CompetidoresModelo extends Equatable {
   String nomeCidade;
   String siglaEstado;
   String ativo;
+  String idProva;
   bool? jaExistente;
   String? idParceiroTrocado;
 
@@ -21,6 +22,7 @@ class CompetidoresModelo extends Equatable {
     required this.nomeCidade,
     required this.siglaEstado,
     required this.ativo,
+    required this.idProva,
     this.jaExistente,
     this.idParceiroTrocado,
   });
@@ -33,6 +35,7 @@ class CompetidoresModelo extends Equatable {
       'nomeCidade': nomeCidade,
       'siglaEstado': siglaEstado,
       'ativo': ativo,
+      'idProva': idProva,
       'jaExistente': jaExistente,
       'idParceiroTrocado': idParceiroTrocado,
     };
@@ -46,6 +49,7 @@ class CompetidoresModelo extends Equatable {
       nomeCidade: map['nomeCidade'] as String,
       siglaEstado: map['siglaEstado'] as String,
       ativo: map['ativo'] as String,
+      idProva: map['idProva'] as String,
       jaExistente: map['jaExistente'] != null ? map['jaExistente'] as bool : null,
       idParceiroTrocado: map['idParceiroTrocado'] != null ? map['idParceiroTrocado'] as String : null,
     );
