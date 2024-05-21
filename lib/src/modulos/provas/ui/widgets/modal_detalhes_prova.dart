@@ -38,7 +38,6 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   void initState() {
     super.initState();
     if (mounted) {
-      print(widget.prova.id);
       mudarQuantidade();
     }
   }

@@ -110,14 +110,11 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                                     Text("HC: ${itemParceiro.handicapCliente}, Inscrição: ${itemParceiro.numeroDaInscricao}"),
                                                   ],
                                                   if (itemParceiro.sorteio != '0' && itemParceiro.sorteio.isNotEmpty) ...[
-                                                    Text("HC: ${itemParceiro.handicapCliente}, Inscrição: ${itemParceiro.numeroDaInscricao}, Sorteio${itemParceiro.sorteio}"),
+                                                    Text("HC: ${itemParceiro.handicapCliente}, Inscrição: ${itemParceiro.numeroDaInscricao}, Extra${itemParceiro.sorteio}"),
                                                   ],
                                                 ],
                                               ),
-                                              Text(
-                                                itemParceiro.somatoria,
-                                                style: const TextStyle(fontSize: 16),
-                                              ),
+                                              Text(itemParceiro.somatoria, style: const TextStyle(fontSize: 16)),
                                             ],
                                           ),
                                           const SizedBox(height: 20),

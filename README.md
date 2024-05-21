@@ -74,6 +74,11 @@
 - [x] permissão de bloquear as vendas, mas quem tem inscrições vinculadas (parceiros) pode comprar
 - [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho
 
+- [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
+- [ ] colocar uma coluna quando a vincular_parceiro for editada
+- [ ] colocar um carrosel infinito, na pagina_provas, mostrando as fotos que foram vinculadas
+- [ ] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi.
+
 ======================================= ERROS =========================================================
 
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)

@@ -26,8 +26,18 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
     var cidadeServico = context.read<CidadeServico>();
 
     return Scaffold(
-      appBar: const AppBarSombra(
-        titulo: Text('Inserir'),
+      appBar: const AppBarSombra(titulo: Text('Inserir')),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SizedBox(
+        width: width - 50,
+        height: 50,
+        child: FloatingActionButton.extended(
+          onPressed: () {},
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          label: const Text('Salvar'),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -51,7 +61,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                       const Text('Data de Nascimento'),
                       const SizedBox(height: 5),
                       SizedBox(
-                        width: width / 2,
+                        width: (width / 2) - 15,
                         child: const TextField(
                           decoration: InputDecoration(
                             hintText: 'Data de Nascimento',
@@ -67,7 +77,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                       const Text('Sexo'),
                       const SizedBox(height: 5),
                       DropdownMenu(
-                        width: width / 2,
+                        width: (width / 2) - 15,
                         hintText: 'Selecione o Sexo do Animal',
                         dropdownMenuEntries: const [
                           DropdownMenuEntry(value: 'Macho', label: 'Macho'),
@@ -84,7 +94,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
               const SizedBox(height: 5),
               const TextField(
                 decoration: InputDecoration(
-                  hintText: 'Raca do Animal',
+                  hintText: 'Raça do Animal',
                 ),
               ),
               const SizedBox(height: 10),
@@ -166,6 +176,19 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                     ),
                     const SizedBox(width: 200, child: Text('Sou o propietário.')),
                   ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text('Foto'),
+              const SizedBox(height: 5),
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 234, 234, 234),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Center(
+                  child: Icon(Icons.photo_camera_back_outlined),
                 ),
               ),
             ],
