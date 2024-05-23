@@ -956,9 +956,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                               transferenciaProvedor.transferirCompras(comprasTransferencia, idClienteSelecionado);
                                             },
                                             style: ButtonStyle(
-                                              backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                                              foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                              shape: MaterialStatePropertyAll(
+                                              backgroundColor: const WidgetStatePropertyAll(Colors.green),
+                                              foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                                              shape: WidgetStatePropertyAll(
                                                 RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(5.0),
                                                 ),

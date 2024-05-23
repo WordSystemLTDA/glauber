@@ -120,7 +120,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                             Navigator.pop(context);
                           },
                           style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
@@ -211,8 +211,8 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                               Navigator.pop(context);
                             },
                             style: ButtonStyle(
-                              foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.onBackground),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              foregroundColor: WidgetStatePropertyAll<Color>(Theme.of(context).colorScheme.onSurface),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
@@ -239,9 +239,9 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                               Clipboard.setData(ClipboardData(text: item.codigoPIX));
                             },
                             style: ButtonStyle(
-                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                              foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              backgroundColor: const WidgetStatePropertyAll<Color>(Colors.red),
+                              foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),

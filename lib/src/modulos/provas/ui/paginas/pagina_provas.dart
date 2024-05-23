@@ -402,9 +402,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                               abrirTermosDeUso();
                                             },
                                             style: const ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                                              elevation: MaterialStatePropertyAll(0),
-                                              side: MaterialStatePropertyAll<BorderSide>(
+                                              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                              elevation: WidgetStatePropertyAll(0),
+                                              side: WidgetStatePropertyAll<BorderSide>(
                                                 BorderSide(
                                                   width: 1,
                                                   color: Colors.grey,
@@ -425,9 +425,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                               abrirDenunciar(state);
                                             },
                                             style: const ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                                              elevation: MaterialStatePropertyAll(0),
-                                              side: MaterialStatePropertyAll<BorderSide>(
+                                              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                              elevation: WidgetStatePropertyAll(0),
+                                              side: WidgetStatePropertyAll<BorderSide>(
                                                 BorderSide(
                                                   width: 1,
                                                   color: Colors.red,

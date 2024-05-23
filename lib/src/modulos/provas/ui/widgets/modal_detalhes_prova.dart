@@ -345,9 +345,9 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                                   }
                                 },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(quantidade == 0 ? Colors.grey : Colors.green),
-                            foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                            shape: MaterialStatePropertyAll(
+                            backgroundColor: WidgetStatePropertyAll(quantidade == 0 ? Colors.grey : Colors.green),
+                            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),

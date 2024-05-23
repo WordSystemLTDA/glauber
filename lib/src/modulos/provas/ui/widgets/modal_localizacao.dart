@@ -82,7 +82,7 @@ class _ModalLocalizacaoState extends State<ModalLocalizacao> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: const ButtonStyle(
-                    shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
+                    shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),

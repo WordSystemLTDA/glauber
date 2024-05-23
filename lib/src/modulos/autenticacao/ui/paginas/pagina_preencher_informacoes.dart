@@ -213,8 +213,8 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
                     width: double.infinity,
                     child: ElevatedButton(
                       style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.red),
-                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                        backgroundColor: WidgetStatePropertyAll(Colors.red),
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
                       ),
                       onPressed: () {
                         cadastrar();

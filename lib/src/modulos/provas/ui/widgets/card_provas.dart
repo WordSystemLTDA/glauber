@@ -575,7 +575,7 @@ class _CardProvasState extends State<CardProvas> {
                             height: tamanhoCard,
                             child: ListView.separated(
                               separatorBuilder: (context, index) {
-                                return Divider(height: 1, color: Theme.of(context).colorScheme.background);
+                                return Divider(height: 1, color: Theme.of(context).colorScheme.surface);
                               },
                               padding: const EdgeInsets.only(bottom: 1),
                               physics: const NeverScrollableScrollPhysics(),

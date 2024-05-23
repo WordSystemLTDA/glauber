@@ -277,17 +277,17 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             width: width,
                             child: SegmentedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.selected)) {
+                                backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                                  (Set<WidgetState> states) {
+                                    if (states.contains(WidgetState.selected)) {
                                       return const Color.fromARGB(222, 247, 24, 8);
                                     }
                                     return Colors.transparent;
                                   },
                                 ),
-                                foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                                  (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.selected)) {
+                                foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                                  (Set<WidgetState> states) {
+                                    if (states.contains(WidgetState.selected)) {
                                       return Colors.white;
                                     }
                                     return Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
@@ -573,11 +573,11 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                           height: 50,
                                           child: ElevatedButton(
                                             style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(
+                                              backgroundColor: WidgetStateProperty.all(
                                                 permitirClickConcluir(stateFinalizarCompra) ? const Color.fromARGB(255, 247, 24, 8) : Colors.grey,
                                               ),
-                                              foregroundColor: MaterialStateProperty.all(Colors.white),
-                                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              foregroundColor: WidgetStateProperty.all(Colors.white),
+                                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                                 const RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                                 ),

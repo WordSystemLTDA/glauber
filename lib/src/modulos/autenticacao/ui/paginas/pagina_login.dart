@@ -178,9 +178,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
                               height: 50,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor: const MaterialStatePropertyAll(Color.fromARGB(255, 247, 24, 8)),
-                                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  backgroundColor: const WidgetStatePropertyAll(Color.fromARGB(255, 247, 24, 8)),
+                                  foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                     const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(Radius.circular(5)),
                                     ),

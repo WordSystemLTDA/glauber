@@ -189,8 +189,8 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                               Navigator.pop(context);
                             },
                             style: ButtonStyle(
-                              foregroundColor: MaterialStatePropertyAll<Color>(Theme.of(context).colorScheme.onBackground),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              foregroundColor: WidgetStatePropertyAll<Color>(Theme.of(context).colorScheme.onSurface),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
@@ -219,9 +219,9 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                               });
                             },
                             style: ButtonStyle(
-                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                              foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              backgroundColor: const WidgetStatePropertyAll<Color>(Colors.red),
+                              foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),

@@ -80,9 +80,9 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
                     child: ElevatedButton(
                       onPressed: aparecerModalAdicionarCartao,
                       style: ButtonStyle(
-                        backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                        foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                        shape: MaterialStatePropertyAll(
+                        backgroundColor: const WidgetStatePropertyAll(Colors.green),
+                        foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                        shape: WidgetStatePropertyAll(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -204,9 +204,9 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
                             }
                           },
                           style: ButtonStyle(
-                            backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                            foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                            shape: MaterialStatePropertyAll(
+                            backgroundColor: const WidgetStatePropertyAll(Colors.green),
+                            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
@@ -479,9 +479,9 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
                                 }
                               },
                               style: ButtonStyle(
-                                backgroundColor: const MaterialStatePropertyAll(Colors.green),
-                                foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                                shape: MaterialStatePropertyAll(
+                                backgroundColor: const WidgetStatePropertyAll(Colors.green),
+                                foregroundColor: const WidgetStatePropertyAll(Colors.white),
+                                shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0),
                                   ),

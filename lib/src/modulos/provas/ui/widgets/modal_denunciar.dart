@@ -123,10 +123,10 @@ class _ModalDenunciarState extends State<ModalDenunciar> {
                     absorbing: !concordaDenunciar || nomeDenuncia.text.isEmpty || celularDenuncia.text.isEmpty || mensagemDenuncia.text.isEmpty,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: const MaterialStatePropertyAll(Colors.white),
+                        backgroundColor: const WidgetStatePropertyAll(Colors.white),
                         foregroundColor: (!concordaDenunciar || nomeDenuncia.text.isEmpty || celularDenuncia.text.isEmpty || mensagemDenuncia.text.isEmpty)
-                            ? const MaterialStatePropertyAll(Colors.grey)
-                            : const MaterialStatePropertyAll(Colors.red),
+                            ? const WidgetStatePropertyAll(Colors.grey)
+                            : const WidgetStatePropertyAll(Colors.red),
                       ),
                       onPressed: () {
                         var denunciarServico = context.read<DenunciarServico>();

@@ -105,9 +105,9 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                 const SizedBox(height: 50),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                    foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    backgroundColor: const WidgetStatePropertyAll<Color>(Colors.red),
+                    foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
@@ -151,9 +151,9 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   const SizedBox(height: 50),
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                      foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      backgroundColor: const WidgetStatePropertyAll<Color>(Colors.red),
+                      foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
@@ -189,9 +189,9 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                         Clipboard.setData(ClipboardData(text: dados.codigoPix!));
                       },
                       style: ButtonStyle(
-                        backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromARGB(255, 224, 224, 224)),
-                        foregroundColor: const MaterialStatePropertyAll<Color>(Colors.black),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        backgroundColor: const WidgetStatePropertyAll<Color>(Color.fromARGB(255, 224, 224, 224)),
+                        foregroundColor: const WidgetStatePropertyAll<Color>(Colors.black),
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -229,9 +229,9 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                               builder: (context, state, _) {
                                 return ElevatedButton(
                                   style: ButtonStyle(
-                                    backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                                    foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    backgroundColor: const WidgetStatePropertyAll<Color>(Colors.red),
+                                    foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(5.0),
                                       ),
@@ -257,9 +257,9 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                           ],
                           ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor: const MaterialStatePropertyAll<Color>(Colors.red),
-                              foregroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              backgroundColor: const WidgetStatePropertyAll<Color>(Colors.red),
+                              foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
