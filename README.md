@@ -78,6 +78,8 @@
 - [ ] colocar uma coluna quando a vincular_parceiro for editada
 - [ ] colocar um carrosel infinito, na pagina_provas, mostrando as fotos que foram vinculadas
 - [ ] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi.
+- [ ] arrumar competidores no pacote fechado também
+- [ ] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros.
 
 ======================================= ERROS =========================================================
 
