@@ -106,10 +106,16 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
-            color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) ? const Color(0xFFfbe5ea) : null,
+            color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty)
+                ? const Color(0xFFfbe5ea)
+                : competidor.ativo == 'Somatoria'
+                    ? Colors.blue[50]
+                    : null,
             shape: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty)
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
-                : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                : competidor.ativo == 'Somatoria'
+                    ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.blue), borderRadius: BorderRadius.circular(5))
+                    : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             // color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Colors.red : null,
             child: ListTile(
               onTap: () async {
@@ -186,7 +192,16 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                         Text('Fez todas as inscrições'),
                       ],
                     )
-                  : null,
+                  : competidor.ativo == 'Somatoria'
+                      ? const Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('HandiCap do Competidor'),
+                            Text('Estoura a somatória'),
+                          ],
+                        )
+                      : null,
               title: Text(
                 competidor.nome,
                 style: TextStyle(

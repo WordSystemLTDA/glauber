@@ -62,6 +62,15 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                             child: Image.network(
                               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT93a8gsU4zpkm0GV7gBFKJ9vPEoleHomfql7tvt2jwUQ&s',
                               height: 105,
+                              width: 160,
+                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           const Padding(

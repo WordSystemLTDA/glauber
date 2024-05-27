@@ -3,7 +3,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
@@ -35,14 +34,14 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
         Navigator.pushNamed(context, AppRotas.editarUsuario);
       }
     },
-    {
-      'titulo': const Text('Animais'),
-      'ativo': true,
-      'icone': const FaIcon(FontAwesomeIcons.horse),
-      'funcao': (BuildContext context) {
-        Navigator.pushNamed(context, AppRotas.animais);
-      }
-    },
+    // {
+    //   'titulo': const Text('Animais'),
+    //   'ativo': true,
+    //   'icone': const FaIcon(FontAwesomeIcons.horse),
+    //   'funcao': (BuildContext context) {
+    //     Navigator.pushNamed(context, AppRotas.animais);
+    //   }
+    // },
     {
       'titulo': const Text('Avaliar APP'),
       'ativo': true,

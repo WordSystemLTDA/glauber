@@ -113,10 +113,14 @@ class _CardParceirosState extends State<CardParceiros> {
             elevation: 3.0,
             color: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? const Color(0xFFfbe5ea)
-                : null,
+                : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
+                    ? Colors.blue[50]
+                    : null,
             shape: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
-                : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
+                    ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.blue), borderRadius: BorderRadius.circular(5))
+                    : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             child: ListTile(
               onTap: () {
                 if ((competidor.ativo == 'Sim' && (widget.listaCompetidores.where((element) => element.id == competidor.id).isEmpty)) || competidor.id == '0') {
@@ -142,7 +146,25 @@ class _CardParceirosState extends State<CardParceiros> {
                         Text('Fez todas as inscrições'),
                       ],
                     )
-                  : null,
+                  : competidor.ativo == 'Somatoria'
+                      ? const Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('HandiCap do Competidor'),
+                            Text('Estoura a somatória'),
+                          ],
+                        )
+                      : competidor.ativo == 'HCMinMax'
+                          ? const Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('HandiCap do Competidor'),
+                                Text('Não é compatível com a prova'),
+                              ],
+                            )
+                          : null,
               title: Text(
                 competidor.nome,
                 style: TextStyle(

@@ -12,6 +12,7 @@ import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.dart';
+import 'package:provadelaco/src/modulos/animais/servicos/servico_animais.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/handicap_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
@@ -146,6 +147,8 @@ void main() async {
       Provider<AgendaDataSource>(create: (context) => AgendaDataSource([], context.read())),
       ChangeNotifierProvider(create: (context) => AgendaStore(context.read<AgendaServico>(), context.read<AgendaDataSource>())),
       ChangeNotifierProvider(create: (context) => AgendaInfoStore(context.read<AgendaServico>())),
+
+      Provider(create: (context) => ServicoAnimais(context.read(), context.read())),
     ],
     child: const AppWidget(),
   );

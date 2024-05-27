@@ -5,6 +5,11 @@ import 'package:intl/intl.dart';
 class Utils {
   static final coverterEmReal = NumberFormat.currency(locale: 'pt_BR', symbol: "R\$");
 
+  static trocarFormatacaoData(String data) {
+    var dataSplit = data.split('/');
+    return "${dataSplit[2]}-${dataSplit[1]}-${dataSplit[0]}";
+  }
+
   @pragma('vm:entry-point')
   void notificationTapBackground(NotificationResponse notificationResponse) {
     // handle action

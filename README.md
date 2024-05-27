@@ -64,26 +64,30 @@
 - [x] Trocar as ordens do handicap na listagem de parceiros na ordem de entrada
 - [x] Arrumar mensagem de erros do app (mensagem virá somente da api)
 - [x] Trocar os handicaps na ordem de entrada (somente os parceiros)
-- [ ] Arrumar ordem de entrada repetida
-- [ ] Fazer logs de transfêrencia no banco de dados
-- [ ] Botão de mudar várias inscrições ao mesmo tempo (Pagamento)
-- [ ] Limite de handicap nos parceiros (na hora de escolher)
-- [ ] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
-- [ ] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova)
 - [x] ao clicar na forma de pagamento PIX aparecer um alerta
 - [x] permissão de bloquear as vendas, mas quem tem inscrições vinculadas (parceiros) pode comprar
-- [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho
-
-- [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
 - [x] colocar uma coluna quando a vincular_parceiro for editada
+- [x] arrumar competidores no pacote fechado também
+- [x] Arrumar ordem de entrada repetida
+- [x] Limite de handicap nos parceiros (na hora de escolher)
+- [x] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
+
+- [ ] quando clicar no gerar pagamento aparecer uma modal das inscrições deles para selecionar
+- [ ] cancelar inscrições indepedente do pagamento (sim ou não)
+- [ ] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova (somente informação)) colocar o botão no whatsapp para entrar em contato com o competidor
+- [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
 - [ ] colocar um carrosel infinito, na pagina_provas, mostrando as fotos que foram vinculadas
 - [ ] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi.
-- [ ] arrumar competidores no pacote fechado também
 - [ ] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros.
-- [ ] arrumar lista de parceiros nas compras, pegar a quantidade exata que está na prova
+- [ ] Fazer logs de transfêrencia no banco de dados
+- [ ] Fazer aparecer em cor amarelo nos parceiros nas compras (caso o parceiro não tenha nenhuma compra)
+
+- [ ] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
 
 ======================================= ERROS =========================================================
 
+- [ ] arrumar lista de parceiros nas compras, pegar a quantidade exata que está na prova (REVER)
+- [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario
 

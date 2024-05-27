@@ -333,6 +333,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             },
                                                             aoClicarParaGerarPagamento: (compra) {
                                                               if (compra.pago == 'Sim') {
+                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                   showCloseIcon: true,
                                                                   content: Text(
@@ -345,6 +346,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                   compra.idFormaPagamento != '4' &&
                                                                   compra.idFormaPagamento != '5' &&
                                                                   compra.idFormaPagamento != '6')) {
+                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                   showCloseIcon: true,
                                                                   content: Text(
@@ -356,6 +358,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
                                                               if (comprasPagamentos.isNotEmpty) {
                                                                 if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                     showCloseIcon: true,
                                                                     content: Text(
@@ -366,6 +369,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                 }
 
                                                                 if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                     showCloseIcon: true,
                                                                     content: Text(
@@ -532,6 +536,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             modoTransferencia: modoTransferencia,
                                                             aoClicarParaGerarPagamento: (compra) {
                                                               if (compra.pago == 'Sim') {
+                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                   showCloseIcon: true,
                                                                   content: Text(
@@ -544,6 +549,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                   compra.idFormaPagamento != '4' &&
                                                                   compra.idFormaPagamento != '5' &&
                                                                   compra.idFormaPagamento != '6')) {
+                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                   showCloseIcon: true,
                                                                   content: Text(
@@ -555,6 +561,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
                                                               if (comprasPagamentos.isNotEmpty) {
                                                                 if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                     showCloseIcon: true,
                                                                     content: Text(
@@ -565,6 +572,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                 }
 
                                                                 if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                     showCloseIcon: true,
                                                                     content: Text(
