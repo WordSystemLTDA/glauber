@@ -105,7 +105,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
         surfaceTintColor: Colors.white,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: width * 0.9,
+            minWidth: width * 0.9,
             maxHeight: height * 0.5,
           ),
           child: StatefulBuilder(
@@ -115,6 +115,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Gerando Pagamento'),
+                  SizedBox(height: 10),
                   CircularProgressIndicator(),
                 ],
               );

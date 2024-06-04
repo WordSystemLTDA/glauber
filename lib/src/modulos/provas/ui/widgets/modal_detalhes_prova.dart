@@ -185,9 +185,21 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (listaCompetidores.isNotEmpty && widget.permVincularParceiro == 'Sim') ...[
-                        const Padding(
-                          padding: EdgeInsets.only(left: 5, bottom: 10),
-                          child: Text('Seus Parceiros', style: TextStyle(fontSize: 16)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(left: 5, bottom: 10),
+                              child: Text('Seus Parceiros', style: TextStyle(fontSize: 16)),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              style: const ButtonStyle(
+                                  // minimumSize: WidgetStatePropertyAll(Size(width, height))
+                                  ),
+                              child: const Text('Ver Competidores', style: TextStyle(fontSize: 16)),
+                            )
+                          ],
                         ),
                         ListView.builder(
                           shrinkWrap: true,

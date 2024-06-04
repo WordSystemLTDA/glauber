@@ -71,8 +71,7 @@
 - [x] Arrumar ordem de entrada repetida
 - [x] Limite de handicap nos parceiros (na hora de escolher)
 - [x] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
-
-- [ ] quando clicar no gerar pagamento aparecer uma modal das inscrições deles para selecionar
+- [x] quando clicar no gerar pagamento aparecer uma modal das inscrições deles para selecionar
 - [ ] cancelar inscrições indepedente do pagamento (sim ou não)
 - [ ] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova (somente informação)) colocar o botão no whatsapp para entrar em contato com o competidor
 - [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
@@ -81,22 +80,26 @@
 - [ ] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros.
 - [ ] Fazer logs de transfêrencia no banco de dados
 - [ ] Fazer aparecer em cor amarelo nos parceiros nas compras (caso o parceiro não tenha nenhuma compra)
+- [ ] Fazer logs de tudo, de todas as ações feitas no aplicativo
+- [ ] Exprimir os input's da pagina login e cadastro e editar usuario
+
+======================================= SISTEMA WEB ===================================================
 
 - [ ] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
+- [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
 
 ======================================= ERROS =========================================================
 
 - [ ] arrumar lista de parceiros nas compras, pegar a quantidade exata que está na prova (REVER)
-- [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho
-- [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
-- [ ] Exprimir os input's da pagina login e cadastro e editar usuario
-
-- [ ] Fazer logs de tudo, de todas as ações feitas no aplicativo
+- [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho (REVER)
 - [ ] Listagem de parceiros nas compras, rever por id_cabeceira e id_pezeiro (está puxando tudo junto)
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
+
 [ ] Fazer com que ao clicar na notificação em foreground poder ir para Inscrições, ordem de entrada, perfil e inicio. (somente é possivel em modo background)
+
 ======================================= IDEIAS ========================================================
+
 Fazer uma configuração no banco de dados, caso a pessoa queria que a foto do evento ou propaganda seja
 
 - Cobrir (pode cortar imagem ou não)

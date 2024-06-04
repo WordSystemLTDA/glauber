@@ -36,7 +36,7 @@ class ComprasProvedor extends ChangeNotifier {
     carregando = true;
     notifyListeners();
 
-    await _servico.listar(usuario, pagina1, pagina2, pagina3).then((comprasServico) {
+    await _servico.listar(pagina1, pagina2, pagina3).then((comprasServico) {
       if (pagina1 == 1) {
         compras.anteriores.clear();
       }

@@ -22,6 +22,7 @@ class CardCompras extends StatefulWidget {
   final List<ComprasModelo> comprasPagamentos;
   final Function(ComprasModelo compra) aoClicarParaTransferir;
   final Function(ComprasModelo compra) aoClicarParaGerarPagamento;
+  bool? aparecerNomeProva;
   Function()? atualizarLista;
 
   CardCompras({
@@ -33,6 +34,7 @@ class CardCompras extends StatefulWidget {
     required this.comprasPagamentos,
     required this.aoClicarParaTransferir,
     required this.aoClicarParaGerarPagamento,
+    this.aparecerNomeProva = false,
     this.atualizarLista,
   });
 
@@ -64,7 +66,7 @@ class _CardComprasState extends State<CardCompras> {
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
-          side: widget.comprasTransferencia.contains(item) || widget.comprasPagamentos.contains(item) ? const BorderSide(color: Colors.green) : BorderSide.none,
+          side: widget.comprasTransferencia.contains(item) || widget.comprasPagamentos.contains(item) ? const BorderSide(color: Colors.green, width: 2) : BorderSide.none,
         ),
         child: InkWell(
           onTap: (widget.modoTransferencia || widget.modoGerarPagamento) && (item.status == 'Cancelado')
@@ -105,10 +107,7 @@ class _CardComprasState extends State<CardCompras> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          const Text(
-                                            'Detalhes da sua Inscrição',
-                                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                                          ),
+                                          const Text('Detalhes da sua Inscrição', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18)),
                                           IconButton(
                                             onPressed: () {
                                               Navigator.pop(context);
@@ -118,10 +117,7 @@ class _CardComprasState extends State<CardCompras> {
                                         ],
                                       ),
                                       const SizedBox(height: 20),
-                                      const Text(
-                                        'Detalhes do evento',
-                                        style: TextStyle(fontWeight: FontWeight.w700),
-                                      ),
+                                      const Text('Detalhes do evento', style: TextStyle(fontWeight: FontWeight.w700)),
                                       const SizedBox(height: 5),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,10 +135,7 @@ class _CardComprasState extends State<CardCompras> {
                                         ],
                                       ),
                                       const SizedBox(height: 20),
-                                      const Text(
-                                        'Valores da venda',
-                                        style: TextStyle(fontWeight: FontWeight.w700),
-                                      ),
+                                      const Text('Valores da venda', style: TextStyle(fontWeight: FontWeight.w700)),
                                       const SizedBox(height: 5),
                                       Column(
                                         children: [
@@ -361,7 +354,15 @@ class _CardComprasState extends State<CardCompras> {
                     children: [
                       Text("#${item.id} - ${item.nomeEmpresa}"),
                       const SizedBox(height: 10),
-                      Text(item.nomeEvento),
+                      Row(
+                        children: [
+                          Text(item.nomeEvento),
+                          if (widget.aparecerNomeProva == true) ...[
+                            const Text(' - '),
+                            Text(item.nomeProva),
+                          ],
+                        ],
+                      ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

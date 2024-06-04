@@ -135,7 +135,7 @@ void main() async {
 
       ChangeNotifierProvider(create: (context) => ListarCartoesStore(context.read())),
       // Compras
-      Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read())),
+      Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read<IHttpClient>(), context.read<UsuarioProvider>())),
       ChangeNotifierProvider(create: (context) => ComprasProvedor(context.read())),
       ChangeNotifierProvider(create: (context) => TransferenciaProvedor(context.read())),
       // Ordem de Entrada

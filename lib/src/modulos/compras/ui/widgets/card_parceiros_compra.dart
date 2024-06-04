@@ -146,11 +146,8 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                                 if (mounted) {
                                   controller.closeView('');
                                   FocusScope.of(context).unfocus();
-                                  var usuarioProvider = context.read<UsuarioProvider>();
 
-                                  await comprasServico
-                                      .editarParceiro(usuarioProvider.usuario, parceiro.id, parceiro.idParceiro, competidor.id, parceiro.nomeModalidade)
-                                      .then((value) {
+                                  await comprasServico.editarParceiro(parceiro.id, parceiro.idParceiro, competidor.id, parceiro.nomeModalidade).then((value) {
                                     var (sucesso, mensagem) = value;
 
                                     if (sucesso) {

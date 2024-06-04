@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/clientes_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_compras_modelo.dart';
@@ -14,15 +15,16 @@ import 'package:share_plus/share_plus.dart';
 
 class ComprasServicoImpl implements ComprasServico {
   final IHttpClient client;
+  final UsuarioProvider usuarioProvedor;
 
-  ComprasServicoImpl(this.client);
+  ComprasServicoImpl(this.client, this.usuarioProvedor);
 
   @override
-  Future<RetornoComprasModelo> listar(UsuarioModelo? usuario, int pagina1, int pagina2, int pagina3) async {
+  Future<RetornoComprasModelo> listar(int pagina1, int pagina2, int pagina3) async {
     var url = 'compras/listar.php';
 
     var campos = {
-      'id_cliente': usuario!.id,
+      'id_cliente': usuarioProvedor.usuario!.id,
       'pagina1': pagina1,
       'pagina2': pagina2,
       'pagina3': pagina3,
@@ -37,6 +39,29 @@ class ComprasServicoImpl implements ComprasServico {
       return RetornoComprasModelo.fromMap(jsonData['dados']);
     } else {
       return RetornoComprasModelo(anteriores: [], atuais: [], canceladas: []);
+    }
+  }
+
+  @override
+  Future<List<ComprasModelo>> listarSomenteInscricoes(int pagina) async {
+    var url = 'compras/listar_somente_inscricoes.php';
+
+    var campos = {
+      'id_cliente': usuarioProvedor.usuario!.id,
+      'pagina': pagina,
+    };
+
+    var response = await client.post(url: url, body: jsonEncode(campos));
+
+    var jsonData = jsonDecode(response.data);
+    bool sucesso = jsonData['sucesso'];
+
+    if (response.statusCode == 200 && sucesso == true) {
+      return List<ComprasModelo>.from(jsonData['dados'].map((elemento) {
+        return ComprasModelo.fromMap(elemento);
+      }));
+    } else {
+      return [];
     }
   }
 
@@ -133,14 +158,14 @@ class ComprasServicoImpl implements ComprasServico {
   }
 
   @override
-  Future<(bool, String)> editarParceiro(UsuarioModelo? usuario, String idParceiroVenda, String idParceiroOriginal, String idNovoParceiro, String modalidade) async {
+  Future<(bool, String)> editarParceiro(String idParceiroVenda, String idParceiroOriginal, String idNovoParceiro, String modalidade) async {
     var url = 'compras/editar_parceiro.php';
 
     var campos = {
       'id_parceiro_venda': idParceiroVenda,
       'id_parceiro_original': idParceiroOriginal,
       'id_novo_parceiro': idNovoParceiro,
-      'id_cliente_original': usuario!.id,
+      'id_cliente_original': usuarioProvedor.usuario!.id,
       'modalidade': modalidade,
     };
 

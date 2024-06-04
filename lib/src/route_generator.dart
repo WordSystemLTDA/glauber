@@ -9,6 +9,7 @@ import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_calendario.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_ver_evento_calendario.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
+import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_selecionar_pagamentos.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
@@ -34,9 +35,9 @@ class RouteGenerator {
         final argumentos = settings.arguments as PaginaInicioArgumentos?;
 
         if (argumentos != null) {
-          return buildRoute(PaginaInicio(argumentos: argumentos), settings: settings, telaInicio: true);
+          return buildRoute(PaginaInicio(argumentos: argumentos), settings: settings, animacao: true);
         } else {
-          return buildRoute(const PaginaInicio(), settings: settings, telaInicio: true);
+          return buildRoute(const PaginaInicio(), settings: settings, animacao: true);
         }
       case AppRotas.splash:
         return buildRoute(const PaginaSplash(), settings: settings);
@@ -56,6 +57,8 @@ class RouteGenerator {
         return buildRoute(const PaginaAnimais(), settings: settings);
       case AppRotas.animaisCadastrar:
         return buildRoute(const PaginaInserirAnimais(), settings: settings);
+      case AppRotas.selecionarInscricoes:
+        return buildRoute(const PaginaSelecionarPagamentos(), settings: settings);
       case AppRotas.aovivo:
         final argumentos = settings.arguments as PaginaAoVivoArgumentos;
         return buildRoute(PaginaAoVivo(argumentos: argumentos), settings: settings);
@@ -82,8 +85,8 @@ class RouteGenerator {
     }
   }
 
-  static dynamic buildRoute(Widget child, {required RouteSettings settings, bool telaInicio = false}) {
-    if (telaInicio) {
+  static dynamic buildRoute(Widget child, {required RouteSettings settings, bool animacao = false}) {
+    if (animacao) {
       return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
           return child;

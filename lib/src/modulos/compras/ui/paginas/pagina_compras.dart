@@ -799,14 +799,15 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                   backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
                   label: const Text('Gerar Pagamentos'),
                   onPressed: () {
-                    setState(() {
-                      if (modoGerarPagamento == true) {
-                        modoGerarPagamento = false;
-                        comprasPagamentos.clear();
-                      } else {
-                        modoGerarPagamento = true;
-                      }
-                    });
+                    Navigator.pushNamed(context, AppRotas.selecionarInscricoes);
+                    // setState(() {
+                    //   if (modoGerarPagamento == true) {
+                    //     modoGerarPagamento = false;
+                    //     comprasPagamentos.clear();
+                    //   } else {
+                    //     modoGerarPagamento = true;
+                    //   }
+                    // });
                   },
                 ),
               ),
