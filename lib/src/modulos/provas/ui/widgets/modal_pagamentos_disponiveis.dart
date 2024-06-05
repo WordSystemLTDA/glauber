@@ -22,10 +22,7 @@ class _ModalPagamentosDisponiveisState extends State<ModalPagamentosDisponiveis>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Pagamentos Disponíveis',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
+            const Text('Pagamentos Disponíveis', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 10),
             Flexible(
               child: ListView.separated(

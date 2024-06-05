@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
@@ -35,6 +36,82 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
 
   @override
   Widget build(BuildContext context) {
+    // print(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length);
+    var somaValorTotal = (num.parse(comprasPagamentos
+                .fold(
+                  ComprasModelo(
+                    id: "187",
+                    permVincularParceiro: '',
+                    idEmpresa: '1',
+                    valorIngresso: "0.00",
+                    valorTaxa: "0.00",
+                    valorDesconto: "0.00",
+                    valorTotal: "0.00",
+                    status: "Pendente",
+                    codigoQr: "MTAwMDAwMDAwMDE4Nw==",
+                    codigoPIX: "00020126330014br.gov.bcb.pix0111061528269505204000053039865406150.005802BR5911SAGL84237736011Santo Incio62240520mpqrinter7002336949763044DB5",
+                    idCliente: "10",
+                    dataCompra: "2024-01-08",
+                    horaCompra: "13:16 PM",
+                    pago: "Não",
+                    nomeProva: "Sem nome prova",
+                    nomeEvento: "Aniversário João Vitor Fadel",
+                    dataEvento: "2023-12-16",
+                    horaInicio: "09:00:00",
+                    horaInicioF: "09:00 AM",
+                    horaTermino: "19:00:00",
+                    idEvento: '1',
+                    nomeEmpresa: 'Nome empresa',
+                    numeroCelular: "(44) 99921-3336",
+                    formaPagamento: "Pix Mercado Pago",
+                    permitirEditarParceiros: '',
+                    idFormaPagamento: "1",
+                    quandoInscricaoNaoPaga: "mostrar_qrcode_pix",
+                    mensagemQuandoInscricaoNaoPaga: "",
+                    parceiros: [],
+                    provas: [],
+                    valorFiliacao: '0',
+                  ),
+                  (previousValue, element) => ComprasModelo(
+                    id: "187",
+                    permVincularParceiro: '',
+                    idEmpresa: '1',
+                    valorIngresso: "0.00",
+                    valorTaxa: "0.00",
+                    valorDesconto: "0.00",
+                    valorTotal: (num.parse(previousValue.valorTotal) + num.parse(element.valorTotal)).toString(),
+                    status: "Pendente",
+                    codigoQr: "MTAwMDAwMDAwMDE4Nw==",
+                    codigoPIX: "00020126330014br.gov.bcb.pix0111061528269505204000053039865406150.005802BR5911SAGL84237736011Santo Incio62240520mpqrinter7002336949763044DB5",
+                    idCliente: "10",
+                    dataCompra: "2024-01-08",
+                    horaCompra: "13:16 PM",
+                    pago: "Não",
+                    nomeProva: "Sem nome prova",
+                    nomeEvento: "Aniversário João Vitor Fadel",
+                    dataEvento: "2023-12-16",
+                    horaInicio: "09:00:00",
+                    horaInicioF: "09:00 AM",
+                    horaTermino: "19:00:00",
+                    idEvento: '1',
+                    nomeEmpresa: 'Nome empresa',
+                    numeroCelular: "(44) 99921-3336",
+                    formaPagamento: "Pix Mercado Pago",
+                    permitirEditarParceiros: '',
+                    idFormaPagamento: "1",
+                    quandoInscricaoNaoPaga: "mostrar_qrcode_pix",
+                    mensagemQuandoInscricaoNaoPaga: "",
+                    parceiros: [],
+                    provas: [],
+                    valorFiliacao: '0',
+                  ),
+                )
+                .valorTotal) -
+            (comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length > 1
+                ? num.parse(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).first.valorTaxa)
+                : 0))
+        .toString();
+
     return Scaffold(
       appBar: const AppBarSombra(titulo: Text('Selecione as Inscrições')),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -45,7 +122,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
           child: FloatingActionButton.extended(
             heroTag: null,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            label: Text('Pagar ${comprasPagamentos.length} Inscrições'),
+            label: Text('Pagar ${comprasPagamentos.length} Inscrições - ${double.parse(somaValorTotal).obterReal()}'),
             onPressed: () {
               showDialog(
                 context: context,
@@ -114,6 +191,8 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 70),
                           itemBuilder: (context, index) {
                             var item = inscricoesValue[index];
+
+                            // log('opa', error: inscricoesValue.map((e) => e.toMap()));
 
                             return Padding(
                               padding: EdgeInsets.only(bottom: inscricoesValue.lastWhere((element) => element.nomeProva == item.nomeProva).id == item.id ? 20 : 0),
