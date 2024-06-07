@@ -59,13 +59,14 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
 
       if (sucesso) {
         setState(() {
-          codigoPIX = retorno.codigoPIX;
+          codigoPIX = retorno!.codigoPIX;
           idCliente = retorno.idCliente;
           txid = retorno.txid;
         });
         iniciarVerificacaoPagamento();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
+        Navigator.pop(context);
       }
     });
   }

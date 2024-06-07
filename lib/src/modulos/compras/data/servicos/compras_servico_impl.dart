@@ -136,7 +136,7 @@ class ComprasServicoImpl implements ComprasServico {
   }
 
   @override
-  Future<(bool, String, RetornoGerarPagamentos)> gerarPagamentos(List<ComprasModelo> comprasPagamentos, UsuarioModelo? usuario) async {
+  Future<(bool, String, RetornoGerarPagamentos?)> gerarPagamentos(List<ComprasModelo> comprasPagamentos, UsuarioModelo? usuario) async {
     var url = 'compras/gerar_pagamentos.php';
 
     var campos = {
@@ -152,9 +152,13 @@ class ComprasServicoImpl implements ComprasServico {
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];
-    RetornoGerarPagamentos retornoGerarPagamentos = RetornoGerarPagamentos.fromMap(jsonData['dados']);
+    if (sucesso) {
+      RetornoGerarPagamentos retornoGerarPagamentos = RetornoGerarPagamentos.fromMap(jsonData['dados']);
 
-    return (sucesso, mensagem, retornoGerarPagamentos);
+      return (sucesso, mensagem, retornoGerarPagamentos);
+    } else {
+      return (sucesso, mensagem, null);
+    }
   }
 
   @override

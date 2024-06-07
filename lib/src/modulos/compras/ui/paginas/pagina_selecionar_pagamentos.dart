@@ -107,9 +107,11 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                   ),
                 )
                 .valorTotal) -
-            (comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length > 1
-                ? num.parse(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).first.valorTaxa)
-                : 0))
+            ((comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length > 1
+                        ? num.parse(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).first.valorTaxa)
+                        : 0) *
+                    comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length -
+                1))
         .toString();
 
     return Scaffold(
