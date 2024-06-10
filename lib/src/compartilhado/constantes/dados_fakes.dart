@@ -171,6 +171,7 @@ class DadosFakes {
             permVincularParceiro: '',
             idEmpresa: '1',
             valorIngresso: "150.00",
+            pixVencido: 'Não',
             valorTaxa: "0.00",
             valorDesconto: "0.00",
             valorTotal: "150.00",

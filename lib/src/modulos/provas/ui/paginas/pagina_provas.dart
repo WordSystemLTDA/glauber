@@ -68,31 +68,45 @@ class _PaginaProvasState extends State<PaginaProvas> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Visibility(
           visible: provasCarrinho.isNotEmpty,
-          child: SizedBox(
-            width: 250,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRotas.finalizarCompra,
-                  arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento),
-                );
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              backgroundColor: const Color.fromARGB(255, 247, 24, 8),
-              label: Row(
-                children: [
-                  Text("${provasCarrinho.length.toString()} ${provasCarrinho.length == 1 ? 'Item' : 'Itens'}"),
-                  const SizedBox(width: 10),
-                  Text(
-                    Utils.coverterEmReal.format(valorTotal),
-                    style: const TextStyle(color: Colors.white),
+          child: Stack(
+            children: [
+              SizedBox(
+                width: 250,
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppRotas.finalizarCompra,
+                      arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  backgroundColor: const Color.fromARGB(255, 247, 24, 8),
+                  label: Column(
+                    children: [
+                      const Text('Confirmar Inscrição', style: TextStyle(fontSize: 11, color: Colors.white)),
+                      Row(
+                        children: [
+                          Text("${provasCarrinho.length.toString()} ${provasCarrinho.length == 1 ? 'Item' : 'Itens'}"),
+                          const SizedBox(width: 10),
+                          Text(
+                            Utils.coverterEmReal.format(valorTotal),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          // const SizedBox(width: 10),
+                        ],
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  const Icon(Icons.arrow_forward_ios_outlined),
-                ],
+                ),
               ),
-            ),
+              const Positioned(
+                right: 10,
+                top: 0,
+                bottom: 0,
+                child: Icon(Icons.arrow_forward_ios_outlined, color: Colors.white),
+              ),
+            ],
           ),
         ),
         body: ValueListenableBuilder<ProvasEstado>(

@@ -87,6 +87,7 @@
 
 - [ ] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
+- [ ] remover parceiros vinculados ao excluir inscrição
 
 ======================================= ERROS =========================================================
 

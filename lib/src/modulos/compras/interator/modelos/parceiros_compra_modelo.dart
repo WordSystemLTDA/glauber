@@ -11,6 +11,7 @@ class ParceirosCompraModelo {
   final String idModalidade;
   final String nomeCidade;
   final String siglaEstado;
+  final String parceiroTemCompra;
 
   ParceirosCompraModelo({
     required this.id,
@@ -22,6 +23,7 @@ class ParceirosCompraModelo {
     required this.idModalidade,
     required this.nomeCidade,
     required this.siglaEstado,
+    required this.parceiroTemCompra,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +37,7 @@ class ParceirosCompraModelo {
       'idModalidade': idModalidade,
       'nomeCidade': nomeCidade,
       'siglaEstado': siglaEstado,
+      'parceiroTemCompra': parceiroTemCompra,
     };
   }
 
@@ -49,6 +52,7 @@ class ParceirosCompraModelo {
       idModalidade: map['idModalidade'] as String,
       nomeCidade: map['nomeCidade'] as String,
       siglaEstado: map['siglaEstado'] as String,
+      parceiroTemCompra: map['parceiroTemCompra'] as String,
     );
   }
 

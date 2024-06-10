@@ -1,10 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/parceiros_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
-class ComprasModelo {
+class ComprasModelo extends Equatable {
   final String id;
   final String valorIngresso;
   final String valorTaxa;
@@ -34,6 +35,7 @@ class ComprasModelo {
   final String mensagemQuandoInscricaoNaoPaga;
   final String permitirEditarParceiros;
   final String permVincularParceiro;
+  final String? pixVencido;
   final List<ProvaModelo> provas;
   final List<ParceirosCompraModelo> parceiros;
 
@@ -67,6 +69,7 @@ class ComprasModelo {
     required this.mensagemQuandoInscricaoNaoPaga,
     required this.permitirEditarParceiros,
     required this.permVincularParceiro,
+    this.pixVencido,
     required this.provas,
     required this.parceiros,
   });
@@ -102,6 +105,7 @@ class ComprasModelo {
       'mensagemQuandoInscricaoNaoPaga': mensagemQuandoInscricaoNaoPaga,
       'permitirEditarParceiros': permitirEditarParceiros,
       'permVincularParceiro': permVincularParceiro,
+      'pixVencido': pixVencido,
       'provas': provas.map((x) => x.toMap()).toList(),
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
     };
@@ -138,6 +142,7 @@ class ComprasModelo {
       mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
       permitirEditarParceiros: map['permitirEditarParceiros'] as String,
       permVincularParceiro: map['permVincularParceiro'] as String,
+      pixVencido: map['pixVencido'] != null ? map['pixVencido'] as String : null,
       provas: List<ProvaModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvaModelo>(
           (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
@@ -154,4 +159,8 @@ class ComprasModelo {
   String toJson() => json.encode(toMap());
 
   factory ComprasModelo.fromJson(String source) => ComprasModelo.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id];
 }

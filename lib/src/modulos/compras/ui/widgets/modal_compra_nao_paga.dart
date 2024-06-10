@@ -107,10 +107,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                       const Text(
                         'Sua compra foi verificada com sucesso.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 50),
                       SizedBox(
@@ -141,21 +138,23 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: 50),
-                  QrImageView(
-                    data: item.codigoPIX,
-                    size: width / 2,
-                    backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.transparent : Colors.white,
-                  ),
+                  if (item.pixVencido == 'Sim') ...[
+                    const Text('Esse pix está Vencido, gere outro para pagar.'),
+                  ],
+                  if (item.pixVencido == 'Não') ...[
+                    QrImageView(
+                      data: item.codigoPIX,
+                      size: width / 2,
+                      backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.transparent : Colors.white,
+                    ),
+                  ],
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         children: [
-                          const Icon(
-                            Icons.person,
-                            size: 20,
-                          ),
+                          const Icon(Icons.person, size: 20),
                           const SizedBox(width: 5),
                           Text(item.idCliente),
                         ],
@@ -163,10 +162,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                       const SizedBox(width: 10),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.airplane_ticket,
-                            size: 20,
-                          ),
+                          const Icon(Icons.airplane_ticket, size: 20),
                           const SizedBox(width: 5),
                           Text(item.id),
                         ],
@@ -230,10 +226,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
                                 showCloseIcon: true,
                                 backgroundColor: Colors.green,
                                 content: Center(
-                                  child: Text(
-                                    'Código PIX copiado',
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  child: Text('Código PIX copiado', textAlign: TextAlign.center),
                                 ),
                               ));
                               Clipboard.setData(ClipboardData(text: item.codigoPIX));

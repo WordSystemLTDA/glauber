@@ -10,7 +10,6 @@ import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_prove
 import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_compras.dart';
-import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_pagar_inscricoes.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -123,7 +122,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         listenable: comprasStore,
         builder: (BuildContext context, Widget? child) {
           return Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             floatingActionButton: _buildFloatingActionButton(),
             body: Column(
               children: [
@@ -784,60 +783,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
       width: width - 30,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // if (comprasStore.compras.anteriores.isNotEmpty && comprasStore.compras.atuais.isNotEmpty) ...[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 40,
-                child: FloatingActionButton.extended(
-                  heroTag: null,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
-                  label: const Text('Gerar Pagamentos'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRotas.selecionarInscricoes);
-                    // setState(() {
-                    //   if (modoGerarPagamento == true) {
-                    //     modoGerarPagamento = false;
-                    //     comprasPagamentos.clear();
-                    //   } else {
-                    //     modoGerarPagamento = true;
-                    //   }
-                    // });
-                  },
-                ),
-              ),
-              if (comprasPagamentos.isNotEmpty) ...[
-                SizedBox(
-                  height: 40,
-                  child: FloatingActionButton.extended(
-                    heroTag: null,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    backgroundColor: modoGerarPagamento ? Colors.green : Colors.grey,
-                    label: Text('Pagar ${comprasPagamentos.length} Inscrições'),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ModalPagarInscricoes(
-                            comprasPagamentos: comprasPagamentos,
-                            aoVerificarPagamento: () {
-                              listarCompras(resetar: true);
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ],
-          ),
+
           // ],
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1002,6 +951,26 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                 ),
               ],
             ],
+          ),
+          SizedBox(
+            height: 40,
+            child: FloatingActionButton.extended(
+              heroTag: null,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              backgroundColor: Colors.green,
+              label: const Text('Quero Pagar Agora'),
+              onPressed: () {
+                Navigator.pushNamed(context, AppRotas.selecionarInscricoes);
+                // setState(() {
+                //   if (modoGerarPagamento == true) {
+                //     modoGerarPagamento = false;
+                //     comprasPagamentos.clear();
+                //   } else {
+                //     modoGerarPagamento = true;
+                //   }
+                // });
+              },
+            ),
           ),
         ],
       ),
