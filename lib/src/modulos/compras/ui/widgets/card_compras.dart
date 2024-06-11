@@ -339,10 +339,7 @@ class _CardComprasState extends State<CardCompras> {
                       bottomLeft: Radius.circular(5),
                     ),
                   ),
-                  child: VerticalDivider(
-                    color: corCompra(item),
-                    thickness: 5,
-                  ),
+                  child: VerticalDivider(color: corCompra(item), thickness: 5),
                 ),
               ),
               Expanded(

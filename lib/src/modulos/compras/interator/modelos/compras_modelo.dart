@@ -38,6 +38,7 @@ class ComprasModelo extends Equatable {
   final String? pixVencido;
   final List<ProvaModelo> provas;
   final List<ParceirosCompraModelo> parceiros;
+  final String? idCabeceira;
 
   ComprasModelo({
     required this.id,
@@ -72,6 +73,7 @@ class ComprasModelo extends Equatable {
     this.pixVencido,
     required this.provas,
     required this.parceiros,
+    this.idCabeceira,
   });
 
   Map<String, dynamic> toMap() {
@@ -108,6 +110,7 @@ class ComprasModelo extends Equatable {
       'pixVencido': pixVencido,
       'provas': provas.map((x) => x.toMap()).toList(),
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
+      'idCabeceira': idCabeceira,
     };
   }
 
@@ -153,6 +156,7 @@ class ComprasModelo extends Equatable {
           (x) => ParceirosCompraModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
     );
   }
 
@@ -161,6 +165,5 @@ class ComprasModelo extends Equatable {
   factory ComprasModelo.fromJson(String source) => ComprasModelo.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id];
 }

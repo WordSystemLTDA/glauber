@@ -323,8 +323,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                                     style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white),
                                                     children: <TextSpan>[
                                                       TextSpan(text: " ${dados.tempoCancel} minutos", style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                      const TextSpan(text: '. Ápos isso, o pedido será'),
-                                                      const TextSpan(text: ' cancelado automaticamente', style: TextStyle(color: Colors.red)),
+                                                      const TextSpan(text: '. Ápos isso, você precisa'),
+                                                      const TextSpan(text: ' gerar o pagamento novamente', style: TextStyle(color: Colors.red)),
                                                       const TextSpan(text: '.'),
                                                     ],
                                                   ),
