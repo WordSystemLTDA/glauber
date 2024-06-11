@@ -82,6 +82,7 @@
 - [ ] Fazer aparecer em cor amarelo nos parceiros nas compras (caso o parceiro não tenha nenhuma compra)
 - [ ] Fazer logs de tudo, de todas as ações feitas no aplicativo
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario
+- [ ] Tirar botão de editar forma de pagamento
 
 ======================================= SISTEMA WEB ===================================================
 
