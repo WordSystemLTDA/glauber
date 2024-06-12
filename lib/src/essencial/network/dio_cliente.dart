@@ -5,7 +5,7 @@ import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart'
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 
 class DioClient implements IHttpClient {
-  final dio = Dio(BaseOptions(baseUrl: ConstantesGlobal.apiUrl));
+  final dio = Dio(BaseOptions(baseUrl: ConstantesGlobal.apiUrl, connectTimeout: const Duration(minutes: 10)));
 
   @override
   Future? get({required String url, Options? options}) async {
