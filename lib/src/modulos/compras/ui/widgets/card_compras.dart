@@ -2,15 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_parceiros_compra.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_nao_paga.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_paga.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_edicao_venda_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 // ignore: must_be_immutable
@@ -289,36 +286,36 @@ class _CardComprasState extends State<CardCompras> {
                                     ],
                                   ),
                                 ),
-                                if (item.pago == 'Não' && item.status != 'Cancelado') ...[
-                                  Positioned(
-                                    bottom: 10,
-                                    left: 0,
-                                    right: 0,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pushNamed(
-                                            context,
-                                            AppRotas.finalizarCompra,
-                                            arguments: PaginaFinalizarCompraArgumentos(
-                                              editarVenda: true,
-                                              dadosEdicaoVendaModelo: DadosEdicaoVendaModelo(idVenda: item.id, metodoPagamento: item.idFormaPagamento),
-                                              provas: item.provas,
-                                              idEvento: item.idEvento,
-                                            ),
-                                          ).then((value) {
-                                            if (widget.atualizarLista != null) {
-                                              widget.atualizarLista!();
-                                            }
-                                          });
-                                        },
-                                        child: const Text('Editar forma de Pagamento'),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                // if (item.pago == 'Não' && item.status != 'Cancelado') ...[
+                                //   Positioned(
+                                //     bottom: 10,
+                                //     left: 0,
+                                //     right: 0,
+                                //     child: Align(
+                                //       alignment: Alignment.center,
+                                //       child: ElevatedButton(
+                                //         onPressed: () {
+                                //           Navigator.pop(context);
+                                //           Navigator.pushNamed(
+                                //             context,
+                                //             AppRotas.finalizarCompra,
+                                //             arguments: PaginaFinalizarCompraArgumentos(
+                                //               editarVenda: true,
+                                //               dadosEdicaoVendaModelo: DadosEdicaoVendaModelo(idVenda: item.id, metodoPagamento: item.idFormaPagamento),
+                                //               provas: item.provas,
+                                //               idEvento: item.idEvento,
+                                //             ),
+                                //           ).then((value) {
+                                //             if (widget.atualizarLista != null) {
+                                //               widget.atualizarLista!();
+                                //             }
+                                //           });
+                                //         },
+                                //         child: const Text('Editar forma de Pagamento'),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ],
                               ],
                             ),
                           ),

@@ -112,12 +112,12 @@ class _CardOrdemDeEntradaState extends State<CardOrdemDeEntrada> {
                                                   if (itemParceiro.sorteio != '0' && itemParceiro.sorteio.isNotEmpty) ...[
                                                     Text("HC: ${itemParceiro.handicapCliente}, Somatória: ${itemParceiro.somatoria}, Extra${itemParceiro.sorteio}"),
                                                   ],
+                                                  Text(itemParceiro.numeroDaInscricao, style: const TextStyle(fontSize: 16, color: Colors.red)),
                                                 ],
                                               ),
-                                              Text(itemParceiro.numeroDaInscricao, style: const TextStyle(fontSize: 16, color: Colors.red)),
                                             ],
                                           ),
-                                          const SizedBox(height: 20),
+                                          const SizedBox(height: 10),
                                           SizedBox(
                                             width: double.infinity,
                                             child: Wrap(

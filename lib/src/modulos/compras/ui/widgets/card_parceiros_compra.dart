@@ -106,20 +106,20 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
         Iterable<Widget> widgets = competidores.map((competidor) {
           return Card(
             elevation: 3.0,
-            color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty)
+            color: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? const Color(0xFFfbe5ea)
-                : competidor.ativo == 'Somatoria'
+                : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
                     ? Colors.blue[50]
                     : null,
-            shape: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty)
+            shape: (competidor.ativo == 'Não' || widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
-                : competidor.ativo == 'Somatoria'
+                : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
                     ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.blue), borderRadius: BorderRadius.circular(5))
                     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             // color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Colors.red : null,
             child: ListTile(
               onTap: () async {
-                if (competidor.ativo == 'Sim' && widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty) {
+                if ((competidor.ativo == 'Sim' && (widget.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty)) || competidor.id == '0') {
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext contextDialog) {
@@ -198,7 +198,16 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                             Text('Estoura a somatória'),
                           ],
                         )
-                      : null,
+                      : competidor.ativo == 'HCMinMax'
+                          ? const Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('HandiCap do Competidor'),
+                                Text('Não é compatível com a prova'),
+                              ],
+                            )
+                          : null,
               title: Text(
                 competidor.nome,
                 style: TextStyle(

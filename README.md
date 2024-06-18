@@ -89,6 +89,7 @@
 - [ ] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
 - [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
 - [ ] remover parceiros vinculados ao excluir inscrição
+- [ ] nas inscrições na hora de excluir, em vincular_parceiros se for pezeiro editar o id_venda_pezeiro para 0 e o id_pezeiro para 0 ou se for cabeceiro editar id_venda_cabeceira para 0 e o id_cabeceira para 0
 
 ======================================= ERROS =========================================================
 
