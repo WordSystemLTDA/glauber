@@ -11,7 +11,7 @@ class ParceirosCompraModelo {
   final String idModalidade;
   final String nomeCidade;
   final String siglaEstado;
-  final String parceiroTemCompra;
+  String parceiroTemCompra;
 
   ParceirosCompraModelo({
     required this.id,

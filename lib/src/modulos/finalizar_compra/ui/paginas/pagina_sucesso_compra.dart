@@ -201,21 +201,22 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  SizedBox(
+                  const SizedBox(
                     width: 300,
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text: 'O pagamento deve ser realizado em até',
-                        style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white),
-                        children: <TextSpan>[
-                          TextSpan(text: " ${dados.tempoCancel} minutos", style: const TextStyle(fontWeight: FontWeight.bold)),
-                          const TextSpan(text: '. Ápos isso, o pedido será'),
-                          const TextSpan(text: ' cancelado automaticamente', style: TextStyle(color: Colors.red)),
-                          const TextSpan(text: '.'),
-                        ],
-                      ),
-                    ),
+                    child: Text('Suas Inscrições estão confirmadas', textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    // child: RichText(
+                    //   textAlign: TextAlign.center,
+                    //   text: TextSpan(
+                    //     text: 'O pagamento deve ser realizado em até',
+                    //     style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white),
+                    //     children: <TextSpan>[
+                    //       TextSpan(text: " ${dados.tempoCancel} minutos", style: const TextStyle(fontWeight: FontWeight.bold)),
+                    //       const TextSpan(text: '. Ápos isso, o pedido será'),
+                    //       const TextSpan(text: ' cancelado automaticamente', style: TextStyle(color: Colors.red)),
+                    //       const TextSpan(text: '.'),
+                    //     ],
+                    //   ),
+                    // ),
                   ),
                   SafeArea(
                     child: SizedBox(

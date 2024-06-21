@@ -48,7 +48,15 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
       builder: (BuildContext context, SearchController controller) {
         return Card(
           margin: const EdgeInsets.only(bottom: 5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+              side: BorderSide(
+                color: parceiro.parceiroTemCompra == 'Sim'
+                    ? Colors.green
+                    : parceiro.parceiroTemCompra == 'Aguardando'
+                        ? const Color.fromARGB(255, 209, 130, 3)
+                        : Colors.transparent,
+              )),
           child: InkWell(
             borderRadius: BorderRadius.circular(5),
             onTap: () {
@@ -67,7 +75,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                       Text(parceiro.nomeModalidade),
                       const SizedBox(height: 5),
                       SizedBox(
-                        width: 250,
+                        width: 230,
                         child: Text(
                           parceiro.nomeProva,
                           overflow: TextOverflow.ellipsis,
@@ -83,15 +91,48 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                       if (parceiro.nomeCidade.isNotEmpty) Text("${parceiro.nomeCidade} - ${parceiro.siglaEstado}"),
                     ],
                   ),
-                  if (item.permitirEditarParceiros == 'Sim')
-                    IconButton(
-                      onPressed: () {
-                        if (item.permitirEditarParceiros == 'Sim') {
-                          controller.openView();
-                        }
-                      },
-                      icon: const Icon(Icons.edit),
+                  SizedBox(
+                    width: 100,
+                    height: 95,
+                    child: Stack(
+                      children: [
+                        if (item.permitirEditarParceiros == 'Sim')
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: IconButton(
+                              onPressed: () {
+                                if (item.permitirEditarParceiros == 'Sim') {
+                                  controller.openView();
+                                }
+                              },
+                              icon: const Icon(Icons.edit),
+                            ),
+                          ),
+                        const SizedBox(height: 20),
+                        Positioned(
+                          bottom: 0,
+                          right: 5,
+                          child: Text(
+                            parceiro.parceiroTemCompra == 'Aguardando'
+                                ? 'Pendente'
+                                : parceiro.parceiroTemCompra == 'Sim'
+                                    ? 'Confirmado'
+                                    : '',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: parceiro.parceiroTemCompra == 'Sim'
+                                    ? Colors.green
+                                    : parceiro.parceiroTemCompra == 'Aguardando'
+                                        ? Colors.red
+                                        : null),
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
                 ],
               ),
             ),
@@ -155,6 +196,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                                         setState(() {
                                           parceiro.idParceiro = competidor.id;
                                           parceiro.nomeParceiro = competidor.nome;
+                                          parceiro.parceiroTemCompra = 'Não';
                                         });
                                         Navigator.pop(context);
                                       }
