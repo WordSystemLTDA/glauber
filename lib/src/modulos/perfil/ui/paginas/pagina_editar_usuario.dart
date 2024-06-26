@@ -356,10 +356,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                 ),
                 // -----------------------------------------------------------------
                 const SizedBox(height: 20),
-                const Text(
-                  'Dados',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
+                const Text('Dados', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                 const SizedBox(height: 10),
                 TextField(
                   controller: nomeController,
