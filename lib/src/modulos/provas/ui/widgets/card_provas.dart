@@ -135,6 +135,7 @@ class _CardProvasState extends State<CardProvas> {
           somatoriaHandicaps: state.provaModelo.somatoriaHandicaps,
           habilitarAoVivo: '',
           competidores: state.provaModelo.competidores,
+          permitirEditarParceiros: state.provaModelo.permitirEditarParceiros,
         );
 
         if (provaModelo.avulsa == 'Sim') {
@@ -167,6 +168,7 @@ class _CardProvasState extends State<CardProvas> {
                       idCabeceira: provaModelo.idCabeceira,
                       somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                       competidores: listaCompetidores,
+                      permitirEditarParceiros: provaModelo.permitirEditarParceiros,
                     );
 
                     if (quantidade == 0) {
@@ -210,6 +212,7 @@ class _CardProvasState extends State<CardProvas> {
               idCabeceira: provaModelo.idCabeceira,
               somatoriaHandicaps: provaModelo.somatoriaHandicaps,
               competidores: provaModelo.competidores,
+              permitirEditarParceiros: provaModelo.permitirEditarParceiros,
             );
 
             widget.adicionarNoCarrinho(novaProva, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
@@ -243,6 +246,7 @@ class _CardProvasState extends State<CardProvas> {
                         idCabeceira: provaModelo.idCabeceira,
                         somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                         competidores: listaCompetidores,
+                        permitirEditarParceiros: provaModelo.permitirEditarParceiros,
                       );
 
                       if (quantidade == 0) {
@@ -336,6 +340,7 @@ class _CardProvasState extends State<CardProvas> {
       somatoriaHandicaps: prova.somatoriaHandicaps,
       competidores: prova.competidores,
       permitirSorteio: prova.permitirSorteio,
+      permitirEditarParceiros: prova.permitirEditarParceiros,
     );
 
     return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;

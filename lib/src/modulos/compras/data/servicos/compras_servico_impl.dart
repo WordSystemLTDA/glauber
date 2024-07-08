@@ -179,7 +179,7 @@ class ComprasServicoImpl implements ComprasServico {
     );
 
     var jsonData = jsonDecode(response.data);
-    print(jsonData);
+
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];
 

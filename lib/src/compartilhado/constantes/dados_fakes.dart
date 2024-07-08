@@ -117,6 +117,7 @@ class DadosFakes {
       idCabeceira: null,
       hcMinimo: '1.00',
       hcMaximo: '7.00',
+      permitirEditarParceiros: '',
       somatoriaHandicaps: '0',
     ),
   );
@@ -192,7 +193,6 @@ class DadosFakes {
             nomeEmpresa: 'Nome empresa',
             numeroCelular: "(44) 99921-3336",
             formaPagamento: "Pix Mercado Pago",
-            permitirEditarParceiros: '',
             idFormaPagamento: "1",
             quandoInscricaoNaoPaga: "mostrar_qrcode_pix",
             mensagemQuandoInscricaoNaoPaga: "",

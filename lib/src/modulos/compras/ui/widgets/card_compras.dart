@@ -220,10 +220,7 @@ class _CardComprasState extends State<CardCompras> {
                                         ],
                                       ),
                                       const SizedBox(height: 20),
-                                      const Text(
-                                        'Provas Vinculadas',
-                                        style: TextStyle(fontWeight: FontWeight.w700),
-                                      ),
+                                      const Text('Provas Vinculadas', style: TextStyle(fontWeight: FontWeight.w700)),
                                       const SizedBox(height: 5),
                                       Flexible(
                                         child: ListView.builder(
@@ -259,10 +256,7 @@ class _CardComprasState extends State<CardCompras> {
                                       ),
                                       if (item.parceiros.isNotEmpty) ...[
                                         const SizedBox(height: 20),
-                                        const Text(
-                                          'Seus Parceiros',
-                                          style: TextStyle(fontWeight: FontWeight.w700),
-                                        ),
+                                        const Text('Seus Parceiros', style: TextStyle(fontWeight: FontWeight.w700)),
                                         const SizedBox(height: 5),
                                         Flexible(
                                           child: ListView.builder(

@@ -33,7 +33,7 @@ class ComprasModelo extends Equatable {
   final String idFormaPagamento;
   final String quandoInscricaoNaoPaga;
   final String mensagemQuandoInscricaoNaoPaga;
-  final String permitirEditarParceiros;
+  // final String permitirEditarParceiros;
   final String permVincularParceiro;
   final String? pixVencido;
   final List<ProvaModelo> provas;
@@ -68,7 +68,7 @@ class ComprasModelo extends Equatable {
     required this.idFormaPagamento,
     required this.quandoInscricaoNaoPaga,
     required this.mensagemQuandoInscricaoNaoPaga,
-    required this.permitirEditarParceiros,
+    // required this.permitirEditarParceiros,
     required this.permVincularParceiro,
     this.pixVencido,
     required this.provas,
@@ -105,7 +105,7 @@ class ComprasModelo extends Equatable {
       'idFormaPagamento': idFormaPagamento,
       'quandoInscricaoNaoPaga': quandoInscricaoNaoPaga,
       'mensagemQuandoInscricaoNaoPaga': mensagemQuandoInscricaoNaoPaga,
-      'permitirEditarParceiros': permitirEditarParceiros,
+      // 'permitirEditarParceiros': permitirEditarParceiros,
       'permVincularParceiro': permVincularParceiro,
       'pixVencido': pixVencido,
       'provas': provas.map((x) => x.toMap()).toList(),
@@ -143,7 +143,7 @@ class ComprasModelo extends Equatable {
       idFormaPagamento: map['idFormaPagamento'] as String,
       quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] as String,
       mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
-      permitirEditarParceiros: map['permitirEditarParceiros'] as String,
+      // permitirEditarParceiros: map['permitirEditarParceiros'] as String,
       permVincularParceiro: map['permVincularParceiro'] as String,
       pixVencido: map['pixVencido'] != null ? map['pixVencido'] as String : null,
       provas: List<ProvaModelo>.from(

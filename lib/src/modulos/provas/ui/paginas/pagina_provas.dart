@@ -494,6 +494,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
       nomeCabeceira: prova.nomeCabeceira,
       somatoriaHandicaps: prova.somatoriaHandicaps,
       sorteio: prova.sorteio,
+      permitirEditarParceiros: prova.permitirEditarParceiros,
     );
 
     if (mounted) {
@@ -556,6 +557,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         nomeCabeceira: prova.nomeCabeceira,
         somatoriaHandicaps: prova.somatoriaHandicaps,
         sorteio: prova.sorteio,
+        permitirEditarParceiros: prova.permitirEditarParceiros,
       );
 
       // Irá permitir escolher so um pacote por prova

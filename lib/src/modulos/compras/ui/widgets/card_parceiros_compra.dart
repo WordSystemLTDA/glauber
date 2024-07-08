@@ -60,7 +60,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
           child: InkWell(
             borderRadius: BorderRadius.circular(5),
             onTap: () {
-              if (item.permitirEditarParceiros == 'Sim') {
+              if (item.provas[0].permitirEditarParceiros == 'Sim') {
                 controller.openView();
               }
             },
@@ -96,14 +96,14 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                     height: 95,
                     child: Stack(
                       children: [
-                        if (item.permitirEditarParceiros == 'Sim')
+                        if (item.provas[0].permitirEditarParceiros == 'Sim')
                           Positioned(
                             right: 0,
                             top: 0,
                             bottom: 0,
                             child: IconButton(
                               onPressed: () {
-                                if (item.permitirEditarParceiros == 'Sim') {
+                                if (item.provas[0].permitirEditarParceiros == 'Sim') {
                                   controller.openView();
                                 }
                               },

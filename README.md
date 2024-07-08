@@ -79,10 +79,10 @@
 - [ ] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi.
 - [ ] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros.
 - [ ] Fazer logs de transfêrencia no banco de dados
-- [ ] Fazer aparecer em cor amarelo nos parceiros nas compras (caso o parceiro não tenha nenhuma compra)
+- [x] Fazer aparecer em cor amarelo nos parceiros nas compras (caso o parceiro não tenha nenhuma compra)
 - [ ] Fazer logs de tudo, de todas as ações feitas no aplicativo
 - [ ] Exprimir os input's da pagina login e cadastro e editar usuario
-- [ ] Tirar botão de editar forma de pagamento
+- [x] Tirar botão de editar forma de pagamento
 
 ======================================= SISTEMA WEB ===================================================
 
