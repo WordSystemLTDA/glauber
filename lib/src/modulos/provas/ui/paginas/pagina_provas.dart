@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_image_viewer/easy_image_viewer.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +17,7 @@ import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.d
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/card_banner_carrossel.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_localizacao.dart';
@@ -135,50 +135,32 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           height: 250,
                           child: Stack(
                             children: [
-                              Positioned.fill(
-                                child: CachedNetworkImage(
-                                  imageUrl: evento.foto,
-                                  fit: BoxFit.cover,
-                                  progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-                                    child: SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: CircularProgressIndicator(value: downloadProgress.progress),
-                                    ),
+                              SizedBox(
+                                height: 250,
+                                child: CarouselSlider.builder(
+                                  options: CarouselOptions(
+                                    height: 250.0,
+                                    autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
+                                    aspectRatio: 2.0,
+                                    enableInfiniteScroll: evento.bannersCarrossel.isNotEmpty ? true : false,
+                                    pauseAutoPlayOnTouch: true,
+                                    viewportFraction: 1.0,
+                                    autoPlayInterval: const Duration(seconds: 10),
                                   ),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                                ),
-                              ),
-                              Skeleton.ignore(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    final imageProvider = Image.network(evento.foto).image;
-                                    showImageViewer(
-                                      context,
-                                      imageProvider,
-                                      useSafeArea: true,
-                                      immersive: false,
-                                      doubleTapZoomable: true,
+                                  itemCount: evento.bannersCarrossel.length + 1,
+                                  itemBuilder: (context, index, realIndex) {
+                                    var bannerCarrossel = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? index : (index - 1)];
+
+                                    return CardBannerCarrossel(
+                                      evento: evento,
+                                      bannerCarrossel: bannerCarrossel,
+                                      index: index,
                                     );
                                   },
-                                  child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      height: 300,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          end: const Alignment(0.0, -0.6),
-                                          begin: const Alignment(0.0, 0),
-                                          colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ),
                               ),
                               Align(
-                                alignment: Alignment.centerLeft,
+                                alignment: Alignment.bottomLeft,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
@@ -196,21 +178,6 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                       ),
                                       const SizedBox(height: 5),
                                     ],
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.translucent, // Needed for invisible things to be tapped.
-                                  onTap: () {},
-                                  child: const SizedBox(
-                                    width: 150,
-                                    height: 150,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(9.0), // Configure hit area.
-                                    ),
                                   ),
                                 ),
                               ),

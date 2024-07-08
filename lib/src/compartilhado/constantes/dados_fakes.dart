@@ -78,6 +78,7 @@ class DadosFakes {
       nomeEmpresa: "Glauber Sampaio",
       longitude: "",
       latitude: "",
+      bannersCarrossel: [],
     ),
     EventoModelo(
       id: "19",
@@ -99,6 +100,7 @@ class DadosFakes {
       nomeEmpresa: "Glauber Sampaio",
       longitude: "",
       latitude: "",
+      bannersCarrossel: [],
     ),
   ];
 
@@ -155,6 +157,7 @@ class DadosFakes {
       nomeEmpresa: "Glauber Sampaio",
       longitude: "",
       latitude: "",
+      bannersCarrossel: [],
     ),
     pagamentos: [PagamentosModelo(id: "1", nome: "Pix Mercado Pago"), PagamentosModelo(id: "2", nome: "Pagamento Local")],
   );

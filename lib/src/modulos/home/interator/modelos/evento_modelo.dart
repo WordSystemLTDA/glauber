@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:provadelaco/src/modulos/home/interator/modelos/modelo_banners_carrossel.dart';
+
 class EventoModelo {
   final String id;
   final String idEmpresa;
@@ -21,6 +23,7 @@ class EventoModelo {
   final String nomeCidade;
   final String nomeEmpresa;
   final String liberacaoDeCompra;
+  final List<ModeloBannersCarrossel> bannersCarrossel;
 
   EventoModelo({
     required this.id,
@@ -42,6 +45,7 @@ class EventoModelo {
     required this.nomeCidade,
     required this.nomeEmpresa,
     required this.liberacaoDeCompra,
+    required this.bannersCarrossel,
   });
 
   Map<String, dynamic> toMap() {
@@ -65,6 +69,7 @@ class EventoModelo {
       'nomeCidade': nomeCidade,
       'nomeEmpresa': nomeEmpresa,
       'liberacaoDeCompra': liberacaoDeCompra,
+      'bannersCarrossel': bannersCarrossel.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -89,6 +94,11 @@ class EventoModelo {
       nomeCidade: map['nomeCidade'] as String,
       nomeEmpresa: map['nomeEmpresa'] as String,
       liberacaoDeCompra: map['liberacaoDeCompra'] as String,
+      bannersCarrossel: List<ModeloBannersCarrossel>.from(
+        (map['bannersCarrossel'] as List<dynamic>).map<ModeloBannersCarrossel>(
+          (x) => ModeloBannersCarrossel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 
