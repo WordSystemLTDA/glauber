@@ -231,32 +231,53 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                         alignment: Alignment.topCenter,
                                         child: Column(
                                           children: [
-                                            Text(
-                                              'Nenhuma ordem de entrada',
-                                              style: TextStyle(fontSize: 17),
-                                            ),
-                                            Text(
-                                              'foi encontrada para essa prova.',
-                                              style: TextStyle(fontSize: 17),
-                                            ),
+                                            Text('Nenhuma ordem de entrada', style: TextStyle(fontSize: 17)),
+                                            Text('foi encontrada para essa prova.', style: TextStyle(fontSize: 17)),
                                           ],
                                         ),
                                       ),
                                     );
                                   }
-                                  return ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: state.ordemdeentradas.length,
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.all(15),
-                                    itemBuilder: (context, index) {
-                                      var item = state.ordemdeentradas[index];
 
-                                      return CardOrdemDeEntradaProva(
-                                        item: item,
-                                        mostrarOpcoes: true,
-                                      );
-                                    },
+                                  return Column(
+                                    children: [
+                                      if (state.ordemdeentradas[0].quemEstaCorrendoAgora != null) ...[
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 10, top: 10),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              'Quem está correndo agora',
+                                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: CardOrdemDeEntradaProva(
+                                            selecionado: true,
+                                            item: state.ordemdeentradas[0].quemEstaCorrendoAgora!,
+                                            mostrarOpcoes: true,
+                                          ),
+                                        ),
+                                        const Divider(height: 5),
+                                      ],
+                                      ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: state.ordemdeentradas.length,
+                                        shrinkWrap: true,
+                                        padding: const EdgeInsets.all(10),
+                                        itemBuilder: (context, index) {
+                                          var item = state.ordemdeentradas[index];
+
+                                          return CardOrdemDeEntradaProva(
+                                            item: item,
+                                            mostrarOpcoes: true,
+                                            selecionado: false,
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   );
                                 }
 
@@ -274,14 +295,8 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                           alignment: Alignment.topCenter,
                                           child: Column(
                                             children: [
-                                              Text(
-                                                'Nenhuma ordem de entrada',
-                                                style: TextStyle(fontSize: 17),
-                                              ),
-                                              Text(
-                                                'foi encontrada para essa prova.',
-                                                style: TextStyle(fontSize: 17),
-                                              ),
+                                              Text('Nenhuma ordem de entrada', style: TextStyle(fontSize: 17)),
+                                              Text('foi encontrada para essa prova.', style: TextStyle(fontSize: 17)),
                                             ],
                                           ),
                                         ),
@@ -344,10 +359,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                             padding: EdgeInsets.only(top: 50),
                                             child: Align(
                                               alignment: Alignment.topCenter,
-                                              child: Text(
-                                                'Não há provas AO VIVO para esse evento.',
-                                                style: TextStyle(fontSize: 16),
-                                              ),
+                                              child: Text('Não há provas AO VIVO para esse evento.', style: TextStyle(fontSize: 16)),
                                             ),
                                           )
                                         : const Padding(
@@ -356,14 +368,8 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                               alignment: Alignment.topCenter,
                                               child: Column(
                                                 children: [
-                                                  Text(
-                                                    'Nenhuma ordem de entrada',
-                                                    style: TextStyle(fontSize: 17),
-                                                  ),
-                                                  Text(
-                                                    'foi encontrada para essa prova.',
-                                                    style: TextStyle(fontSize: 17),
-                                                  ),
+                                                  Text('Nenhuma ordem de entrada', style: TextStyle(fontSize: 17)),
+                                                  Text('foi encontrada para essa prova.', style: TextStyle(fontSize: 17)),
                                                 ],
                                               ),
                                             ),

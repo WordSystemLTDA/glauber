@@ -17,6 +17,7 @@ class ProvaParceirosModelos {
   final String idClientePezeiro;
   final String nomeClienteCabeceira;
   final String nomeClientePezeiro;
+  final ProvaParceirosModelos? quemEstaCorrendoAgora;
 
   ProvaParceirosModelos({
     required this.id,
@@ -34,6 +35,7 @@ class ProvaParceirosModelos {
     required this.idClientePezeiro,
     required this.nomeClienteCabeceira,
     required this.nomeClientePezeiro,
+    this.quemEstaCorrendoAgora,
   });
 
   Map<String, dynamic> toMap() {
@@ -53,6 +55,7 @@ class ProvaParceirosModelos {
       'idClientePezeiro': idClientePezeiro,
       'nomeClienteCabeceira': nomeClienteCabeceira,
       'nomeClientePezeiro': nomeClientePezeiro,
+      'quemEstaCorrendoAgora': quemEstaCorrendoAgora?.toMap(),
     };
   }
 
@@ -73,6 +76,7 @@ class ProvaParceirosModelos {
       idClientePezeiro: map['idClientePezeiro'] as String,
       nomeClienteCabeceira: map['nomeClienteCabeceira'] as String,
       nomeClientePezeiro: map['nomeClientePezeiro'] as String,
+      quemEstaCorrendoAgora: map['quemEstaCorrendoAgora'] != null ? ProvaParceirosModelos.fromMap(map['quemEstaCorrendoAgora'] as Map<String, dynamic>) : null,
     );
   }
 

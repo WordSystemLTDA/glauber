@@ -4,11 +4,13 @@ import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/prova
 class CardOrdemDeEntradaProva extends StatefulWidget {
   final ProvaParceirosModelos item;
   final bool mostrarOpcoes;
+  final bool selecionado;
 
   const CardOrdemDeEntradaProva({
     super.key,
     required this.item,
     required this.mostrarOpcoes,
+    required this.selecionado,
   });
 
   @override
@@ -21,9 +23,12 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
     var itemParceiro = widget.item;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 10),
       elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+        side: widget.selecionado ? const BorderSide(width: 1, color: Colors.green) : BorderSide.none,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
