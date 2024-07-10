@@ -16,8 +16,9 @@ import 'package:skeletonizer/skeletonizer.dart';
 class PaginaAoVivoArgumentos {
   final String idEvento;
   final String? idProva;
+  final String? nomeProva;
 
-  PaginaAoVivoArgumentos({required this.idEvento, this.idProva});
+  PaginaAoVivoArgumentos({required this.idEvento, this.idProva, this.nomeProva});
 }
 
 class PaginaAoVivo extends StatefulWidget {
@@ -30,6 +31,7 @@ class PaginaAoVivo extends StatefulWidget {
 
 class _PaginaAoVivoState extends State<PaginaAoVivo> {
   String provaSelecionada = '0';
+  String nomeProvaSelecionada = '';
 
   @override
   void initState() {
@@ -42,6 +44,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
       if (widget.argumentos.idProva != null) {
         setState(() {
           provaSelecionada = widget.argumentos.idProva!;
+          nomeProvaSelecionada = widget.argumentos.nomeProva!;
         });
         ordemDeEntradaProvaStore.listar(usuarioProvider.usuario, widget.argumentos.idProva!);
       }
@@ -200,13 +203,13 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                           ),
                         ),
                         if (provas.isNotEmpty) ...[
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10, top: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 10),
                             child: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                'Provas AO VIVO!',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                provaSelecionada == "0" ? 'Provas AO VIVO!' : "Prova: $nomeProvaSelecionada",
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -326,6 +329,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                   aoSelecionarProvaAoVivo: (prova) {
                                     setState(() {
                                       provaSelecionada = prova.id;
+                                      nomeProvaSelecionada = prova.nomeProva;
                                     });
 
                                     ordemDeEntradaProvaStore.listar(usuarioProvider.usuario, prova.id);

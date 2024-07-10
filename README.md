@@ -76,7 +76,7 @@
 - [ ] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova (somente informação)) colocar o botão no whatsapp para entrar em contato com o competidor
 - [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
 - [x] colocar um carrosel infinito, na pagina_provas, mostrando as fotos que foram vinculadas
-- [ ] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi.
+- [x] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi.
 - [ ] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros.
 - [ ] Fazer logs de transfêrencia no banco de dados
 - [x] Fazer aparecer em cor amarelo nos parceiros nas compras (caso o parceiro não tenha nenhuma compra)

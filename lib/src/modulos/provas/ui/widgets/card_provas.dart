@@ -411,7 +411,7 @@ class _CardProvasState extends State<CardProvas> {
       }
     } else {
       if (prova.habilitarAoVivo == 'Sim') {
-        Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
+        Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id, nomeProva: prova.nomeProva));
       }
     }
   }
@@ -457,7 +457,7 @@ class _CardProvasState extends State<CardProvas> {
           color: Colors.transparent,
           content: _getIconButton(Colors.red, Icons.live_tv_outlined),
           onTap: (handler) {
-            Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id));
+            Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id, nomeProva: prova.nomeProva));
           },
         ),
       ],
