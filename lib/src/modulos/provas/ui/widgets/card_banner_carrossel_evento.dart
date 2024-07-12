@@ -10,8 +10,9 @@ class CardBannerCarrossel extends StatelessWidget {
   final EventoModelo evento;
   final ModeloBannersCarrossel? bannerCarrossel;
   final int index;
+  final bool? aparecerSombra;
 
-  const CardBannerCarrossel({super.key, required this.evento, this.bannerCarrossel, required this.index});
+  const CardBannerCarrossel({super.key, required this.evento, this.bannerCarrossel, required this.index, this.aparecerSombra = true});
 
   @override
   Widget build(BuildContext context) {
@@ -39,34 +40,36 @@ class CardBannerCarrossel extends StatelessWidget {
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
-          Skeleton.ignore(
-            child: GestureDetector(
-              onTap: () {
-                final imageProvider = Image.network(foto).image;
-                showImageViewer(
-                  context,
-                  imageProvider,
-                  useSafeArea: true,
-                  immersive: false,
-                  doubleTapZoomable: true,
-                );
-              },
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 300,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      end: const Alignment(0.0, -0.6),
-                      begin: const Alignment(0.0, 0),
-                      colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+          if (aparecerSombra == true) ...[
+            Skeleton.ignore(
+              child: GestureDetector(
+                onTap: () {
+                  final imageProvider = Image.network(foto).image;
+                  showImageViewer(
+                    context,
+                    imageProvider,
+                    useSafeArea: true,
+                    immersive: false,
+                    doubleTapZoomable: true,
+                  );
+                },
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 300,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        end: const Alignment(0.0, -0.6),
+                        begin: const Alignment(0.0, 0),
+                        colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
+          ],
           Positioned(
             top: 0,
             left: 0,

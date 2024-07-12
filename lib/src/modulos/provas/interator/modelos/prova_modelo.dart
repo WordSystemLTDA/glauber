@@ -18,6 +18,7 @@ class ProvaModelo extends Equatable {
   final PermitirCompraModelo permitirCompra;
   final String permitirSorteio;
   final String habilitarAoVivo;
+  final String liberarReembolso;
   final String? descricao;
   final String? somatoriaHandicaps;
   final bool? sorteio;
@@ -36,6 +37,7 @@ class ProvaModelo extends Equatable {
     required this.quantMinima,
     required this.quantMaxima,
     required this.permitirCompra,
+    this.liberarReembolso = 'Não',
     required this.permitirSorteio,
     required this.habilitarAoVivo,
     required this.permitirEditarParceiros,
@@ -78,6 +80,7 @@ class ProvaModelo extends Equatable {
       'permitirCompra': permitirCompra.toMap(),
       'permitirSorteio': permitirSorteio,
       'habilitarAoVivo': habilitarAoVivo,
+      'liberarReembolso': liberarReembolso,
       'descricao': descricao,
       'somatoriaHandicaps': somatoriaHandicaps,
       'sorteio': sorteio,
@@ -98,6 +101,7 @@ class ProvaModelo extends Equatable {
       avulsa: map['avulsa'] as String,
       quantMinima: map['quantMinima'] as String,
       quantMaxima: map['quantMaxima'] as String,
+      liberarReembolso: map['liberarReembolso'] as String,
       permitirEditarParceiros: map['permitirEditarParceiros'] as String,
       permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
       permitirSorteio: map['permitirSorteio'] as String,

@@ -121,6 +121,7 @@ class DadosFakes {
       hcMaximo: '7.00',
       permitirEditarParceiros: '',
       somatoriaHandicaps: '0',
+      liberarReembolso: '',
     ),
   );
 
@@ -178,6 +179,7 @@ class DadosFakes {
             pixVencido: 'Não',
             valorTaxa: "0.00",
             valorDesconto: "0.00",
+            reembolso: '',
             valorTotal: "150.00",
             status: "Pendente",
             codigoQr: "MTAwMDAwMDAwMDE4Nw==",

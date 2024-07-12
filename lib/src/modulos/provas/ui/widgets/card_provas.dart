@@ -136,6 +136,7 @@ class _CardProvasState extends State<CardProvas> {
           habilitarAoVivo: '',
           competidores: state.provaModelo.competidores,
           permitirEditarParceiros: state.provaModelo.permitirEditarParceiros,
+          liberarReembolso: state.provaModelo.liberarReembolso,
         );
 
         if (provaModelo.avulsa == 'Sim') {
@@ -169,6 +170,7 @@ class _CardProvasState extends State<CardProvas> {
                       somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                       competidores: listaCompetidores,
                       permitirEditarParceiros: provaModelo.permitirEditarParceiros,
+                      liberarReembolso: provaModelo.liberarReembolso,
                     );
 
                     if (quantidade == 0) {
@@ -213,6 +215,7 @@ class _CardProvasState extends State<CardProvas> {
               somatoriaHandicaps: provaModelo.somatoriaHandicaps,
               competidores: provaModelo.competidores,
               permitirEditarParceiros: provaModelo.permitirEditarParceiros,
+              liberarReembolso: provaModelo.liberarReembolso,
             );
 
             widget.adicionarNoCarrinho(novaProva, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
@@ -247,6 +250,7 @@ class _CardProvasState extends State<CardProvas> {
                         somatoriaHandicaps: provaModelo.somatoriaHandicaps,
                         competidores: listaCompetidores,
                         permitirEditarParceiros: provaModelo.permitirEditarParceiros,
+                        liberarReembolso: provaModelo.liberarReembolso,
                       );
 
                       if (quantidade == 0) {
@@ -341,6 +345,7 @@ class _CardProvasState extends State<CardProvas> {
       competidores: prova.competidores,
       permitirSorteio: prova.permitirSorteio,
       permitirEditarParceiros: prova.permitirEditarParceiros,
+      liberarReembolso: prova.liberarReembolso,
     );
 
     return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;

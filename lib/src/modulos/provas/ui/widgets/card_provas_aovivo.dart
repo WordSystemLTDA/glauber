@@ -64,6 +64,7 @@ class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
       competidores: prova.competidores,
       permitirSorteio: prova.permitirSorteio,
       permitirEditarParceiros: prova.permitirEditarParceiros,
+      liberarReembolso: prova.liberarReembolso,
     );
 
     return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;

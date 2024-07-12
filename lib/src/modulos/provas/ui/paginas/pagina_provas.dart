@@ -17,7 +17,7 @@ import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.d
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/card_banner_carrossel.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/card_banner_carrossel_evento.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_localizacao.dart';
@@ -41,6 +41,7 @@ class PaginaProvas extends StatefulWidget {
 
 class _PaginaProvasState extends State<PaginaProvas> {
   List<ProvaModelo> provasCarrinho = [];
+  final CarouselController _carrosselController = CarouselController();
 
   @override
   void initState() {
@@ -138,6 +139,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               SizedBox(
                                 height: 250,
                                 child: CarouselSlider.builder(
+                                  carouselController: _carrosselController,
                                   options: CarouselOptions(
                                     height: 250.0,
                                     autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
@@ -159,6 +161,34 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                   },
                                 ),
                               ),
+                              if (evento.bannersCarrossel.isNotEmpty) ...[
+                                Positioned(
+                                  left: 10,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: IconButton(
+                                    color: Colors.grey,
+                                    onPressed: () {
+                                      _carrosselController.previousPage();
+                                    },
+                                    icon: const Icon(Icons.arrow_back_ios_outlined),
+                                  ),
+                                ),
+                              ],
+                              if (evento.bannersCarrossel.isNotEmpty) ...[
+                                Positioned(
+                                  right: 10,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: IconButton(
+                                    color: Colors.grey,
+                                    onPressed: () {
+                                      _carrosselController.nextPage();
+                                    },
+                                    icon: const Icon(Icons.arrow_forward_ios_outlined),
+                                  ),
+                                ),
+                              ],
                               Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Padding(
@@ -462,6 +492,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
       somatoriaHandicaps: prova.somatoriaHandicaps,
       sorteio: prova.sorteio,
       permitirEditarParceiros: prova.permitirEditarParceiros,
+      liberarReembolso: prova.liberarReembolso,
     );
 
     if (mounted) {
@@ -525,6 +556,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         somatoriaHandicaps: prova.somatoriaHandicaps,
         sorteio: prova.sorteio,
         permitirEditarParceiros: prova.permitirEditarParceiros,
+        liberarReembolso: prova.liberarReembolso,
       );
 
       // Irá permitir escolher so um pacote por prova

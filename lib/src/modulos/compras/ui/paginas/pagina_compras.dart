@@ -877,7 +877,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                           suggestionsBuilder: (BuildContext context, SearchController controller) async {
                                             final keyword = controller.value.text;
 
-                                            List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientes(keyword);
+                                            List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientesNormal(keyword);
 
                                             Iterable<Widget> widgets = clientes.map((cliente) {
                                               return GestureDetector(

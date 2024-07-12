@@ -66,14 +66,11 @@ class ComprasServicoImpl implements ComprasServico {
   }
 
   @override
-  Future<List<ClientesModelo>> listarClientes(String pesquisa) async {
-    var url = 'compras/listar_clientes.php?pesquisa=$pesquisa';
+  Future<List<ClientesModelo>> listarClientesNormal(String pesquisa) async {
+    var idCliente = usuarioProvedor.usuario!.id!;
+    var url = 'compras/listar_clientes_normal.php?pesquisa=$pesquisa&id_cliente=$idCliente';
 
-    var campos = {
-      'pesquisa': pesquisa,
-    };
-
-    var response = await client.post(url: url, body: jsonEncode(campos));
+    var response = await client.get(url: url);
 
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];
@@ -171,6 +168,27 @@ class ComprasServicoImpl implements ComprasServico {
       'id_novo_parceiro': idNovoParceiro,
       'id_cliente_original': usuarioProvedor.usuario!.id,
       'modalidade': modalidade,
+    };
+
+    Response response = await client.post(
+      url: url,
+      body: jsonEncode(campos),
+    );
+
+    var jsonData = jsonDecode(response.data);
+
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+
+    return (sucesso, mensagem);
+  }
+
+  @override
+  Future<(bool, String)> editarReembolsoVenda(String id) async {
+    var url = 'compras/editar_reembolso_venda.php';
+
+    var campos = {
+      'id_venda': id,
     };
 
     Response response = await client.post(

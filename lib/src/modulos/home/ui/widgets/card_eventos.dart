@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
-import 'package:intl/intl.dart';
 
 class CardEventos extends StatefulWidget {
   final EventoModelo evento;
@@ -36,6 +36,32 @@ class _CardEventosState extends State<CardEventos> {
           },
           child: Stack(
             children: [
+              // SizedBox(
+              //   height: 220,
+              //   child: CarouselSlider.builder(
+              //     carouselController: _carrosselController,
+              //     options: CarouselOptions(
+              //       height: 220.0,
+              //       autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
+              //       aspectRatio: 2.0,
+              //       enableInfiniteScroll: evento.bannersCarrossel.isNotEmpty ? true : false,
+              //       pauseAutoPlayOnTouch: true,
+              //       viewportFraction: 1.0,
+              //       autoPlayInterval: const Duration(seconds: 10),
+              //     ),
+              //     itemCount: evento.bannersCarrossel.length + 1,
+              //     itemBuilder: (context, index, realIndex) {
+              //       var bannerCarrossel = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? index : (index - 1)];
+
+              //       return CardBannerCarrossel(
+              //         evento: evento,
+              //         bannerCarrossel: bannerCarrossel,
+              //         index: index,
+              //         aparecerSombra: false,
+              //       );
+              //     },
+              //   ),
+              // ),
               CachedNetworkImage(
                 imageUrl: evento.foto,
                 width: double.infinity,

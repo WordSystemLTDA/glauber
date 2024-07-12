@@ -46,6 +46,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     permVincularParceiro: '',
                     idEmpresa: '1',
                     valorIngresso: "0.00",
+                    reembolso: '',
                     valorTaxa: "0.00",
                     valorDesconto: "0.00",
                     valorTotal: "0.00",
@@ -77,6 +78,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                   (previousValue, element) => ComprasModelo(
                     id: "187",
                     pixVencido: '',
+                    reembolso: '',
                     permVincularParceiro: '',
                     idEmpresa: '1',
                     valorIngresso: "0.00",

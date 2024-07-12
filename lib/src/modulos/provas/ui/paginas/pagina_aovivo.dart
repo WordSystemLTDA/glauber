@@ -250,7 +250,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              'Quem está correndo agora',
+                                              'Inscrição Atual',
                                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                             ),
                                           ),

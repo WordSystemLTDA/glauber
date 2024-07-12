@@ -39,6 +39,7 @@ class ComprasModelo extends Equatable {
   final List<ProvaModelo> provas;
   final List<ParceirosCompraModelo> parceiros;
   final String? idCabeceira;
+  final String reembolso;
 
   ComprasModelo({
     required this.id,
@@ -74,6 +75,7 @@ class ComprasModelo extends Equatable {
     required this.provas,
     required this.parceiros,
     this.idCabeceira,
+    this.reembolso = 'Não',
   });
 
   Map<String, dynamic> toMap() {
@@ -111,6 +113,7 @@ class ComprasModelo extends Equatable {
       'provas': provas.map((x) => x.toMap()).toList(),
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
       'idCabeceira': idCabeceira,
+      'reembolso': reembolso,
     };
   }
 
@@ -141,6 +144,7 @@ class ComprasModelo extends Equatable {
       numeroCelular: map['numeroCelular'] as String,
       formaPagamento: map['formaPagamento'] as String,
       idFormaPagamento: map['idFormaPagamento'] as String,
+      reembolso: map['reembolso'] as String,
       quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] as String,
       mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
       // permitirEditarParceiros: map['permitirEditarParceiros'] as String,
