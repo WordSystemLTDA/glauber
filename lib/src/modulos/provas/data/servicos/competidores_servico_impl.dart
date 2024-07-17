@@ -28,4 +28,23 @@ class CompetidoresServicoImpl implements CompetidoresServico {
       return [];
     }
   }
+
+  @override
+  Future<List<CompetidoresModelo>> listarBancoCompetidores(String? idCabeceira, UsuarioModelo? usuario, String pesquisa, String idProva) async {
+    var idCliente = usuario != null ? usuario.id : 0;
+    var url = 'compras/listar_clientes_sorteio.php?pesquisa=$pesquisa&id_prova=$idProva&id_cliente=$idCliente&id_cabeceira=$idCabeceira';
+
+    var response = await client.get(url: url);
+    var jsonData = jsonDecode(response.data);
+    var dados = jsonData['dados'];
+    var sucesso = jsonData['sucesso'];
+
+    if (sucesso == true) {
+      return List<CompetidoresModelo>.from(dados.map((elemento) {
+        return CompetidoresModelo.fromMap(elemento);
+      }));
+    } else {
+      return [];
+    }
+  }
 }

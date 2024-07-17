@@ -18,7 +18,7 @@ class ProvaModelo extends Equatable {
   final PermitirCompraModelo permitirCompra;
   final String permitirSorteio;
   final String habilitarAoVivo;
-  final String liberarReembolso;
+  final String? liberarReembolso;
   final String? descricao;
   final String? somatoriaHandicaps;
   final bool? sorteio;
@@ -84,10 +84,10 @@ class ProvaModelo extends Equatable {
       'descricao': descricao,
       'somatoriaHandicaps': somatoriaHandicaps,
       'sorteio': sorteio,
+      'permitirEditarParceiros': permitirEditarParceiros,
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
-      'permitirEditarParceiros': permitirEditarParceiros,
-      'competidores': competidores?.map((x) => x.toMap()).toList(),
+      'competidores': competidores!.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -101,19 +101,19 @@ class ProvaModelo extends Equatable {
       avulsa: map['avulsa'] as String,
       quantMinima: map['quantMinima'] as String,
       quantMaxima: map['quantMaxima'] as String,
-      liberarReembolso: map['liberarReembolso'] as String,
-      permitirEditarParceiros: map['permitirEditarParceiros'] as String,
       permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
       permitirSorteio: map['permitirSorteio'] as String,
       habilitarAoVivo: map['habilitarAoVivo'] as String,
+      liberarReembolso: map['liberarReembolso'] != null ? map['liberarReembolso'] as String : null,
       descricao: map['descricao'] != null ? map['descricao'] as String : null,
       somatoriaHandicaps: map['somatoriaHandicaps'] != null ? map['somatoriaHandicaps'] as String : null,
       sorteio: map['sorteio'] != null ? map['sorteio'] as bool : null,
+      permitirEditarParceiros: map['permitirEditarParceiros'] as String,
       nomeCabeceira: map['nomeCabeceira'] != null ? map['nomeCabeceira'] as String : null,
       idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
       competidores: map['competidores'] != null
           ? List<CompetidoresModelo>.from(
-              (map['competidores'] as List<int>).map<CompetidoresModelo?>(
+              (map['competidores'] as List<dynamic>).map<CompetidoresModelo?>(
                 (x) => CompetidoresModelo.fromMap(x as Map<String, dynamic>),
               ),
             )
