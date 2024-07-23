@@ -22,14 +22,14 @@ class ListarInformacoesServicoImpl implements ListarInformacoesServico {
     }
 
     var campos = {
-      'provas': provas,
+      'provas': provas.map((e) => e.toMap()).toList(),
       'id_evento': idEvento,
       'id_cliente': usuario!.id ?? 0,
       'editando': editando,
       'idVenda': idVenda,
     };
 
-    var response = await client.post(url: url, body: json.encode(campos));
+    var response = await client.post(url: url, body: jsonEncode(campos));
 
     var jsonData = jsonDecode(response.data);
 

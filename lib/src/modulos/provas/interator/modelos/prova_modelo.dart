@@ -87,7 +87,7 @@ class ProvaModelo extends Equatable {
       'permitirEditarParceiros': permitirEditarParceiros,
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
-      'competidores': competidores!.map((x) => x.toMap()).toList(),
+      'competidores': competidores != null ? competidores!.map((x) => x.toMap()).toList() : [], // não mudar
     };
   }
 

@@ -419,7 +419,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                     onPressed: () {
                       controller.openView();
                     },
-                    child: const Text('Ver competidores disponíveis', style: TextStyle(fontSize: 14)),
+                    child: const Text('Competidores disponíveis', style: TextStyle(fontSize: 14)),
                   );
                 },
                 suggestionsBuilder: (BuildContext context, SearchController controller) async {
