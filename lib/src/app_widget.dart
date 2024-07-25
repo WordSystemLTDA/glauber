@@ -16,6 +16,9 @@ class AppWidget extends StatelessWidget {
       valueListenable: context.read<ThemeController>(),
       builder: (context, state, _) {
         return MaterialApp(
+          builder: (context, child) {
+            return MediaQuery(data: MediaQuery.of(context).copyWith(boldText: false), child: child!);
+          },
           title: 'GS Equine',
           debugShowCheckedModeBanner: false,
           theme: lightTheme,
