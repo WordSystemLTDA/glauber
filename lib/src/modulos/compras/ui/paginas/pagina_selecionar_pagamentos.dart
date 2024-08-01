@@ -140,10 +140,10 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     },
                   );
                 },
-              );
-
-              setState(() {
-                comprasPagamentos = [];
+              ).then((value) {
+                setState(() {
+                  comprasPagamentos = [];
+                });
               });
             },
           ),
