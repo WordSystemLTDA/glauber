@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -41,7 +41,7 @@ class PaginaProvas extends StatefulWidget {
 
 class _PaginaProvasState extends State<PaginaProvas> {
   List<ProvaModelo> provasCarrinho = [];
-  final CarouselController _carrosselController = CarouselController();
+  final cs.CarouselController _carrosselController = cs.CarouselController();
 
   @override
   void initState() {
@@ -138,9 +138,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             children: [
                               SizedBox(
                                 height: 250,
-                                child: CarouselSlider.builder(
+                                child: cs.CarouselSlider.builder(
                                   carouselController: _carrosselController,
-                                  options: CarouselOptions(
+                                  options: cs.CarouselOptions(
                                     height: 250.0,
                                     autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
                                     aspectRatio: 2.0,
