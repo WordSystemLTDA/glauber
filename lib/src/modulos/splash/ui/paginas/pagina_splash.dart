@@ -72,16 +72,18 @@ class _PaginaSplashState extends State<PaginaSplash> {
             var (sucesso, _, usuarioRetorno) = resposta;
 
             if (sucesso) {
-              UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+              if (mounted) {
+                UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+              }
             } else {
-              UsuarioServico.sair(context);
+              if (mounted) {
+                UsuarioServico.sair(context);
+              }
             }
 
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRotas.inicio,
-              (Route<dynamic> route) => false,
-            );
+            if (mounted) {
+              Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
+            }
           });
         }
       }

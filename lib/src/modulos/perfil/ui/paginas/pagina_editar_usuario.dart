@@ -197,31 +197,35 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       );
 
       if (sucesso) {
-        var usuarioProvider = context.read<UsuarioProvider>();
+        if (mounted) {
+          var usuarioProvider = context.read<UsuarioProvider>();
 
-        usuarioProvider.setUsuario(usuarioNovo);
-        UsuarioServico.salvarUsuario(context, usuarioNovo);
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text('Sucesso ao editar dados.'),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {},
-          ),
-        ));
+          usuarioProvider.setUsuario(usuarioNovo);
+          UsuarioServico.salvarUsuario(context, usuarioNovo);
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Sucesso ao editar dados.'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          ));
+        }
       } else {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(mensagem),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {},
-          ),
-        ));
+        if (mounted) {
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(mensagem),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          ));
+        }
       }
       setState(() {
         salvando = false;

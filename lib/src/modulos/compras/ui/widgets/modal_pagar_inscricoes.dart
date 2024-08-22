@@ -65,8 +65,10 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
         });
         iniciarVerificacaoPagamento();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
-        Navigator.pop(context);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
+          Navigator.pop(context);
+        }
       }
     });
   }

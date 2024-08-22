@@ -158,16 +158,20 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                                   var (sucessoAoExcluirConta, mensagem) = resposta;
 
                                   if (sucessoAoExcluirConta) {
-                                    UsuarioServico.sair(context).then((value) {
-                                      Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
-                                    });
+                                    if (context.mounted) {
+                                      UsuarioServico.sair(context).then((value) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                                        }
+                                      });
+                                    }
                                   } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                         backgroundColor: Colors.red,
                                         content: Text(mensagem),
-                                      ),
-                                    );
+                                      ));
+                                    }
                                   }
                                 });
                               },
@@ -222,10 +226,14 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                         var (sucessoAoExcluirToken, _) = resposta;
 
                         if (sucessoAoExcluirToken) {
-                          UsuarioServico.sair(context).then((value) {
-                            comprasProvedor.resetarCompras();
-                            Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
-                          });
+                          if (context.mounted) {
+                            UsuarioServico.sair(context).then((value) {
+                              comprasProvedor.resetarCompras();
+                              if (context.mounted) {
+                                Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
+                              }
+                            });
+                          }
                         }
                       });
                     });

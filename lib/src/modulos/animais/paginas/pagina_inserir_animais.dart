@@ -114,7 +114,9 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                       .then((value) {
                     if (value.$1) {
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.$2)));
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.$2)));
+                      }
                     }
 
                     salvando.value = false;

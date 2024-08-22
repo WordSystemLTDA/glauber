@@ -78,44 +78,46 @@ class _CardProvasState extends State<CardProvas> {
         .then((state) {
       if (state.permitirCompraModelo.liberado) {
         if (usuarioProvider.usuario!.ativoProva == 'Sim' && confirmar) {
-          showDialog<String>(
-            context: context,
-            builder: (BuildContext contextDialog) {
-              return AlertDialog(
-                title: const Text('Confirmação'),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      Text(
-                        item.id == '1'
-                            ? (usuarioProvider.usuario!.cabeceiroProvas ?? '')
-                            : item.id == '2'
-                                ? (usuarioProvider.usuario!.pezeiroProvas ?? '')
-                                : '',
-                        textAlign: TextAlign.justify,
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                    ],
+          if (mounted) {
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext contextDialog) {
+                return AlertDialog(
+                  title: const Text('Confirmação'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text(
+                          item.id == '1'
+                              ? (usuarioProvider.usuario!.cabeceiroProvas ?? '')
+                              : item.id == '2'
+                                  ? (usuarioProvider.usuario!.pezeiroProvas ?? '')
+                                  : '',
+                          textAlign: TextAlign.justify,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Não'),
-                    onPressed: () {
-                      Navigator.of(contextDialog).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('Sim'),
-                    onPressed: () async {
-                      Navigator.of(contextDialog).pop();
-                      aoClicarNaCabeceira(prova, item, false);
-                    },
-                  ),
-                ],
-              );
-            },
-          );
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Não'),
+                      onPressed: () {
+                        Navigator.of(contextDialog).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Sim'),
+                      onPressed: () async {
+                        Navigator.of(contextDialog).pop();
+                        aoClicarNaCabeceira(prova, item, false);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
 
           return;
         }
@@ -288,11 +290,15 @@ class _CardProvasState extends State<CardProvas> {
                 onPressed: () {
                   if (state.permitirCompraModelo.rota! == '/compras') {
                     Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: state.permitirCompraModelo.rota!)).then((value) {
-                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                      if (mounted) {
+                        context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                      }
                     });
                   } else {
                     Navigator.pushNamed(context, state.permitirCompraModelo.rota!).then((value) {
-                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                      if (mounted) {
+                        context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                      }
                     });
                   }
                 },
@@ -396,11 +402,15 @@ class _CardProvasState extends State<CardProvas> {
               onPressed: () {
                 if (prova.permitirCompra.rota! == '/compras') {
                   Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: prova.permitirCompra.rota!)).then((value) {
-                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                    if (mounted) {
+                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                    }
                   });
                 } else {
                   Navigator.pushNamed(context, prova.permitirCompra.rota!).then((value) {
-                    context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                    if (mounted) {
+                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                    }
                   });
                 }
               },

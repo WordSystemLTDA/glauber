@@ -78,10 +78,14 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                       var (sucessoAoExcluirToken, _) = resposta;
 
                       if (sucessoAoExcluirToken) {
-                        UsuarioServico.sair(context).then((value) {
-                          comprasProvedor.resetarCompras();
-                          Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
-                        });
+                        if (mounted) {
+                          UsuarioServico.sair(context).then((value) {
+                            comprasProvedor.resetarCompras();
+                            if (mounted) {
+                              Navigator.pushNamedAndRemoveUntil(context, '/inicio', (Route<dynamic> route) => false);
+                            }
+                          });
+                        }
                       }
                     });
                   }

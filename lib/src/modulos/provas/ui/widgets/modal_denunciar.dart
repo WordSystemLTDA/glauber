@@ -135,7 +135,9 @@ class _ModalDenunciarState extends State<ModalDenunciar> {
                             .denunciar(provasEstado.evento!.id, provasEstado.evento!.idEmpresa, nomeDenuncia.text, celularDenuncia.text, mensagemDenuncia.text)
                             .then((sucesso) {
                           if (sucesso) {
-                            Navigator.pop(context);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
 
                             setStateDialog(() {
                               nomeDenuncia.text = '';
@@ -144,15 +146,17 @@ class _ModalDenunciarState extends State<ModalDenunciar> {
                               concordaDenunciar = concordaDenunciar ? false : true;
                             });
 
-                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: const Text('Sucesso ao fazer denuncia.'),
-                              backgroundColor: Colors.green,
-                              action: SnackBarAction(
-                                label: 'OK',
-                                onPressed: () {},
-                              ),
-                            ));
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: const Text('Sucesso ao fazer denuncia.'),
+                                backgroundColor: Colors.green,
+                                action: SnackBarAction(
+                                  label: 'OK',
+                                  onPressed: () {},
+                                ),
+                              ));
+                            }
                           }
                         });
                       },

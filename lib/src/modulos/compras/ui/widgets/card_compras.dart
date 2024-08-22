@@ -420,14 +420,18 @@ class _CardComprasState extends State<CardCompras> {
                                                   TextButton(
                                                     onPressed: () async {
                                                       await context.read<ComprasServico>().editarReembolsoVenda(item.id).then((value) {
-                                                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                          SnackBar(content: Text(value.$2)),
-                                                        );
+                                                        if (context.mounted) {
+                                                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(content: Text(value.$2)),
+                                                          );
+                                                        }
 
                                                         if (value.$1 == true) {
-                                                          Navigator.pop(context);
-                                                          Navigator.pop(context);
+                                                          if (context.mounted) {
+                                                            Navigator.pop(context);
+                                                            Navigator.pop(context);
+                                                          }
 
                                                           if (widget.atualizarLista != null) {
                                                             widget.atualizarLista!();

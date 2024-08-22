@@ -198,7 +198,9 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                                           parceiro.nomeParceiro = competidor.nome;
                                           parceiro.parceiroTemCompra = 'Não';
                                         });
-                                        Navigator.pop(context);
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                        }
                                       }
                                     } else {
                                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
