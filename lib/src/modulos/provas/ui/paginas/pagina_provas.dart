@@ -41,7 +41,7 @@ class PaginaProvas extends StatefulWidget {
 
 class _PaginaProvasState extends State<PaginaProvas> {
   List<ProvaModelo> provasCarrinho = [];
-  final cs.CarouselController _carrosselController = cs.CarouselController();
+  final cs.CarouselSliderController _carrosselController = cs.CarouselSliderController();
 
   @override
   void initState() {
