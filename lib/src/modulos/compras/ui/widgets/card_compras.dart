@@ -453,11 +453,7 @@ class _CardComprasState extends State<CardCompras> {
                                 },
                               );
                             },
-                            icon: const Icon(
-                              Icons.block_outlined,
-                              color: Colors.red,
-                              size: 30,
-                            ),
+                            icon: const Icon(Icons.block_outlined, color: Colors.red, size: 30),
                           ),
                         ],
                         // IconButton(
