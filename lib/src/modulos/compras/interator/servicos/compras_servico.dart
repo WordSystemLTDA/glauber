@@ -6,6 +6,7 @@ import 'package:provadelaco/src/modulos/compras/interator/modelos/retorno_gerar_
 
 abstract interface class ComprasServico {
   Future<RetornoComprasModelo> listar(int pagina1, int pagina2, int pagina3);
+  Future<ComprasModelo?> listarPorId(String id, String idProva, String idEvento);
   Future<List<ComprasModelo>> listarSomenteInscricoes(int pagina);
   Future<List<ClientesModelo>> listarClientesNormal(String pesquisa);
   Future<bool> baixarPDF(String idVenda);

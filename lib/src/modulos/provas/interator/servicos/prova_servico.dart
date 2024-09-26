@@ -4,6 +4,6 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_retorno_m
 
 abstract interface class ProvaServico {
   Future<ProvaRetornoModelo> listar(UsuarioModelo? usuario, String idEvento, String tipo);
-
+  Future<ProvaRetornoModelo> listarAoVivo(UsuarioModelo? usuario, String idEmpresa, String idEvento);
   Future<PermitirCompraModelo> permitirAdicionarCompra(String idEvento, String idProva, UsuarioModelo? usuario, String idCabeceira, String quantidadeCarrinho);
 }

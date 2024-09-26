@@ -48,6 +48,36 @@ class ProvaServicoImpl implements ProvaServico {
   }
 
   @override
+  Future<ProvaRetornoModelo> listarAoVivo(UsuarioModelo? usuario, String idEmpresa, String idEvento) async {
+    var url = 'provas/listar_ao_vivo.php?id_evento=$idEvento&idEmpresa=$idEmpresa';
+
+    var response = await client.get(url: url);
+    var jsonData = jsonDecode(response.data);
+
+    bool sucesso = jsonData['sucesso'];
+
+    EventoModelo evento = EventoModelo.fromMap(jsonData['evento']);
+
+    List<ProvaModelo> provas = List<ProvaModelo>.from(jsonData['provas'].map((elemento) {
+      return ProvaModelo.fromMap(elemento);
+    }));
+
+    List<NomesCabeceiraModelo> nomesCabeceira = List<NomesCabeceiraModelo>.from(jsonData['nomesCabeceira'].map((elemento) {
+      return NomesCabeceiraModelo.fromMap(elemento);
+    }));
+
+    List<PagamentosModelo> pagamentoDisponiveis = List<PagamentosModelo>.from(jsonData['pagamentoDisponiveis'].map((elemento) {
+      return PagamentosModelo.fromMap(elemento);
+    }));
+
+    if (response.statusCode == 200 && sucesso == true) {
+      return ProvaRetornoModelo(sucesso: sucesso, provas: provas, evento: evento, pagamentoDisponiveis: pagamentoDisponiveis, nomesCabeceira: nomesCabeceira);
+    } else {
+      return Future.error('');
+    }
+  }
+
+  @override
   Future<PermitirCompraModelo> permitirAdicionarCompra(String idEvento, String idProva, UsuarioModelo? usuario, String idCabeceira, String quantidadeCarrinho) async {
     var idCliente = usuario != null ? usuario.id : 0;
 

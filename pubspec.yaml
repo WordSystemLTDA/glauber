@@ -51,19 +51,19 @@ dependencies:
   url_launcher: ^6.1.14
   path_provider: ^2.1.1
   share_plus: ^10.0.2
-  firebase_messaging: ^14.7.3
-  firebase_core: ^2.21.0
-  flutter_local_notifications: ^17.2.2
+  firebase_messaging: ^15.1.2
+  firebase_core: ^3.5.0
+  flutter_local_notifications: ^17.2.3
   timezone: ^0.9.2
   flutter_timezone: ^3.0.1
-  google_sign_in: ^6.1.6
+  google_sign_in: ^6.2.1
   sign_in_with_apple: ^6.1.2
   brasil_fields: ^1.14.0
   pub_semver: ^2.1.4
   package_info_plus: ^8.0.2
   easy_image_viewer: ^1.2.1
   flutter_launcher_icons: ^0.13.1
-  skeletonizer: ^1.0.0
+  skeletonizer: ^1.4.2
   syncfusion_flutter_calendar: ^26.2.11+1
   syncfusion_localizations: ^26.2.11
   flutter_swipe_action_cell: ^3.1.3

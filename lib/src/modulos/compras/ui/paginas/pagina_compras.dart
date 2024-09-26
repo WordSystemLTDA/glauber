@@ -44,6 +44,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var transferenciaProvedor = context.read<TransferenciaProvedor>();
+
       transferenciaProvedor.addListener(() {
         TransferenciaEstado state = transferenciaProvedor.value;
 
@@ -123,7 +124,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         builder: (BuildContext context, Widget? child) {
           return Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: _buildFloatingActionButton(),
+            floatingActionButton: (comprasStore.compras.atuais.isEmpty ||
+                    comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Sim').isNotEmpty).isNotEmpty)
+                ? null
+                : _buildFloatingActionButton(),
             body: Column(
               children: [
                 const TabBar(

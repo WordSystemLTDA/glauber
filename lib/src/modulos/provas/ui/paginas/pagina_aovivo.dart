@@ -41,6 +41,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
       var provasAoVivoStore = context.read<ProvasAoVivoStore>();
       var ordemDeEntradaProvaStore = context.read<OrdemDeEntradaProvaStore>();
       var usuarioProvider = context.read<UsuarioProvider>();
+
       if (widget.argumentos.idProva != null) {
         setState(() {
           provaSelecionada = widget.argumentos.idProva!;

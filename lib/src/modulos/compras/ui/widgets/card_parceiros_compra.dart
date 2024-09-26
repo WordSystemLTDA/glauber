@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -12,8 +13,15 @@ class CardParceirosCompra extends StatefulWidget {
   final ComprasModelo item;
   final ParceirosCompraModelo parceiro;
   final List<ParceirosCompraModelo> parceiros;
+  final Function() aoSalvar;
 
-  const CardParceirosCompra({super.key, required this.item, required this.parceiro, required this.parceiros});
+  const CardParceirosCompra({
+    super.key,
+    required this.item,
+    required this.parceiro,
+    required this.parceiros,
+    required this.aoSalvar,
+  });
 
   @override
   State<CardParceirosCompra> createState() => _CardParceirosCompraState();
@@ -188,16 +196,20 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                                   controller.closeView('');
                                   FocusScope.of(context).unfocus();
 
+                                  // print(parceiro.toMap());
+                                  // print(competidor.id);
+
                                   await comprasServico.editarParceiro(parceiro.id, parceiro.idParceiro, competidor.id, parceiro.nomeModalidade).then((value) {
                                     var (sucesso, mensagem) = value;
 
                                     if (sucesso) {
                                       if (mounted) {
-                                        setState(() {
-                                          parceiro.idParceiro = competidor.id;
-                                          parceiro.nomeParceiro = competidor.nome;
-                                          parceiro.parceiroTemCompra = 'Não';
-                                        });
+                                        // setState(() {
+                                        //   parceiro.idParceiro = competidor.id;
+                                        //   parceiro.nomeParceiro = competidor.nome;
+                                        //   parceiro.parceiroTemCompra = 'Não';
+                                        // });
+                                        widget.aoSalvar();
                                         if (context.mounted) {
                                           Navigator.pop(context);
                                         }

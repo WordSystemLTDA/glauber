@@ -43,6 +43,24 @@ class ComprasServicoImpl implements ComprasServico {
   }
 
   @override
+  Future<ComprasModelo?> listarPorId(String id, String idProva, String idEvento) async {
+    var url = 'compras/listar_por_id.php';
+
+    var campos = {
+      'id_cliente': usuarioProvedor.usuario!.id,
+      'id': id,
+      'id_prova': idProva,
+      'id_evento': idEvento,
+    };
+
+    var response = await client.post(url: url, body: jsonEncode(campos));
+
+    var jsonData = jsonDecode(response.data);
+
+    return ComprasModelo.fromMap(jsonData['dados']);
+  }
+
+  @override
   Future<List<ComprasModelo>> listarSomenteInscricoes(int pagina) async {
     var url = 'compras/listar_somente_inscricoes.php';
 
@@ -169,6 +187,8 @@ class ComprasServicoImpl implements ComprasServico {
       'id_cliente_original': usuarioProvedor.usuario!.id,
       'modalidade': modalidade,
     };
+
+    print(campos);
 
     Response response = await client.post(
       url: url,

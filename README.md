@@ -72,7 +72,7 @@
 - [x] Limite de handicap nos parceiros (na hora de escolher)
 - [x] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
 - [x] quando clicar no gerar pagamento aparecer uma modal das inscrições deles para selecionar
-- [ ] cancelar inscrições indepedente do pagamento (sim ou não)
+- [x] cancelar inscrições indepedente do pagamento (sim ou não)
 - [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
 - [x] colocar um carrosel infinito, na pagina_provas, mostrando as fotos que foram vinculadas \*
 - [x] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi. \*
@@ -82,21 +82,33 @@
 - [x] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros. \*
 - [x] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova (somente informação)) colocar o botão no whatsapp para entrar em contato com o competidor \*
 - [x] Fazer botão de reembolsar venda \*
-- [ ] Fazer vinculação de provas na lista de competicação na hora de mostrar provas ao vivo (que agora não é mais provas é por lista de competição), juntar as ordem de entradas das provas vinculadas
-- [ ] Fazer automatico uma lista de FINAL ordenada pelo ranking se o ranking não tiver null (MAIOR PARA O MENOR)
+- [ ] Fazer vinculação de provas na lista_competicacao na hora de mostrar provas ao vivo (que agora não é mais provas é por lista_competicao), juntar as ordem de entradas das provas vinculadas (ORDEM CRESCENTE NÚMERO DA INSCRIÇÃO)
+- [ ] Fazer automatico uma lista de FINAL ordenada pelo ranking se o ranking não tiver null (MAIOR PARA O MENOR, baseado no ranking) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
+- [ ] Fazer automatico uma lista de RESULTADO FINAL ordenada pelo classificacao se o classificacao não tiver null (MENOR PARA O MAIOR, baseado na classificacao) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
+- [ ] Liberação de Compra EVENTO erro
+- [x] Ao editar parceiro mudar data e hora edição
+- [ ] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
+- [ ] Arrumar notificações
+- [ ] Colocar Competidores Disponiveis na modal de detalhes da inscrição em compras (ao editar parceiro)
+
+403 RG3 SOMA 6 -> São Assaí, Getúlio peba, João Ciliao - Passou do limite e duplicou
+
+401 RG3 SOMA 10 -> tito - DUPLICOU
+
+406 RG3 SOMA 5 -> darci barreto - passou do limite
 
 ======================================= SISTEMA WEB ===================================================
 
-- [ ] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
-- [ ] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
-- [ ] remover parceiros vinculados ao excluir inscrição
-- [ ] nas inscrições na hora de excluir, em vincular_parceiros se for pezeiro editar o id_venda_pezeiro para 0 e o id_pezeiro para 0 ou se for cabeceiro editar id_venda_cabeceira para 0 e o id_cabeceira para 0
+- [x] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
+- [x] Rever gerar pagamanento provas avulsas se possível gerar uma unica linha ou mostrar uma unica linha (SISTEMA)
+- [x] remover parceiros vinculados ao excluir inscrição
+- [x] nas inscrições na hora de excluir, em vincular_parceiros se for pezeiro editar o id_venda_pezeiro para 0 e o id_pezeiro para 0 ou se for cabeceiro editar id_venda_cabeceira para 0 e o id_cabeceira para 0
 
 ======================================= ERROS =========================================================
 
-- [ ] arrumar lista de parceiros nas compras, pegar a quantidade exata que está na prova (REVER)
-- [ ] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho (REVER)
-- [ ] Listagem de parceiros nas compras, rever por id_cabeceira e id_pezeiro (está puxando tudo junto)
+- [x] arrumar lista de parceiros nas compras, pegar a quantidade exata que está na prova (REVER)
+- [x] arrumar quando inserir mais de uma vez a mesma prova, ele retirar do carrinho (REVER)
+- [x] Listagem de parceiros nas compras, rever por id_cabeceira e id_pezeiro (está puxando tudo junto)
 
 ======================================= PARA FAZER (AVANÇADO) =========================================
 
