@@ -13,6 +13,7 @@ class ProvaParceirosModelos {
   final String finalT;
   final String medio;
   final String ranking;
+  final String classificacao;
   final String idClienteCabeceira;
   final String idClientePezeiro;
   final String nomeClienteCabeceira;
@@ -31,6 +32,7 @@ class ProvaParceirosModelos {
     required this.finalT,
     required this.medio,
     required this.ranking,
+    required this.classificacao,
     required this.idClienteCabeceira,
     required this.idClientePezeiro,
     required this.nomeClienteCabeceira,
@@ -51,6 +53,7 @@ class ProvaParceirosModelos {
       'finalT': finalT,
       'medio': medio,
       'ranking': ranking,
+      'classificacao': classificacao,
       'idClienteCabeceira': idClienteCabeceira,
       'idClientePezeiro': idClientePezeiro,
       'nomeClienteCabeceira': nomeClienteCabeceira,
@@ -72,6 +75,7 @@ class ProvaParceirosModelos {
       finalT: map['finalT'] as String,
       medio: map['medio'] as String,
       ranking: map['ranking'] as String,
+      classificacao: map['classificacao'] as String,
       idClienteCabeceira: map['idClienteCabeceira'] as String,
       idClientePezeiro: map['idClientePezeiro'] as String,
       nomeClienteCabeceira: map['nomeClienteCabeceira'] as String,

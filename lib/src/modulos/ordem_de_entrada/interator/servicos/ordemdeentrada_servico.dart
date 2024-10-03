@@ -5,5 +5,6 @@ import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/prova
 abstract interface class OrdemDeEntradaServico {
   Future<List<OrdemDeEntradaModelo>> listar(UsuarioModelo? usuario);
   Future<List<ProvaParceirosModelos>> listarPorProva(UsuarioModelo? usuario, String idProva);
+  Future<List<ProvaParceirosModelos>> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento);
   Future<bool> baixarPDF(String idVenda);
 }

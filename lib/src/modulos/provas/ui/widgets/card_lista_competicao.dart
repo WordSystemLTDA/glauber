@@ -2,91 +2,53 @@
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/modelo_prova_ao_vivo.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class CardProvasAoVivo extends StatefulWidget {
-  final ProvaModelo prova;
+class CardListaCompeticao extends StatefulWidget {
+  final ModeloProvaAoVivo item;
   final EventoModelo evento;
   // final bool verificando;
-  final List<ProvaModelo> provasCarrinho;
+  final List<ModeloProvaAoVivo> provasCarrinho;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final String idEvento;
-  final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros) adicionarNoCarrinho;
-  final Function(int quantidade, ProvaModelo prova, EventoModelo evento) adicionarAvulsaNoCarrinho;
-  final Function(ProvaModelo prova) removerDoCarrinho;
 
-  final Function(ProvaModelo prova)? aoSelecionarProvaAoVivo;
+  final Function(ModeloProvaAoVivo item)? aoSelecionar;
 
-  const CardProvasAoVivo({
+  const CardListaCompeticao({
     super.key,
-    required this.prova,
+    required this.item,
     required this.idEvento,
     // required this.verificando,
     required this.nomesCabeceira,
     required this.evento,
     required this.provasCarrinho,
-    required this.adicionarAvulsaNoCarrinho,
-    required this.adicionarNoCarrinho,
-    required this.removerDoCarrinho,
-    this.aoSelecionarProvaAoVivo,
+    this.aoSelecionar,
   });
 
   @override
-  State<CardProvasAoVivo> createState() => _CardProvasAoVivoState();
+  State<CardListaCompeticao> createState() => _CardListaCompeticaoState();
 }
 
-class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
+class _CardListaCompeticaoState extends State<CardListaCompeticao> {
   double tamanhoCard = 110;
   bool verificando = false;
 
-  Color? coresAction(ProvaModelo prova, NomesCabeceiraModelo item) {
-    return Colors.red;
-  }
-
-  bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
-    var provaNova = ProvaModelo(
-      id: prova.id,
-      permitirCompra: prova.permitirCompra,
-      hcMinimo: "0",
-      hcMaximo: "0",
-      avulsa: prova.avulsa,
-      quantMaxima: "0",
-      quantMinima: "0",
-      nomeProva: prova.nomeProva,
-      valor: prova.valor,
-      habilitarAoVivo: '',
-      idCabeceira: item.id,
-      somatoriaHandicaps: prova.somatoriaHandicaps,
-      competidores: prova.competidores,
-      permitirSorteio: prova.permitirSorteio,
-      permitirEditarParceiros: prova.permitirEditarParceiros,
-      liberarReembolso: prova.liberarReembolso,
-    );
-
-    return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;
-  }
-
-  int quantidadeExisteCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
-    return widget.provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == item.id).length;
-  }
-
-  Color coresJaComprou(ProvaModelo prova) {
+  Color coresJaComprou(ModeloProvaAoVivo prova) {
     return Colors.green;
   }
 
-  void aoClicarNoCard(ProvaModelo prova) {
-    if (widget.aoSelecionarProvaAoVivo != null) {
-      widget.aoSelecionarProvaAoVivo!(prova);
+  void aoClicarNoCard(ModeloProvaAoVivo item) {
+    if (widget.aoSelecionar != null) {
+      widget.aoSelecionar!(item);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var prova = widget.prova;
+    var item = widget.item;
     var width = MediaQuery.of(context).size.width;
 
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -99,7 +61,7 @@ class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: InkWell(
           onTap: () {
-            aoClicarNoCard(prova);
+            aoClicarNoCard(item);
           },
           borderRadius: BorderRadius.circular(5),
           child: Stack(
@@ -123,7 +85,7 @@ class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
                                 bottomLeft: Radius.circular(8),
                               ),
                             ),
-                            child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
+                            child: VerticalDivider(color: coresJaComprou(item), thickness: 5),
                           ),
                         ),
                         Padding(
@@ -135,42 +97,19 @@ class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
                               SizedBox(
                                 width: (width - 90) - 50,
                                 child: Text(
-                                  prova.nomeProva,
+                                  item.nome,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ),
-                              if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
-                                SizedBox(
-                                  width: (width - 90) - 50,
-                                  child: Text(
-                                    prova.descricao!,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
-                                  ),
-                                ),
-                              ],
                               SizedBox(
                                 width: (width - 90) - 50,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(prova.valor)),
-                                      style: const TextStyle(fontSize: 18, color: Colors.green),
-                                    ),
-                                    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Text(
-                                          "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
+                                child: Text(
+                                  "Competidores: ${item.ordemDeEntradas.length}",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
                                 ),
                               ),
                             ],
@@ -206,8 +145,8 @@ class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
                                 child: Material(
                                   child: InkWell(
                                     onTap: () {
-                                      if (widget.aoSelecionarProvaAoVivo != null) {
-                                        widget.aoSelecionarProvaAoVivo!(prova);
+                                      if (widget.aoSelecionar != null) {
+                                        widget.aoSelecionar!(item);
                                       }
                                     },
                                     child: Center(
@@ -223,18 +162,10 @@ class _CardProvasAoVivoState extends State<CardProvasAoVivo> {
                                                 height: 20,
                                                 repeat: true,
                                               ),
-                                              const Text(
-                                                'Ver',
-                                                // style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                                textAlign: TextAlign.center,
-                                              ),
+                                              const Text('Ver', textAlign: TextAlign.center),
                                             ],
                                           ),
-                                          const Text(
-                                            'AO VIVO',
-                                            // style: TextStyle(color: existeNoCarrinho(prova, item) ? Colors.white : (isDarkMode ? Colors.white : Colors.black)),
-                                            textAlign: TextAlign.center,
-                                          ),
+                                          const Text('AO VIVO', textAlign: TextAlign.center),
                                         ],
                                       ),
                                     ),

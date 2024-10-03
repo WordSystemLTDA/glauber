@@ -54,6 +54,24 @@ class OrdemDeEntradaServicoImpl implements OrdemDeEntradaServico {
   }
 
   @override
+  Future<List<ProvaParceirosModelos>> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento) async {
+    var url = "ordem_de_entrada/listar_por_lista_competicao.php?id_empresa=$idEmpresa&id_evento=$idEvento&id_lista_competicao=$idListaCompeticao";
+
+    var response = await client.get(url: url);
+
+    var jsonData = jsonDecode(response.data);
+    bool sucesso = jsonData['sucesso'];
+
+    if (response.statusCode == 200 && sucesso == true) {
+      return List<ProvaParceirosModelos>.from(jsonData['dados'].map((elemento) {
+        return ProvaParceirosModelos.fromMap(elemento);
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  @override
   Future<bool> baixarPDF(String idVenda) async {
     var tempDir = await getTemporaryDirectory();
     var savePath = '${tempDir.path}/inscricao$idVenda.pdf';

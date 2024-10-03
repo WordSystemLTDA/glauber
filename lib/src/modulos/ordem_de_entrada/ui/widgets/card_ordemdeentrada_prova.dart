@@ -114,12 +114,27 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                       Text(itemParceiro.medio),
                     ],
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'Ranking: ${itemParceiro.ranking}',
-                      textAlign: TextAlign.center,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            'Ranking: ${itemParceiro.ranking}',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            'Classificação: ${itemParceiro.classificacao}',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

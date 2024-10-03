@@ -82,14 +82,15 @@
 - [x] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros. \*
 - [x] Banco de competidores (Botão de ver competidores que já compraram e tem a inscrição como sorteio mostrar na modal de detalhes da prova (somente informação)) colocar o botão no whatsapp para entrar em contato com o competidor \*
 - [x] Fazer botão de reembolsar venda \*
-- [ ] Fazer vinculação de provas na lista_competicacao na hora de mostrar provas ao vivo (que agora não é mais provas é por lista_competicao), juntar as ordem de entradas das provas vinculadas (ORDEM CRESCENTE NÚMERO DA INSCRIÇÃO)
-- [ ] Fazer automatico uma lista de FINAL ordenada pelo ranking se o ranking não tiver null (MAIOR PARA O MENOR, baseado no ranking) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
-- [ ] Fazer automatico uma lista de RESULTADO FINAL ordenada pelo classificacao se o classificacao não tiver null (MENOR PARA O MAIOR, baseado na classificacao) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
+- [x] Fazer vinculação de provas na lista_competicacao na hora de mostrar provas ao vivo (que agora não é mais provas é por lista_competicao), juntar as ordem de entradas das provas vinculadas (ORDEM CRESCENTE NÚMERO DA INSCRIÇÃO)
+- [x] Fazer automatico uma lista de FINAL ordenada pelo ranking se o ranking não tiver null (MAIOR PARA O MENOR, baseado no ranking) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
+- [x] Fazer automatico uma lista de RESULTADO FINAL ordenada pelo classificacao se o classificacao não tiver null (MENOR PARA O MAIOR, baseado na classificacao) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
 - [ ] Liberação de Compra EVENTO erro
 - [x] Ao editar parceiro mudar data e hora edição
 - [ ] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
 - [ ] Arrumar notificações
-- [ ] Colocar Competidores Disponiveis na modal de detalhes da inscrição em compras (ao editar parceiro)
+- [x] Colocar Competidores Disponiveis na modal de detalhes da inscrição em compras (ao editar parceiro)
+- [x] fazer quant_max_inscricoes_pezeiro e quant_max_inscricoes_cabeceira
 
 403 RG3 SOMA 6 -> São Assaí, Getúlio peba, João Ciliao - Passou do limite e duplicou
 

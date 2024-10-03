@@ -18,6 +18,7 @@ class ProvaModelo extends Equatable {
   final PermitirCompraModelo permitirCompra;
   final String permitirSorteio;
   final String habilitarAoVivo;
+  final String idListaCompeticao;
   final String? liberarReembolso;
   final String? descricao;
   final String? somatoriaHandicaps;
@@ -37,13 +38,14 @@ class ProvaModelo extends Equatable {
     required this.quantMinima,
     required this.quantMaxima,
     required this.permitirCompra,
-    this.liberarReembolso = 'Não',
     required this.permitirSorteio,
     required this.habilitarAoVivo,
-    required this.permitirEditarParceiros,
+    required this.idListaCompeticao,
+    this.liberarReembolso = 'Não',
     this.descricao,
     this.somatoriaHandicaps,
     this.sorteio,
+    required this.permitirEditarParceiros,
     this.nomeCabeceira,
     this.idCabeceira,
     this.competidores,
@@ -80,6 +82,7 @@ class ProvaModelo extends Equatable {
       'permitirCompra': permitirCompra.toMap(),
       'permitirSorteio': permitirSorteio,
       'habilitarAoVivo': habilitarAoVivo,
+      'idListaCompeticao': idListaCompeticao,
       'liberarReembolso': liberarReembolso,
       'descricao': descricao,
       'somatoriaHandicaps': somatoriaHandicaps,
@@ -87,7 +90,7 @@ class ProvaModelo extends Equatable {
       'permitirEditarParceiros': permitirEditarParceiros,
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
-      'competidores': competidores != null ? competidores!.map((x) => x.toMap()).toList() : [], // não mudar
+      'competidores': competidores?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -104,6 +107,7 @@ class ProvaModelo extends Equatable {
       permitirCompra: PermitirCompraModelo.fromMap(map['permitirCompra'] as Map<String, dynamic>),
       permitirSorteio: map['permitirSorteio'] as String,
       habilitarAoVivo: map['habilitarAoVivo'] as String,
+      idListaCompeticao: map['idListaCompeticao'] as String,
       liberarReembolso: map['liberarReembolso'] != null ? map['liberarReembolso'] as String : null,
       descricao: map['descricao'] != null ? map['descricao'] as String : null,
       somatoriaHandicaps: map['somatoriaHandicaps'] != null ? map['somatoriaHandicaps'] as String : null,

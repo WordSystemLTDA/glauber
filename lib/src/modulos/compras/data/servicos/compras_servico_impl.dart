@@ -188,8 +188,6 @@ class ComprasServicoImpl implements ComprasServico {
       'modalidade': modalidade,
     };
 
-    print(campos);
-
     Response response = await client.post(
       url: url,
       body: jsonEncode(campos),

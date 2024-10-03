@@ -10,8 +10,8 @@ class ProvaRetornoModelo {
   final bool sucesso;
   final List<ProvaModelo> provas;
   final List<NomesCabeceiraModelo> nomesCabeceira;
-  final List<PagamentosModelo> pagamentoDisponiveis;
   final EventoModelo evento;
+  final List<PagamentosModelo> pagamentoDisponiveis;
 
   ProvaRetornoModelo({
     required this.sucesso,

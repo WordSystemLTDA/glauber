@@ -133,6 +133,7 @@ class _CardProvasState extends State<CardProvas> {
           quantMaxima: state.permitirCompraModelo.quantMaximaAvulsa == null ? state.provaModelo.quantMaxima : state.permitirCompraModelo.quantMaximaAvulsa!,
           quantMinima: state.provaModelo.quantMinima,
           hcMaximo: state.provaModelo.hcMaximo,
+          idListaCompeticao: state.provaModelo.idListaCompeticao,
           idCabeceira: state.idCabeceira,
           somatoriaHandicaps: state.provaModelo.somatoriaHandicaps,
           habilitarAoVivo: '',
@@ -165,6 +166,7 @@ class _CardProvasState extends State<CardProvas> {
                       habilitarAoVivo: '',
                       hcMaximo: "0",
                       avulsa: provaModelo.avulsa,
+                      idListaCompeticao: '',
                       quantMaxima: "0",
                       quantMinima: "0",
                       sorteio: sorteio,
@@ -208,6 +210,7 @@ class _CardProvasState extends State<CardProvas> {
               permitirCompra: provaModelo.permitirCompra,
               hcMinimo: "0",
               hcMaximo: "0",
+              idListaCompeticao: '',
               avulsa: provaModelo.avulsa,
               habilitarAoVivo: '',
               quantMaxima: "0",
@@ -243,6 +246,7 @@ class _CardProvasState extends State<CardProvas> {
                         permitirCompra: provaModelo.permitirCompra,
                         hcMinimo: "0",
                         hcMaximo: "0",
+                        idListaCompeticao: '',
                         avulsa: provaModelo.avulsa,
                         quantMaxima: "0",
                         quantMinima: "0",
@@ -342,6 +346,7 @@ class _CardProvasState extends State<CardProvas> {
       hcMaximo: "0",
       avulsa: prova.avulsa,
       quantMaxima: "0",
+      idListaCompeticao: '',
       quantMinima: "0",
       nomeProva: prova.nomeProva,
       valor: prova.valor,
@@ -426,7 +431,9 @@ class _CardProvasState extends State<CardProvas> {
       }
     } else {
       if (prova.habilitarAoVivo == 'Sim') {
-        Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id, nomeProva: prova.nomeProva));
+        Navigator.pushNamed(context, AppRotas.aovivo,
+            arguments:
+                PaginaAoVivoArgumentos(idEvento: widget.evento.id, idEmpresa: widget.evento.idEmpresa, idListaCompeticao: prova.idListaCompeticao, nomeProva: prova.nomeProva));
       }
     }
   }
@@ -472,7 +479,9 @@ class _CardProvasState extends State<CardProvas> {
           color: Colors.transparent,
           content: _getIconButton(Colors.red, Icons.live_tv_outlined),
           onTap: (handler) {
-            Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.evento.id, idProva: prova.id, nomeProva: prova.nomeProva));
+            Navigator.pushNamed(context, AppRotas.aovivo,
+                arguments:
+                    PaginaAoVivoArgumentos(idEvento: widget.evento.id, idEmpresa: widget.evento.idEmpresa, idListaCompeticao: prova.idListaCompeticao, nomeProva: prova.nomeProva));
           },
         ),
       ],

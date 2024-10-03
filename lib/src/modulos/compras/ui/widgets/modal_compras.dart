@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_parceiros_compra.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
 
 class ModalCompras extends StatefulWidget {
@@ -229,7 +235,96 @@ class _ModalComprasState extends State<ModalCompras> {
                     ),
                     if (item!.parceiros.isNotEmpty) ...[
                       const SizedBox(height: 20),
-                      const Text('Seus Parceiros', style: TextStyle(fontWeight: FontWeight.w700)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Seus Parceiros', style: TextStyle(fontWeight: FontWeight.w700)),
+                          SearchAnchor(
+                            viewBuilder: (suggestions) {
+                              if (suggestions.isEmpty) {
+                                return const Padding(
+                                  padding: EdgeInsets.only(top: 50.0),
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text('Nenhum competidor disponível para essa Prova.'),
+                                  ),
+                                );
+                              }
+                              return ListView.builder(
+                                itemCount: suggestions.length,
+                                padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                                itemBuilder: (context, index) {
+                                  var itemN = suggestions.elementAt(index);
+
+                                  return itemN;
+                                },
+                              );
+                            },
+                            isFullScreen: true,
+                            builder: (BuildContext context, SearchController controller) {
+                              return TextButton(
+                                onPressed: () {
+                                  controller.openView();
+                                },
+                                child: const Text('Competidores disponíveis', style: TextStyle(fontSize: 14)),
+                              );
+                            },
+                            suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                              final keyword = controller.value.text;
+                              var usuarioProvider = context.read<UsuarioProvider>();
+                              bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+                              var competidoresServico = context.read<CompetidoresServico>();
+
+                              List<CompetidoresModelo>? competidores =
+                                  await competidoresServico.listarBancoCompetidores(item!.idCabeceira!, usuarioProvider.usuario, keyword, widget.idProva);
+
+                              Iterable<Widget> widgets = competidores.map((competidor) {
+                                return Card(
+                                  elevation: 3.0,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                  child: ListTile(
+                                    onTap: () {},
+                                    leading: Text(competidor.id),
+                                    title: Text(
+                                      competidor.nome,
+                                      style: TextStyle(color: isDarkMode ? Colors.white : null),
+                                    ),
+                                    trailing: competidor.celular == null || (competidor.celular != null && competidor.celular!.isEmpty)
+                                        ? null
+                                        : IconButton(
+                                            onPressed: () {
+                                              if (competidor.celular != null && competidor.celular!.isNotEmpty) {
+                                                FuncoesGlobais.abrirWhatsapp(competidor.celular!);
+                                              }
+                                            },
+                                            icon: const FaIcon(
+                                              FontAwesomeIcons.whatsapp,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          competidor.apelido,
+                                          style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                        ),
+                                        if (competidor.nomeCidade.isNotEmpty)
+                                          Text(
+                                            "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                                            style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+
+                              return widgets;
+                            },
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 5),
                       Flexible(
                         child: ListView.builder(

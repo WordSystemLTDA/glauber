@@ -17,8 +17,22 @@ class OrdemDeEntradaProvaStore extends ValueNotifier<OrdemDeEntradaEstadoProva> 
     value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
   }
 
+  void listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento) async {
+    value = OrdemDeEntradaCarregando();
+
+    List<ProvaParceirosModelos> ordemdeentradas = await _servico.listarPorListaCompeticao(usuario, idListaCompeticao, idEmpresa, idEvento);
+
+    value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
+  }
+
   void atualizarLista(UsuarioModelo? usuario, String idProva) async {
     List<ProvaParceirosModelos> ordemdeentradas = await _servico.listarPorProva(usuario, idProva);
+
+    value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
+  }
+
+  void atualizarListaPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento) async {
+    List<ProvaParceirosModelos> ordemdeentradas = await _servico.listarPorListaCompeticao(usuario, idListaCompeticao, idEmpresa, idEvento);
 
     value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
   }

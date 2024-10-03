@@ -111,6 +111,7 @@ class DadosFakes {
       quantMaxima: '',
       quantMinima: '',
       permitirSorteio: '',
+      idListaCompeticao: '',
       id: '31',
       habilitarAoVivo: '',
       nomeProva: 'WARM UP #6 E #9',

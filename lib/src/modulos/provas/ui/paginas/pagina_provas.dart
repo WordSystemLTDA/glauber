@@ -270,6 +270,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                       AppRotas.aovivo,
                                       arguments: PaginaAoVivoArgumentos(
                                         idEvento: widget.argumentos.idEvento,
+                                        idEmpresa: evento.idEmpresa,
                                       ),
                                     );
                                   },
@@ -481,6 +482,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
       hcMinimo: prova.hcMinimo,
       habilitarAoVivo: '',
       hcMaximo: prova.hcMaximo,
+      idListaCompeticao: prova.idListaCompeticao,
       permitirSorteio: prova.permitirSorteio,
       avulsa: prova.avulsa,
       quantMinima: prova.quantMinima,
@@ -545,6 +547,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         hcMinimo: prova.hcMinimo,
         permitirSorteio: prova.permitirSorteio,
         hcMaximo: prova.hcMaximo,
+        idListaCompeticao: prova.idListaCompeticao,
         habilitarAoVivo: '',
         avulsa: prova.avulsa,
         quantMinima: prova.quantMinima,
