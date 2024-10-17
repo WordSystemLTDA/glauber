@@ -125,7 +125,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
           return Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             floatingActionButton: (comprasStore.compras.atuais.isEmpty ||
-                    comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Sim').isNotEmpty).isNotEmpty)
+                    comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
                 ? null
                 : _buildFloatingActionButton(),
             body: Column(
