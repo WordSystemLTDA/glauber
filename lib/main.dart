@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/firebase_options.dart';
 import 'package:provadelaco/src/app_widget.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
@@ -86,7 +85,7 @@ extension EmailValidator on String {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   HttpOverrides.global = MyHttpOverrides();
 
   final app = MultiProvider(

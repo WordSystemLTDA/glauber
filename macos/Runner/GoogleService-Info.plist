@@ -2,18 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>558343760209-kli5es5ed4fft96osjb5b3kru421qv43.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.558343760209-kli5es5ed4fft96osjb5b3kru421qv43</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>558343760209-hujctapi6sdgnfvc560q3stpblbnrt7v.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDavRxxLAb7cBm0U7WJOJv7D66Jyr6yE5k</string>
+	<string>AIzaSyBFMUd4r7m_TOlAizmspnv3F_FDBozZaEI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>984977495690</string>
+	<string>558343760209</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.glauber.RunnerTests</string>
+	<string>com.example.glauber</string>
 	<key>PROJECT_ID</key>
-	<string>provadelacos</string>
+	<string>provasdelaco</string>
 	<key>STORAGE_BUCKET</key>
-	<string>provadelacos.appspot.com</string>
+	<string>provasdelaco.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:984977495690:ios:c845d6afd65a34067eff73</string>
+	<string>1:558343760209:ios:5f457c0349d2c881800b70</string>
 </dict>
 </plist>

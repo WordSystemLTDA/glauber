@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "558343760209",
     "project_id": "provasdelaco",
-    "storage_bucket": "provasdelaco.appspot.com"
+    "storage_bucket": "provasdelaco.firebasestorage.app"
   },
   "client": [
     {
@@ -19,6 +19,14 @@
           "android_info": {
             "package_name": "com.provadelaco.glauber",
             "certificate_hash": "e64cbb8157a274a2e5b0d9386204ad8affe9b3d4"
+          }
+        },
+        {
+          "client_id": "558343760209-l2vipnmu0slf6j795svftbu9c47oon3a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.provadelaco.glauber",
+            "certificate_hash": "1f20a5d269d1379e10bd39219941fd004fd8c79c"
           }
         },
         {
