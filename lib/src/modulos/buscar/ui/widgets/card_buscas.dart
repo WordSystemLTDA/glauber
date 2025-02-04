@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
-import 'package:intl/intl.dart';
 
 class CardBuscas extends StatefulWidget {
   final EventoModelo evento;
@@ -59,7 +59,7 @@ class _CardBuscasState extends State<CardBuscas> {
                     gradient: LinearGradient(
                       end: const Alignment(0.0, -0.6),
                       begin: const Alignment(0.0, 0),
-                      colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                      colors: <Color>[const Color(0x8A000000), Colors.black12.withValues(alpha: 0.0)],
                     ),
                   ),
                 ),

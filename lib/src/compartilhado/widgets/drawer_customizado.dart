@@ -139,7 +139,7 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                               ).image,
                             )
                           : CircleAvatar(
-                              backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                              backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withValues(alpha: 1.0),
                               radius: 35,
                               child: Text(
                                 nomeUsuario(),

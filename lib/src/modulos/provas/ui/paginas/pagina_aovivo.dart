@@ -140,7 +140,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                         gradient: LinearGradient(
                                           end: const Alignment(0.0, -0.6),
                                           begin: const Alignment(0.0, 0),
-                                          colors: <Color>[const Color(0x8A000000), Colors.black12.withOpacity(0.0)],
+                                          colors: <Color>[const Color(0x8A000000), Colors.black12.withValues(alpha: 0.0)],
                                         ),
                                       ),
                                     ),

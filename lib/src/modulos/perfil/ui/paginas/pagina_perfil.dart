@@ -321,7 +321,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                             backgroundImage: Image.network(usuarioProvider.usuario!.foto!).image,
                           )
                         : CircleAvatar(
-                            backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                            backgroundColor: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withValues(alpha: 1.0),
                             radius: 45,
                             child: Text(
                               nomeUsuario(),
