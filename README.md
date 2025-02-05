@@ -1,55 +1,41 @@
 Fazer no Aplicativo
 
-- Movimentações duplicou (não permitir duplicar pelo id_mov)
-- Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
-- Caso laço em dupla, 3 tambores, laço individual for Pendente no cadastro do cliente, aparecer para selecionar a modalide na tela de home
+- [ ] Movimentações duplicou (não permitir duplicar pelo id_mov)
+- [ ] Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
+- [ ] Caso laço em dupla, 3 tambores, laço individual for Pendente no cadastro do cliente, aparecer para selecionar a modalide na tela de home
 
-  - Arrumar loading ao cancelar login do google
-  - Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
-  - Ao segurar o card da prova, aparecer a súmula em uma modal
-  - Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
-    
-  - Cadastros de cliente
-- Ao cadastrar aparecer "Selecione as Modalidades que deseja competir" e fazer cards para selecionar as modalidades (Simular checkbox)
-- Laço em dupla (CADASTRO DO CLIENTE) - aparecer do jeito que tá
-- 3 Tambores (CADASTRO DO CLIENTE) - Data de Nascimento, Select de opção do profissional (sim ou não), Genêro/sexo (opcional, selecionar na tela de home depois caso pule)
-- Laço Individual (CADASTRO DO CLIENTE) - Handicap laço individual (1, 2, 3, 4)
+- [ ] Arrumar loading ao cancelar login do google
+- [ ] Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
+- [ ] Ao segurar o card da prova, aparecer a súmula em uma modal
+- [ ] Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
 
+Cadastros de cliente
+
+- [ ] Ao cadastrar aparecer "Selecione as Modalidades que deseja competir" e fazer cards para selecionar as modalidades (Simular checkbox)
+- [ ] Laço em dupla (CADASTRO DO CLIENTE) - aparecer do jeito que tá
+- [ ] 3 Tambores (CADASTRO DO CLIENTE) - Data de Nascimento, Select de opção do profissional (sim ou não), Genêro/sexo (opcional, selecionar na tela de home depois caso pule)
+- [ ] Laço Individual (CADASTRO DO CLIENTE) - Handicap laço individual (1, 2, 3, 4)
 
 Cadastro de prova
 
-- 3 Tambores - Venda Avulsa padrão como Sim
-- 3 Tambores - Apenas deixar esses campos: Descrição e Quant. Max. Inscrições Pacote Fechado
-- 3 Tambores - Campo de selecionar a idade máxima da prova
-- 3 Tambores - Campo de selecionar Genêro/Sexo da prova
-- 3 Tambores - Campo de selecionar opção de profissional da prova
-- 
-- Laço em dupla - Venda Avulsa padrão como Sim
-- Laço em dupla - Aparecer Quant. Max. Inscrições Pacote Fechado como 1
-- 
-- Laço Individual - Criar campo de HC Máximo (é outro campo, não pode usar o que já esta criado)
-- Laço Individual  - Apenas deixar esses campos: Descrição e Quant. Max. de Inscrições
-
-
+- [ ] 3 Tambores - Venda Avulsa padrão como Sim
+- [ ] 3 Tambores - Apenas deixar esses campos: Descrição e Quant. Max. Inscrições Pacote Fechado
+- [ ] 3 Tambores - Campo de selecionar a idade máxima da prova
+- [ ] 3 Tambores - Campo de selecionar Genêro/Sexo da prova
+- [ ] 3 Tambores - Campo de selecionar opção de profissional da prova
+- [ ] Laço em dupla - Venda Avulsa padrão como Sim
+- [ ] Laço em dupla - Aparecer Quant. Max. Inscrições Pacote Fechado como 1
+- [ ] Laço Individual - Criar campo de HC Máximo (é outro campo, não pode usar o que já esta criado)
+- [ ] Laço Individual  - Apenas deixar esses campos: Descrição e Quant. Max. de Inscrições
 
 Na Página de Provas
 
-- 3 Tambores selecionar o animal para mostrar as provas (ou mostrar o animal que está como Padrão)
-- 3 Tambores aparecer somente as provas que o animal e o competidor pode correr
-- 3 Tambores embaixo do tabbar vai ter um input de selecionar o animal
-- 
-- Laço Individual só clicar no card e comprar
-- 
-- Permissão Compra Ordenada -> Só pode comprar as provas se comprou a prova anterior, ex: Eu só posso comprar a prova 2 se eu comprar a prova 1 primeiro (1 ou 2, pegar pela sequencia)
-- Permissão de Selecionar animal de outra pessoa
-
-
-
-
-
-
-
-
+- [ ] 3 Tambores selecionar o animal para mostrar as provas (ou mostrar o animal que está como Padrão)
+- [ ] 3 Tambores aparecer somente as provas que o animal e o competidor pode correr
+- [ ] 3 Tambores embaixo do tabbar vai ter um input de selecionar o animal
+- [ ] Laço Individual só clicar no card e comprar
+- [ ] Permissão Compra Ordenada -> Só pode comprar as provas se comprou a prova anterior, ex: Eu só posso comprar a prova 2 se eu comprar a prova 1 primeiro (1 ou 2, pegar pela sequencia)
+- [ ] Permissão de Selecionar animal de outra pessoa
 
 ======================================= ATUALIZAÇÕES ==================================================
 

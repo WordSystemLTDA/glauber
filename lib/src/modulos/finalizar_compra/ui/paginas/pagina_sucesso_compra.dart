@@ -30,7 +30,6 @@ class PaginaSucessoCompra extends StatefulWidget {
 
 class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
   bool sucessoAoVerificarPagamento = false;
-
   Timer? _timer;
 
   @override

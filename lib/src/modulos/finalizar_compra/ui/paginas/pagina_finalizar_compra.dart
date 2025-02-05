@@ -245,7 +245,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             return const Text('Erro ao listar informações.');
           }
 
-          metodoPagamento = dados.pagamentos[0].id;
+          metodoPagamento = dados.pagamentos.firstOrNull?.id ?? '0';
 
           return Skeletonizer(
             enabled: state is CarregandoInformacoes,

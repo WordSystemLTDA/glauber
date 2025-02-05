@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+// import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
@@ -13,6 +13,7 @@ import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 class PaginaLogin extends StatefulWidget {
   const PaginaLogin({super.key});
@@ -274,7 +275,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             ),
                             const SizedBox(height: 20),
                             SignInButton(
-                              Buttons.GoogleDark,
+                              Buttons.googleDark,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
@@ -287,7 +288,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                             const SizedBox(height: 10),
                             if (!kIsWeb && Platform.isIOS) ...[
                               SignInButton(
-                                Buttons.AppleDark,
+                                Buttons.appleDark,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),

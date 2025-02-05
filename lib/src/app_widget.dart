@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/compartilhado/theme/theme_data.dart';
@@ -25,14 +24,14 @@ class AppWidget extends StatelessWidget {
           darkTheme: darkTheme,
           themeMode: state,
           localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            // GlobalMaterialLocalizations.delegate,
+            // GlobalWidgetsLocalizations.delegate,
+            // GlobalCupertinoLocalizations.delegate,
             SfGlobalLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('pt', 'BR'),
-          ],
+          // supportedLocales: const [
+          //   Locale('pt', 'BR'),
+          // ],
           locale: const Locale('pt', 'BR'),
           initialRoute: AppRotas.paginaInicial,
           navigatorKey: AppRotas.navigatorKey,
