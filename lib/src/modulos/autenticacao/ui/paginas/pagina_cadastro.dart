@@ -5,6 +5,7 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/handicaps_dialog.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
@@ -14,8 +15,9 @@ import 'package:provider/provider.dart';
 
 class PaginaCadastroArgumentos {
   final List<ModeloModalidadesCadastro> modalidades;
+  final bool jaEstaCadastrado;
 
-  const PaginaCadastroArgumentos({required this.modalidades});
+  const PaginaCadastroArgumentos({required this.modalidades, required this.jaEstaCadastrado});
 }
 
 class PaginaCadastro extends StatefulWidget {
@@ -54,6 +56,11 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   void initState() {
     super.initState();
     final autenticacaoStore = context.read<AutenticacaoStore>();
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    if (widget.argumentos.jaEstaCadastrado == true) {
+      // TODO: fazer
+    }
 
     autenticacaoStore.addListener(() {
       AutenticacaoEstado state = autenticacaoStore.value;
@@ -178,165 +185,167 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       Text("${widget.argumentos.modalidades.map((e) => e.nome.toString())}", style: const TextStyle(fontSize: 16)),
                     ],
                   ),
-                  const Divider(height: 30),
-                  Text('Dados Gerais', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  const Text('Nome completo'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    controller: _nomeController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Nome Completo'),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('Apelido'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    controller: _apelidoController,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Como quer ser chamado no Brete'),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('E-mail'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: joao@gmail.com'),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('Celular'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    controller: _celularController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      TelefoneInputFormatter(),
-                    ],
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: 'Celular',
+                  if (widget.argumentos.jaEstaCadastrado == false) ...[
+                    const Divider(height: 30),
+                    Text('Dados Gerais', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 15),
+                    const Text('Nome completo'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: _nomeController,
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Nome Completo'),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('Cidade'),
-                  const SizedBox(height: 5),
-                  SearchAnchor(
-                    viewBuilder: (suggestions) {
-                      return ListView.builder(
-                        itemCount: suggestions.length,
-                        padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                        itemBuilder: (context, index) {
-                          var item = suggestions.elementAt(index);
+                    const SizedBox(height: 10),
+                    const Text('Apelido'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: _apelidoController,
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Como quer ser chamado no Brete'),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text('E-mail'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Ex: joao@gmail.com'),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text('Celular'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: _celularController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        TelefoneInputFormatter(),
+                      ],
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        hintText: 'Celular',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text('Cidade'),
+                    const SizedBox(height: 5),
+                    SearchAnchor(
+                      viewBuilder: (suggestions) {
+                        return ListView.builder(
+                          itemCount: suggestions.length,
+                          padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                          itemBuilder: (context, index) {
+                            var item = suggestions.elementAt(index);
 
-                          return item;
-                        },
-                      );
-                    },
-                    isFullScreen: true,
-                    searchController: _pesquisaCidadeController,
-                    builder: (BuildContext context, SearchController controller) {
-                      return TextField(
-                        onTap: () {
-                          _pesquisaCidadeController.openView();
-                        },
-                        controller: _cidadeController,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      );
-                    },
-                    suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                      final keyword = controller.value.text;
-
-                      List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
-
-                      Iterable<Widget> widgets = cidades!.map((cidade) {
-                        return GestureDetector(
-                          onTap: () {
-                            controller.closeView('');
-                            setState(() {
-                              idCidade = cidade.id;
-                              _cidadeController.text = cidade.nome;
-                            });
-                            FocusScope.of(context).unfocus();
+                            return item;
                           },
-                          child: Card(
-                            elevation: 3.0,
-                            child: ListTile(
-                              leading: const Icon(Icons.copy_all_outlined),
-                              title: Text(cidade.nome),
-                              subtitle: Text(
-                                cidade.nomeUf,
-                                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                              ),
-                            ),
+                        );
+                      },
+                      isFullScreen: true,
+                      searchController: _pesquisaCidadeController,
+                      builder: (BuildContext context, SearchController controller) {
+                        return TextField(
+                          onTap: () {
+                            _pesquisaCidadeController.openView();
+                          },
+                          controller: _cidadeController,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
                           ),
                         );
-                      });
+                      },
+                      suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                        final keyword = controller.value.text;
 
-                      return widgets;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Senha'),
-                            const SizedBox(height: 5),
-                            TextField(
-                              obscureText: ocultarSenha,
-                              controller: _senhaController,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: 'Senha',
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      ocultarSenha = !ocultarSenha;
-                                    });
-                                  },
-                                  icon: ocultarSenha
-                                      ? const Icon(Icons.remove_red_eye)
-                                      : const Icon(
-                                          Icons.remove_red_eye_outlined,
-                                        ),
+                        List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
+
+                        Iterable<Widget> widgets = cidades!.map((cidade) {
+                          return GestureDetector(
+                            onTap: () {
+                              controller.closeView('');
+                              setState(() {
+                                idCidade = cidade.id;
+                                _cidadeController.text = cidade.nome;
+                              });
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: Card(
+                              elevation: 3.0,
+                              child: ListTile(
+                                leading: const Icon(Icons.copy_all_outlined),
+                                title: Text(cidade.nome),
+                                subtitle: Text(
+                                  cidade.nomeUf,
+                                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Confirmar senha'),
-                            const SizedBox(height: 5),
-                            TextField(
-                              obscureText: ocultarConfirmar,
-                              controller: _confirmarSenhaController,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                hintText: 'Confirmar senha',
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      ocultarConfirmar = !ocultarConfirmar;
-                                    });
-                                  },
-                                  icon: ocultarConfirmar ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
+                          );
+                        });
+
+                        return widgets;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Senha'),
+                              const SizedBox(height: 5),
+                              TextField(
+                                obscureText: ocultarSenha,
+                                controller: _senhaController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  hintText: 'Senha',
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        ocultarSenha = !ocultarSenha;
+                                      });
+                                    },
+                                    icon: ocultarSenha
+                                        ? const Icon(Icons.remove_red_eye)
+                                        : const Icon(
+                                            Icons.remove_red_eye_outlined,
+                                          ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Confirmar senha'),
+                              const SizedBox(height: 5),
+                              TextField(
+                                obscureText: ocultarConfirmar,
+                                controller: _confirmarSenhaController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  hintText: 'Confirmar senha',
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        ocultarConfirmar = !ocultarConfirmar;
+                                      });
+                                    },
+                                    icon: ocultarConfirmar ? const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   if (widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) ...[
                     const Divider(height: 30),
                     Text('Laço em Dupla', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),

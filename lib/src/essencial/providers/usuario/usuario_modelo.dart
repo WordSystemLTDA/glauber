@@ -40,6 +40,11 @@ class UsuarioModelo {
   String? cabeceiroProvas;
   String? pezeiroProvas;
   String? ativoProva;
+  String? lacoemdupla;
+  String? tambores3;
+  String? lacoindividual;
+  String? tipodecategoriaprofissional;
+  String? handicaplacoindividual;
 
   UsuarioModelo({
     required this.id,

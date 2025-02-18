@@ -46,7 +46,8 @@ class RouteGenerator {
       case AppRotas.buscar:
         return buildRoute(const PaginaBuscar(), settings: settings);
       case AppRotas.selecionarModalidades:
-        return buildRoute(const PaginaSelecionarModalidades(), settings: settings);
+        final argumentos = settings.arguments as PaginaSelecionarModalidadesArgumentos;
+        return buildRoute(PaginaSelecionarModalidades(argumentos: argumentos), settings: settings);
       case AppRotas.compras:
         return buildRoute(const PaginaCompras(), settings: settings);
       case AppRotas.ordemDeEntrada:

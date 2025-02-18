@@ -3,8 +3,15 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_cadastro.dart';
 
+class PaginaSelecionarModalidadesArgumentos {
+  final bool jaEstaCadastrado;
+
+  const PaginaSelecionarModalidadesArgumentos({required this.jaEstaCadastrado});
+}
+
 class PaginaSelecionarModalidades extends StatefulWidget {
-  const PaginaSelecionarModalidades({super.key});
+  final PaginaSelecionarModalidadesArgumentos argumentos;
+  const PaginaSelecionarModalidades({super.key, required this.argumentos});
 
   @override
   State<PaginaSelecionarModalidades> createState() => _PaginaSelecionarModalidadesState();
@@ -117,7 +124,7 @@ class _PaginaSelecionarModalidadesState extends State<PaginaSelecionarModalidade
                   Navigator.pushNamed(
                     context,
                     AppRotas.cadastro,
-                    arguments: PaginaCadastroArgumentos(modalidades: modalidadesSelecionadas),
+                    arguments: PaginaCadastroArgumentos(modalidades: modalidadesSelecionadas, jaEstaCadastrado: widget.argumentos.jaEstaCadastrado),
                   );
                 },
                 child: const Text('Ir para Cadastro', style: TextStyle(fontSize: 18)),

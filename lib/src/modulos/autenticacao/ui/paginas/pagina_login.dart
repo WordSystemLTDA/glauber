@@ -12,6 +12,7 @@ import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.da
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
@@ -325,7 +326,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                             onPressed: () {
                                               Navigator.of(contextDialog).pop();
                                               // Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades);
+                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades,
+                                                  arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
                                             },
                                           ),
                                           TextButton(
@@ -390,7 +392,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                 }
 
                                 // Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                                Navigator.pushNamed(context, AppRotas.selecionarModalidades);
+                                Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
                               },
                               title: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
