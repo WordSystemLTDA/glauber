@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -189,7 +190,21 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
   }
 
   @override
-  Future<(bool, String)> cadastrar(String nome, String apelido, String email, String senha, String celular, String cidade, String hcCabeceira, String hcPiseiro) async {
+  Future<(bool, String)> cadastrar(
+    String nome,
+    String apelido,
+    String email,
+    String senha,
+    String celular,
+    String cidade,
+    String hcCabeceira,
+    String hcPiseiro,
+    String tipodecategoriaprofissional,
+    String handicaplacoindividual,
+    String datanascimento,
+    String sexo,
+    List<ModeloModalidadesCadastro> modalidades,
+  ) async {
     var url = 'autenticacao/cadastrar.php';
 
     var campos = {
@@ -201,6 +216,11 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       "cidade": cidade,
       "hcCabeceira": hcCabeceira,
       "hcPiseiro": hcPiseiro,
+      'tipo_de_categoria_profissional': tipodecategoriaprofissional,
+      'handi_cap_laco_individual': handicaplacoindividual,
+      'data_nascimento': datanascimento,
+      'sexo': sexo,
+      'modalidades': modalidades.toList(),
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

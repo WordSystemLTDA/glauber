@@ -34,36 +34,54 @@ class _HandiCapsDialogState extends State<HandiCapsDialog> {
     var handiCapStore = context.read<HandiCapStore>();
 
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: SizedBox(
         height: 400,
-        child: ValueListenableBuilder<HandiCapEstado>(
-          valueListenable: handiCapStore,
-          builder: (context, state, _) {
-            if (state is HandiCapCarregando) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 10),
+              child: Text('Selecione um Handicap', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            ),
+            const Divider(),
+            Expanded(
+              child: ValueListenableBuilder<HandiCapEstado>(
+                valueListenable: handiCapStore,
+                builder: (context, state, _) {
+                  if (state is HandiCapCarregando) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-            if (state is HandiCapCarregado) {
-              return ListView.builder(
-                itemCount: state.handicaps.length,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                itemBuilder: (context, index) {
-                  var item = state.handicaps[index];
+                  if (state is HandiCapCarregado) {
+                    return ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return const Divider(height: 0.5, color: Color.fromARGB(255, 233, 233, 233));
+                      },
+                      shrinkWrap: true,
 
-                  return ListTile(
-                    onTap: () {
-                      widget.aoMudar(item, state.handicaps);
-                    },
-                    title: Text(item.nome),
-                  );
+                      itemCount: state.handicaps.length,
+                      // padding: const EdgeInsets.symmetric(vertical: 15),
+                      itemBuilder: (context, index) {
+                        var item = state.handicaps[index];
+
+                        return ListTile(
+                          onTap: () {
+                            widget.aoMudar(item, state.handicaps);
+                          },
+                          title: Text(item.nome),
+                        );
+                      },
+                    );
+                  }
+
+                  return const Text('Erro ao tentar Listar HandiCaps');
                 },
-              );
-            }
-
-            return const Text('Erro ao tentar Listar HandiCaps');
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );

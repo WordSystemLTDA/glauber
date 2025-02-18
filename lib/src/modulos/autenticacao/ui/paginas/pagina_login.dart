@@ -324,7 +324,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                             child: const Text('Não'),
                                             onPressed: () {
                                               Navigator.of(contextDialog).pop();
-                                              Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                                              // Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades);
                                             },
                                           ),
                                           TextButton(
@@ -388,7 +389,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                   return;
                                 }
 
-                                Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                                // Navigator.pushNamed(context, '/autenticacao/cadastrar');
+                                Navigator.pushNamed(context, AppRotas.selecionarModalidades);
                               },
                               title: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

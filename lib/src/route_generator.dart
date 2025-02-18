@@ -5,6 +5,7 @@ import 'package:provadelaco/src/modulos/animais/paginas/pagina_inserir_animais.d
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_login.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
 import 'package:provadelaco/src/modulos/buscar/ui/paginas/pagina_buscar.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_calendario.dart';
 import 'package:provadelaco/src/modulos/calendario/ui/paginas/pagina_ver_evento_calendario.dart';
@@ -28,7 +29,8 @@ class RouteGenerator {
       case AppRotas.login:
         return buildRoute(const PaginaLogin(), settings: settings);
       case AppRotas.cadastro:
-        return buildRoute(const PaginaCadastro(), settings: settings);
+        final argumentos = settings.arguments as PaginaCadastroArgumentos;
+        return buildRoute(PaginaCadastro(argumentos: argumentos), settings: settings);
       case AppRotas.home:
         return buildRoute(const PaginaHome(), settings: settings);
       case AppRotas.inicio:
@@ -43,6 +45,8 @@ class RouteGenerator {
         return buildRoute(const PaginaSplash(), settings: settings);
       case AppRotas.buscar:
         return buildRoute(const PaginaBuscar(), settings: settings);
+      case AppRotas.selecionarModalidades:
+        return buildRoute(const PaginaSelecionarModalidades(), settings: settings);
       case AppRotas.compras:
         return buildRoute(const PaginaCompras(), settings: settings);
       case AppRotas.ordemDeEntrada:

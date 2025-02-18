@@ -3,7 +3,6 @@ Fazer no Aplicativo
 - [ ] Movimentações duplicou (não permitir duplicar pelo id_mov)
 - [ ] Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
 - [ ] Caso laço em dupla, 3 tambores, laço individual for Pendente no cadastro do cliente, aparecer para selecionar a modalide na tela de home
-
 - [ ] Arrumar loading ao cancelar login do google
 - [ ] Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
 - [ ] Ao segurar o card da prova, aparecer a súmula em uma modal
@@ -11,10 +10,10 @@ Fazer no Aplicativo
 
 Cadastros de cliente
 
-- [ ] Ao cadastrar aparecer "Selecione as Modalidades que deseja competir" e fazer cards para selecionar as modalidades (Simular checkbox)
-- [ ] Laço em dupla (CADASTRO DO CLIENTE) - aparecer do jeito que tá
+- [X] Ao cadastrar aparecer "Selecione as Modalidades que deseja competir" e fazer cards para selecionar as modalidades (Simular checkbox)
+- [X] Laço em dupla (CADASTRO DO CLIENTE) - aparecer do jeito que tá
 - [ ] 3 Tambores (CADASTRO DO CLIENTE) - Data de Nascimento, Select de opção do profissional (sim ou não), Genêro/sexo (opcional, selecionar na tela de home depois caso pule)
-- [ ] Laço Individual (CADASTRO DO CLIENTE) - Handicap laço individual (1, 2, 3, 4)
+- [X] Laço Individual (CADASTRO DO CLIENTE) - Handicap laço individual (1, 2, 3, 4)
 
 Cadastro de prova
 

@@ -1,17 +1,26 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
 import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
 import 'package:provider/provider.dart';
 
+class PaginaCadastroArgumentos {
+  final List<ModeloModalidadesCadastro> modalidades;
+
+  const PaginaCadastroArgumentos({required this.modalidades});
+}
+
 class PaginaCadastro extends StatefulWidget {
-  const PaginaCadastro({super.key});
+  final PaginaCadastroArgumentos argumentos;
+  const PaginaCadastro({super.key, required this.argumentos});
 
   @override
   State<PaginaCadastro> createState() => _PaginaCadastroState();
@@ -23,15 +32,19 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   final _emailController = TextEditingController();
   final _hcCabeceiraController = TextEditingController();
   final _hcPiseiroController = TextEditingController();
+  final _hcLacoIndividualController = TextEditingController();
   final _senhaController = TextEditingController();
   final _confirmarSenhaController = TextEditingController();
-  final TextEditingController celularController = TextEditingController();
-
-  TextEditingController cidadeController = TextEditingController(text: 'Sem cidade');
-  SearchController pesquisaCidadeController = SearchController();
+  final _dataNascimentoController = TextEditingController();
+  final _celularController = TextEditingController();
+  final _cidadeController = TextEditingController(text: 'Sem cidade');
+  final _pesquisaCidadeController = SearchController();
 
   String idHcCabeceira = '0';
   String idHcPiseiro = '0';
+  String idHcLacoIndividual = '0';
+  String profissional = '';
+  String genero = '';
   String idCidade = '';
 
   bool ocultarSenha = true;
@@ -47,7 +60,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (state is Cadastrado) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(context, AppRotas.login, (Route<dynamic> route) => false);
           }
         });
       } else if (state is ErroAoCadastrar) {
@@ -76,6 +89,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     _hcPiseiroController.dispose();
     _senhaController.dispose();
     _confirmarSenhaController.dispose();
+    _dataNascimentoController.dispose();
+    _celularController.dispose();
+    _cidadeController.dispose();
+    _pesquisaCidadeController.dispose();
     super.dispose();
   }
 
@@ -87,7 +104,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     String email = _emailController.text;
     String senha = _senhaController.text;
     String confirmar = _confirmarSenhaController.text;
-    String celular = celularController.text;
+    String celular = _celularController.text;
     String cidade = idCidade;
     String hcCabeceira = idHcCabeceira;
     String hcPiseiro = idHcPiseiro;
@@ -98,7 +115,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         backgroundColor: Colors.red,
         content: Center(child: Text('Preencha todos os campos!')),
       ));
-    } else if ((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) {
+    } else if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) &&
+        widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         showCloseIcon: true,
         backgroundColor: Colors.red,
@@ -112,7 +130,24 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
           content: Center(child: Text('Campos de senha precisam ser iguais!')),
         ));
       } else {
-        autenticacaoStore.cadastrar(nome.trimLeft().trimRight(), apelido.trimLeft().trimRight(), email.trimLeft().trimRight(), senha, celular, cidade, hcCabeceira, hcPiseiro);
+        var dataNascimentoF = _dataNascimentoController.text.split('/');
+        var dataNascimento = "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
+
+        autenticacaoStore.cadastrar(
+          nome: nome.trimLeft().trimRight(),
+          apelido: apelido.trimLeft().trimRight(),
+          email: email.trimLeft().trimRight(),
+          senha: senha,
+          celular: celular,
+          cidade: cidade,
+          hcCabeceira: hcCabeceira,
+          hcPiseiro: hcPiseiro,
+          datanascimento: dataNascimento,
+          handicaplacoindividual: idHcLacoIndividual,
+          modalidades: widget.argumentos.modalidades,
+          sexo: genero,
+          tipodecategoriaprofissional: profissional,
+        );
       }
     }
   }
@@ -134,9 +169,18 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
               titulo: Text("Cadastre-se"),
             ),
             body: Padding(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(20),
               child: ListView(
                 children: [
+                  Wrap(
+                    children: [
+                      const Text("Suas Modalidades: ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      Text("${widget.argumentos.modalidades.map((e) => e.nome.toString())}", style: const TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                  const Divider(height: 30),
+                  Text('Dados Gerais', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 15),
                   const Text('Nome completo'),
                   const SizedBox(height: 5),
                   TextField(
@@ -162,7 +206,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                   const Text('Celular'),
                   const SizedBox(height: 5),
                   TextField(
-                    controller: celularController,
+                    controller: _celularController,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                       TelefoneInputFormatter(),
@@ -188,13 +232,13 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       );
                     },
                     isFullScreen: true,
-                    searchController: pesquisaCidadeController,
+                    searchController: _pesquisaCidadeController,
                     builder: (BuildContext context, SearchController controller) {
                       return TextField(
                         onTap: () {
-                          pesquisaCidadeController.openView();
+                          _pesquisaCidadeController.openView();
                         },
-                        controller: cidadeController,
+                        controller: _cidadeController,
                         readOnly: true,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
@@ -212,7 +256,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                             controller.closeView('');
                             setState(() {
                               idCidade = cidade.id;
-                              cidadeController.text = cidade.nome;
+                              _cidadeController.text = cidade.nome;
                             });
                             FocusScope.of(context).unfocus();
                           },
@@ -293,70 +337,180 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  const Text('HandiCap Cabeça'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    readOnly: true,
-                    keyboardType: TextInputType.number,
-                    controller: _hcCabeceiraController,
-                    decoration: const InputDecoration(
-                      hintText: "Seu HandiCap",
-                      border: OutlineInputBorder(),
+                  if (widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) ...[
+                    const Divider(height: 30),
+                    Text('Laço em Dupla', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 15),
+                    const Text('HandiCap Cabeça*'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      readOnly: true,
+                      keyboardType: TextInputType.number,
+                      controller: _hcCabeceiraController,
+                      decoration: const InputDecoration(
+                        hintText: "Seu HandiCap",
+                        border: OutlineInputBorder(),
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return HandiCapsDialog(
+                              aoMudar: (itemHC, handicaps) {
+                                setState(() {
+                                  if (int.parse(idHcPiseiro) == 3 && double.parse(itemHC.id) < 3) {
+                                    _hcCabeceiraController.text = handicaps.where((element) => element.id == '3').first.nome;
+                                    idHcCabeceira = '3';
+                                  } else {
+                                    _hcCabeceiraController.text = itemHC.nome;
+                                    idHcCabeceira = itemHC.id;
+                                  }
+                                });
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
+                      },
                     ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return HandiCapsDialog(
-                            aoMudar: (itemHC, handicaps) {
-                              setState(() {
-                                if (int.parse(idHcPiseiro) == 3 && double.parse(itemHC.id) < 3) {
-                                  _hcCabeceiraController.text = handicaps.where((element) => element.id == '3').first.nome;
-                                  idHcCabeceira = '3';
-                                } else {
-                                  _hcCabeceiraController.text = itemHC.nome;
-                                  idHcCabeceira = itemHC.id;
-                                }
-                              });
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  const Text('HandiCap Pé'),
-                  const SizedBox(height: 5),
-                  TextField(
-                    readOnly: true,
-                    controller: _hcPiseiroController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu HandiCap'),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return HandiCapsDialog(
-                            aoMudar: (itemHC, handicaps) {
-                              setState(() {
-                                if (int.parse(idHcCabeceira) == 3 && double.parse(itemHC.id) < 3) {
-                                  _hcPiseiroController.text = handicaps.where((element) => element.id == '3').first.nome;
-                                  idHcPiseiro = '3';
-                                } else {
-                                  _hcPiseiroController.text = itemHC.nome;
-                                  idHcPiseiro = itemHC.id;
-                                }
-                              });
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 10),
+                    const Text('HandiCap Pé*'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      readOnly: true,
+                      controller: _hcPiseiroController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu HandiCap'),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return HandiCapsDialog(
+                              aoMudar: (itemHC, handicaps) {
+                                setState(() {
+                                  if (int.parse(idHcCabeceira) == 3 && double.parse(itemHC.id) < 3) {
+                                    _hcPiseiroController.text = handicaps.where((element) => element.id == '3').first.nome;
+                                    idHcPiseiro = '3';
+                                  } else {
+                                    _hcPiseiroController.text = itemHC.nome;
+                                    idHcPiseiro = itemHC.id;
+                                  }
+                                });
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                  if (widget.argumentos.modalidades.where((element) => element.id == '2').isNotEmpty) ...[
+                    const Divider(height: 30),
+                    Text('Laço Individual', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 15),
+                    const Text('HandiCap*'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      readOnly: true,
+                      controller: _hcLacoIndividualController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Seu HandiCap'),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return HandiCapsDialog(
+                              aoMudar: (itemHC, handicaps) {
+                                setState(() {
+                                  if (int.parse(idHcCabeceira) == 3 && double.parse(itemHC.id) < 3) {
+                                    _hcLacoIndividualController.text = handicaps.where((element) => element.id == '3').first.nome;
+                                    idHcLacoIndividual = '3';
+                                  } else {
+                                    _hcLacoIndividualController.text = itemHC.nome;
+                                    idHcLacoIndividual = itemHC.id;
+                                  }
+                                });
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                  if (widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty) ...[
+                    const Divider(height: 30),
+                    Text('3 Tambores', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 15),
+                    const Text('Data de Nascimento*'),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: _dataNascimentoController,
+                      keyboardType: TextInputType.text,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        DataInputFormatter(),
+                      ],
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Data de Nascimento'),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Profissional*'),
+                              const SizedBox(height: 5),
+                              DropdownMenu(
+                                expandedInsets: EdgeInsets.zero,
+                                initialSelection: 'Não',
+                                hintText: 'Você é Profissinal',
+                                onSelected: (opcao) {
+                                  if (opcao == null) return;
+
+                                  setState(() {
+                                    profissional = opcao;
+                                  });
+                                },
+                                dropdownMenuEntries: const [
+                                  DropdownMenuEntry(value: 'Não', label: 'Não'),
+                                  DropdownMenuEntry(value: 'Sim', label: 'Sim'),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Gênero'),
+                              const SizedBox(height: 5),
+                              DropdownMenu(
+                                expandedInsets: EdgeInsets.zero,
+                                initialSelection: '',
+                                hintText: 'Seu gênero',
+                                onSelected: (opcao) {
+                                  if (opcao == null) return;
+
+                                  setState(() {
+                                    genero = opcao;
+                                  });
+                                },
+                                dropdownMenuEntries: const [
+                                  DropdownMenuEntry(value: 'Masculino', label: 'Masculino'),
+                                  DropdownMenuEntry(value: 'Feminino', label: 'Feminino'),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  const SizedBox(height: 25),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

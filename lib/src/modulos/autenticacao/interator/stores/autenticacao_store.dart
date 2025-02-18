@@ -6,6 +6,7 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -102,10 +103,40 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     });
   }
 
-  void cadastrar(nome, apelido, email, senha, celular, cidade, hcCabeceira, hcPiseiro) async {
+  void cadastrar({
+    required String nome,
+    required String apelido,
+    required String email,
+    required String senha,
+    required String celular,
+    required String cidade,
+    required String hcCabeceira,
+    required String hcPiseiro,
+    required String tipodecategoriaprofissional,
+    required String handicaplacoindividual,
+    required String datanascimento,
+    required String sexo,
+    required List<ModeloModalidadesCadastro> modalidades,
+  }) async {
     value = Cadastrando();
 
-    _autenticacaoServico.cadastrar(nome, apelido, email, senha, celular, cidade, hcCabeceira, hcPiseiro).then((resposta) {
+    _autenticacaoServico
+        .cadastrar(
+      nome,
+      apelido,
+      email,
+      senha,
+      celular,
+      cidade,
+      hcCabeceira,
+      hcPiseiro,
+      tipodecategoriaprofissional,
+      handicaplacoindividual,
+      datanascimento,
+      sexo,
+      modalidades,
+    )
+        .then((resposta) {
       var (sucesso, mensagem) = resposta;
 
       if (sucesso) {

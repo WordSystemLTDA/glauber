@@ -4,6 +4,7 @@ class AppRotas {
   static const splash = '/';
   static const inicio = '/inicio';
   static const login = '/autenticacao/login';
+  static const selecionarModalidades = '/autenticacao/selecionar_modalides';
   static const cadastro = '/autenticacao/cadastrar';
   static const preencherInformacoes = '/autenticacao/preencherInformacoes';
   static const home = '/home';
