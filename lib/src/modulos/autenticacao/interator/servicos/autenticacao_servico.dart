@@ -9,6 +9,7 @@ abstract interface class AutenticacaoServico {
   Future<(bool, String)> sair(UsuarioModelo? usuario, String? tokenNotificacao);
   Future<(bool, String)> excluirConta(UsuarioModelo? usuario, String? tokenNotificacao);
   Future<(bool, String)> cadastrar(
+    String? idcliente,
     String nome,
     String apelido,
     String email,
@@ -22,5 +23,6 @@ abstract interface class AutenticacaoServico {
     String datanascimento,
     String sexo,
     List<ModeloModalidadesCadastro> modalidades,
+    bool jaEstaCadastrado,
   );
 }

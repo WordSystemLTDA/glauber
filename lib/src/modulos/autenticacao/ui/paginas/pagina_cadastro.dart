@@ -5,6 +5,7 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/compartilhado/widgets/handicaps_dialog.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
@@ -59,7 +60,22 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     var usuarioProvider = context.read<UsuarioProvider>();
 
     if (widget.argumentos.jaEstaCadastrado == true) {
-      // TODO: fazer
+      if (usuarioProvider.usuario != null) {
+        var nascimentoF = usuarioProvider.usuario?.dataNascimento?.split('-');
+        var nascimento = nascimentoF == null ? '' : "${nascimentoF[2]}/${nascimentoF[1]}/${nascimentoF[0]}";
+
+        _dataNascimentoController.text = nascimento;
+        profissional = usuarioProvider.usuario?.tipodecategoriaprofissional ?? '';
+        genero = usuarioProvider.usuario?.sexo ?? '';
+
+        idHcCabeceira = usuarioProvider.usuario?.idHcCabeceira ?? '';
+        _hcCabeceiraController.text = usuarioProvider.usuario?.hcCabeceira ?? '';
+        idHcPiseiro = usuarioProvider.usuario?.idHcPezeiro ?? '';
+        _hcPiseiroController.text = usuarioProvider.usuario?.hcPezeiro ?? '';
+
+        _hcLacoIndividualController.text = usuarioProvider.usuario?.handicaplacoindividual ?? '';
+        idHcLacoIndividual = usuarioProvider.usuario?.idhandicaplacoindividual ?? '';
+      }
     }
 
     autenticacaoStore.addListener(() {
@@ -67,7 +83,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (state is Cadastrado) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            Navigator.pushNamedAndRemoveUntil(context, AppRotas.login, (Route<dynamic> route) => false);
+            if (widget.argumentos.jaEstaCadastrado) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, AppRotas.login, (Route<dynamic> route) => false);
+            }
           }
         });
       } else if (state is ErroAoCadastrar) {
@@ -104,6 +125,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   }
 
   void cadastrar() {
+    var usuarioProvider = context.read<UsuarioProvider>();
     var autenticacaoStore = context.read<AutenticacaoStore>();
 
     String nome = _nomeController.text;
@@ -116,46 +138,118 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     String hcCabeceira = idHcCabeceira;
     String hcPiseiro = idHcPiseiro;
 
-    if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        showCloseIcon: true,
-        backgroundColor: Colors.red,
-        content: Center(child: Text('Preencha todos os campos!')),
-      ));
-    } else if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) &&
-        widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        showCloseIcon: true,
-        backgroundColor: Colors.red,
-        content: Center(child: Text('Você precisa preencher todos os handicaps.')),
-      ));
-    } else {
+    // 3 Tambores
+    if (widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty) {
+      if (_dataNascimentoController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Data de Nascimento é Obrigatório!')),
+        ));
+        return;
+      }
+
+      if (_dataNascimentoController.text.isNotEmpty && _dataNascimentoController.text.length < 10) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Data de Nascimento inválida!')),
+        ));
+        return;
+      }
+
+      if (profissional.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Você precisa selecionar se é profissional ou não!')),
+        ));
+        return;
+      }
+    }
+
+    // Laço Individual
+    if (widget.argumentos.modalidades.where((element) => element.id == '2').isNotEmpty) {
+      if (_hcLacoIndividualController.text.isEmpty || idHcLacoIndividual == '0') {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Você precisa selecionar um HandiCap em Laço Individual!')),
+        ));
+        return;
+      }
+    }
+
+    // Laço em Dupla
+    if (widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
+      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) &&
+          widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Você precisa preencher todos os handicaps.')),
+        ));
+        return;
+      }
+    }
+
+    if (widget.argumentos.jaEstaCadastrado == false) {
+      if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+          content: Center(child: Text('Preencha todos os campos!')),
+        ));
+        return;
+      }
+
       if (senha != confirmar) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
           backgroundColor: Colors.red,
           content: Center(child: Text('Campos de senha precisam ser iguais!')),
         ));
-      } else {
-        var dataNascimentoF = _dataNascimentoController.text.split('/');
-        var dataNascimento = "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
-
-        autenticacaoStore.cadastrar(
-          nome: nome.trimLeft().trimRight(),
-          apelido: apelido.trimLeft().trimRight(),
-          email: email.trimLeft().trimRight(),
-          senha: senha,
-          celular: celular,
-          cidade: cidade,
-          hcCabeceira: hcCabeceira,
-          hcPiseiro: hcPiseiro,
-          datanascimento: dataNascimento,
-          handicaplacoindividual: idHcLacoIndividual,
-          modalidades: widget.argumentos.modalidades,
-          sexo: genero,
-          tipodecategoriaprofissional: profissional,
-        );
+        return;
       }
+    }
+
+    var dataNascimentoF = _dataNascimentoController.text.split('/');
+    var dataNascimento = "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
+
+    autenticacaoStore.cadastrar(
+      idcliente: widget.argumentos.jaEstaCadastrado ? usuarioProvider.usuario?.id : '0',
+      nome: nome.trimLeft().trimRight(),
+      apelido: apelido.trimLeft().trimRight(),
+      email: email.trimLeft().trimRight(),
+      senha: senha,
+      celular: celular,
+      cidade: cidade,
+      hcCabeceira: hcCabeceira,
+      hcPiseiro: hcPiseiro,
+      datanascimento: widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? dataNascimento : '0000-00-00',
+      handicaplacoindividual: idHcLacoIndividual,
+      modalidades: widget.argumentos.modalidades,
+      sexo: genero,
+      tipodecategoriaprofissional: profissional,
+      jaEstaCadastrado: widget.argumentos.jaEstaCadastrado,
+    );
+
+    if (widget.argumentos.jaEstaCadastrado) {
+      usuarioProvider.setUsuario(UsuarioModelo.fromMap({
+        ...usuarioProvider.usuario!.toMap(),
+        'dataNascimento': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? dataNascimento : '0000-00-00',
+        'hcCabeceira': _hcCabeceiraController.text,
+        'hcPezeiro': _hcPiseiroController.text,
+        'idHcCabeceira': hcCabeceira,
+        'idHcPezeiro': hcPiseiro,
+        'idhandicaplacoindividual': idHcLacoIndividual,
+        'handicaplacoindividual': _hcLacoIndividualController.text,
+        'sexo': genero,
+        'tipodecategoriaprofissional': profissional,
+        'lacoemdupla': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? 'Sim' : 'Não',
+        'tambores3': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? 'Sim' : 'Não',
+        'lacoindividual': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? 'Sim' : 'Não',
+      }));
     }
   }
 
@@ -429,15 +523,11 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                           context: context,
                           builder: (context) {
                             return HandiCapsDialog(
+                              mostrarSomente: [1.00, 2.00, 3.00, 4.00],
                               aoMudar: (itemHC, handicaps) {
                                 setState(() {
-                                  if (int.parse(idHcCabeceira) == 3 && double.parse(itemHC.id) < 3) {
-                                    _hcLacoIndividualController.text = handicaps.where((element) => element.id == '3').first.nome;
-                                    idHcLacoIndividual = '3';
-                                  } else {
-                                    _hcLacoIndividualController.text = itemHC.nome;
-                                    idHcLacoIndividual = itemHC.id;
-                                  }
+                                  _hcLacoIndividualController.text = itemHC.nome;
+                                  idHcLacoIndividual = itemHC.id;
                                 });
                                 Navigator.pop(context);
                               },
@@ -460,7 +550,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                         FilteringTextInputFormatter.digitsOnly,
                         DataInputFormatter(),
                       ],
-                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Data de Nascimento'),
+                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: '31/12/2024'),
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -473,7 +563,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                               const SizedBox(height: 5),
                               DropdownMenu(
                                 expandedInsets: EdgeInsets.zero,
-                                initialSelection: 'Não',
+                                initialSelection: '',
                                 hintText: 'Você é Profissinal',
                                 onSelected: (opcao) {
                                   if (opcao == null) return;
@@ -495,12 +585,12 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Gênero'),
+                              const Text('Sexo'),
                               const SizedBox(height: 5),
                               DropdownMenu(
                                 expandedInsets: EdgeInsets.zero,
                                 initialSelection: '',
-                                hintText: 'Seu gênero',
+                                hintText: 'Seu sexo',
                                 onSelected: (opcao) {
                                   if (opcao == null) return;
 
@@ -524,13 +614,13 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(Colors.red),
+                        backgroundColor: WidgetStatePropertyAll(Colors.green),
                         foregroundColor: WidgetStatePropertyAll(Colors.white),
                       ),
                       onPressed: () {
                         cadastrar();
                       },
-                      child: state is Cadastrando ? const CircularProgressIndicator() : const Text('Cadastrar-se'),
+                      child: state is Cadastrando ? const CircularProgressIndicator() : Text(widget.argumentos.jaEstaCadastrado ? 'Salvar' : 'Cadastrar-se'),
                     ),
                   )
                 ],

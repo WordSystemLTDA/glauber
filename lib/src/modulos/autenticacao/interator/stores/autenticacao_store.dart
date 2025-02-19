@@ -19,46 +19,50 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
   void entrar(BuildContext context, String email, String senha, TiposLogin tiposLogin, String? tokenNotificacao) async {
     value = Carregando();
 
-    if (tiposLogin == TiposLogin.email) {
-      await _autenticacaoServico.entrar(email, senha, tiposLogin, null, tokenNotificacao).then((resposta) {
-        var (sucesso, mensagem, usuarioRetorno) = resposta;
-
-        if (sucesso) {
-          UsuarioServico.salvarUsuario(context, usuarioRetorno!);
-          value = Autenticado();
-        } else {
-          value = AutenticacaoErro(erro: Exception(mensagem));
-        }
-      }).onError((error, stackTrace) {
-        value = AutenticacaoErro(erro: Exception(error));
-      });
-    } else {
-      await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
-        if (usuario == null) {
-          return;
-        }
-
-        await _autenticacaoServico.entrar(email, senha, tiposLogin, usuario, tokenNotificacao).then((resposta) {
-          var (sucesso, _, usuarioRetorno) = resposta;
+    try {
+      if (tiposLogin == TiposLogin.email) {
+        await _autenticacaoServico.entrar(email, senha, tiposLogin, null, tokenNotificacao).then((resposta) {
+          var (sucesso, mensagem, usuarioRetorno) = resposta;
 
           if (sucesso) {
             UsuarioServico.salvarUsuario(context, usuarioRetorno!);
             value = Autenticado();
           } else {
-            value = AutenticacaoErro(erro: Exception('Preencha as informações acima.'));
-
-            Navigator.pushNamed(
-              context,
-              AppRotas.preencherInformacoes,
-              arguments: PaginaPreencherInformacoesArgumentos(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin),
-            );
+            value = AutenticacaoErro(erro: Exception(mensagem));
           }
         }).onError((error, stackTrace) {
           value = AutenticacaoErro(erro: Exception(error));
         });
-      }).onError((error, stackTrace) {
-        value = AutenticacaoErro(erro: Exception(error));
-      });
+      } else {
+        await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
+          if (usuario == null) {
+            return;
+          }
+
+          await _autenticacaoServico.entrar(email, senha, tiposLogin, usuario, tokenNotificacao).then((resposta) {
+            var (sucesso, _, usuarioRetorno) = resposta;
+
+            if (sucesso) {
+              UsuarioServico.salvarUsuario(context, usuarioRetorno!);
+              value = Autenticado();
+            } else {
+              value = AutenticacaoErro(erro: Exception('Preencha as informações acima.'));
+
+              Navigator.pushNamed(
+                context,
+                AppRotas.preencherInformacoes,
+                arguments: PaginaPreencherInformacoesArgumentos(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin),
+              );
+            }
+          }).onError((error, stackTrace) {
+            value = AutenticacaoErro(erro: Exception(error));
+          });
+        }).onError((error, stackTrace) {
+          value = AutenticacaoErro(erro: Exception(error));
+        });
+      }
+    } catch (e) {
+      value = AutenticacaoErro(erro: Exception(e));
     }
   }
 
@@ -104,6 +108,7 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
   }
 
   void cadastrar({
+    String? idcliente,
     required String nome,
     required String apelido,
     required String email,
@@ -117,11 +122,13 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
     required String datanascimento,
     required String sexo,
     required List<ModeloModalidadesCadastro> modalidades,
+    required bool jaEstaCadastrado,
   }) async {
     value = Cadastrando();
 
     _autenticacaoServico
         .cadastrar(
+      idcliente,
       nome,
       apelido,
       email,
@@ -135,6 +142,7 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
       datanascimento,
       sexo,
       modalidades,
+      jaEstaCadastrado,
     )
         .then((resposta) {
       var (sucesso, mensagem) = resposta;

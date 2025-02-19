@@ -5,9 +5,10 @@ import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_s
 import 'package:provider/provider.dart';
 
 class HandiCapsDialog extends StatefulWidget {
+  final List<double> mostrarSomente;
   final Function(HandiCapsModelos itemHC, List<HandiCapsModelos> handicaps) aoMudar;
 
-  const HandiCapsDialog({super.key, required this.aoMudar});
+  const HandiCapsDialog({super.key, this.mostrarSomente = const [], required this.aoMudar});
 
   @override
   State<HandiCapsDialog> createState() => _HandiCapsDialogState();
@@ -61,11 +62,14 @@ class _HandiCapsDialogState extends State<HandiCapsDialog> {
                         return const Divider(height: 0.5, color: Color.fromARGB(255, 233, 233, 233));
                       },
                       shrinkWrap: true,
-
-                      itemCount: state.handicaps.length,
+                      itemCount: widget.mostrarSomente.isEmpty
+                          ? state.handicaps.length
+                          : state.handicaps.where((element) => widget.mostrarSomente.contains(double.parse(element.valor))).toList().length,
                       // padding: const EdgeInsets.symmetric(vertical: 15),
                       itemBuilder: (context, index) {
-                        var item = state.handicaps[index];
+                        var item = widget.mostrarSomente.isEmpty
+                            ? state.handicaps[index]
+                            : state.handicaps.where((element) => widget.mostrarSomente.contains(double.parse(element.valor))).toList()[index];
 
                         return ListTile(
                           onTap: () {

@@ -390,7 +390,6 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
                                   return;
                                 }
-
                                 // Navigator.pushNamed(context, '/autenticacao/cadastrar');
                                 Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
                               },

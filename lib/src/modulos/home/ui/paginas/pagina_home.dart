@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
@@ -40,6 +43,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
               length: state.categorias.length,
               vsync: this,
             );
+            verificarModalidadesUsuario();
           }
 
           if (_categoriaController != null) {
@@ -47,6 +51,18 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
           }
         }
       });
+    });
+  }
+
+  void verificarModalidadesUsuario() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var usuario = context.read<UsuarioProvider>().usuario;
+
+      if (usuario == null) return;
+
+      if (usuario.tambores3 == 'Pendente' || usuario.lacoemdupla == 'Pendente' || usuario.lacoindividual == 'Pendente') {
+        Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: true));
+      }
     });
   }
 
@@ -113,7 +129,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                       ),
                     ),
                   ],
-                  if (_categoriaController != null) ...[
+                  if (_categoriaController != null && _categoriaController?.length == categorias.length) ...[
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
@@ -165,7 +181,6 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                       ),
                     ),
                   ],
-
                   // Carrosel de Propagandas
                   const SizedBox(height: 10),
                   if (propagandas.isNotEmpty) ...[

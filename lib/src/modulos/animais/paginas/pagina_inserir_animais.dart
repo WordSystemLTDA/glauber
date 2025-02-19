@@ -1,14 +1,12 @@
 import 'dart:io';
 
 // import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/modulos/animais/servicos/servico_animais.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInserirAnimais extends StatefulWidget {
@@ -21,15 +19,11 @@ class PaginaInserirAnimais extends StatefulWidget {
 class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
   bool souPropietario = true;
 
-  SearchController pesquisaCidadeController = SearchController();
-
-  TextEditingController cidadeController = TextEditingController();
   TextEditingController sexoController = TextEditingController();
   TextEditingController racaDoAnimalController = TextEditingController();
   TextEditingController nomeController = TextEditingController();
   TextEditingController dataNascimentoController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString());
 
-  String idCidade = '';
   String sexo = 'Macho';
 
   var escolhendoArquivo = ValueNotifier(false);
@@ -38,27 +32,25 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
   var fotoSelecionadaEdicaoUrl = '';
 
   void aoClicarParaSelecionarFoto() async {
-    // if (mounted) {
-    //   escolhendoArquivo.value = true;
+    if (mounted) {
+      escolhendoArquivo.value = true;
 
-    //   FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
 
-    //   if (result != null) {
-    //     File file = File(result.files.single.path!);
+      if (result != null) {
+        File file = File(result.files.single.path!);
 
-    //     fotoSelecionada.value = file;
-    //     escolhendoArquivo.value = false;
-    //   } else {
-    //     escolhendoArquivo.value = false;
-    //   }
-    // }
+        fotoSelecionada.value = file;
+        escolhendoArquivo.value = false;
+      } else {
+        escolhendoArquivo.value = false;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
-
-    var cidadeServico = context.read<CidadeServico>();
 
     return Scaffold(
       appBar: const AppBarSombra(titulo: Text('Inserir')),
@@ -98,24 +90,62 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
               height: 50,
               child: FloatingActionButton.extended(
                 onPressed: () {
+                  if (salvando.value) return;
+
                   salvando.value = true;
+
+                  if (nomeController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Nome do animal é obrigatório.'),
+                    ));
+                    return;
+                  }
+
+                  if (dataNascimentoController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Data de Nascimento é obrigatório.'),
+                    ));
+                    return;
+                  }
+
+                  if (sexo.isEmpty) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Sexo é obrigatório.'),
+                    ));
+                    return;
+                  }
+
+                  if (racaDoAnimalController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Raça do Animal é obrigatório.'),
+                    ));
+                    return;
+                  }
 
                   context
                       .read<ServicoAnimais>()
                       .inserir(
-                        nomeController.text,
-                        Utils.trocarFormatacaoData(dataNascimentoController.text),
-                        sexo,
-                        racaDoAnimalController.text,
-                        idCidade,
-                        '',
-                        souPropietario ? '0' : '1',
+                        nome: nomeController.text,
+                        dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
+                        sexo: sexo,
+                        raca: racaDoAnimalController.text,
+                        foto: '',
+                        idProprietario: souPropietario ? '0' : '1',
                       )
                       .then((value) {
-                    if (value.$1) {
+                    if (value.sucesso) {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
                     } else {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.$2)));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(value.mensagem),
+                        ));
                       }
                     }
 
@@ -220,68 +250,6 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
               TextField(
                 controller: racaDoAnimalController,
                 decoration: const InputDecoration(hintText: 'Raça do Animal'),
-              ),
-              const SizedBox(height: 10),
-              const Text('Cidade'),
-              const SizedBox(height: 5),
-              SearchAnchor(
-                viewBuilder: (suggestions) {
-                  return ListView.builder(
-                    itemCount: suggestions.length,
-                    padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                    itemBuilder: (context, index) {
-                      var item = suggestions.elementAt(index);
-
-                      return item;
-                    },
-                  );
-                },
-                isFullScreen: true,
-                searchController: pesquisaCidadeController,
-                builder: (BuildContext context, SearchController controller) {
-                  return TextField(
-                    controller: cidadeController,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Selecione uma cidade',
-                    ),
-                    onTap: () {
-                      pesquisaCidadeController.openView();
-                    },
-                  );
-                },
-                suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                  final keyword = controller.value.text;
-
-                  List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
-
-                  Iterable<Widget> widgets = cidades!.map((cidade) {
-                    return GestureDetector(
-                      onTap: () {
-                        controller.closeView('');
-                        setState(() {
-                          idCidade = cidade.id;
-                          cidadeController.text = cidade.nome;
-                        });
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: Card(
-                        elevation: 3.0,
-                        child: ListTile(
-                          leading: const Icon(Icons.copy_all_outlined),
-                          title: Text(cidade.nome),
-                          subtitle: Text(
-                            cidade.nomeUf,
-                            style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-
-                  return widgets;
-                },
               ),
               const SizedBox(height: 10),
               const Text('Foto'),

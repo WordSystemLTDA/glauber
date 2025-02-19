@@ -29,15 +29,14 @@ class ServicoAnimais {
     }
   }
 
-  Future<(bool, String)> inserir(
-    String nome,
-    String dataNascimento,
-    String sexo,
-    String raca,
-    String cidade,
-    String foto,
-    String idProprietario,
-  ) async {
+  Future<({bool sucesso, String mensagem})> inserir({
+    required String nome,
+    required String dataNascimento,
+    required String sexo,
+    required String raca,
+    required String foto,
+    required String idProprietario,
+  }) async {
     var idCliente = usuarioProvedor.usuario!.id!;
 
     var url = 'animais/inserir.php';
@@ -47,7 +46,6 @@ class ServicoAnimais {
       'data_nasci_animal': dataNascimento,
       'sexo': sexo,
       'raca_do_animal': raca,
-      'id_cidade': cidade,
       'foto': foto,
       'id_usuario_lanc': idCliente,
       'id_proprietario': idProprietario == '0' ? idCliente : idProprietario,
@@ -59,6 +57,6 @@ class ServicoAnimais {
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];
 
-    return (sucesso, mensagem);
+    return (sucesso: sucesso, mensagem: mensagem);
   }
 }

@@ -191,6 +191,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
 
   @override
   Future<(bool, String)> cadastrar(
+    String? idcliente,
     String nome,
     String apelido,
     String email,
@@ -204,10 +205,12 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
     String datanascimento,
     String sexo,
     List<ModeloModalidadesCadastro> modalidades,
+    bool jaEstaCadastrado,
   ) async {
     var url = 'autenticacao/cadastrar.php';
 
     var campos = {
+      "id_cliente": idcliente ?? '0',
       "nome": nome,
       "apelido": apelido,
       "email": email,
@@ -221,6 +224,7 @@ class AutenticacaoServicoImpl implements AutenticacaoServico {
       'data_nascimento': datanascimento,
       'sexo': sexo,
       'modalidades': modalidades.toList(),
+      'jaEstaCadastrado': jaEstaCadastrado,
     };
 
     var response = await client.post(url: url, body: jsonEncode(campos));

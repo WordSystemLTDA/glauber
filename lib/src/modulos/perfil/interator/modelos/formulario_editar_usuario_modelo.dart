@@ -24,6 +24,11 @@ class FormularioEditarUsuarioModelo {
   final String hcPezeiro;
   final String tipoDePix;
   final String chavePix;
+  final String lacoemdupla;
+  final String tambores3;
+  final String lacoindividual;
+  final String tipodecategoriaprofissional;
+  final String handicaplacoindividual;
 
   FormularioEditarUsuarioModelo({
     required this.id,
@@ -48,6 +53,11 @@ class FormularioEditarUsuarioModelo {
     required this.hcPezeiro,
     required this.tipoDePix,
     required this.chavePix,
+    required this.lacoemdupla,
+    required this.tambores3,
+    required this.lacoindividual,
+    required this.tipodecategoriaprofissional,
+    required this.handicaplacoindividual,
   });
 
   Map<String, dynamic> toMap() {
@@ -74,6 +84,11 @@ class FormularioEditarUsuarioModelo {
       'hcPezeiro': hcPezeiro,
       'tipoDePix': tipoDePix,
       'chavePix': chavePix,
+      'lacoemdupla': lacoemdupla,
+      'tambores3': tambores3,
+      'lacoindividual': lacoindividual,
+      'tipodecategoriaprofissional': tipodecategoriaprofissional,
+      'handicaplacoindividual': handicaplacoindividual,
     };
   }
 
@@ -101,6 +116,11 @@ class FormularioEditarUsuarioModelo {
       hcPezeiro: map['hcPezeiro'] as String,
       tipoDePix: map['tipoDePix'] as String,
       chavePix: map['chavePix'] as String,
+      lacoemdupla: map['lacoemdupla'] as String,
+      tambores3: map['tambores3'] as String,
+      lacoindividual: map['lacoindividual'] as String,
+      tipodecategoriaprofissional: map['tipodecategoriaprofissional'] as String,
+      handicaplacoindividual: map['handicaplacoindividual'] as String,
     );
   }
 

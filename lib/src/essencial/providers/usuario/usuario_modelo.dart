@@ -45,6 +45,7 @@ class UsuarioModelo {
   String? lacoindividual;
   String? tipodecategoriaprofissional;
   String? handicaplacoindividual;
+  String? idhandicaplacoindividual;
 
   UsuarioModelo({
     required this.id,
@@ -82,9 +83,15 @@ class UsuarioModelo {
     required this.somaDeHandicaps,
     required this.atualizacaoAndroid,
     required this.atualizacaoIos,
-    required this.ativoProva,
     required this.cabeceiroProvas,
     required this.pezeiroProvas,
+    required this.ativoProva,
+    this.lacoemdupla,
+    this.tambores3,
+    this.lacoindividual,
+    this.tipodecategoriaprofissional,
+    this.handicaplacoindividual,
+    this.idhandicaplacoindividual,
   });
 
   Map<String, dynamic> toMap() {
@@ -127,6 +134,12 @@ class UsuarioModelo {
       'cabeceiroProvas': cabeceiroProvas,
       'pezeiroProvas': pezeiroProvas,
       'ativoProva': ativoProva,
+      'lacoemdupla': lacoemdupla,
+      'tambores3': tambores3,
+      'lacoindividual': lacoindividual,
+      'tipodecategoriaprofissional': tipodecategoriaprofissional,
+      'handicaplacoindividual': handicaplacoindividual,
+      'idhandicaplacoindividual': idhandicaplacoindividual,
     };
   }
 
@@ -170,6 +183,12 @@ class UsuarioModelo {
       cabeceiroProvas: map['cabeceiroProvas'] != null ? map['cabeceiroProvas'] as String : null,
       pezeiroProvas: map['pezeiroProvas'] != null ? map['pezeiroProvas'] as String : null,
       ativoProva: map['ativoProva'] != null ? map['ativoProva'] as String : null,
+      lacoemdupla: map['lacoemdupla'] != null ? map['lacoemdupla'] as String : null,
+      tambores3: map['tambores3'] != null ? map['tambores3'] as String : null,
+      lacoindividual: map['lacoindividual'] != null ? map['lacoindividual'] as String : null,
+      tipodecategoriaprofissional: map['tipodecategoriaprofissional'] != null ? map['tipodecategoriaprofissional'] as String : null,
+      handicaplacoindividual: map['handicaplacoindividual'] != null ? map['handicaplacoindividual'] as String : null,
+      idhandicaplacoindividual: map['idhandicaplacoindividual'] != null ? map['idhandicaplacoindividual'] as String : null,
     );
   }
 
