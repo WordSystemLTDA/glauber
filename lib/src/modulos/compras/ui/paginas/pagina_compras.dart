@@ -188,10 +188,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                             ),
                           ),
                           const SizedBox(width: 5),
-                          const Text(
-                            'Lib. Reembolso',
-                            style: TextStyle(fontSize: 12),
-                          ),
+                          const Text('Lib. Reembolso', style: TextStyle(fontSize: 12)),
                         ],
                       ),
                       Row(
@@ -207,10 +204,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                             ),
                           ),
                           const SizedBox(width: 5),
-                          const Text(
-                            'Canc. / Reemb.',
-                            style: TextStyle(fontSize: 12),
-                          ),
+                          const Text('Canc. / Reemb.', style: TextStyle(fontSize: 12)),
                         ],
                       ),
                     ],
@@ -521,86 +515,108 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                       ),
                                                       ...item.compras.map((e) {
                                                         return Padding(
-                                                          padding: const EdgeInsets.only(left: 7, right: 7),
-                                                          child: CardCompras(
-                                                            item: e,
-                                                            comprasTransferencia: comprasTransferencia,
-                                                            aoClicarParaTransferir: (compra) {
-                                                              if (comprasTransferencia.contains(compra)) {
-                                                                setState(() {
-                                                                  comprasTransferencia.remove(compra);
-                                                                });
-                                                              } else {
-                                                                setState(() {
-                                                                  comprasTransferencia.add(compra);
-                                                                });
-                                                              }
-                                                            },
-                                                            modoTransferencia: modoTransferencia,
-                                                            aoClicarParaGerarPagamento: (compra) {
-                                                              if (compra.pago == 'Sim') {
-                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                  showCloseIcon: true,
-                                                                  content: Text(
-                                                                    'Você só pode selecionar inscrições que não foram pagas.',
+                                                          padding: EdgeInsets.only(left: 7, right: 7),
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              if ((item.compras.where((element) => element.idCabeceira == '1').firstOrNull?.id == e.id)) ...[
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+                                                                  child: Text(
+                                                                    item.compras.where((element) => element.idCabeceira == '1').firstOrNull?.nomeProva ?? '',
+                                                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                                                   ),
-                                                                ));
-                                                                return;
-                                                              }
-                                                              if ((compra.idFormaPagamento != '1' &&
-                                                                  compra.idFormaPagamento != '4' &&
-                                                                  compra.idFormaPagamento != '5' &&
-                                                                  compra.idFormaPagamento != '6')) {
-                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                  showCloseIcon: true,
-                                                                  content: Text(
-                                                                    'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
+                                                                ),
+                                                              ] else if ((item.compras.where((element) => element.idCabeceira == '2').firstOrNull?.id == e.id)) ...[
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+                                                                  child: Text(
+                                                                    item.compras.where((element) => element.idCabeceira == '2').firstOrNull?.nomeProva ?? '',
+                                                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                                                   ),
-                                                                ));
-                                                                return;
-                                                              }
+                                                                ),
+                                                              ],
+                                                              CardCompras(
+                                                                item: e,
+                                                                comprasTransferencia: comprasTransferencia,
+                                                                aoClicarParaTransferir: (compra) {
+                                                                  if (comprasTransferencia.contains(compra)) {
+                                                                    setState(() {
+                                                                      comprasTransferencia.remove(compra);
+                                                                    });
+                                                                  } else {
+                                                                    setState(() {
+                                                                      comprasTransferencia.add(compra);
+                                                                    });
+                                                                  }
+                                                                },
+                                                                modoTransferencia: modoTransferencia,
+                                                                aoClicarParaGerarPagamento: (compra) {
+                                                                  if (compra.pago == 'Sim') {
+                                                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                      showCloseIcon: true,
+                                                                      content: Text(
+                                                                        'Você só pode selecionar inscrições que não foram pagas.',
+                                                                      ),
+                                                                    ));
+                                                                    return;
+                                                                  }
+                                                                  if ((compra.idFormaPagamento != '1' &&
+                                                                      compra.idFormaPagamento != '4' &&
+                                                                      compra.idFormaPagamento != '5' &&
+                                                                      compra.idFormaPagamento != '6')) {
+                                                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                      showCloseIcon: true,
+                                                                      content: Text(
+                                                                        'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
+                                                                      ),
+                                                                    ));
+                                                                    return;
+                                                                  }
 
-                                                              if (comprasPagamentos.isNotEmpty) {
-                                                                if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
-                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                    showCloseIcon: true,
-                                                                    content: Text(
-                                                                      'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
-                                                                    ),
-                                                                  ));
-                                                                  return;
-                                                                }
+                                                                  if (comprasPagamentos.isNotEmpty) {
+                                                                    if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                                                                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                        showCloseIcon: true,
+                                                                        content: Text(
+                                                                          'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
+                                                                        ),
+                                                                      ));
+                                                                      return;
+                                                                    }
 
-                                                                if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
-                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                    showCloseIcon: true,
-                                                                    content: Text(
-                                                                      'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
-                                                                    ),
-                                                                  ));
-                                                                  return;
-                                                                }
-                                                              }
+                                                                    if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                                                                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                        showCloseIcon: true,
+                                                                        content: Text(
+                                                                          'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
+                                                                        ),
+                                                                      ));
+                                                                      return;
+                                                                    }
+                                                                  }
 
-                                                              if (comprasPagamentos.contains(compra)) {
-                                                                setState(() {
-                                                                  comprasPagamentos.remove(compra);
-                                                                });
-                                                              } else {
-                                                                setState(() {
-                                                                  comprasPagamentos.add(compra);
-                                                                });
-                                                              }
-                                                            },
-                                                            comprasPagamentos: comprasPagamentos,
-                                                            modoGerarPagamento: modoGerarPagamento,
-                                                            atualizarLista: () {
-                                                              listarCompras(resetar: true);
-                                                            },
+                                                                  if (comprasPagamentos.contains(compra)) {
+                                                                    setState(() {
+                                                                      comprasPagamentos.remove(compra);
+                                                                    });
+                                                                  } else {
+                                                                    setState(() {
+                                                                      comprasPagamentos.add(compra);
+                                                                    });
+                                                                  }
+                                                                },
+                                                                comprasPagamentos: comprasPagamentos,
+                                                                modoGerarPagamento: modoGerarPagamento,
+                                                                atualizarLista: () {
+                                                                  listarCompras(resetar: true);
+                                                                },
+                                                              ),
+                                                            ],
                                                           ),
                                                         );
                                                       }),

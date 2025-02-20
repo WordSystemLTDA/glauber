@@ -8,6 +8,7 @@ class ModeloAnimal {
   final String sexo;
   final String racadoanimal;
   final String foto;
+  final bool soupropietario;
 
   ModeloAnimal({
     required this.id,
@@ -16,6 +17,7 @@ class ModeloAnimal {
     required this.sexo,
     required this.racadoanimal,
     required this.foto,
+    required this.soupropietario,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class ModeloAnimal {
       'sexo': sexo,
       'racadoanimal': racadoanimal,
       'foto': foto,
+      'soupropietario': soupropietario,
     };
   }
 
@@ -37,6 +40,7 @@ class ModeloAnimal {
       sexo: map['sexo'] as String,
       racadoanimal: map['racadoanimal'] as String,
       foto: map['foto'] as String,
+      soupropietario: map['soupropietario'] as bool,
     );
   }
 

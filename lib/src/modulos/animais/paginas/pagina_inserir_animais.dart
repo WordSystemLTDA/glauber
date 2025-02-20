@@ -1,28 +1,29 @@
 import 'dart:io';
 
-// import 'package:file_picker/file_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
+import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
 import 'package:provadelaco/src/modulos/animais/servicos/servico_animais.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInserirAnimais extends StatefulWidget {
-  const PaginaInserirAnimais({super.key});
+  final ModeloAnimal? modeloAnimais;
+
+  const PaginaInserirAnimais({super.key, this.modeloAnimais});
 
   @override
   State<PaginaInserirAnimais> createState() => _PaginaInserirAnimaisState();
 }
 
 class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
-  bool souPropietario = true;
-
-  TextEditingController sexoController = TextEditingController();
-  TextEditingController racaDoAnimalController = TextEditingController();
-  TextEditingController nomeController = TextEditingController();
-  TextEditingController dataNascimentoController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString());
+  late bool souPropietario;
+  late TextEditingController sexoController;
+  late TextEditingController racaDoAnimalController;
+  late TextEditingController nomeController;
+  late TextEditingController dataNascimentoController;
 
   String sexo = 'Macho';
 
@@ -30,6 +31,25 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
   var salvando = ValueNotifier(false);
   var fotoSelecionada = ValueNotifier(File(''));
   var fotoSelecionadaEdicaoUrl = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.modeloAnimais != null) {
+      nomeController = TextEditingController(text: widget.modeloAnimais!.nomedoanimal);
+      dataNascimentoController = TextEditingController(text: widget.modeloAnimais!.datanascianimal);
+      sexo = widget.modeloAnimais!.sexo;
+      racaDoAnimalController = TextEditingController(text: widget.modeloAnimais!.racadoanimal);
+      fotoSelecionadaEdicaoUrl = widget.modeloAnimais!.foto;
+      souPropietario = widget.modeloAnimais!.soupropietario;
+    } else {
+      nomeController = TextEditingController();
+      dataNascimentoController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString());
+      racaDoAnimalController = TextEditingController();
+      souPropietario = true;
+    }
+  }
 
   void aoClicarParaSelecionarFoto() async {
     if (mounted) {
@@ -126,31 +146,59 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                     return;
                   }
 
-                  context
-                      .read<ServicoAnimais>()
-                      .inserir(
-                        nome: nomeController.text,
-                        dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
-                        sexo: sexo,
-                        raca: racaDoAnimalController.text,
-                        foto: '',
-                        idProprietario: souPropietario ? '0' : '1',
-                      )
-                      .then((value) {
-                    if (value.sucesso) {
-                      if (context.mounted) {
-                        Navigator.pop(context);
+                  if (widget.modeloAnimais != null) {
+                    context
+                        .read<ServicoAnimais>()
+                        .editar(
+                          id: widget.modeloAnimais!.id,
+                          nome: nomeController.text,
+                          dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
+                          sexo: sexo,
+                          raca: racaDoAnimalController.text,
+                          foto: fotoSelecionada.value.path,
+                          fotoedicao: fotoSelecionadaEdicaoUrl.split('/').last,
+                          idProprietario: souPropietario ? '0' : '1',
+                        )
+                        .then((value) {
+                      if (value.sucesso) {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(value.mensagem),
+                          ));
+                        }
                       }
-                    } else {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(value.mensagem),
-                        ));
+                    });
+                  } else {
+                    context
+                        .read<ServicoAnimais>()
+                        .inserir(
+                          nome: nomeController.text,
+                          dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
+                          sexo: sexo,
+                          raca: racaDoAnimalController.text,
+                          foto: fotoSelecionada.value.path,
+                          idProprietario: souPropietario ? '0' : '1',
+                        )
+                        .then((value) {
+                      if (value.sucesso) {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(value.mensagem),
+                          ));
+                        }
                       }
-                    }
+                    });
+                  }
 
-                    salvando.value = false;
-                  });
+                  salvando.value = false;
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -258,7 +306,6 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                  // color: const Color.fromARGB(255, 234, 234, 234),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: MouseRegion(
@@ -284,6 +331,9 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                                       ? Image.network(
                                           fotoSelecionadaEdicaoUrl,
                                           fit: BoxFit.contain,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Icon(Icons.error);
+                                          },
                                         )
                                       : Image.file(
                                           fotoSelecionadaValue,

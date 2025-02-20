@@ -1,0 +1,2 @@
+/Applications/XAMPP/xamppfiles/htdocs/ProjetosFlutter/glauber/android/app/.cxx/RelWithDebInfo/3x3563z6/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Applications/XAMPP/xamppfiles/htdocs/ProjetosFlutter/glauber/android/app/.cxx/RelWithDebInfo/3x3563z6/armeabi-v7a/CMakeFiles/rebuild_cache.dir

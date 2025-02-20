@@ -1,0 +1,2 @@
+/Applications/XAMPP/xamppfiles/htdocs/ProjetosFlutter/glauber/android/app/.cxx/RelWithDebInfo/3x3563z6/x86/CMakeFiles/edit_cache.dir
+/Applications/XAMPP/xamppfiles/htdocs/ProjetosFlutter/glauber/android/app/.cxx/RelWithDebInfo/3x3563z6/x86/CMakeFiles/rebuild_cache.dir

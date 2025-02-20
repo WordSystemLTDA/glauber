@@ -23,6 +23,20 @@ class ProvedorAnimal extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> excluir(String id) async {
+    if (carregando) return;
+
+    carregando = true;
+    notifyListeners();
+
+    await _servico.excluir(id).then((_) {
+      animais.removeWhere((animal) => animal.id == id);
+    });
+
+    carregando = false;
+    notifyListeners();
+  }
+
   void resetarCompras() {
     animais = [];
     carregando = false;

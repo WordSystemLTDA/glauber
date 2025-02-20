@@ -64,7 +64,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         var nascimentoF = usuarioProvider.usuario?.dataNascimento?.split('-');
         var nascimento = nascimentoF == null ? '' : "${nascimentoF[2]}/${nascimentoF[1]}/${nascimentoF[0]}";
 
-        _dataNascimentoController.text = nascimento;
+        if (nascimentoF != null && (nascimentoF[0] != '00' && nascimentoF[0] != '0000')) {
+          _dataNascimentoController.text = nascimento;
+        }
+
         profissional = usuarioProvider.usuario?.tipodecategoriaprofissional ?? '';
         genero = usuarioProvider.usuario?.sexo ?? '';
 
@@ -73,8 +76,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         idHcPiseiro = usuarioProvider.usuario?.idHcPezeiro ?? '';
         _hcPiseiroController.text = usuarioProvider.usuario?.hcPezeiro ?? '';
 
-        _hcLacoIndividualController.text = usuarioProvider.usuario?.handicaplacoindividual ?? '';
-        idHcLacoIndividual = usuarioProvider.usuario?.idhandicaplacoindividual ?? '';
+        if ((usuarioProvider.usuario?.handicaplacoindividual ?? '0') != '0') {
+          _hcLacoIndividualController.text = usuarioProvider.usuario?.handicaplacoindividual ?? '';
+          idHcLacoIndividual = usuarioProvider.usuario?.idhandicaplacoindividual ?? '';
+        }
       }
     }
 
@@ -158,7 +163,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         return;
       }
 
-      if (profissional.isEmpty) {
+      if (profissional.isEmpty || (profissional != 'Não' && profissional != 'Sim')) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
           backgroundColor: Colors.red,

@@ -73,7 +73,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
               }
             },
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -81,15 +81,15 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(parceiro.nomeModalidade),
-                      const SizedBox(height: 5),
-                      SizedBox(
-                        width: 230,
-                        child: Text(
-                          parceiro.nomeProva,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
+                      // const SizedBox(height: 5),
+                      // SizedBox(
+                      //   width: 230,
+                      //   child: Text(
+                      //     parceiro.nomeProva,
+                      //     overflow: TextOverflow.ellipsis,
+                      //     maxLines: 1,
+                      //   ),
+                      // ),
                       const SizedBox(height: 5),
                       Text(
                         parceiro.nomeParceiro,
@@ -108,7 +108,6 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                           Positioned(
                             right: 0,
                             top: 0,
-                            bottom: 0,
                             child: IconButton(
                               onPressed: () {
                                 if (item.provas[0].permitirEditarParceiros == 'Sim') {
@@ -120,7 +119,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                           ),
                         const SizedBox(height: 20),
                         Positioned(
-                          bottom: 0,
+                          bottom: 10,
                           right: 5,
                           child: Text(
                             parceiro.parceiroTemCompra == 'Aguardando'

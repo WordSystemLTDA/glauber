@@ -1,0 +1,6 @@
+-keep class com.google.j2objc.annotations.** { *; }
+-keep class com.google.common.util.concurrent.** { *; }
+-dontwarn com.google.j2objc.annotations.ReflectionSupport$Level
+-dontwarn com.google.j2objc.annotations.ReflectionSupport
+-dontwarn com.google.j2objc.annotations.RetainedWith
+-dontwarn com.google.j2objc.annotations.Weak

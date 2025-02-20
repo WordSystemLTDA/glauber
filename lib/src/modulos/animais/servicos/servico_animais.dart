@@ -41,17 +41,70 @@ class ServicoAnimais {
 
     var url = 'animais/inserir.php';
 
-    var campos = {
+    var formData = FormData.fromMap({
       'nome_do_animal': nome,
       'data_nasci_animal': dataNascimento,
       'sexo': sexo,
       'raca_do_animal': raca,
-      'foto': foto,
+      'foto': foto.isEmpty ? '' : await MultipartFile.fromFile(foto, filename: 'foto.jpg'),
       'id_usuario_lanc': idCliente,
       'id_proprietario': idProprietario == '0' ? idCliente : idProprietario,
+    });
+
+    Response response = await client.post(url: url, body: formData);
+
+    var jsonData = jsonDecode(response.data);
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+
+    return (sucesso: sucesso, mensagem: mensagem);
+  }
+
+  Future<({bool sucesso, String mensagem})> editar({
+    required String id,
+    required String nome,
+    required String dataNascimento,
+    required String sexo,
+    required String raca,
+    required String foto,
+    required String fotoedicao,
+    required String idProprietario,
+  }) async {
+    var idCliente = usuarioProvedor.usuario!.id!;
+
+    var url = 'animais/editar.php';
+
+    var formData = FormData.fromMap({
+      'id_animal': id,
+      'nome_do_animal': nome,
+      'data_nasci_animal': dataNascimento,
+      'sexo': sexo,
+      'raca_do_animal': raca,
+      'foto': foto.isEmpty ? fotoedicao : await MultipartFile.fromFile(foto, filename: 'foto.jpg'),
+      'id_usuario_lanc': idCliente,
+      'id_proprietario': idProprietario == '0' ? idCliente : idProprietario,
+    });
+
+    Response response = await client.post(url: url, body: formData);
+
+    var jsonData = jsonDecode(response.data);
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+
+    return (sucesso: sucesso, mensagem: mensagem);
+  }
+
+  Future<({bool sucesso, String mensagem})> excluir(String idAnimal) async {
+    var idCliente = usuarioProvedor.usuario!.id!;
+
+    var url = 'animais/excluir.php';
+
+    var formData = {
+      'id_animal': idAnimal,
+      'id_usuario_lanc': idCliente,
     };
 
-    Response response = await client.post(url: url, body: jsonEncode(campos));
+    Response response = await client.post(url: url, body: formData);
 
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];

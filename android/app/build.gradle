@@ -31,16 +31,17 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.provadelaco.glauber"
-    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    compileSdkVersion 34
+    ndkVersion "25.1.8937393"
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '21'
     }
 
     sourceSets {
@@ -52,7 +53,7 @@ android {
         applicationId "com.provadelaco.glauber"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 26
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -72,6 +73,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -81,6 +84,8 @@ flutter {
 }
 
 dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    implementation platform("org.jetbrains.kotlin:kotlin-bom:1.8.0")
     implementation platform("com.google.firebase:firebase-bom:32.4.1")
     implementation 'com.android.support:multidex:2.0.1'
 }

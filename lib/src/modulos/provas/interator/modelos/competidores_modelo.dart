@@ -15,6 +15,8 @@ class CompetidoresModelo extends Equatable {
   bool? jaExistente;
   String? idParceiroTrocado;
   String? celular;
+  String? hccabeceira;
+  String? hcpezeiro;
 
   CompetidoresModelo({
     required this.id,
@@ -27,6 +29,8 @@ class CompetidoresModelo extends Equatable {
     this.jaExistente,
     this.idParceiroTrocado,
     this.celular,
+    this.hccabeceira,
+    this.hcpezeiro,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,6 +45,8 @@ class CompetidoresModelo extends Equatable {
       'jaExistente': jaExistente,
       'idParceiroTrocado': idParceiroTrocado,
       'celular': celular,
+      'hccabeceira': hccabeceira,
+      'hcpezeiro': hcpezeiro,
     };
   }
 
@@ -56,6 +62,8 @@ class CompetidoresModelo extends Equatable {
       jaExistente: map['jaExistente'] != null ? map['jaExistente'] as bool : null,
       idParceiroTrocado: map['idParceiroTrocado'] != null ? map['idParceiroTrocado'] as String : null,
       celular: map['celular'] != null ? map['celular'] as String : null,
+      hccabeceira: map['hccabeceira'] != null ? map['hccabeceira'] as String : null,
+      hcpezeiro: map['hcpezeiro'] != null ? map['hcpezeiro'] as String : null,
     );
   }
 

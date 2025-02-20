@@ -6,6 +6,7 @@ import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compras.dart';
+import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_parceiros.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -39,8 +40,6 @@ class CardCompras extends StatefulWidget {
 }
 
 class _CardComprasState extends State<CardCompras> {
-  double tamanhoCard = 120;
-
   Color corCompra(ComprasModelo item) {
     if (item.status == 'Cancelado') {
       return Colors.yellow;
@@ -53,10 +52,11 @@ class _CardComprasState extends State<CardCompras> {
 
   @override
   Widget build(BuildContext context) {
+    double tamanhoCard = 125;
     var item = widget.item;
 
     return SizedBox(
-      height: tamanhoCard,
+      height: 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
@@ -83,198 +83,179 @@ class _CardComprasState extends State<CardCompras> {
                     },
                   );
                 },
-          child: Row(
+          child: Stack(
             children: [
-              Skeleton.shade(
-                child: Container(
-                  width: 5,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5),
-                      bottomLeft: Radius.circular(5),
-                    ),
-                  ),
-                  child: VerticalDivider(color: corCompra(item), thickness: 5),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("#${item.id} - ${item.nomeEmpresa}"),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text(item.nomeEvento),
-                          if (widget.aparecerNomeProva == true) ...[
-                            const Text(' - '),
-                            Text(item.nomeProva),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(item.pago == 'Não' ? 'Pendente' : 'Pago'),
-                          Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
-                          Text(item.horaCompra),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
               SizedBox(
                 height: tamanhoCard,
-                width: 60,
-                child: Card(
-                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))),
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: Column(
-                      mainAxisAlignment: item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não' ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
-                          },
-                          icon: const FaIcon(
-                            FontAwesomeIcons.whatsapp,
-                            color: Colors.green,
-                            size: 30,
+                child: Row(
+                  children: [
+                    Skeleton.shade(
+                      child: Container(
+                        width: 5,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            // bottomLeft: Radius.circular(5),
                           ),
                         ),
-                        if (item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não') ...[
-                          IconButton(
-                            onPressed: () {
-                              // FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Deseja realmente cancelar venda?'),
-                                    content: const Text('Cancelar venda'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Não'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: const Text('Cuidado!'),
-                                                content: const Text('Essa inscrição será Cancelada.'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Voltar'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      await context.read<ComprasServico>().editarReembolsoVenda(item.id).then((value) {
-                                                        if (context.mounted) {
-                                                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                            SnackBar(content: Text(value.$2)),
-                                                          );
-                                                        }
-
-                                                        if (value.$1 == true) {
-                                                          if (context.mounted) {
-                                                            Navigator.pop(context);
-                                                            Navigator.pop(context);
-                                                          }
-
-                                                          if (widget.atualizarLista != null) {
-                                                            widget.atualizarLista!();
-                                                          }
-                                                        }
-                                                      });
-                                                    },
-                                                    child: const Text('Quero Cancelar', style: TextStyle(color: Colors.red)),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: const Text('Sim'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.block_outlined, color: Colors.red, size: 30),
-                          ),
-                        ],
-                        // IconButton(
-                        //   onPressed: () {
-                        //     if (item.pago == 'Sim') {
-                        //       showDialog(
-                        //         context: context,
-                        //         builder: (context) {
-                        //           return ModalCompraPaga(item: item);
-                        //         },
-                        //       );
-                        //     } else {
-                        //       if (item.status == 'Cancelado') {
-                        //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        //           content: const Text('Esse ingresso foi cancelado.'),
-                        //           action: SnackBarAction(
-                        //             label: 'OK',
-                        //             onPressed: () {},
-                        //           ),
-                        //         ));
-                        //         return;
-                        //       }
-
-                        //       if (item.quandoInscricaoNaoPaga == 'nao_mostrar_qrcode_pix') {
-                        //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        //           content: Text(item.mensagemQuandoInscricaoNaoPaga),
-                        //           action: SnackBarAction(
-                        //             label: 'OK',
-                        //             onPressed: () {},
-                        //           ),
-                        //         ));
-                        //         return;
-                        //       }
-
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return ModalCompraNaoPaga(
-                        //       item: item,
-                        //       aoVerificarPagamento: (item) {
-                        //         setState(() {
-                        //           item.pago = 'Sim';
-                        //         });
-                        //       },
-                        //     );
-                        //   },
-                        // );
-                        //     }
-                        //   },
-                        //   icon: const Icon(Icons.qr_code_scanner, size: 30),
-                        // ),
-                      ],
+                        child: VerticalDivider(color: corCompra(item), thickness: 5),
+                      ),
                     ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("#${item.id} - ${item.nomeEmpresa}"),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text(item.nomeEvento),
+                                if (widget.aparecerNomeProva == true) ...[
+                                  const Text(' - '),
+                                  Text(item.nomeProva),
+                                ],
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(item.pago == 'Não' ? 'Pendente' : 'Pago'),
+                                Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(item.dataCompra))),
+                                Text(item.horaCompra),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: tamanhoCard,
+                      width: 60,
+                      child: Card(
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))),
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Column(
+                            mainAxisAlignment: item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não' ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
+                                },
+                                icon: const FaIcon(
+                                  FontAwesomeIcons.whatsapp,
+                                  color: Colors.green,
+                                  size: 30,
+                                ),
+                              ),
+                              if (item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não') ...[
+                                IconButton(
+                                  onPressed: () {
+                                    // FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Deseja realmente cancelar venda?'),
+                                          content: const Text('Cancelar venda'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Não'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text('Cuidado!'),
+                                                      content: const Text('Essa inscrição será Cancelada.'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: const Text('Voltar'),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () async {
+                                                            await context.read<ComprasServico>().editarReembolsoVenda(item.id).then((value) {
+                                                              if (context.mounted) {
+                                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                                  SnackBar(content: Text(value.$2)),
+                                                                );
+                                                              }
+
+                                                              if (value.$1 == true) {
+                                                                if (context.mounted) {
+                                                                  Navigator.pop(context);
+                                                                  Navigator.pop(context);
+                                                                }
+
+                                                                if (widget.atualizarLista != null) {
+                                                                  widget.atualizarLista!();
+                                                                }
+                                                              }
+                                                            });
+                                                          },
+                                                          child: const Text('Quero Cancelar', style: TextStyle(color: Colors.red)),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: const Text('Sim'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: const Icon(Icons.block_outlined, color: Colors.red, size: 30),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: -5,
+                left: 0,
+                right: 0,
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ModalParceiros(idCompra: item.id, idProva: item.provas[0].id, idEvento: item.idEvento);
+                      },
+                    );
+                  },
+                  style: ButtonStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+                      ),
+                    ),
+                    backgroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 237, 237, 237)),
+                    foregroundColor: WidgetStatePropertyAll(Colors.black87),
                   ),
+                  child: Text("Ver meus Parceiros"),
                 ),
               ),
             ],
