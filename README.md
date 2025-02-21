@@ -7,7 +7,7 @@ Fazer no Aplicativo
 - [ ] Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
 - [X] Colocar um botão de ver meus parceiros no card da compra e quando clicar aparecer uma modal para listar os parceiros dela
 - [X] Em Competidores Disponiveis (em compras e selecionar prova) aparecer handicap de cabeça e pé
-- [ ] Mostrar provas ativo ou não em Inscrições e Ordem de entrada
+- [X] Mostrar provas oculta ou não em Inscrições e Ordem de entrada
 - [ ] Liberação de Compra EM eventos não está funcionando
 - [ ] Fazer notificação
 

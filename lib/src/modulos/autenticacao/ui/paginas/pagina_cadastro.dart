@@ -62,7 +62,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     if (widget.argumentos.jaEstaCadastrado == true) {
       if (usuarioProvider.usuario != null) {
         var nascimentoF = usuarioProvider.usuario?.dataNascimento?.split('-');
-        var nascimento = nascimentoF == null ? '' : "${nascimentoF[2]}/${nascimentoF[1]}/${nascimentoF[0]}";
+        var nascimento = (nascimentoF == null || (nascimentoF.isNotEmpty && nascimentoF[0].isEmpty)) ? '' : "${nascimentoF[2]}/${nascimentoF[1]}/${nascimentoF[0]}";
 
         if (nascimentoF != null && (nascimentoF[0] != '00' && nascimentoF[0] != '0000')) {
           _dataNascimentoController.text = nascimento;
@@ -89,6 +89,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             if (widget.argumentos.jaEstaCadastrado) {
+              print('veio aqui');
               Navigator.pop(context);
               Navigator.pop(context);
             } else {
@@ -219,7 +220,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
 
     var dataNascimentoF = _dataNascimentoController.text.split('/');
-    var dataNascimento = "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
+    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty))
+        ? '0000-00-00'
+        : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
 
     autenticacaoStore.cadastrar(
       idcliente: widget.argumentos.jaEstaCadastrado ? usuarioProvider.usuario?.id : '0',
@@ -251,9 +254,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         'handicaplacoindividual': _hcLacoIndividualController.text,
         'sexo': genero,
         'tipodecategoriaprofissional': profissional,
-        'lacoemdupla': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? 'Sim' : 'Não',
+        'lacoemdupla': widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty ? 'Sim' : 'Não',
         'tambores3': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? 'Sim' : 'Não',
-        'lacoindividual': widget.argumentos.modalidades.where((element) => element.id == '1').isNotEmpty ? 'Sim' : 'Não',
+        'lacoindividual': widget.argumentos.modalidades.where((element) => element.id == '2').isNotEmpty ? 'Sim' : 'Não',
       }));
     }
   }
@@ -466,7 +469,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                             return HandiCapsDialog(
                               aoMudar: (itemHC, handicaps) {
                                 setState(() {
-                                  if (int.parse(idHcPiseiro) == 3 && double.parse(itemHC.id) < 3) {
+                                  if ((int.tryParse(idHcPiseiro) ?? 0) == 3 && (double.tryParse(itemHC.id) ?? 0) < 3) {
                                     _hcCabeceiraController.text = handicaps.where((element) => element.id == '3').first.nome;
                                     idHcCabeceira = '3';
                                   } else {
@@ -496,7 +499,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                             return HandiCapsDialog(
                               aoMudar: (itemHC, handicaps) {
                                 setState(() {
-                                  if (int.parse(idHcCabeceira) == 3 && double.parse(itemHC.id) < 3) {
+                                  if ((int.tryParse(idHcCabeceira) ?? 0) == 3 && (double.tryParse(itemHC.id) ?? 0) < 3) {
                                     _hcPiseiroController.text = handicaps.where((element) => element.id == '3').first.nome;
                                     idHcPiseiro = '3';
                                   } else {
