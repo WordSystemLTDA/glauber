@@ -86,7 +86,16 @@ extension EmailValidator on String {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyDZ6lea3HfYNHHk56a6XjfyklgXNmKi1EU",
+      appId: '1:558343760209:web:40cdf70d0e292a66800b70',
+      messagingSenderId: "558343760209",
+      projectId: "provasdelaco",
+    ),
+  );
+
   HttpOverrides.global = MyHttpOverrides();
 
   final app = MultiProvider(
