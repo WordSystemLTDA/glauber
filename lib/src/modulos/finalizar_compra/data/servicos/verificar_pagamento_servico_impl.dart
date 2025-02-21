@@ -9,11 +9,11 @@ class VerificarPagamentoServicoImpl implements VerificarPagamentoServico {
   VerificarPagamentoServicoImpl(this.client);
 
   @override
-  Future<bool> verificarPagamento(String idVenda, String idFormaPagamento) async {
+  Future<bool> verificarPagamento(String txid, String idFormaPagamento) async {
     var url = 'pagamentos/verificar_pagamento.php';
 
     var campos = {
-      'id_venda': idVenda,
+      'txid': txid,
       'id_forma_pagamento': idFormaPagamento,
     };
 

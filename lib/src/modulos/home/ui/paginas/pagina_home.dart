@@ -61,7 +61,13 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
       if (usuario == null) return;
 
       if (usuario.tambores3 == 'Pendente' || usuario.lacoemdupla == 'Pendente' || usuario.lacoindividual == 'Pendente') {
-        Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: true));
+        Navigator.pushNamed(
+          context,
+          AppRotas.selecionarModalidades,
+          arguments: PaginaSelecionarModalidadesArgumentos(
+            jaEstaCadastrado: true,
+          ),
+        );
       }
     });
   }

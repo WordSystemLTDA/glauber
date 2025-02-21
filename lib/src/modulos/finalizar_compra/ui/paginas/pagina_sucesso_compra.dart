@@ -59,7 +59,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
           var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
 
           _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-            verificarPagamentoServico.verificarPagamento(widget.argumentos.dados.idVenda!, widget.argumentos.metodoPagamento).then((sucesso) {
+            verificarPagamentoServico.verificarPagamento(widget.argumentos.dados.txid!, widget.argumentos.metodoPagamento).then((sucesso) {
               if (sucesso) {
                 setState(() {
                   sucessoAoVerificarPagamento = true;

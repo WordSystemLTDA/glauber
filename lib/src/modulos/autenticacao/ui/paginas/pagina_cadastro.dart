@@ -89,7 +89,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             if (widget.argumentos.jaEstaCadastrado) {
-              print('veio aqui');
               Navigator.pop(context);
               Navigator.pop(context);
             } else {
