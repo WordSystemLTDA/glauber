@@ -10,6 +10,7 @@ Fazer no Aplicativo
 - [X] Mostrar provas oculta ou não em Inscrições e Ordem de entrada
 - [ ] Liberação de Compra EM eventos não está funcionando
 - [ ] Fazer notificação
+- [ ] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 
 Erros
 - [ ] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
