@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_widget.dart';
 import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
@@ -79,22 +80,28 @@ class MyHttpOverrides extends HttpOverrides {
 
 extension EmailValidator on String {
   bool isValidEmail() {
-    return RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(this);
+    return RegExp(
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+    ).hasMatch(this);
   }
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyDZ6lea3HfYNHHk56a6XjfyklgXNmKi1EU",
-      appId: '1:558343760209:web:40cdf70d0e292a66800b70',
-      messagingSenderId: "558343760209",
-      projectId: "provasdelaco",
-    ),
-  );
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      name: 'provasdelaco',
+      options: FirebaseOptions(
+        apiKey: "AIzaSyDZ6lea3HfYNHHk56a6XjfyklgXNmKi1EU",
+        appId: '1:558343760209:web:40cdf70d0e292a66800b70',
+        messagingSenderId: "558343760209",
+        projectId: "provasdelaco",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
 
   HttpOverrides.global = MyHttpOverrides();
 
