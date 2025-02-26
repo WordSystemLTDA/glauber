@@ -1,10 +1,10 @@
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/modalidade_prova_modelo.dart';
 
 sealed class ProvasEstado {
-  final List<ProvaModelo> provas;
+  final List<ModalidadeProvaModelo> provas;
   final EventoModelo? evento;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final List<PagamentosModelo>? pagamentosDisponiveis;

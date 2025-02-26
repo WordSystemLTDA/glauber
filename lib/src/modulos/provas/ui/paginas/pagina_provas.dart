@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart' as cs;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -18,10 +15,9 @@ import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.da
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_banner_carrossel_evento.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
-import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_localizacao.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_pagamentos_disponiveis.dart';
+import 'package:provadelaco/src/modulos/provas/ui/widgets/page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -59,7 +55,6 @@ class _PaginaProvasState extends State<PaginaProvas> {
     var provasStore = context.read<ProvasStore>();
 
     var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
 
     double valorTotal = provasCarrinho.fold(0, (previousValue, element) => previousValue + double.parse(element.valor));
 
@@ -126,342 +121,223 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 onRefresh: () async {
                   provasStore.atualizarLista(usuarioProvider.usuario, widget.argumentos.idEvento, '');
                 },
-                child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  child: Skeletonizer(
-                    enabled: state is ProvasCarregando,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 250,
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                height: 250,
-                                child: cs.CarouselSlider.builder(
-                                  carouselController: _carrosselController,
-                                  options: cs.CarouselOptions(
-                                    height: 250.0,
-                                    autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
-                                    aspectRatio: 2.0,
-                                    enableInfiniteScroll: evento.bannersCarrossel.isNotEmpty ? true : false,
-                                    pauseAutoPlayOnTouch: true,
-                                    viewportFraction: 1.0,
-                                    autoPlayInterval: const Duration(seconds: 10),
-                                  ),
-                                  itemCount: evento.bannersCarrossel.length + 1,
-                                  itemBuilder: (context, index, realIndex) {
-                                    var bannerCarrossel = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? index : (index - 1)];
+                child: Skeletonizer(
+                  enabled: state is ProvasCarregando,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 250,
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              height: 250,
+                              child: cs.CarouselSlider.builder(
+                                carouselController: _carrosselController,
+                                options: cs.CarouselOptions(
+                                  height: 250.0,
+                                  autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
+                                  aspectRatio: 2.0,
+                                  enableInfiniteScroll: evento.bannersCarrossel.isNotEmpty ? true : false,
+                                  pauseAutoPlayOnTouch: true,
+                                  viewportFraction: 1.0,
+                                  autoPlayInterval: const Duration(seconds: 10),
+                                ),
+                                itemCount: evento.bannersCarrossel.length + 1,
+                                itemBuilder: (context, index, realIndex) {
+                                  var bannerCarrossel = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? index : (index - 1)];
 
-                                    return CardBannerCarrossel(
-                                      evento: evento,
-                                      bannerCarrossel: bannerCarrossel,
-                                      index: index,
-                                    );
+                                  return CardBannerCarrossel(
+                                    evento: evento,
+                                    bannerCarrossel: bannerCarrossel,
+                                    index: index,
+                                  );
+                                },
+                              ),
+                            ),
+                            if (evento.bannersCarrossel.isNotEmpty) ...[
+                              Positioned(
+                                left: 10,
+                                top: 0,
+                                bottom: 0,
+                                child: IconButton(
+                                  color: Colors.grey,
+                                  onPressed: () {
+                                    _carrosselController.previousPage();
                                   },
-                                ),
-                              ),
-                              if (evento.bannersCarrossel.isNotEmpty) ...[
-                                Positioned(
-                                  left: 10,
-                                  top: 0,
-                                  bottom: 0,
-                                  child: IconButton(
-                                    color: Colors.grey,
-                                    onPressed: () {
-                                      _carrosselController.previousPage();
-                                    },
-                                    icon: const Icon(Icons.arrow_back_ios_outlined),
-                                  ),
-                                ),
-                              ],
-                              if (evento.bannersCarrossel.isNotEmpty) ...[
-                                Positioned(
-                                  right: 10,
-                                  top: 0,
-                                  bottom: 0,
-                                  child: IconButton(
-                                    color: Colors.grey,
-                                    onPressed: () {
-                                      _carrosselController.nextPage();
-                                    },
-                                    icon: const Icon(Icons.arrow_forward_ios_outlined),
-                                  ),
-                                ),
-                              ],
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
-                                      Text(
-                                        evento.nomeEvento,
-                                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
-                                      ),
-                                      Text(
-                                        DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
-                                        style: const TextStyle(color: Colors.white, fontSize: 14),
-                                      ),
-                                      const SizedBox(height: 5),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Skeleton.ignore(
-                                child: SafeArea(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Container(
-                                      width: 90,
-                                      decoration: const BoxDecoration(
-                                        color: Color.fromARGB(106, 0, 0, 0),
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
-                                      child: IconButton(
-                                        icon: const Row(
-                                          children: [
-                                            Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
-                                            SizedBox(width: 10),
-                                            Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
-                                          ],
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ),
-                                  ),
+                                  icon: const Icon(Icons.arrow_back_ios_outlined),
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: width,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ActionChip(
-                                  avatar: const Icon(Icons.location_on_outlined),
-                                  label: const Text('Localização'),
+                            if (evento.bannersCarrossel.isNotEmpty) ...[
+                              Positioned(
+                                right: 10,
+                                top: 0,
+                                bottom: 0,
+                                child: IconButton(
+                                  color: Colors.grey,
                                   onPressed: () {
-                                    abrirLocalizacao(evento);
+                                    _carrosselController.nextPage();
                                   },
+                                  icon: const Icon(Icons.arrow_forward_ios_outlined),
                                 ),
-                                const SizedBox(width: 10),
-                                ActionChip(
-                                  avatar: Lottie.asset(
-                                    'assets/lotties/aovivo.json',
-                                    width: 20,
-                                    height: 20,
-                                    repeat: true,
-                                  ),
-                                  label: const Text('AO VIVO'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRotas.aovivo,
-                                      arguments: PaginaAoVivoArgumentos(
-                                        idEvento: widget.argumentos.idEvento,
-                                        idEmpresa: evento.idEmpresa,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                                ActionChip(
-                                  avatar: const Icon(Icons.warning_amber),
-                                  label: const Text('Termos de Uso'),
-                                  onPressed: () {
-                                    abrirTermosDeUso();
-                                  },
-                                ),
-                                // const SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (provas.isNotEmpty && nomesCabeceira != null) ...[
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Escolha sua Prova',
-                                style: TextStyle(fontSize: 16),
                               ),
-                            ),
-                          ),
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(10),
-                            itemCount: provas.length,
-                            itemBuilder: (context, index) {
-                              var prova = provas[index];
-
-                              return CardProvas(
-                                prova: prova,
-                                evento: evento,
-                                nomesCabeceira: nomesCabeceira,
-                                idEvento: widget.argumentos.idEvento,
-                                provasCarrinho: provasCarrinho,
-                                adicionarAvulsaNoCarrinho: (quantidade, prova, evento) {
-                                  adicionarAvulsaNoCarrinho(quantidade, prova, evento);
-                                },
-                                adicionarNoCarrinho: (prova, evento, quantParceiros) {
-                                  adicionarNoCarrinho(prova, evento, quantParceiros);
-                                },
-                                removerDoCarrinho: (prova) {
-                                  setState(() {
-                                    provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                        if (provas.isEmpty) ...[
-                          const Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Não há provas para esse evento.',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        ],
-                        Padding(
-                          padding: EdgeInsets.only(top: setarTamanhoTopo(height, state)),
-                          child: Card(
-                            margin: EdgeInsets.zero,
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.only(bottom: 10),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                              ),
-                              margin: EdgeInsets.zero,
+                            ],
+                            Align(
+                              alignment: Alignment.bottomLeft,
                               child: Padding(
-                                padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (!kIsWeb && Platform.isAndroid ? 50 : 20)),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.pin_drop_outlined, size: 20),
-                                            Opacity(
-                                              opacity: 0.6,
-                                              child: Text(
-                                                " ${evento.nomeCidade}",
-                                                style: const TextStyle(fontSize: 15),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.date_range, size: 20),
-                                            Opacity(
-                                              opacity: 0.6,
-                                              child: Text(
-                                                " ${DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento))}",
-                                                style: const TextStyle(fontSize: 15),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                    // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
+                                    Text(
+                                      evento.nomeEvento,
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
                                     ),
-                                    const SizedBox(height: 15),
-                                    const Text(
-                                      'Descrição do evento',
-                                      style: TextStyle(fontSize: 16),
+                                    Text(
+                                      DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                                      style: const TextStyle(color: Colors.white, fontSize: 14),
                                     ),
-                                    if (evento.descricao1.isNotEmpty) ...[
-                                      const SizedBox(height: 15),
-                                      Text(evento.descricao1),
-                                    ],
-                                    if (evento.descricao2.isNotEmpty) ...[
-                                      const SizedBox(height: 10),
-                                      Text(evento.descricao2),
-                                    ],
-                                    if (evento.descricao1.isEmpty && evento.descricao2.isEmpty) ...[
-                                      const SizedBox(height: 15),
-                                      const Text('...'),
-                                    ],
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: width / 2.4,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              abrirTermosDeUso();
-                                            },
-                                            style: const ButtonStyle(
-                                              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                                              elevation: WidgetStatePropertyAll(0),
-                                              side: WidgetStatePropertyAll<BorderSide>(
-                                                BorderSide(
-                                                  width: 1,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              'Termos de Uso',
-                                              style: TextStyle(color: Colors.grey),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        SizedBox(
-                                          width: width / 2.4,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              abrirDenunciar(state);
-                                            },
-                                            style: const ButtonStyle(
-                                              backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                                              elevation: WidgetStatePropertyAll(0),
-                                              side: WidgetStatePropertyAll<BorderSide>(
-                                                BorderSide(
-                                                  width: 1,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              'Denunciar',
-                                              style: TextStyle(color: Colors.red),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    const SizedBox(height: 5),
                                   ],
                                 ),
                               ),
                             ),
+                            Skeleton.ignore(
+                              child: SafeArea(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Container(
+                                    width: 90,
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(106, 0, 0, 0),
+                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Row(
+                                        children: [
+                                          Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                                          SizedBox(width: 10),
+                                          Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: width,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ActionChip(
+                                avatar: const Icon(Icons.location_on_outlined),
+                                label: const Text('Localização'),
+                                onPressed: () {
+                                  abrirLocalizacao(evento);
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              ActionChip(
+                                avatar: Lottie.asset(
+                                  'assets/lotties/aovivo.json',
+                                  width: 20,
+                                  height: 20,
+                                  repeat: true,
+                                ),
+                                label: const Text('AO VIVO'),
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRotas.aovivo,
+                                    arguments: PaginaAoVivoArgumentos(
+                                      idEvento: widget.argumentos.idEvento,
+                                      idEmpresa: evento.idEmpresa,
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              ActionChip(
+                                avatar: const Icon(Icons.warning_amber),
+                                label: const Text('Termos de Uso'),
+                                onPressed: () {
+                                  abrirTermosDeUso();
+                                },
+                              ),
+                              // const SizedBox(width: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (provas.isNotEmpty && nomesCabeceira != null) ...[
+                        // const Padding(
+                        //   padding: EdgeInsets.only(left: 10),
+                        //   child: Align(
+                        //     alignment: Alignment.centerLeft,
+                        //     child: Text(
+                        //       'Escolha sua Prova',
+                        //       style: TextStyle(fontSize: 16),
+                        //     ),
+                        //   ),
+                        // ),
+                        Expanded(
+                          child: DefaultTabController(
+                            length: provas.length,
+                            initialIndex: 0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                TabBar(
+                                  isScrollable: true,
+                                  tabAlignment: TabAlignment.start,
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  tabs: provas.map((e) {
+                                    return Tab(text: e.nomemodalidade);
+                                  }).toList(),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+                                    ),
+                                    child: TabBarView(
+                                      children: provas.map((e) {
+                                        return PageViewProvas(
+                                          evento: evento,
+                                          provas: e.provas,
+                                          modalidade: e.modalidade,
+                                          nomesCabeceira: nomesCabeceira,
+                                          provasCarrinho: provasCarrinho,
+                                          state: state,
+                                          adicionarAvulsaNoCarrinho: (quantidade, prova, evento) {
+                                            adicionarAvulsaNoCarrinho(quantidade, prova, evento);
+                                          },
+                                          adicionarNoCarrinho: (prova, evento, quantParceiros) {
+                                            adicionarNoCarrinho(prova, evento, quantParceiros);
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
-                    ),
+                    ],
                   ),
                 ),
               );
@@ -607,6 +483,15 @@ class _PaginaProvasState extends State<PaginaProvas> {
     }
   }
 
+  void abrirLocalizacao(evento) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ModalLocalizacao(evento: evento);
+      },
+    );
+  }
+
   void abrirTermosDeUso() {
     showDialog(
       context: context,
@@ -614,24 +499,6 @@ class _PaginaProvasState extends State<PaginaProvas> {
         return const Dialog(
           child: TermosDeUso(),
         );
-      },
-    );
-  }
-
-  void abrirDenunciar(ProvasEstado provasEstado) {
-    showDialog(
-      context: context,
-      builder: (contextDialog) {
-        return ModalDenunciar(provasEstado: provasEstado);
-      },
-    );
-  }
-
-  void abrirLocalizacao(evento) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ModalLocalizacao(evento: evento);
       },
     );
   }

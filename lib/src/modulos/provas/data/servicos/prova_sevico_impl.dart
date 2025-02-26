@@ -5,9 +5,9 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart'
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/modalidade_prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/modelo_prova_ao_vivo_retorno.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_retorno_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 
@@ -29,8 +29,8 @@ class ProvaServicoImpl implements ProvaServico {
 
     EventoModelo evento = EventoModelo.fromMap(jsonData['evento']);
 
-    List<ProvaModelo> provas = List<ProvaModelo>.from(jsonData['provas'].map((elemento) {
-      return ProvaModelo.fromMap(elemento);
+    List<ModalidadeProvaModelo> provas = List<ModalidadeProvaModelo>.from(jsonData['provas'].map((elemento) {
+      return ModalidadeProvaModelo.fromJson(elemento);
     }));
 
     List<NomesCabeceiraModelo> nomesCabeceira = List<NomesCabeceiraModelo>.from(jsonData['nomesCabeceira'].map((elemento) {
@@ -67,6 +67,6 @@ class ProvaServicoImpl implements ProvaServico {
     var response = await client.get(url: url);
     var jsonData = jsonDecode(response.data);
 
-    return PermitirCompraModelo.fromMap(jsonData);
+    return PermitirCompraModelo.fromJson(jsonData);
   }
 }

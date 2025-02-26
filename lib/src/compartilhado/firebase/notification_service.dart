@@ -114,7 +114,7 @@ class NotificationService {
             arguments: PaginaFinalizarCompraArgumentos(
               idEvento: message['idEvento'],
               provas: List<ProvaModelo>.from(jsonDecode(message['provas']).map((elemento) {
-                return ProvaModelo.fromMap(elemento);
+                return ProvaModelo.fromJson(elemento);
               })),
             ),
           );

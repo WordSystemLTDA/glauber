@@ -110,7 +110,7 @@ class ComprasModelo extends Equatable {
       // 'permitirEditarParceiros': permitirEditarParceiros,
       'permVincularParceiro': permVincularParceiro,
       'pixVencido': pixVencido,
-      'provas': provas.map((x) => x.toMap()).toList(),
+      'provas': provas.map((x) => x.toJson()).toList(),
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
       'idCabeceira': idCabeceira,
       'reembolso': reembolso,
@@ -152,7 +152,7 @@ class ComprasModelo extends Equatable {
       pixVencido: map['pixVencido'] != null ? map['pixVencido'] as String : null,
       provas: List<ProvaModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvaModelo>(
-          (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
+          (x) => ProvaModelo.fromJson(x as Map<String, dynamic>),
         ),
       ),
       parceiros: List<ParceirosCompraModelo>.from(

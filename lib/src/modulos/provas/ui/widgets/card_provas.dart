@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
-import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -23,6 +22,7 @@ class CardProvas extends StatefulWidget {
   final List<ProvaModelo> provasCarrinho;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final String idEvento;
+  final String modalidade;
   final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros) adicionarNoCarrinho;
   final Function(int quantidade, ProvaModelo prova, EventoModelo evento) adicionarAvulsaNoCarrinho;
   final Function(ProvaModelo prova) removerDoCarrinho;
@@ -34,6 +34,7 @@ class CardProvas extends StatefulWidget {
     required this.idEvento,
     required this.nomesCabeceira,
     required this.evento,
+    required this.modalidade,
     required this.provasCarrinho,
     required this.adicionarAvulsaNoCarrinho,
     required this.adicionarNoCarrinho,
@@ -49,7 +50,7 @@ class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 110;
   bool verificando = false;
 
-  void aoClicarNaCabeceira(ProvaModelo prova, NomesCabeceiraModelo item, bool confirmar) async {
+  void aoClicarNaCabeceira(ProvaModelo prova, bool confirmar, {NomesCabeceiraModelo? item}) async {
     var usuarioProvider = context.read<UsuarioProvider>();
     var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
@@ -74,7 +75,7 @@ class _CardProvasState extends State<CardProvas> {
     var jaExisteCarrinho = existeNoCarrinho(prova, item);
     var quantidadeCarrinho = widget.provasCarrinho.where((element) => element.id == prova.id).length.toString();
     await verificarPermitirCompraProvedor
-        .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item.id, jaExisteCarrinho, quantidadeCarrinho)
+        .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item?.id, jaExisteCarrinho, quantidadeCarrinho)
         .then((state) {
       if (state.permitirCompraModelo.liberado) {
         if (usuarioProvider.usuario!.ativoProva == 'Sim' && confirmar) {
@@ -88,9 +89,9 @@ class _CardProvasState extends State<CardProvas> {
                     child: ListBody(
                       children: <Widget>[
                         Text(
-                          item.id == '1'
+                          item?.id == '1'
                               ? (usuarioProvider.usuario!.cabeceiroProvas ?? '')
-                              : item.id == '2'
+                              : item?.id == '2'
                                   ? (usuarioProvider.usuario!.pezeiroProvas ?? '')
                                   : '',
                           textAlign: TextAlign.justify,
@@ -324,7 +325,7 @@ class _CardProvasState extends State<CardProvas> {
     });
   }
 
-  Color? coresAction(ProvaModelo prova, NomesCabeceiraModelo item) {
+  Color? coresAction(ProvaModelo prova, NomesCabeceiraModelo? item) {
     if (existeNoCarrinho(prova, item)) {
       if (Theme.of(context).brightness == Brightness.light) {
         return Colors.green;
@@ -338,7 +339,7 @@ class _CardProvasState extends State<CardProvas> {
     }
   }
 
-  bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
+  bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo? item) {
     var provaNova = ProvaModelo(
       id: prova.id,
       permitirCompra: prova.permitirCompra,
@@ -351,7 +352,7 @@ class _CardProvasState extends State<CardProvas> {
       nomeProva: prova.nomeProva,
       valor: prova.valor,
       habilitarAoVivo: '',
-      idCabeceira: item.id,
+      idCabeceira: item?.id,
       somatoriaHandicaps: prova.somatoriaHandicaps,
       competidores: prova.competidores,
       permitirSorteio: prova.permitirSorteio,
@@ -362,8 +363,8 @@ class _CardProvasState extends State<CardProvas> {
     return widget.provasCarrinho.where((element) => element.id == provaNova.id && element.idCabeceira == provaNova.idCabeceira).isNotEmpty;
   }
 
-  int quantidadeExisteCarrinho(ProvaModelo prova, NomesCabeceiraModelo item) {
-    return widget.provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == item.id).length;
+  int quantidadeExisteCarrinho(ProvaModelo prova, {NomesCabeceiraModelo? item}) {
+    return widget.provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == item?.id).length;
   }
 
   Color coresJaComprou(ProvaModelo prova) {
@@ -472,123 +473,116 @@ class _CardProvasState extends State<CardProvas> {
 
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return SwipeActionCell(
-      key: ObjectKey(prova),
-      trailingActions: <SwipeAction>[
-        SwipeAction(
-          color: Colors.transparent,
-          content: _getIconButton(Colors.red, Icons.live_tv_outlined),
-          onTap: (handler) {
+    return SizedBox(
+      width: width,
+      height: tamanhoCard,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        child: InkWell(
+          onTap: () {
+            aoClicarNoCard(prova);
+          },
+          onLongPress: () {
             Navigator.pushNamed(context, AppRotas.aovivo,
                 arguments:
                     PaginaAoVivoArgumentos(idEvento: widget.evento.id, idEmpresa: widget.evento.idEmpresa, idListaCompeticao: prova.idListaCompeticao, nomeProva: prova.nomeProva));
           },
-        ),
-      ],
-      child: SizedBox(
-        width: width,
-        height: tamanhoCard,
-        child: Card(
-          margin: const EdgeInsets.only(bottom: 10),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-          child: InkWell(
-            onTap: () {
-              aoClicarNoCard(prova);
-            },
-            onLongPress: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return Dialog(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "ID da Prova: ${prova.id}",
-                        textAlign: TextAlign.center,
-                      ),
+          onDoubleTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "ID da Prova: ${prova.id}",
+                      textAlign: TextAlign.center,
                     ),
-                  );
-                },
-              );
-            },
-            borderRadius: BorderRadius.circular(5),
-            child: Stack(
-              children: [
-                if (verificando) ...[
-                  const Center(child: CircularProgressIndicator()),
-                ],
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Skeleton.shade(
-                            child: Container(
-                              width: 5,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8),
+                  ),
+                );
+              },
+            );
+          },
+          borderRadius: BorderRadius.circular(5),
+          child: Stack(
+            children: [
+              if (verificando) ...[
+                const Center(child: CircularProgressIndicator()),
+              ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Skeleton.shade(
+                          child: Container(
+                            width: 5,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                bottomLeft: Radius.circular(8),
+                              ),
+                            ),
+                            child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
+                                child: Text(
+                                  prova.nomeProva,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ),
-                              child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                              if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
                                 SizedBox(
-                                  width: (width - 90) - 50,
+                                  width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
                                   child: Text(
-                                    prova.nomeProva,
+                                    prova.descricao!,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                                if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
-                                  SizedBox(
-                                    width: (width - 90) - 50,
-                                    child: Text(
-                                      prova.descricao!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
-                                    ),
-                                  ),
-                                ],
-                                SizedBox(
-                                  width: (width - 90) - 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        Utils.coverterEmReal.format(double.parse(prova.valor)),
-                                        style: const TextStyle(fontSize: 18, color: Colors.green),
-                                      ),
-                                      if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
-                                        Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: Text(
-                                            "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
-                                            style: const TextStyle(fontSize: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ],
+                                    style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
                                   ),
                                 ),
                               ],
-                            ),
+                              SizedBox(
+                                width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      Utils.coverterEmReal.format(double.parse(prova.valor)),
+                                      style: const TextStyle(fontSize: 18, color: Colors.green),
+                                    ),
+                                    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Text(
+                                          "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
+                  if (widget.modalidade == '2')
                     SizedBox(
                       width: 90,
                       height: tamanhoCard,
@@ -650,10 +644,9 @@ class _CardProvasState extends State<CardProvas> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

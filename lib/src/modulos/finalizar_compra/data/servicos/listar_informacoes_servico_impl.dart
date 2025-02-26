@@ -22,7 +22,7 @@ class ListarInformacoesServicoImpl implements ListarInformacoesServico {
     }
 
     var campos = {
-      'provas': provas.map((e) => e.toMap()).toList(),
+      'provas': provas.map((e) => e.toJson()).toList(),
       'id_evento': idEvento,
       'id_cliente': usuario!.id ?? 0,
       'editando': editando,

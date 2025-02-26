@@ -116,7 +116,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
               rotaApp,
               arguments: PaginaFinalizarCompraArgumentos(
                 provas: List<ProvaModelo>.from(jsonDecode(message.data['provas']).map((elemento) {
-                  return ProvaModelo.fromMap(elemento);
+                  return ProvaModelo.fromJson(elemento);
                 })),
                 idEvento: message.data['idEvento'],
               ),

@@ -9,7 +9,7 @@ class VerificarPermitirCompraEstadoInicial implements VerificarPermitirCompraEst
 
 class VerificandoPermitirCompra implements VerificarPermitirCompraEstado {
   final String idProvaVerificando;
-  final String idCabeceiraVerificando;
+  final String? idCabeceiraVerificando;
 
   VerificandoPermitirCompra({
     required this.idProvaVerificando,
@@ -21,7 +21,7 @@ class SucessoAoVerificarPermitirCompra implements VerificarPermitirCompraEstado 
   final PermitirCompraModelo permitirCompraModelo;
   final ProvaModelo provaModelo;
   final EventoModelo eventoModelo;
-  final String idCabeceira;
+  final String? idCabeceira;
 
   SucessoAoVerificarPermitirCompra({
     required this.permitirCompraModelo,

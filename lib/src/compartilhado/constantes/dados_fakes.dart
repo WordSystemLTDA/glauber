@@ -9,6 +9,7 @@ import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
 import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/modalidade_prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
@@ -104,25 +105,31 @@ class DadosFakes {
     ),
   ];
 
-  static List<ProvaModelo> dadosFakesProvas = List.generate(
+  static List<ModalidadeProvaModelo> dadosFakesProvas = List.generate(
     2,
-    (index) => ProvaModelo(
-      avulsa: '',
-      quantMaxima: '',
-      quantMinima: '',
-      permitirSorteio: '',
-      idListaCompeticao: '',
-      id: '31',
-      habilitarAoVivo: '',
-      nomeProva: 'WARM UP #6 E #9',
-      valor: '150.00',
-      permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: '', permVincularParceiro: ''),
-      idCabeceira: null,
-      hcMinimo: '1.00',
-      hcMaximo: '7.00',
-      permitirEditarParceiros: '',
-      somatoriaHandicaps: '0',
-      liberarReembolso: '',
+    (index) => ModalidadeProvaModelo(
+      modalidade: '1',
+      nomemodalidade: '',
+      provas: [
+        ProvaModelo(
+          avulsa: '',
+          quantMaxima: '',
+          quantMinima: '',
+          permitirSorteio: '',
+          idListaCompeticao: '',
+          id: '31',
+          habilitarAoVivo: '',
+          nomeProva: 'WARM UP #6 E #9',
+          valor: '150.00',
+          permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: '', rota: '', tituloAcao: '', permVincularParceiro: ''),
+          idCabeceira: null,
+          hcMinimo: '1.00',
+          hcMaximo: '7.00',
+          permitirEditarParceiros: '',
+          somatoriaHandicaps: '0',
+          liberarReembolso: '',
+        ),
+      ],
     ),
   );
 

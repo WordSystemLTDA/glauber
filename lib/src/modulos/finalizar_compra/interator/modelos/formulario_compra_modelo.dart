@@ -48,7 +48,7 @@ class FormularioCompraModelo {
       'valorTotal': valorTotal,
       'temValorFiliacao': temValorFiliacao,
       'tipoDeVenda': tipoDeVenda,
-      'provas': provas.map((x) => x.toMap()).toList(),
+      'provas': provas.map((x) => x.toJson()).toList(),
       'cartao': cartao?.toMap(),
     };
   }
@@ -68,7 +68,7 @@ class FormularioCompraModelo {
       tipoDeVenda: map['tipoDeVenda'] as String,
       provas: List<ProvaModelo>.from(
         (map['provas'] as List<dynamic>).map<ProvaModelo>(
-          (x) => ProvaModelo.fromMap(x as Map<String, dynamic>),
+          (x) => ProvaModelo.fromJson(x as Map<String, dynamic>),
         ),
       ),
       cartao: map['cartao'] != null ? CartaoModelo.fromMap(map['cartao'] as Map<String, dynamic>) : null,

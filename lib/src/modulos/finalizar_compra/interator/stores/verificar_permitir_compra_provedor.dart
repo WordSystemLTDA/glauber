@@ -16,7 +16,7 @@ class VerificarPermitirCompraProvedor extends ValueNotifier<VerificarPermitirCom
     String idEvento,
     String idProva,
     UsuarioModelo usuario,
-    String idCabeceira,
+    String? idCabeceira,
     bool jaExisteCarrinho,
     String quantidadeCarrinho,
   ) async {
