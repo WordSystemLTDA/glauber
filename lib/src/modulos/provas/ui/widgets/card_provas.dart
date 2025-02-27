@@ -111,7 +111,7 @@ class _CardProvasState extends State<CardProvas> {
                       child: const Text('Sim'),
                       onPressed: () async {
                         Navigator.of(contextDialog).pop();
-                        aoClicarNaCabeceira(prova, item, false);
+                        aoClicarNaCabeceira(prova, false, item: item);
                       },
                     ),
                   ],
@@ -607,8 +607,8 @@ class _CardProvasState extends State<CardProvas> {
                                 var item = widget.nomesCabeceira![index];
 
                                 return Badge(
-                                  isLabelVisible: quantidadeExisteCarrinho(prova, item) != 0,
-                                  label: Text(quantidadeExisteCarrinho(prova, item).toString()),
+                                  isLabelVisible: quantidadeExisteCarrinho(prova, item: item) != 0,
+                                  label: Text(quantidadeExisteCarrinho(prova, item: item).toString()),
                                   offset: const Offset(-2, 3),
                                   child: SizedBox(
                                     width: 90,
@@ -618,7 +618,7 @@ class _CardProvasState extends State<CardProvas> {
                                       child: InkWell(
                                         borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
                                         onTap: () {
-                                          aoClicarNaCabeceira(prova, item, true);
+                                          aoClicarNaCabeceira(prova, true, item: item);
                                         },
                                         child: Center(
                                           child: Text(
