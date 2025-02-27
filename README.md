@@ -1,10 +1,15 @@
+Criação de Tabela
+
+- [ ] hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto))
+- [ ] id_animal foi criada na tabela itens_venda (quando inserir animal na venda)
+
 Fazer no Aplicativo
 
 - [X] Caso laço em dupla, 3 tambores, laço individual for Pendente no cadastro do cliente, aparecer para selecionar a modalide na tela de home
 - [ ] Arrumar loading ao cancelar login do google
 - [ ] Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
-- [ ] Ao segurar o card da prova, aparecer a súmula em uma modal
-- [ ] Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
+- [X] Ao segurar o card da prova, aparecer a súmula em uma modal
+- [X] Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
 - [X] Colocar um botão de ver meus parceiros no card da compra e quando clicar aparecer uma modal para listar os parceiros dela
 - [X] Em Competidores Disponiveis (em compras e selecionar prova) aparecer handicap de cabeça e pé
 - [X] Mostrar provas oculta ou não em Inscrições e Ordem de entrada
