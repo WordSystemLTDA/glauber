@@ -11,6 +11,7 @@ import 'package:provadelaco/src/compartilhado/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
+import 'package:provadelaco/src/modulos/animais/paginas/pagina_animais.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'ativo': true,
       'icone': const Icon(FontAwesomeIcons.horse),
       'funcao': (BuildContext context) {
-        Navigator.pushNamed(context, AppRotas.animais);
+        Navigator.pushNamed(context, AppRotas.animais, arguments: PaginaAnimaisArgumentos(selecionarAnimais: false));
       }
     },
     {

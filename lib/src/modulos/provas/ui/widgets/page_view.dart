@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
 import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
+import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
+import 'package:provadelaco/src/modulos/animais/paginas/pagina_animais.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
@@ -13,6 +16,7 @@ import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
 
 class PageViewProvas extends StatefulWidget {
   final EventoModelo evento;
+  final ModeloAnimal? animalPadrao;
   final List<ProvaModelo> provas;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final List<ProvaModelo> provasCarrinho;
@@ -21,22 +25,40 @@ class PageViewProvas extends StatefulWidget {
   final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros) adicionarNoCarrinho;
   final Function(int quantidade, ProvaModelo prova, EventoModelo evento) adicionarAvulsaNoCarrinho;
 
-  const PageViewProvas(
-      {super.key,
-      required this.evento,
-      required this.provas,
-      this.nomesCabeceira,
-      required this.provasCarrinho,
-      required this.state,
-      required this.adicionarNoCarrinho,
-      required this.adicionarAvulsaNoCarrinho,
-      required this.modalidade});
+  const PageViewProvas({
+    super.key,
+    required this.evento,
+    required this.animalPadrao,
+    required this.provas,
+    this.nomesCabeceira,
+    required this.provasCarrinho,
+    required this.state,
+    required this.adicionarNoCarrinho,
+    required this.adicionarAvulsaNoCarrinho,
+    required this.modalidade,
+  });
 
   @override
   State<PageViewProvas> createState() => _PageViewProvasState();
 }
 
 class _PageViewProvasState extends State<PageViewProvas> {
+  late List<ProvaModelo> provas = [];
+  late EventoModelo evento;
+  late ModeloAnimal? animalPadrao;
+  late List<NomesCabeceiraModelo>? nomesCabeceira = [];
+  late List<ProvaModelo> provasCarrinho = [];
+
+  @override
+  void initState() {
+    super.initState();
+    provas = widget.provas;
+    evento = widget.evento;
+    animalPadrao = widget.animalPadrao;
+    nomesCabeceira = widget.nomesCabeceira;
+    provasCarrinho = widget.provasCarrinho;
+  }
+
   void abrirTermosDeUso() {
     showDialog(
       context: context,
@@ -57,14 +79,19 @@ class _PageViewProvasState extends State<PageViewProvas> {
     );
   }
 
+  void selecionarAnimal() {
+    Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true)).then((value) {
+      var item = value as ModeloAnimal;
+
+      setState(() {
+        animalPadrao = item;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-
-    var provas = widget.provas;
-    var evento = widget.evento;
-    var nomesCabeceira = widget.nomesCabeceira;
-    var provasCarrinho = widget.provasCarrinho;
 
     return SingleChildScrollView(
       child: Column(
@@ -75,19 +102,75 @@ class _PageViewProvasState extends State<PageViewProvas> {
               child: SizedBox(
                 width: double.infinity,
                 height: 100,
-                child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Selecionar Animal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                      ],
-                    ),
-                  ),
-                ),
+                child: animalPadrao == null
+                    ? Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        child: InkWell(
+                          onTap: () {
+                            selecionarAnimal();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Selecionar Animal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        child: InkWell(
+                          onTap: () {
+                            selecionarAnimal();
+                          },
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.network(
+                                  animalPadrao!.foto,
+                                  height: 105,
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return SizedBox(
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    return const Icon(Icons.error_outline, color: Colors.grey, size: 105);
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 15.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(animalPadrao!.nomedoanimal, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                      Text(animalPadrao!.racadoanimal),
+                                      Text(animalPadrao!.sexo),
+                                      Text(
+                                        "${(DateTime.now().year - DateTime.parse(Utils.trocarFormatacaoData(animalPadrao!.datanascianimal, pattern: '/', to: '-')).year).toString()} anos",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
               ),
             ),
           ],
@@ -197,10 +280,7 @@ class _PageViewProvasState extends State<PageViewProvas> {
                                 backgroundColor: WidgetStatePropertyAll(Colors.transparent),
                                 elevation: WidgetStatePropertyAll(0),
                                 side: WidgetStatePropertyAll<BorderSide>(
-                                  BorderSide(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
+                                  BorderSide(width: 1, color: Colors.grey),
                                 ),
                               ),
                               child: const Text('Termos de Uso', style: TextStyle(color: Colors.grey)),
@@ -217,10 +297,7 @@ class _PageViewProvasState extends State<PageViewProvas> {
                                 backgroundColor: WidgetStatePropertyAll(Colors.transparent),
                                 elevation: WidgetStatePropertyAll(0),
                                 side: WidgetStatePropertyAll<BorderSide>(
-                                  BorderSide(
-                                    width: 1,
-                                    color: Colors.red,
-                                  ),
+                                  BorderSide(width: 1, color: Colors.red),
                                 ),
                               ),
                               child: const Text('Denunciar', style: TextStyle(color: Colors.red)),

@@ -50,7 +50,7 @@ class _CardProvasState extends State<CardProvas> {
   double tamanhoCard = 110;
   bool verificando = false;
 
-  void aoClicarNaCabeceira(ProvaModelo prova, bool confirmar, {NomesCabeceiraModelo? item}) async {
+  void aoClicarNaCabeceira(ProvaModelo prova, bool confirmar, {NomesCabeceiraModelo? item, bool? selecionarParceiro = true}) async {
     var usuarioProvider = context.read<UsuarioProvider>();
     var verificarPermitirCompraProvedor = context.read<VerificarPermitirCompraProvedor>();
 
@@ -72,7 +72,7 @@ class _CardProvasState extends State<CardProvas> {
       verificando = true;
     });
 
-    var jaExisteCarrinho = existeNoCarrinho(prova, item);
+    var jaExisteCarrinho = existeNoCarrinho(prova, item: item);
     var quantidadeCarrinho = widget.provasCarrinho.where((element) => element.id == prova.id).length.toString();
     await verificarPermitirCompraProvedor
         .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item?.id, jaExisteCarrinho, quantidadeCarrinho)
@@ -119,7 +119,6 @@ class _CardProvasState extends State<CardProvas> {
               },
             );
           }
-
           return;
         }
 
@@ -142,6 +141,11 @@ class _CardProvasState extends State<CardProvas> {
           permitirEditarParceiros: state.provaModelo.permitirEditarParceiros,
           liberarReembolso: state.provaModelo.liberarReembolso,
         );
+
+        if (selecionarParceiro == true) {
+          widget.adicionarNoCarrinho(provaModelo, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
+          return;
+        }
 
         if (provaModelo.avulsa == 'Sim') {
           if (mounted) {
@@ -184,9 +188,11 @@ class _CardProvasState extends State<CardProvas> {
                       return true;
                     }
 
-                    if ((state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
-                        ? false
-                        : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                    if (state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))) {
+                      return true;
+                    }
+
+                    if (listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty) {
                       return false;
                     }
 
@@ -325,8 +331,8 @@ class _CardProvasState extends State<CardProvas> {
     });
   }
 
-  Color? coresAction(ProvaModelo prova, NomesCabeceiraModelo? item) {
-    if (existeNoCarrinho(prova, item)) {
+  Color? coresAction(ProvaModelo prova, {NomesCabeceiraModelo? item}) {
+    if (existeNoCarrinho(prova, item: item)) {
       if (Theme.of(context).brightness == Brightness.light) {
         return Colors.green;
       } else {
@@ -339,7 +345,7 @@ class _CardProvasState extends State<CardProvas> {
     }
   }
 
-  bool existeNoCarrinho(ProvaModelo prova, NomesCabeceiraModelo? item) {
+  bool existeNoCarrinho(ProvaModelo prova, {NomesCabeceiraModelo? item}) {
     var provaNova = ProvaModelo(
       id: prova.id,
       permitirCompra: prova.permitirCompra,
@@ -430,40 +436,27 @@ class _CardProvasState extends State<CardProvas> {
           ));
         }
       }
+
+      return;
     } else {
       if (prova.habilitarAoVivo == 'Sim') {
-        Navigator.pushNamed(context, AppRotas.aovivo,
-            arguments:
-                PaginaAoVivoArgumentos(idEvento: widget.evento.id, idEmpresa: widget.evento.idEmpresa, idListaCompeticao: prova.idListaCompeticao, nomeProva: prova.nomeProva));
+        Navigator.pushNamed(
+          context,
+          AppRotas.aovivo,
+          arguments: PaginaAoVivoArgumentos(
+            idEvento: widget.evento.id,
+            idEmpresa: widget.evento.idEmpresa,
+            idListaCompeticao: prova.idListaCompeticao,
+            nomeProva: prova.nomeProva,
+          ),
+        );
+        return;
       }
     }
-  }
 
-  Widget _getIconButton(color, icon) {
-    return Container(
-      width: 120,
-      height: 120,
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-        border: Border.all(width: 1, color: const Color.fromARGB(255, 255, 159, 152)),
-        color: const Color(0xFFfbe5ea),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.black,
-          ),
-          const SizedBox(height: 5),
-          const Text(
-            'Súmula',
-            style: TextStyle(color: Colors.black),
-          ),
-        ],
-      ),
-    );
+    if (widget.modalidade == '4' || widget.modalidade == '3') {
+      aoClicarNaCabeceira(prova, false);
+    }
   }
 
   @override
@@ -473,180 +466,190 @@ class _CardProvasState extends State<CardProvas> {
 
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return SizedBox(
-      width: width,
-      height: tamanhoCard,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: InkWell(
-          onTap: () {
-            aoClicarNoCard(prova);
-          },
-          onLongPress: () {
-            Navigator.pushNamed(context, AppRotas.aovivo,
-                arguments:
-                    PaginaAoVivoArgumentos(idEvento: widget.evento.id, idEmpresa: widget.evento.idEmpresa, idListaCompeticao: prova.idListaCompeticao, nomeProva: prova.nomeProva));
-          },
-          onDoubleTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return Dialog(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "ID da Prova: ${prova.id}",
-                      textAlign: TextAlign.center,
+    return Badge(
+      isLabelVisible: widget.modalidade != '4' ? false : quantidadeExisteCarrinho(prova) != 0,
+      label: Text(quantidadeExisteCarrinho(prova).toString()),
+      offset: const Offset(-2, 3),
+      child: SizedBox(
+        width: width,
+        height: tamanhoCard,
+        child: Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          child: InkWell(
+            onTap: () {
+              aoClicarNoCard(prova);
+            },
+            onLongPress: () {
+              Navigator.pushNamed(
+                context,
+                AppRotas.aovivo,
+                arguments: PaginaAoVivoArgumentos(
+                  idEvento: widget.evento.id,
+                  idEmpresa: widget.evento.idEmpresa,
+                  idListaCompeticao: prova.idListaCompeticao,
+                  nomeProva: prova.nomeProva,
+                ),
+              );
+            },
+            onDoubleTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "ID da Prova: ${prova.id}",
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          },
-          borderRadius: BorderRadius.circular(5),
-          child: Stack(
-            children: [
-              if (verificando) ...[
-                const Center(child: CircularProgressIndicator()),
-              ],
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 5,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                bottomLeft: Radius.circular(8),
-                              ),
-                            ),
-                            child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
-                                child: Text(
-                                  prova.nomeProva,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 16),
+                  );
+                },
+              );
+            },
+            borderRadius: BorderRadius.circular(5),
+            child: Stack(
+              children: [
+                if (verificando) ...[
+                  const Center(child: CircularProgressIndicator()),
+                ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          Skeleton.shade(
+                            child: Container(
+                              width: 5,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8),
                                 ),
                               ),
-                              if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
+                              child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 SizedBox(
                                   width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
                                   child: Text(
-                                    prova.descricao!,
+                                    prova.nomeProva,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
+                                  SizedBox(
+                                    width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
+                                    child: Text(
+                                      prova.descricao!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                                SizedBox(
+                                  width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        Utils.coverterEmReal.format(double.parse(prova.valor)),
+                                        style: const TextStyle(fontSize: 18, color: Colors.green),
+                                      ),
+                                      if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Text("HC: ${prova.hcMinimo} á ${prova.hcMaximo}", style: const TextStyle(fontSize: 12)),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ],
-                              SizedBox(
-                                width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      Utils.coverterEmReal.format(double.parse(prova.valor)),
-                                      style: const TextStyle(fontSize: 18, color: Colors.green),
-                                    ),
-                                    if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Text(
-                                          "HC: ${prova.hcMinimo} á ${prova.hcMaximo}",
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  if (widget.modalidade == '2')
-                    SizedBox(
-                      width: 90,
-                      height: tamanhoCard,
-                      child: Material(
-                        child: Card(
-                          clipBehavior: Clip.hardEdge,
-                          margin: EdgeInsets.zero,
-                          elevation: 5,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                          ),
-                          child: SizedBox(
-                            height: tamanhoCard,
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return Divider(height: 1, color: Theme.of(context).colorScheme.surface);
-                              },
-                              padding: const EdgeInsets.only(bottom: 1),
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: widget.nomesCabeceira!.length,
-                              itemBuilder: (context, index) {
-                                var item = widget.nomesCabeceira![index];
+                    if (widget.modalidade == '2')
+                      SizedBox(
+                        width: 90,
+                        height: tamanhoCard,
+                        child: Material(
+                          child: Card(
+                            clipBehavior: Clip.hardEdge,
+                            margin: EdgeInsets.zero,
+                            elevation: 5,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+                            ),
+                            child: SizedBox(
+                              height: tamanhoCard,
+                              child: ListView.separated(
+                                separatorBuilder: (context, index) {
+                                  return Divider(height: 1, color: Theme.of(context).colorScheme.surface);
+                                },
+                                padding: const EdgeInsets.only(bottom: 1),
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: widget.nomesCabeceira!.length,
+                                itemBuilder: (context, index) {
+                                  var item = widget.nomesCabeceira![index];
 
-                                return Badge(
-                                  isLabelVisible: quantidadeExisteCarrinho(prova, item: item) != 0,
-                                  label: Text(quantidadeExisteCarrinho(prova, item: item).toString()),
-                                  offset: const Offset(-2, 3),
-                                  child: SizedBox(
-                                    width: 90,
-                                    height: tamanhoCard / 2.1,
-                                    child: Material(
-                                      color: coresAction(prova, item),
-                                      child: InkWell(
-                                        borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
-                                        onTap: () {
-                                          aoClicarNaCabeceira(prova, true, item: item);
-                                        },
-                                        child: Center(
-                                          child: Text(
-                                            item.nome,
-                                            style: TextStyle(
-                                              color: prova.permitirCompra.liberado == false ||
-                                                      (prova.permitirCompra.idCabeceiraInvalido != null && prova.permitirCompra.idCabeceiraInvalido! == item.id)
-                                                  ? Colors.grey
-                                                  : existeNoCarrinho(prova, item)
-                                                      ? Colors.white
-                                                      : (isDarkMode ? Colors.white : Colors.black),
+                                  return Badge(
+                                    isLabelVisible: quantidadeExisteCarrinho(prova, item: item) != 0,
+                                    label: Text(quantidadeExisteCarrinho(prova, item: item).toString()),
+                                    offset: const Offset(-2, 3),
+                                    child: SizedBox(
+                                      width: 90,
+                                      height: tamanhoCard / 2.1,
+                                      child: Material(
+                                        color: coresAction(prova, item: item),
+                                        child: InkWell(
+                                          borderRadius:
+                                              index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                          onTap: () {
+                                            aoClicarNaCabeceira(prova, true, item: item);
+                                          },
+                                          child: Center(
+                                            child: Text(
+                                              item.nome,
+                                              style: TextStyle(
+                                                color: prova.permitirCompra.liberado == false ||
+                                                        (prova.permitirCompra.idCabeceiraInvalido != null && prova.permitirCompra.idCabeceiraInvalido! == item.id)
+                                                    ? Colors.grey
+                                                    : existeNoCarrinho(prova, item: item)
+                                                        ? Colors.white
+                                                        : (isDarkMode ? Colors.white : Colors.black),
+                                              ),
+                                              textAlign: TextAlign.center,
                                             ),
-                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

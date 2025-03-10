@@ -14,7 +14,13 @@ class ProvasStore extends ValueNotifier<ProvasEstado> {
     var resposta = await _provaServico.listar(usuario, idEvento, tipo);
 
     if (resposta.sucesso) {
-      value = ProvasCarregado(provas: resposta.provas, evento: resposta.evento, nomesCabeceira: resposta.nomesCabeceira, pagamentosDisponiveis: resposta.pagamentoDisponiveis);
+      value = ProvasCarregado(
+        provas: resposta.provas,
+        evento: resposta.evento,
+        animalPadrao: resposta.animalPadrao,
+        nomesCabeceira: resposta.nomesCabeceira,
+        pagamentosDisponiveis: resposta.pagamentoDisponiveis,
+      );
     } else {
       value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
     }
@@ -24,7 +30,13 @@ class ProvasStore extends ValueNotifier<ProvasEstado> {
     var resposta = await _provaServico.listar(usuario, idEvento, tipo);
 
     if (resposta.sucesso) {
-      value = ProvasCarregado(provas: resposta.provas, evento: resposta.evento, nomesCabeceira: resposta.nomesCabeceira, pagamentosDisponiveis: resposta.pagamentoDisponiveis);
+      value = ProvasCarregado(
+        provas: resposta.provas,
+        evento: resposta.evento,
+        animalPadrao: resposta.animalPadrao,
+        nomesCabeceira: resposta.nomesCabeceira,
+        pagamentosDisponiveis: resposta.pagamentoDisponiveis,
+      );
     } else {
       value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
     }

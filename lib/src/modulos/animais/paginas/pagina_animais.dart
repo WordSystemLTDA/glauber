@@ -6,8 +6,15 @@ import 'package:provadelaco/src/modulos/animais/paginas/pagina_inserir_animais.d
 import 'package:provadelaco/src/modulos/animais/provedores/provedor_animal.dart';
 import 'package:provider/provider.dart';
 
+class PaginaAnimaisArgumentos {
+  final bool? selecionarAnimais;
+
+  PaginaAnimaisArgumentos({this.selecionarAnimais = false});
+}
+
 class PaginaAnimais extends StatefulWidget {
-  const PaginaAnimais({super.key});
+  final PaginaAnimaisArgumentos argumentos;
+  const PaginaAnimais({super.key, required this.argumentos});
 
   @override
   State<PaginaAnimais> createState() => _PaginaAnimaisState();
@@ -35,9 +42,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
   Widget build(BuildContext context) {
     return Consumer<ProvedorAnimal>(builder: (context, provedor, child) {
       return Scaffold(
-        appBar: const AppBarSombra(
-          titulo: Text("Animais"),
-        ),
+        appBar: const AppBarSombra(titulo: Text("Animais")),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, AppRotas.animaisCadastrar).then((value) {
@@ -62,7 +67,6 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                     ),
                   ),
                   onChanged: (nomePesquisa) {
-                    // buscarStore.listarEventoPorNome(nomePesquisa);
                     listar(nomePesquisa);
                   },
                 ),
@@ -79,7 +83,11 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                     return Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          if (widget.argumentos.selecionarAnimais == true) {
+                            Navigator.pop(context, item);
+                          }
+                        },
                         child: Row(
                           children: [
                             ClipRRect(
@@ -89,9 +97,13 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                 height: 105,
                                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                                   if (loadingProgress == null) return child;
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                                  return SizedBox(
+                                    width: 105,
+                                    height: 105,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                                      ),
                                     ),
                                   );
                                 },
@@ -118,30 +130,32 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                 ),
                               ),
                             ),
-                            Column(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    // Implement edit functionality
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return PaginaInserirAnimais(modeloAnimais: item);
-                                      },
-                                    )).then((value) {
-                                      listar(nomeBuscaController.text);
-                                    });
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () {
-                                    // Implement delete functionality
-                                    provedor.excluir(item.id);
-                                  },
-                                ),
-                              ],
-                            ),
+                            if (widget.argumentos.selecionarAnimais == false) ...[
+                              Column(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      // Implement edit functionality
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return PaginaInserirAnimais(modeloAnimais: item);
+                                        },
+                                      )).then((value) {
+                                        listar(nomeBuscaController.text);
+                                      });
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      // Implement delete functionality
+                                      provedor.excluir(item.id);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ],
                         ),
                       ),

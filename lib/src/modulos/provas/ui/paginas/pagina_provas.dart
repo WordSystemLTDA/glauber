@@ -109,6 +109,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
           valueListenable: provasStore,
           builder: (context, state, _) {
             var evento = state is ProvasCarregando ? DadosFakes.dadosFakesEventos[0] : state.evento;
+            var animalPadrao = state.animalPadrao;
             var provas = state is ProvasCarregando ? DadosFakes.dadosFakesProvas : state.provas;
             var nomesCabeceira = state is ProvasCarregando ? DadosFakes.dadosFakesNomesCabeceira : state.nomesCabeceira;
 
@@ -316,6 +317,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                       children: provas.map((e) {
                                         return PageViewProvas(
                                           evento: evento,
+                                          animalPadrao: animalPadrao,
                                           provas: e.provas,
                                           modalidade: e.modalidade,
                                           nomesCabeceira: nomesCabeceira,

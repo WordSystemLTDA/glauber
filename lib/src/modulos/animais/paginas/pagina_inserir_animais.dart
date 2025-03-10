@@ -26,6 +26,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
   late TextEditingController dataNascimentoController;
 
   String sexo = 'Macho';
+  String padrao = 'Não';
 
   var escolhendoArquivo = ValueNotifier(false);
   var salvando = ValueNotifier(false);
@@ -49,6 +50,18 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
       racaDoAnimalController = TextEditingController();
       souPropietario = true;
     }
+  }
+
+  @override
+  void dispose() {
+    sexoController.dispose();
+    racaDoAnimalController.dispose();
+    nomeController.dispose();
+    dataNascimentoController.dispose();
+    salvando.dispose();
+    escolhendoArquivo.dispose();
+    fotoSelecionada.dispose();
+    super.dispose();
   }
 
   void aoClicarParaSelecionarFoto() async {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
+import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
@@ -28,6 +29,7 @@ class ProvaServicoImpl implements ProvaServico {
     bool sucesso = jsonData['sucesso'];
 
     EventoModelo evento = EventoModelo.fromMap(jsonData['evento']);
+    ModeloAnimal? animalPadrao = jsonData['animalPadrao'] != null ? ModeloAnimal.fromMap(jsonData['animalPadrao']) : null;
 
     List<ModalidadeProvaModelo> provas = List<ModalidadeProvaModelo>.from(jsonData['provas'].map((elemento) {
       return ModalidadeProvaModelo.fromJson(elemento);
@@ -42,7 +44,14 @@ class ProvaServicoImpl implements ProvaServico {
     }));
 
     if (response.statusCode == 200 && sucesso == true) {
-      return ProvaRetornoModelo(sucesso: sucesso, provas: provas, evento: evento, pagamentoDisponiveis: pagamentoDisponiveis, nomesCabeceira: nomesCabeceira);
+      return ProvaRetornoModelo(
+        sucesso: sucesso,
+        provas: provas,
+        evento: evento,
+        pagamentoDisponiveis: pagamentoDisponiveis,
+        nomesCabeceira: nomesCabeceira,
+        animalPadrao: animalPadrao,
+      );
     } else {
       return Future.error('');
     }

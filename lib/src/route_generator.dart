@@ -59,7 +59,8 @@ class RouteGenerator {
       case AppRotas.calendario:
         return buildRoute(const PaginaCalendario(), settings: settings);
       case AppRotas.animais:
-        return buildRoute(const PaginaAnimais(), settings: settings);
+        final argumentos = settings.arguments as PaginaAnimaisArgumentos;
+        return buildRoute(PaginaAnimais(argumentos: argumentos), settings: settings);
       case AppRotas.animaisCadastrar:
         return buildRoute(const PaginaInserirAnimais(), settings: settings);
       case AppRotas.selecionarInscricoes:

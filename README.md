@@ -1,7 +1,14 @@
+X = FEITO
+? = FEITO MAIS PRECISA DE TESTES
+- = FEITO MAIS OU MENOS
+! = REVER SE VAI FAZER MESMO
+
 Criação de Tabela
 
-- [ ] hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto))
-- [ ] id_animal foi criada na tabela itens_venda (quando inserir animal na venda)
+- hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto))
+- id_animal foi criada na tabela itens_venda (quando inserir animal na venda)
+- padrao foi criada na tabela animais (varchar(5) Padrão: Não)
+- id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
 
 Fazer no Aplicativo
 
@@ -14,13 +21,14 @@ Fazer no Aplicativo
 - [X] Em Competidores Disponiveis (em compras e selecionar prova) aparecer handicap de cabeça e pé
 - [X] Mostrar provas oculta ou não em Inscrições e Ordem de entrada
 - [ ] Liberação de Compra EM eventos não está funcionando
-- [ ] Fazer notificação
-- [ ] Adicionar alguma forma de recebers logs igual sentry ou algo assim
+- [?] Fazer notificação
+- [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
+- [ ] Fazer input de Padrão no cadastrar animais
 
 Erros
-- [ ] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
+- [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
 - [ ] Movimentações duplicou (não permitir duplicar pelo id_mov)
-- [ ] Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
+- [?] Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
 
 Sistema (Painel)
 
@@ -47,10 +55,10 @@ Cadastro de prova
 
 Na Página de Provas
 
-- [ ] 3 Tambores selecionar o animal para mostrar as provas (ou mostrar o animal que está como Padrão)
+- [X] 3 Tambores selecionar o animal para mostrar as provas (ou mostrar o animal que está como Padrão)
 - [ ] 3 Tambores aparecer somente as provas que o animal e o competidor pode correr
-- [ ] 3 Tambores embaixo do tabbar vai ter um input de selecionar o animal
-- [ ] Laço Individual só clicar no card e comprar
+- [X] 3 Tambores embaixo do tabbar vai ter um input de selecionar o animal
+- [X] Laço Individual só clicar no card e comprar
 - [ ] Permissão Compra Ordenada -> Só pode comprar as provas se comprou a prova anterior, ex: Eu só posso comprar a prova 2 se eu comprar a prova 1 primeiro (1 ou 2, pegar pela sequencia)
 - [ ] Permissão de Selecionar animal de outra pessoa
 
