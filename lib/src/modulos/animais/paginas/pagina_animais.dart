@@ -42,7 +42,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
   Widget build(BuildContext context) {
     return Consumer<ProvedorAnimal>(builder: (context, provedor, child) {
       return Scaffold(
-        appBar: const AppBarSombra(titulo: Text("Animais")),
+        appBar: const AppBarSombra(titulo: Text("Seus Animais")),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, AppRotas.animaisCadastrar).then((value) {

@@ -22,7 +22,7 @@ class ServicoAnimais {
 
     if (response.statusCode == 200 && sucesso == true) {
       return List<ModeloAnimal>.from(jsonData['dados'].map((elemento) {
-        return ModeloAnimal.fromMap(elemento);
+        return ModeloAnimal.fromJson(elemento);
       }));
     } else {
       return [];

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
+import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
 
@@ -25,9 +26,11 @@ class ProvaModelo {
   final String? somatoriaHandicaps;
   final bool? sorteio;
   final String permitirEditarParceiros;
+  final ModeloAnimal? animalSelecionado;
   String? nomeCabeceira;
   String? idCabeceira;
   List<CompetidoresModelo>? competidores;
+  String? idmodalidade;
 
   ProvaModelo({
     required this.id,
@@ -47,9 +50,11 @@ class ProvaModelo {
     this.somatoriaHandicaps,
     this.sorteio,
     required this.permitirEditarParceiros,
+    this.animalSelecionado,
     this.nomeCabeceira,
     this.idCabeceira,
     this.competidores,
+    this.idmodalidade,
   });
 
   factory ProvaModelo.fromJson(Map<String, dynamic> json) => _$ProvaModeloFromJson(json);

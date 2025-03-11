@@ -96,10 +96,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                 ),
                 Text(
                   dados.tituloSucessoAoVerificarPagamento!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
@@ -141,10 +138,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                 ),
                 Text(
                   dados.tituloRetorno!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 if (dados.tipoRetorno == 'normal') ...[
                   const SizedBox(height: 50),
@@ -179,10 +173,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                           showCloseIcon: true,
                           backgroundColor: Colors.green,
                           content: Center(
-                            child: Text(
-                              'Código PIX copiado',
-                              textAlign: TextAlign.center,
-                            ),
+                            child: Text('Código PIX copiado', textAlign: TextAlign.center),
                           ),
                         ));
                         Clipboard.setData(ClipboardData(text: dados.codigoPix!));
@@ -244,10 +235,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                                       ? const SizedBox(
                                           width: 25,
                                           height: 25,
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                            strokeWidth: 1,
-                                          ),
+                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 1),
                                         )
                                       : const Text('Verificar Pagamento'),
                                 );

@@ -25,11 +25,16 @@ ProvaModelo _$ProvaModeloFromJson(Map<String, dynamic> json) => ProvaModelo(
       somatoriaHandicaps: json['somatoriaHandicaps'] as String?,
       sorteio: json['sorteio'] as bool?,
       permitirEditarParceiros: json['permitirEditarParceiros'] as String,
+      animalSelecionado: json['animalSelecionado'] == null
+          ? null
+          : ModeloAnimal.fromJson(
+              json['animalSelecionado'] as Map<String, dynamic>),
       nomeCabeceira: json['nomeCabeceira'] as String?,
       idCabeceira: json['idCabeceira'] as String?,
       competidores: (json['competidores'] as List<dynamic>?)
           ?.map((e) => CompetidoresModelo.fromJson(e as String))
           .toList(),
+      idmodalidade: json['idmodalidade'] as String?,
     );
 
 Map<String, dynamic> _$ProvaModeloToJson(ProvaModelo instance) =>
@@ -51,7 +56,9 @@ Map<String, dynamic> _$ProvaModeloToJson(ProvaModelo instance) =>
       'somatoriaHandicaps': instance.somatoriaHandicaps,
       'sorteio': instance.sorteio,
       'permitirEditarParceiros': instance.permitirEditarParceiros,
+      'animalSelecionado': instance.animalSelecionado,
       'nomeCabeceira': instance.nomeCabeceira,
       'idCabeceira': instance.idCabeceira,
       'competidores': instance.competidores,
+      'idmodalidade': instance.idmodalidade,
     };

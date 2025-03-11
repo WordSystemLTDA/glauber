@@ -21,7 +21,7 @@ ProvaRetornoModelo _$ProvaRetornoModeloFromJson(Map<String, dynamic> json) =>
       evento: EventoModelo.fromJson(json['evento'] as String),
       animalPadrao: json['animalPadrao'] == null
           ? null
-          : ModeloAnimal.fromJson(json['animalPadrao'] as String),
+          : ModeloAnimal.fromJson(json['animalPadrao'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ProvaRetornoModeloToJson(ProvaRetornoModelo instance) =>

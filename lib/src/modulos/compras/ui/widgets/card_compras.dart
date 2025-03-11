@@ -56,7 +56,7 @@ class _CardComprasState extends State<CardCompras> {
     var item = widget.item;
 
     return SizedBox(
-      height: 170,
+      height: (item.provas[0].idmodalidade == '4') ? 130 : 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
@@ -93,10 +93,10 @@ class _CardComprasState extends State<CardCompras> {
                       child: Container(
                         width: 5,
                         clipBehavior: Clip.hardEdge,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(5),
-                            // bottomLeft: Radius.circular(5),
+                            bottomLeft: (item.provas[0].idmodalidade == '4') ? Radius.circular(5) : Radius.zero,
                           ),
                         ),
                         child: VerticalDivider(color: corCompra(item), thickness: 5),
@@ -233,31 +233,46 @@ class _CardComprasState extends State<CardCompras> {
                   ],
                 ),
               ),
-              Positioned(
-                bottom: -5,
-                left: 0,
-                right: 0,
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ModalParceiros(idCompra: item.id, idProva: item.provas[0].id, idEvento: item.idEvento);
-                      },
-                    );
-                  },
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+              if (item.provas[0].idmodalidade != '4')
+                Positioned(
+                  bottom: -5,
+                  left: 0,
+                  right: 0,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (item.provas[0].idmodalidade == '3') {
+                        return;
+                      }
+
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ModalParceiros(idCompra: item.id, idProva: item.provas[0].id, idEvento: item.idEvento);
+                        },
+                      );
+                    },
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+                        ),
                       ),
+                      backgroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 237, 237, 237)),
+                      foregroundColor: WidgetStatePropertyAll(Colors.black87),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 237, 237, 237)),
-                    foregroundColor: WidgetStatePropertyAll(Colors.black87),
+                    child: item.provas[0].idmodalidade == '3'
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("Animal: ", style: TextStyle(fontSize: 14)),
+                              Text(item.provas[0].animalSelecionado?.nomedoanimal ?? '0', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                              // Text(item.provas[0].animalSelecionado?.racadoanimal ?? '0', style: TextStyle(fontSize: 12)),
+                            ],
+                          )
+                        : Text("Ver meus Parceiros"),
                   ),
-                  child: Text("Ver meus Parceiros"),
                 ),
-              ),
             ],
           ),
         ),

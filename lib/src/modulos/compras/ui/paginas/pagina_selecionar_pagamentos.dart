@@ -182,9 +182,31 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                           selecionarVariasInscricoes = value;
                           if (value == true) {
                             for (var element in inscricoes.value) {
-                              if (!comprasPagamentos.contains(element)) {
+                              if (comprasPagamentos.contains(element) == false) {
                                 comprasPagamentos.add(element);
                               }
+
+                              // if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                              //               ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                              //               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              //                 showCloseIcon: true,
+                              //                 content: Text(
+                              //                   'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
+                              //                 ),
+                              //               ));
+                              //               return;
+                              //             }
+
+                              //             if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                              //               ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                              //               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              //                 showCloseIcon: true,
+                              //                 content: Text(
+                              //                   'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
+                              //                 ),
+                              //               ));
+                              //               return;
+                              //             }
                             }
                           } else {
                             for (var element in inscricoes.value) {
@@ -255,9 +277,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                                               ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                 showCloseIcon: true,
-                                                content: Text(
-                                                  'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
-                                                ),
+                                                content: Text('Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.'),
                                               ));
                                               return;
                                             }
@@ -266,9 +286,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                                               ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                 showCloseIcon: true,
-                                                content: Text(
-                                                  'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
-                                                ),
+                                                content: Text('Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.'),
                                               ));
                                               return;
                                             }

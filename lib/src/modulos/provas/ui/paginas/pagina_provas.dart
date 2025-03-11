@@ -12,6 +12,7 @@ import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_final
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/stores/provas_provedor.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_banner_carrossel_evento.dart';
@@ -323,11 +324,11 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                           nomesCabeceira: nomesCabeceira,
                                           provasCarrinho: provasCarrinho,
                                           state: state,
-                                          adicionarAvulsaNoCarrinho: (quantidade, prova, evento) {
-                                            adicionarAvulsaNoCarrinho(quantidade, prova, evento);
+                                          adicionarAvulsaNoCarrinho: (quantidade, prova, evento, modalidade) {
+                                            adicionarAvulsaNoCarrinho(quantidade, prova, evento, modalidade);
                                           },
-                                          adicionarNoCarrinho: (prova, evento, quantParceiros) {
-                                            adicionarNoCarrinho(prova, evento, quantParceiros);
+                                          adicionarNoCarrinho: (prova, evento, quantParceiros, modalidade) {
+                                            adicionarNoCarrinho(prova, evento, quantParceiros, modalidade);
                                           },
                                         );
                                       }).toList(),
@@ -352,7 +353,18 @@ class _PaginaProvasState extends State<PaginaProvas> {
     });
   }
 
-  void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento, String quantParceiros) {
+  void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento, String quantParceiros, String idmodalidade) {
+    var provasProvedor = context.read<ProvasProvedor>();
+    if (idmodalidade == '3') {
+      if (provasProvedor.animalSelecionado == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Você precisa selecionar um animal antes.'),
+          backgroundColor: Colors.red,
+        ));
+        return;
+      }
+    }
+
     var novaProva = ProvaModelo(
       id: prova.id,
       nomeProva: prova.nomeProva,
@@ -373,6 +385,8 @@ class _PaginaProvasState extends State<PaginaProvas> {
       sorteio: prova.sorteio,
       permitirEditarParceiros: prova.permitirEditarParceiros,
       liberarReembolso: prova.liberarReembolso,
+      animalSelecionado: provasProvedor.animalSelecionado,
+      idmodalidade: idmodalidade,
     );
 
     if (mounted) {
@@ -416,7 +430,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     }
   }
 
-  void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento) {
+  void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento, String idmodalidade) {
     if (mounted) {
       var novaProva = ProvaModelo(
         id: prova.id,
@@ -438,6 +452,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         sorteio: prova.sorteio,
         permitirEditarParceiros: prova.permitirEditarParceiros,
         liberarReembolso: prova.liberarReembolso,
+        idmodalidade: idmodalidade,
       );
 
       // Irá permitir escolher so um pacote por prova

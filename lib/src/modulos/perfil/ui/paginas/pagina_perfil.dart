@@ -37,7 +37,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       }
     },
     {
-      'titulo': const Text('Animais'),
+      'titulo': const Text('Seus Animais'),
       'ativo': true,
       'icone': const Icon(FontAwesomeIcons.horse),
       'funcao': (BuildContext context) {

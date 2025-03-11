@@ -20,7 +20,6 @@ class PaginaInserirAnimais extends StatefulWidget {
 
 class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
   late bool souPropietario;
-  late TextEditingController sexoController;
   late TextEditingController racaDoAnimalController;
   late TextEditingController nomeController;
   late TextEditingController dataNascimentoController;
@@ -54,7 +53,6 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
 
   @override
   void dispose() {
-    sexoController.dispose();
     racaDoAnimalController.dispose();
     nomeController.dispose();
     dataNascimentoController.dispose();

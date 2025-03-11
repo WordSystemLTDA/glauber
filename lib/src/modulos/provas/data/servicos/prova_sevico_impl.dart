@@ -29,7 +29,7 @@ class ProvaServicoImpl implements ProvaServico {
     bool sucesso = jsonData['sucesso'];
 
     EventoModelo evento = EventoModelo.fromMap(jsonData['evento']);
-    ModeloAnimal? animalPadrao = jsonData['animalPadrao'] != null ? ModeloAnimal.fromMap(jsonData['animalPadrao']) : null;
+    ModeloAnimal? animalPadrao = jsonData['animalPadrao'] != null ? ModeloAnimal.fromJson(jsonData['animalPadrao']) : null;
 
     List<ModalidadeProvaModelo> provas = List<ModalidadeProvaModelo>.from(jsonData['provas'].map((elemento) {
       return ModalidadeProvaModelo.fromJson(elemento);

@@ -1,20 +1,24 @@
 X = FEITO
-? = FEITO MAIS PRECISA DE TESTES
+? = FEITO MAS PRECISA DE TESTES
 - = FEITO MAIS OU MENOS
 ! = REVER SE VAI FAZER MESMO
 
 Criação de Tabela
 
+- COLOCAR TODOS COMO NULL PADRÃO
 - hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto))
 - id_animal foi criada na tabela itens_venda (quando inserir animal na venda)
+- modalidade foi criada na tabela itens_venda (3 tambores, laço em dupla, laço individual)
 - padrao foi criada na tabela animais (varchar(5) Padrão: Não)
 - id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
+- id_modalidade foi criada em ordem_de_entrada
+- hora foi criada em movimentacoes
 
 Fazer no Aplicativo
 
 - [X] Caso laço em dupla, 3 tambores, laço individual for Pendente no cadastro do cliente, aparecer para selecionar a modalide na tela de home
 - [ ] Arrumar loading ao cancelar login do google
-- [ ] Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
+- [X] Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
 - [X] Ao segurar o card da prova, aparecer a súmula em uma modal
 - [X] Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
 - [X] Colocar um botão de ver meus parceiros no card da compra e quando clicar aparecer uma modal para listar os parceiros dela
@@ -24,6 +28,10 @@ Fazer no Aplicativo
 - [?] Fazer notificação
 - [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 - [ ] Fazer input de Padrão no cadastrar animais
+- [ ] Melhorar a listagem de ordem de entrada (deixar mais rapido)
+- [X] Permitir provas que estão ativas ou não em selecionar pagamentos
+- [ ] Quando seleciona todos os pagamentos em selecionar pagamentos, não permitir provas em eventos/empresas/pagamento diferentes
+- [!] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
@@ -48,6 +56,7 @@ Cadastro de prova
 - [ ] 3 Tambores - Campo de selecionar a idade máxima da prova
 - [ ] 3 Tambores - Campo de selecionar Genêro/Sexo da prova
 - [ ] 3 Tambores - Campo de selecionar opção de profissional da prova
+- [ ] 3 Tambores - Campo de selecionar se pode mais de 1 cliente por animal (Padrão como não permitir)
 - [ ] Laço em dupla - Venda Avulsa padrão como Sim
 - [ ] Laço em dupla - Aparecer Quant. Max. Inscrições Pacote Fechado como 1
 - [ ] Laço Individual - Criar campo de HC Máximo (é outro campo, não pode usar o que já esta criado)
@@ -137,7 +146,7 @@ Na Página de Provas
 - [X] Colocar uma permissão de obrigar a cidade quando clicar na prova (OBRIGAR A COLOCAR A CIDADE)
 - [X] quando clicar no gerar pagamento aparecer uma modal das inscrições deles para selecionar
 - [X] cancelar inscrições indepedente do pagamento (sim ou não)
-- [ ] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
+- [-] cancelar a inscrição com um bloqueio (exemplo, colocar 0 horas pode cancelar qualquer hora, 2 horas pode cancelar 2 horas antes da prova)
 - [X] colocar um carrosel infinito, na pagina_provas, mostrando as fotos que foram vinculadas \*
 - [X] fazer para mostrar a inscrição que está agora, pegar por ordem de 1 boi até o ultimo editado + 1, a partir do 2 boi, a ordem vai pegar normal menos a que ta SAT no 1 boi. \*
 - [X] quando for transferir os ingressos, transferir também os parceiros vinculados ou ver se é para zerar os parceiros.
@@ -149,10 +158,7 @@ Na Página de Provas
 - [X] Fazer vinculação de provas na lista_competicacao na hora de mostrar provas ao vivo (que agora não é mais provas é por lista_competicao), juntar as ordem de entradas das provas vinculadas (ORDEM CRESCENTE NÚMERO DA INSCRIÇÃO)
 - [X] Fazer automatico uma lista de FINAL ordenada pelo ranking se o ranking não tiver null (MAIOR PARA O MENOR, baseado no ranking) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
 - [X] Fazer automatico uma lista de RESULTADO FINAL ordenada pelo classificacao se o classificacao não tiver null (MENOR PARA O MAIOR, baseado na classificacao) (SEMPRE EM BAIXO DE TODAS AS LISTAS)
-- [ ] Liberação de Compra EVENTO erro
 - [X] Ao editar parceiro mudar data e hora edição
-- [ ] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
-- [ ] Arrumar notificações
 - [X] Colocar Competidores Disponiveis na modal de detalhes da inscrição em compras (ao editar parceiro)
 - [X] fazer quant_max_inscricoes_pezeiro e quant_max_inscricoes_cabeceira
 

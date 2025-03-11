@@ -68,6 +68,7 @@ import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_s
 import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_aovivo_store.dart';
+import 'package:provadelaco/src/modulos/provas/interator/stores/provas_provedor.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
 import 'package:provider/provider.dart';
 
@@ -166,6 +167,7 @@ void main() async {
 
       Provider(create: (context) => ServicoAnimais(context.read(), context.read())),
       ChangeNotifierProvider(create: (context) => ProvedorAnimal(context.read<ServicoAnimais>())),
+      ChangeNotifierProvider(create: (context) => ProvasProvedor()),
     ],
     child: const AppWidget(),
   );
