@@ -9,6 +9,7 @@ class ModeloAnimal {
   final String nomedoanimal;
   final String datanascianimal;
   final String sexo;
+  final String padrao;
   final String racadoanimal;
   final String foto;
   final bool soupropietario;
@@ -18,6 +19,7 @@ class ModeloAnimal {
     required this.nomedoanimal,
     required this.datanascianimal,
     required this.sexo,
+    required this.padrao,
     required this.racadoanimal,
     required this.foto,
     required this.soupropietario,

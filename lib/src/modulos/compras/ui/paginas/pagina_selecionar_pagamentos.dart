@@ -183,6 +183,14 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                           if (value == true) {
                             for (var element in inscricoes.value) {
                               if (comprasPagamentos.contains(element) == false) {
+                                // if (element.idEmpresa == comprasPagamentos.firstOrNull?.idEmpresa) {
+                                //   return;
+                                // }
+
+                                // if (element.idFormaPagamento != comprasPagamentos.firstOrNull?.idFormaPagamento) {
+                                //   return;
+                                // }
+
                                 comprasPagamentos.add(element);
                               }
 

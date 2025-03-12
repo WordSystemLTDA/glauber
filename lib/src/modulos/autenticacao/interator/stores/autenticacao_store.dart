@@ -36,6 +36,7 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
       } else {
         await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
           if (usuario == null) {
+            value = AutenticacaoErro(erro: Exception('Login cancelado pelo Usuário'));
             return;
           }
 

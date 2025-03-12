@@ -113,10 +113,10 @@ class _CardComprasState extends State<CardCompras> {
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                Text(item.nomeEvento),
+                                Flexible(child: Text(item.nomeEvento)),
                                 if (widget.aparecerNomeProva == true) ...[
-                                  const Text(' - '),
-                                  Text(item.nomeProva),
+                                  // SizedBox(width: 10),
+                                  // Flexible(child: Text(item.nomeProva)),
                                 ],
                               ],
                             ),

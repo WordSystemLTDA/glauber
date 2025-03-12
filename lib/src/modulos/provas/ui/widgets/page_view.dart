@@ -93,10 +93,10 @@ class _PageViewProvasState extends State<PageViewProvas> {
   void selecionarAnimal() {
     var provasProvedor = context.read<ProvasProvedor>();
 
-    Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true)).then((value) {
-      var item = value as ModeloAnimal;
+    Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true)).then(<ModeloAnimal>(value) {
+      if (value == null) return;
 
-      provasProvedor.animalSelecionado = item;
+      provasProvedor.animalSelecionado = value;
     });
   }
 

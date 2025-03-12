@@ -11,32 +11,33 @@ Criação de Tabela
 - modalidade foi criada na tabela itens_venda (3 tambores, laço em dupla, laço individual)
 - padrao foi criada na tabela animais (varchar(5) Padrão: Não)
 - id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
-- id_modalidade foi criada em ordem_de_entrada
+- id_modalidade foi criada em ordem_de_entrada (depois irá criar outras colunas para 3 tambores/laço individual)
 - hora foi criada em movimentacoes
 
 Fazer no Aplicativo
 
 - [X] Caso laço em dupla, 3 tambores, laço individual for Pendente no cadastro do cliente, aparecer para selecionar a modalide na tela de home
-- [ ] Arrumar loading ao cancelar login do google
 - [X] Usuário não pode comprar prova que ele não pode correr (3 tambores, laço individual, laço em dupla)
 - [X] Ao segurar o card da prova, aparecer a súmula em uma modal
 - [X] Aparecer um TabBar contendo as categorias (3 tambores, laço em dupla, laço individual, etc..) na página de evento (onde contem as provas)
 - [X] Colocar um botão de ver meus parceiros no card da compra e quando clicar aparecer uma modal para listar os parceiros dela
 - [X] Em Competidores Disponiveis (em compras e selecionar prova) aparecer handicap de cabeça e pé
 - [X] Mostrar provas oculta ou não em Inscrições e Ordem de entrada
-- [ ] Liberação de Compra EM eventos não está funcionando
-- [?] Fazer notificação
-- [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
-- [ ] Fazer input de Padrão no cadastrar animais
-- [ ] Melhorar a listagem de ordem de entrada (deixar mais rapido)
 - [X] Permitir provas que estão ativas ou não em selecionar pagamentos
-- [ ] Quando seleciona todos os pagamentos em selecionar pagamentos, não permitir provas em eventos/empresas/pagamento diferentes
+- [X] Fazer input de Padrão no cadastrar animais
+- [?] Fazer notificação
+- [?] Arrumar loading ao cancelar login do google
+- [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 - [!] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
+- [ ] Liberação de Compra EM eventos não está funcionando
+- [?] Melhorar a listagem de ordem de entrada (deixar mais rapido)
+- [ ] Quando seleciona todos os pagamentos em selecionar pagamentos, não permitir provas em eventos/empresas/pagamento diferentes
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
-- [ ] Movimentações duplicou (não permitir duplicar pelo id_mov)
 - [?] Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
+- [?] Movimentações duplicou (não permitir duplicar pelo id_mov)
+- [ ] Parece que não está aparecendo a modal para selecionar os parceiros
 
 Sistema (Painel)
 

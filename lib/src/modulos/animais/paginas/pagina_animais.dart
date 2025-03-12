@@ -122,9 +122,15 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                     Text(item.nomedoanimal, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                                     Text(item.racadoanimal),
                                     Text(item.sexo),
-                                    Text(
-                                      "${(DateTime.now().year - DateTime.parse(Utils.trocarFormatacaoData(item.datanascianimal, pattern: '/', to: '-')).year).toString()} anos",
-                                      style: TextStyle(fontSize: 12),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${(DateTime.now().year - DateTime.parse(Utils.trocarFormatacaoData(item.datanascianimal, pattern: '/', to: '-')).year).toString()} anos",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        Text(item.padrao == 'Sim' ? 'Padrão' : ''),
+                                      ],
                                     ),
                                   ],
                                 ),

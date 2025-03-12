@@ -40,6 +40,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
       nomeController = TextEditingController(text: widget.modeloAnimais!.nomedoanimal);
       dataNascimentoController = TextEditingController(text: widget.modeloAnimais!.datanascianimal);
       sexo = widget.modeloAnimais!.sexo;
+      padrao = widget.modeloAnimais!.padrao;
       racaDoAnimalController = TextEditingController(text: widget.modeloAnimais!.racadoanimal);
       fotoSelecionadaEdicaoUrl = widget.modeloAnimais!.foto;
       souPropietario = widget.modeloAnimais!.soupropietario;
@@ -165,6 +166,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                           nome: nomeController.text,
                           dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
                           sexo: sexo,
+                          padrao: padrao,
                           raca: racaDoAnimalController.text,
                           foto: fotoSelecionada.value.path,
                           fotoedicao: fotoSelecionadaEdicaoUrl.split('/').last,
@@ -190,6 +192,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                           nome: nomeController.text,
                           dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
                           sexo: sexo,
+                          padrao: padrao,
                           raca: racaDoAnimalController.text,
                           foto: fotoSelecionada.value.path,
                           idProprietario: souPropietario ? '0' : '1',
@@ -304,11 +307,45 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                 ],
               ),
               const SizedBox(height: 10),
-              const Text('Raça do Animal'),
-              const SizedBox(height: 5),
-              TextField(
-                controller: racaDoAnimalController,
-                decoration: const InputDecoration(hintText: 'Raça do Animal'),
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Raça do Animal'),
+                      const SizedBox(height: 5),
+                      SizedBox(
+                        width: (width / 2) - 15 + 100,
+                        child: TextField(
+                          controller: racaDoAnimalController,
+                          decoration: const InputDecoration(hintText: 'Raça do Animal'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Padrão'),
+                      const SizedBox(height: 5),
+                      DropdownMenu(
+                        width: (width / 2) - 115,
+                        hintText: 'Deixar esse animal como padrão?',
+                        initialSelection: padrao,
+                        dropdownMenuEntries: const [
+                          DropdownMenuEntry(value: 'Não', label: 'Não'),
+                          DropdownMenuEntry(value: 'Sim', label: 'Sim'),
+                        ],
+                        onSelected: (value) {
+                          if (value != null) {
+                            padrao = value;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
               const Text('Foto'),
