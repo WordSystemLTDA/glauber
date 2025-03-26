@@ -27,11 +27,12 @@ Fazer no Aplicativo
 - [X] Fazer input de Padrão no cadastrar animais
 - [?] Fazer notificação
 - [?] Arrumar loading ao cancelar login do google
+- [?] Melhorar a listagem de ordem de entrada (deixar mais rapido)
 - [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 - [!] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
+- [X] Quando seleciona todos os pagamentos em selecionar pagamentos, não permitir provas em eventos/empresas/pagamento diferentes
 - [ ] Liberação de Compra EM eventos não está funcionando
-- [?] Melhorar a listagem de ordem de entrada (deixar mais rapido)
-- [ ] Quando seleciona todos os pagamentos em selecionar pagamentos, não permitir provas em eventos/empresas/pagamento diferentes
+- [ ] REVER AO SELECIONAR LAÇO CABEÇA E PÉ, E VER SE ESTÁ CERTO
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.

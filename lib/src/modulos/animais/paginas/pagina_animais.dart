@@ -28,12 +28,12 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) {
-        listar('');
+        listar();
       }
     });
   }
 
-  void listar(String pesquisa) async {
+  void listar({String pesquisa = ''}) async {
     ProvedorAnimal provedor = context.read<ProvedorAnimal>();
     await provedor.listar(pesquisa);
   }
@@ -46,7 +46,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, AppRotas.animaisCadastrar).then((value) {
-              listar(nomeBuscaController.text);
+              listar(pesquisa: nomeBuscaController.text);
             });
           },
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -67,7 +67,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                     ),
                   ),
                   onChanged: (nomePesquisa) {
-                    listar(nomePesquisa);
+                    listar(pesquisa: nomePesquisa);
                   },
                 ),
               ),
@@ -148,7 +148,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                           return PaginaInserirAnimais(modeloAnimais: item);
                                         },
                                       )).then((value) {
-                                        listar(nomeBuscaController.text);
+                                        listar(pesquisa: nomeBuscaController.text);
                                       });
                                     },
                                   ),

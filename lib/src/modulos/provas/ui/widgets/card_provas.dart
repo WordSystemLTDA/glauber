@@ -111,7 +111,7 @@ class _CardProvasState extends State<CardProvas> {
                       child: const Text('Sim'),
                       onPressed: () async {
                         Navigator.of(contextDialog).pop();
-                        aoClicarNaCabeceira(prova, false, item: item);
+                        aoClicarNaCabeceira(prova, false, item: item, selecionarParceiro: false);
                       },
                     ),
                   ],
@@ -146,7 +146,6 @@ class _CardProvasState extends State<CardProvas> {
           widget.adicionarNoCarrinho(provaModelo, state.eventoModelo, state.permitirCompraModelo.quantParceiros!);
           return;
         }
-
         if (provaModelo.avulsa == 'Sim') {
           if (mounted) {
             showModalBottomSheet(
@@ -188,11 +187,17 @@ class _CardProvasState extends State<CardProvas> {
                       return true;
                     }
 
-                    if (state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))) {
-                      return true;
-                    }
+                    // if (state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))) {
+                    //   return false;
+                    // }
 
-                    if (listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty) {
+                    // if (listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty) {
+                    //   return false;
+                    // }
+
+                    if ((state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
+                        ? false
+                        : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                       return false;
                     }
 
@@ -517,70 +522,84 @@ class _CardProvasState extends State<CardProvas> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Skeleton.shade(
-                            child: Container(
-                              width: 5,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8),
+                    Expanded(
+                      child: SizedBox(
+                        child: Row(
+                          children: [
+                            Skeleton.shade(
+                              child: Container(
+                                width: 5,
+                                clipBehavior: Clip.hardEdge,
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8),
+                                  ),
+                                ),
+                                child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            prova.nomeProva,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(fontSize: 16),
+                                          ),
+                                        ),
+                                        if (prova.avulsa == 'Sim') ...[
+                                          Icon(Icons.group_add_outlined, size: 18, color: Colors.green),
+                                        ] else ...[
+                                          Icon(Icons.group_off_outlined, size: 18, color: Colors.red),
+                                        ],
+                                      ],
+                                    ),
+                                    if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
+                                      SizedBox(
+                                        width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
+                                        child: Text(
+                                          prova.descricao!,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                    SizedBox(
+                                      width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            Utils.coverterEmReal.format(double.parse(prova.valor)),
+                                            style: const TextStyle(fontSize: 18, color: Colors.green),
+                                          ),
+                                          if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) &&
+                                              (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Text("HC: ${prova.hcMinimo} á ${prova.hcMaximo}", style: const TextStyle(fontSize: 12)),
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: VerticalDivider(color: coresJaComprou(prova), thickness: 5),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
-                                  child: Text(
-                                    prova.nomeProva,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                                if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
-                                  SizedBox(
-                                    width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
-                                    child: Text(
-                                      prova.descricao!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
-                                    ),
-                                  ),
-                                ],
-                                SizedBox(
-                                  width: (width - (widget.modalidade == '2' ? 90 : 0)) - 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        Utils.coverterEmReal.format(double.parse(prova.valor)),
-                                        style: const TextStyle(fontSize: 18, color: Colors.green),
-                                      ),
-                                      if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
-                                        Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: Text("HC: ${prova.hcMinimo} á ${prova.hcMaximo}", style: const TextStyle(fontSize: 12)),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     if (widget.modalidade == '2')

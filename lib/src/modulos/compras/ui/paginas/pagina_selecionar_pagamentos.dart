@@ -34,6 +34,37 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
     });
   }
 
+  void selecionarInscricoesAutomaticamente(bool value) {
+    setState(() {
+      selecionarVariasInscricoes = value;
+      if (value == true) {
+        for (var element in inscricoes.value) {
+          if (comprasPagamentos.contains(element) == false) {
+            if (comprasPagamentos.isNotEmpty && element.idFormaPagamento != comprasPagamentos.firstOrNull?.idFormaPagamento) {
+              return;
+            }
+
+            if (comprasPagamentos.isNotEmpty && element.idEvento != comprasPagamentos.firstOrNull?.idEvento) {
+              return;
+            }
+
+            if (comprasPagamentos.isNotEmpty && element.idEmpresa != comprasPagamentos.firstOrNull?.idEmpresa) {
+              return;
+            }
+
+            comprasPagamentos.add(element);
+          }
+        }
+      } else {
+        for (var element in inscricoes.value) {
+          if (comprasPagamentos.contains(element)) {
+            comprasPagamentos.remove(element);
+          }
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
@@ -155,22 +186,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
             padding: const EdgeInsets.only(top: 10),
             child: InkWell(
               onTap: () {
-                setState(() {
-                  selecionarVariasInscricoes = !selecionarVariasInscricoes;
-                  if (selecionarVariasInscricoes == true) {
-                    for (var element in inscricoes.value) {
-                      if (!comprasPagamentos.contains(element)) {
-                        comprasPagamentos.add(element);
-                      }
-                    }
-                  } else {
-                    for (var element in inscricoes.value) {
-                      if (comprasPagamentos.contains(element)) {
-                        comprasPagamentos.remove(element);
-                      }
-                    }
-                  }
-                });
+                selecionarInscricoesAutomaticamente(!selecionarVariasInscricoes);
               },
               child: Row(
                 children: [
@@ -178,58 +194,13 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     value: selecionarVariasInscricoes,
                     onChanged: (value) {
                       if (value != null) {
-                        setState(() {
-                          selecionarVariasInscricoes = value;
-                          if (value == true) {
-                            for (var element in inscricoes.value) {
-                              if (comprasPagamentos.contains(element) == false) {
-                                // if (element.idEmpresa == comprasPagamentos.firstOrNull?.idEmpresa) {
-                                //   return;
-                                // }
-
-                                // if (element.idFormaPagamento != comprasPagamentos.firstOrNull?.idFormaPagamento) {
-                                //   return;
-                                // }
-
-                                comprasPagamentos.add(element);
-                              }
-
-                              // if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
-                              //               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                              //               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              //                 showCloseIcon: true,
-                              //                 content: Text(
-                              //                   'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
-                              //                 ),
-                              //               ));
-                              //               return;
-                              //             }
-
-                              //             if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
-                              //               ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                              //               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                              //                 showCloseIcon: true,
-                              //                 content: Text(
-                              //                   'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
-                              //                 ),
-                              //               ));
-                              //               return;
-                              //             }
-                            }
-                          } else {
-                            for (var element in inscricoes.value) {
-                              if (comprasPagamentos.contains(element)) {
-                                comprasPagamentos.remove(element);
-                              }
-                            }
-                          }
-                        });
+                        selecionarInscricoesAutomaticamente(value);
                       }
                     },
                   ),
                   SizedBox(
                     width: width - 50,
-                    child: const Text('Selecionar todas as inscrições automaticamente.'),
+                    child: const Text('Selecionar as inscrições que pertencem na mesma empresa e tem a mesma forma de pagamento automaticamente.'),
                   ),
                 ],
               ),
