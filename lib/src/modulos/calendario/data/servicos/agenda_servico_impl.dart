@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:provadelaco/src/compartilhado/constantes/hexcolor.dart';
+import 'package:provadelaco/src/core/constantes/hexcolor.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/modulos/calendario/interator/modelos/agenda_info_modelo.dart';
 import 'package:provadelaco/src/modulos/calendario/interator/servicos/agenda_servico.dart';

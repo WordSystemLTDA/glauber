@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/core/firebase/notification_service.dart';
 import 'package:provadelaco/src/modulos/calendario/interator/estados/agenda_info_estado.dart';
 import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_info_store.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/src/compartilhado/widgets/mostrar_hora_atual.dart';
+import 'package:provadelaco/src/core/widgets/mostrar_hora_atual.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:provider/provider.dart';

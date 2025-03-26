@@ -1,7 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/estados/transferencia_estado.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/clientes_modelo.dart';

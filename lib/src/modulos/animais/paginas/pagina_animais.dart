@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
-import 'package:provadelaco/src/compartilhado/widgets/app_bar_sombra.dart';
+import 'package:provadelaco/src/core/constantes/uteis.dart';
+import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/modulos/animais/paginas/pagina_inserir_animais.dart';
 import 'package:provadelaco/src/modulos/animais/provedores/provedor_animal.dart';
 import 'package:provider/provider.dart';

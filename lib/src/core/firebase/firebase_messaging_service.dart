@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/core/firebase/notification_service.dart';
 
 class FirebaseMessagingService {
   final NotificationService _notificationService;

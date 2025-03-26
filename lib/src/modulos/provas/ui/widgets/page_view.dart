@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/src/compartilhado/constantes/uteis.dart';
-import 'package:provadelaco/src/compartilhado/widgets/termos_de_uso.dart';
+import 'package:provadelaco/src/core/constantes/uteis.dart';
+import 'package:provadelaco/src/core/widgets/termos_de_uso.dart';
 import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
 import 'package:provadelaco/src/modulos/animais/paginas/pagina_animais.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
@@ -146,10 +146,13 @@ class _PageViewProvasState extends State<PageViewProvas> {
                                     borderRadius: BorderRadius.circular(5),
                                     child: Image.network(
                                       provedor.animalSelecionado!.foto,
+                                      width: 92,
                                       height: 105,
                                       loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                                         if (loadingProgress == null) return child;
                                         return SizedBox(
+                                          width: 92,
+                                          height: 105,
                                           child: Center(
                                             child: CircularProgressIndicator(
                                               value:
@@ -159,7 +162,11 @@ class _PageViewProvasState extends State<PageViewProvas> {
                                         );
                                       },
                                       errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                        return const Icon(Icons.error_outline, color: Colors.grey, size: 105);
+                                        return SizedBox(
+                                          width: 92,
+                                          height: 105,
+                                          child: const Icon(Icons.error_outline, color: Colors.grey),
+                                        );
                                       },
                                     ),
                                   ),

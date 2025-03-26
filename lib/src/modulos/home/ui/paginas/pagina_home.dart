@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/compartilhado/constantes/dados_fakes.dart';
+import 'package:provadelaco/src/core/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';

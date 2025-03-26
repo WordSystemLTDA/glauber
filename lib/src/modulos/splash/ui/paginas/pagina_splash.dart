@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/compartilhado/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/compartilhado/firebase/notification_service.dart';
+import 'package:provadelaco/src/core/firebase/firebase_messaging_service.dart';
+import 'package:provadelaco/src/core/firebase/notification_service.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provider/provider.dart';

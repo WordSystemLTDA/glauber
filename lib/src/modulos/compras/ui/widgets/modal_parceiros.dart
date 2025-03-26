@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
-import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
+import 'package:provadelaco/src/core/constantes/constantes_global.dart';
+import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';

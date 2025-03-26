@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/compartilhado/constantes/funcoes_global.dart';
+import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';

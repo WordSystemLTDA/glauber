@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provadelaco/src/compartilhado/constantes/constantes_global.dart';
+import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:url_launcher/url_launcher.dart';
 
