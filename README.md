@@ -53,16 +53,16 @@ Cadastros de cliente
 
 Cadastro de prova
 
-- [ ] 3 Tambores - Venda Avulsa padrão como Sim
-- [ ] 3 Tambores - Apenas deixar esses campos: Descrição e Quant. Max. Inscrições Pacote Fechado
-- [ ] 3 Tambores - Campo de selecionar a idade máxima da prova
-- [ ] 3 Tambores - Campo de selecionar Genêro/Sexo da prova
-- [ ] 3 Tambores - Campo de selecionar opção de profissional da prova
-- [ ] 3 Tambores - Campo de selecionar se pode mais de 1 cliente por animal (Padrão como não permitir)
-- [ ] Laço em dupla - Venda Avulsa padrão como Sim
-- [ ] Laço em dupla - Aparecer Quant. Max. Inscrições Pacote Fechado como 1
-- [ ] Laço Individual - Criar campo de HC Máximo (é outro campo, não pode usar o que já esta criado)
-- [ ] Laço Individual  - Apenas deixar esses campos: Descrição e Quant. Max. de Inscrições
+- [X] 3 Tambores - Venda Avulsa padrão como Sim
+- [X] 3 Tambores - Apenas deixar esses campos: Descrição e Quant. Max. Inscrições Pacote Fechado
+- [X] 3 Tambores - Campo de selecionar a idade máxima da prova
+- [X] 3 Tambores - Campo de selecionar Genêro/Sexo da prova
+- [X] 3 Tambores - Campo de selecionar opção de profissional da prova
+- [X] 3 Tambores - Campo de selecionar se pode mais de 1 cliente por animal (Padrão como não permitir)
+- [X] Laço em dupla - Venda Avulsa padrão como Sim
+- [X] Laço em dupla - Aparecer Quant. Max. Inscrições Pacote Fechado como 1
+- [X] Laço Individual - Criar campo de HC Máximo (é outro campo, não pode usar o que já esta criado)
+- [X] Laço Individual  - Apenas deixar esses campos: Descrição e Quant. Max. de Inscrições
 
 Na Página de Provas
 
