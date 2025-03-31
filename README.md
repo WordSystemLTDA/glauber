@@ -67,7 +67,7 @@ Cadastro de prova
 Na Página de Provas
 
 - [X] 3 Tambores selecionar o animal para mostrar as provas (ou mostrar o animal que está como Padrão)
-- [ ] 3 Tambores aparecer somente as provas que o animal e o competidor pode correr
+- [X] 3 Tambores aparecer somente as provas que o animal e o competidor pode correr
 - [X] 3 Tambores embaixo do tabbar vai ter um input de selecionar o animal
 - [X] Laço Individual só clicar no card e comprar
 - [ ] Permissão Compra Ordenada -> Só pode comprar as provas se comprou a prova anterior, ex: Eu só posso comprar a prova 2 se eu comprar a prova 1 primeiro (1 ou 2, pegar pela sequencia)
