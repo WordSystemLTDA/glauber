@@ -22,7 +22,7 @@ class CompetidoresServicoImpl implements CompetidoresServico {
 
     if (sucesso == true) {
       return List<CompetidoresModelo>.from(dados.map((elemento) {
-        return CompetidoresModelo.fromMap(elemento);
+        return CompetidoresModelo.fromJson(elemento);
       }));
     } else {
       return [];
@@ -41,7 +41,7 @@ class CompetidoresServicoImpl implements CompetidoresServico {
 
     if (sucesso == true) {
       return List<CompetidoresModelo>.from(dados.map((elemento) {
-        return CompetidoresModelo.fromMap(elemento);
+        return CompetidoresModelo.fromJson(elemento);
       }));
     } else {
       return [];

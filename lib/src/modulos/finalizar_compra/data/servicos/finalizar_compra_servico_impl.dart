@@ -26,7 +26,7 @@ class FinalizarCompraServicoImpl implements FinalizarCompraServico {
       'usuario': usuario!.toMap(),
     };
 
-    var response = await client.post(url: url, body: jsonEncode(campos));
+    var response = await client.post(url: url, body: campos);
     var jsonData = jsonDecode(response.data);
 
     bool sucesso = jsonData['sucesso'];

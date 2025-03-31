@@ -44,16 +44,9 @@ class ComprasServicoImpl implements ComprasServico {
 
   @override
   Future<ComprasModelo?> listarPorId(String id, String idProva, String idEvento) async {
-    var url = 'compras/listar_por_id.php';
+    var url = 'compras/listar_por_id.php?id=$id&id_prova=$idProva&id_evento=$idEvento&id_cliente=${usuarioProvedor.usuario!.id}';
 
-    var campos = {
-      'id_cliente': usuarioProvedor.usuario!.id,
-      'id': id,
-      'id_prova': idProva,
-      'id_evento': idEvento,
-    };
-
-    var response = await client.post(url: url, body: jsonEncode(campos));
+    var response = await client.get(url: url);
 
     var jsonData = jsonDecode(response.data);
 

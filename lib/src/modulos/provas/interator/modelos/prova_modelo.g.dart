@@ -32,7 +32,7 @@ ProvaModelo _$ProvaModeloFromJson(Map<String, dynamic> json) => ProvaModelo(
       nomeCabeceira: json['nomeCabeceira'] as String?,
       idCabeceira: json['idCabeceira'] as String?,
       competidores: (json['competidores'] as List<dynamic>?)
-          ?.map((e) => CompetidoresModelo.fromJson(e as String))
+          ?.map((e) => CompetidoresModelo.fromJson(e as Map<String, dynamic>))
           .toList(),
       idmodalidade: json['idmodalidade'] as String?,
     );
