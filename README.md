@@ -164,12 +164,6 @@ Na Página de Provas
 - [X] Colocar Competidores Disponiveis na modal de detalhes da inscrição em compras (ao editar parceiro)
 - [X] fazer quant_max_inscricoes_pezeiro e quant_max_inscricoes_cabeceira
 
-403 RG3 SOMA 6 -> São Assaí, Getúlio peba, João Ciliao - Passou do limite e duplicou
-
-401 RG3 SOMA 10 -> tito - DUPLICOU
-
-406 RG3 SOMA 5 -> darci barreto - passou do limite
-
 ======================================= SISTEMA WEB ===================================================
 
 - [X] relatorio para filiações prova (colunas -> id (competidor), nome, valor, data)
