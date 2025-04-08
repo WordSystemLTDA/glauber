@@ -32,9 +32,9 @@ Fazer no Aplicativo
 - [?] Melhorar a listagem de ordem de entrada (deixar mais rapido)
 - [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 - [!] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
-- [ ] Liberação de Compra EM eventos não está funcionando
-- [ ] Liberação de compra quando é somente um pacote por competidor ele só deve permitir 1 Laço em pé e laço cabeça
-- [ ] Quando o competidor cancela uma compra, não pode permitir comprar de novo essa mesma prova, (aparecer a mensagem, "Você já cancelou essa inscrição, entre em contato com o suporte.")
+- [X] Liberação de Compra EM eventos não está funcionando
+- [X] Liberação de compra quando é somente um pacote por competidor ele só deve permitir 1 Laço em pé e laço cabeça
+- [X] Quando o competidor cancela uma compra, não pode permitir comprar de novo essa mesma prova, (aparecer a mensagem, "Você já cancelou essa inscrição, entre em contato com o suporte.")
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
