@@ -38,7 +38,7 @@ Fazer no Aplicativo
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
-- [?] Vincular_parceiros duplicou (não permitir duplicar pelo id_venda ou outra coisa)
+- [?] Vincular_parceiros duplicou (não permitir duplicar pelo id_v-enda ou outra coisa)
 - [?] Movimentações duplicou (não permitir duplicar pelo id_mov)
 - [X] Parece que não está aparecendo a modal para selecionar os parceiros
 
