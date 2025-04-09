@@ -6,6 +6,7 @@ X = FEITO
 Criação de Tabela
 
 - COLOCAR TODOS COMO NULL PADRÃO
+
 - hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto))
 - id_animal foi criada na tabela itens_venda (quando inserir animal na venda)
 - modalidade foi criada na tabela itens_venda (3 tambores, laço em dupla, laço individual)
@@ -13,7 +14,7 @@ Criação de Tabela
 - id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
 - id_modalidade foi criada em ordem_de_entrada (depois irá criar outras colunas para 3 tambores/laço individual)
 - hora foi criada em movimentacoes
-- Criar em movimentações coluna valor_taxa e total
+- criar em movimentações coluna valor_taxa e total
 
 Fazer no Aplicativo
 
@@ -36,6 +37,8 @@ Fazer no Aplicativo
 - [X] Liberação de Compra EM eventos não está funcionando
 - [X] Liberação de compra quando é somente um pacote por competidor ele só deve permitir 1 Laço em pé e laço cabeça
 - [X] Quando o competidor cancela uma compra, não pode permitir comprar de novo essa mesma prova, (aparecer a mensagem, "Você já cancelou essa inscrição, entre em contato com o suporte.")
+- [ ] Fazer desconto por provas (somente 1 vez) EX: caso eu selecione as 2 provas que estão vinculadas ele irá dar desconto que está cadastrado em descontos_por_prova
+- [ ] em movimentações colocar valor_taxa, total e valor_desconto certo, e valor somente o valor original puro sem taxa
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
