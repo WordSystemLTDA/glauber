@@ -13,6 +13,7 @@ Criação de Tabela
 - id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
 - id_modalidade foi criada em ordem_de_entrada (depois irá criar outras colunas para 3 tambores/laço individual)
 - hora foi criada em movimentacoes
+- Criar em movimentações coluna valor_taxa e total
 
 Fazer no Aplicativo
 
