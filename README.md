@@ -7,14 +7,39 @@ Criação de Tabela
 
 - COLOCAR TODOS COMO NULL PADRÃO
 
-- hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto))
-- id_animal foi criada na tabela itens_venda (quando inserir animal na venda)
-- modalidade foi criada na tabela itens_venda (3 tambores, laço em dupla, laço individual)
-- padrao foi criada na tabela animais (varchar(5) Padrão: Não)
-- id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
-- id_modalidade foi criada em ordem_de_entrada (depois irá criar outras colunas para 3 tambores/laço individual)
-- hora foi criada em movimentacoes
-- criar em movimentações coluna valor_taxa e total
+<!-- - hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto)) -->
+<!-- - id_animal foi criada na tabela itens_venda (quando inserir animal na venda) -->
+<!-- - modalidade foi criada na tabela itens_venda (3 tambores, laço em dupla, laço individual) -->
+<!-- - padrao foi criada na tabela animais (varchar(5) Padrão: Não) -->
+<!-- - id_modalidade foi criada em ordem_de_entrada (depois irá criar outras colunas para 3 tambores/laço individual) -->
+<!-- - hora foi criada em movimentacoes
+- criar em movimentações coluna valor_taxa e total -->
+
+- vendas
+  [x] hora_pgto
+
+- itens_venda
+  [x] id_modalidade (3 tambores, laço em dupla, laço individual)
+  [x] id_animal
+
+- animais
+  [x] padrao (varchar(5) Padrão: Não)
+
+- [x] id_vendas_cabeceira e id_vendas_pezeiro mudou para varchar(100) e agora ao salvar usa o id_compra em vendas ao inves de id da venda
+
+- ordem_de_entrada
+  [x] id_modalidade
+
+- movimentações
+  [x] valor_desconto
+  [x] valor_taxa
+  [x] total
+  [x] hora
+
+- [x] descontos_por_provas (tabela nova)
+
+- provas
+  [x] id_descontos_por_provas
 
 Fazer no Aplicativo
 
