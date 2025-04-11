@@ -65,6 +65,7 @@ Fazer no Aplicativo
 - [ ] Fazer desconto por provas (somente 1 vez) EX: caso eu selecione as 2 provas que estão vinculadas ele irá dar desconto que está cadastrado em descontos_por_prova
 - [ ] em movimentações colocar valor_taxa, total e valor_desconto certo, e valor somente o valor original puro sem taxa
 - [ ] mudar listar de filiação para permitir somente pendente (ok... teria como colocar nas condições que o Status=Pendente tbm?  que as vezes o competidor faz a compra dai é lançada a filiacao, porém ele cancela e faz de novo... dai na nova compra nao eh lancada a filiacao pq ela consta na compra que foi cancelada)
+- [ ] quando cancelar a inscrição (primeira msg de cancelamento pra : ATENÇÃO, SE VOCÊ CANCELAR, NÃO PODERÁ FAZER INSCRIÇÃO NOVAMENTE NESTA PROVA. TEM CERTEZA QUE DESEJA CONTINUAR?)
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
