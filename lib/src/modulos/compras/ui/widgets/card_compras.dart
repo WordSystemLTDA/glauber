@@ -163,7 +163,7 @@ class _CardComprasState extends State<CardCompras> {
                                       builder: (context) {
                                         return AlertDialog(
                                           title: const Text('Deseja realmente cancelar venda?'),
-                                          content: const Text('Cancelar venda'),
+                                          content: const Text('ATENÇÃO, SE VOCÊ CANCELAR, NÃO PODERÁ FAZER INSCRIÇÃO NOVAMENTE NESTA PROVA. TEM CERTEZA QUE DESEJA CONTINUAR?'),
                                           actions: [
                                             TextButton(
                                               onPressed: () {

@@ -14,6 +14,7 @@ class ListarInformacoesModelo {
   final List<ParcelaDisponiveisModelo> parcelasDisponiveisCartao;
   final List<PagamentosModelo> pagamentos;
   final ValorAdicionalModelo? valorAdicional;
+  final String? valorDescontoPorProva;
   final String ativoPagamento;
   final String pagamentoPix;
   final String tempoCancel;
@@ -25,6 +26,7 @@ class ListarInformacoesModelo {
     required this.parcelasDisponiveisCartao,
     required this.pagamentos,
     this.valorAdicional,
+    this.valorDescontoPorProva,
     required this.ativoPagamento,
     required this.pagamentoPix,
     required this.tempoCancel,
@@ -38,6 +40,7 @@ class ListarInformacoesModelo {
       'parcelasDisponiveisCartao': parcelasDisponiveisCartao.map((x) => x.toMap()).toList(),
       'pagamentos': pagamentos.map((x) => x.toMap()).toList(),
       'valorAdicional': valorAdicional?.toMap(),
+      'valorDescontoPorProva': valorDescontoPorProva,
       'ativoPagamento': ativoPagamento,
       'pagamentoPix': pagamentoPix,
       'tempoCancel': tempoCancel,
@@ -60,6 +63,7 @@ class ListarInformacoesModelo {
         ),
       ),
       valorAdicional: map['valorAdicional'] != null ? ValorAdicionalModelo.fromMap(map['valorAdicional'] as Map<String, dynamic>) : null,
+      valorDescontoPorProva: map['valorDescontoPorProva'] != null ? map['valorDescontoPorProva'] as String : null,
       ativoPagamento: map['ativoPagamento'] as String,
       pagamentoPix: map['pagamentoPix'] as String,
       tempoCancel: map['tempoCancel'] as String,

@@ -149,7 +149,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           valorIngresso: dados.prova.valor,
           valorTaxa: dados.prova.taxaProva,
           valorTaxaCartao: metodoPagamento == '3' ? dados.taxaCartao : '0',
-          valorDesconto: "0",
+          valorDesconto: dados.valorDescontoPorProva ?? '0',
           valorTotal: retornarValorTotal(dados).toString(),
           temValorFiliacao: dados.valorAdicional?.valor,
           cartao: cartaoSelecionado,
@@ -174,7 +174,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           valorIngresso: dados.prova.valor,
           valorTaxa: dados.prova.taxaProva,
           valorTaxaCartao: metodoPagamento == '3' ? dados.taxaCartao : '0',
-          valorDesconto: "0",
+          valorDesconto: dados.valorDescontoPorProva ?? '0',
           valorTotal: retornarValorTotal(dados).toString(),
           tipoDeVenda: "Venda",
           cartao: cartaoSelecionado,
@@ -185,6 +185,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
 
   double retornarValorTotal(ListarInformacoesModelo dados) {
     double valorTotal = double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva);
+
+    double desconto = double.parse(dados.valorDescontoPorProva ?? '0');
 
     if (metodoPagamento == '3') {
       valorTotal = valorTotal + double.parse(dados.taxaCartao);
@@ -198,7 +200,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       }
     }
 
-    return valorTotal;
+    return valorTotal - desconto;
   }
 
   void abrirModalCartoes() {
@@ -538,6 +540,21 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               ),
                               Text(
                                 "${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${double.parse(dados.valorAdicional!.valor).obterReal()}",
+                                style: const TextStyle(fontSize: 16, color: Colors.green),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (double.parse(dados.valorDescontoPorProva ?? '0') > 0) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Desconto',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                "- ${double.parse(dados.valorDescontoPorProva ?? '0').obterReal()}",
                                 style: const TextStyle(fontSize: 16, color: Colors.green),
                               ),
                             ],
