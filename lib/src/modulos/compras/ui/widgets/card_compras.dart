@@ -163,7 +163,9 @@ class _CardComprasState extends State<CardCompras> {
                                       builder: (context) {
                                         return AlertDialog(
                                           title: const Text('Deseja realmente cancelar venda?'),
-                                          content: const Text('ATENÇÃO, SE VOCÊ CANCELAR, NÃO PODERÁ FAZER INSCRIÇÃO NOVAMENTE NESTA PROVA. TEM CERTEZA QUE DESEJA CONTINUAR?'),
+                                          content: const Text(
+                                            'Caso você queira trocar o seu parceiro, não é necessário o cancelamento, você pode alterar em "Ver meus Parceiros" ou "(Nome do parceiro)"',
+                                          ),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
@@ -178,7 +180,8 @@ class _CardComprasState extends State<CardCompras> {
                                                   builder: (context) {
                                                     return AlertDialog(
                                                       title: const Text('Cuidado!'),
-                                                      content: const Text('Essa inscrição será Cancelada.'),
+                                                      content: const Text(
+                                                          'ATENÇÃO, SE VOCÊ CANCELAR, NÃO PODERÁ FAZER INSCRIÇÃO NOVAMENTE NESTA PROVA. TEM CERTEZA QUE DESEJA CONTINUAR?'),
                                                       actions: [
                                                         TextButton(
                                                           onPressed: () {

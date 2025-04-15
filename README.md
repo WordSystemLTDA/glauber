@@ -67,6 +67,33 @@ Fazer no Aplicativo
 - [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 - [!] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
 
+- [ ] quando (cancelar ou editar parceiro) a inscrição remover o id e id_vendas (pezeiro ou cabeceira) de quem está cancelando do vincular_parceiros, 
+    e quando editar mudar o status para Pendente
+
+- SOMENTE AVULSA
+  - [ ] Cada card de venda tem que ter o seu parceiro respectivo
+    - aparecer o nome do parceiro caso tenha, e caso não tenha aparecer: 'Sorteio'
+  - [ ] Aparece para o parceiro confirmar a inscrição
+    - aparecer uma página inteira
+    - aparecer em lista
+    - aparecer modo agrupado por provas, deixar aberto como padrão
+    - aparecer o card
+      - Nome do competidor
+      - nome da cidade
+      - laço pé ou cabeça
+      - handicap
+      - botões recusar ou confirmar
+        - se recusar a inscrição vai para sorteio
+        - se confirar vai gerar a venda e a vinculação
+  
+  - Quando cancelar a inscrição e tiver para sorteio excluir a linha (vincular_parceiros)
+  - quando cancelar a inscrição e tiver algum parceiro vinculado, esse parceiro (quem cancelou) vira sorteio
+
+- [ ] Mudar o id_vendas_cabeceira e id_vendas_pezeiro para pegar de id_vendas (antes estava id_compra)
+- [ ] Mudar o 'Pendente' nas páginas de "MEUS PARCEIROS" em "COMPRAS" para 'Aguardando Confirmação'
+
+    
+
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.
 - [?] Vincular_parceiros duplicou (não permitir duplicar pelo id_v-enda ou outra coisa)
