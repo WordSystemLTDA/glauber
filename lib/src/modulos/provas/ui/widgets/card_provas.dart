@@ -557,11 +557,11 @@ class _CardProvasState extends State<CardProvas> {
                                             style: const TextStyle(fontSize: 16),
                                           ),
                                         ),
-                                        if (prova.avulsa == 'Sim') ...[
-                                          Icon(Icons.group_add_outlined, size: 18, color: Colors.green),
-                                        ] else ...[
-                                          Icon(Icons.group_off_outlined, size: 18, color: Colors.red),
-                                        ],
+                                        // if (prova.avulsa == 'Sim') ...[
+                                        //   Icon(Icons.group_add_outlined, size: 18, color: Colors.green),
+                                        // ] else ...[
+                                        //   Icon(Icons.group_off_outlined, size: 18, color: Colors.red),
+                                        // ],
                                       ],
                                     ),
                                     if (prova.descricao != null && prova.descricao!.isNotEmpty) ...[
