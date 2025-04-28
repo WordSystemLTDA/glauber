@@ -247,7 +247,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             return const Text('Erro ao listar informações.');
           }
 
-          metodoPagamento = dados.pagamentos.firstOrNull?.id ?? '0';
+          if (metodoPagamento == '0') {
+            metodoPagamento = dados.pagamentos.firstOrNull?.id ?? '0';
+          }
 
           return Skeletonizer(
             enabled: state is CarregandoInformacoes,
@@ -299,7 +301,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                   .map(
                                     (itemPagamento) => ButtonSegment(
                                       value: itemPagamento.id,
-                                      tooltip: itemPagamento.nome,
+                                      tooltip: "${itemPagamento.id}${itemPagamento.nome}",
                                       label: Text(
                                         itemPagamento.nome,
                                         overflow: TextOverflow.ellipsis,
@@ -310,7 +312,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                               selected: {metodoPagamento},
                               showSelectedIcon: false,
                               onSelectionChanged: (pagamento) {
-                                if (pagamento.first == '1' || pagamento.first == '4' || pagamento.first == '5' || pagamento.first == '6') {
+                                if (pagamento.first == '1' || pagamento.first == '4' || pagamento.first == '5' || pagamento.first == '6' || pagamento.first == '7') {
                                   if (dados.ativoPagamento == 'Sim') {
                                     showDialog<String>(
                                       context: context,

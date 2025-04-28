@@ -114,7 +114,9 @@ class _CardParceirosState extends State<CardParceiros> {
             color: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? const Color(0xFFfbe5ea)
                 : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
-                    ? Colors.blue[50]
+                    ? isDarkMode
+                        ? const Color.fromARGB(255, 102, 117, 128)
+                        : Colors.blue[50]
                     : null,
             shape: (competidor.ativo == 'Não' || widget.listaCompetidores.where((element) => element.id == competidor.id).isNotEmpty) && competidor.id != '0'
                 ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
@@ -184,7 +186,7 @@ class _CardParceirosState extends State<CardParceiros> {
                   if (competidor.nomeCidade.isNotEmpty)
                     Text(
                       "${competidor.nomeCidade} - ${competidor.siglaEstado}",
-                      style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                      style: TextStyle(fontWeight: FontWeight.w500, color: isDarkMode ? Colors.white : Color.fromARGB(255, 89, 89, 89)),
                     ),
                 ],
               ),
