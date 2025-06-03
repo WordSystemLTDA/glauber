@@ -66,6 +66,7 @@ Fazer no Aplicativo
 - [?] Melhorar a listagem de ordem de entrada (deixar mais rapido)
 - [!] Adicionar alguma forma de recebers logs igual sentry ou algo assim
 - [!] Ao cancelar inscrição remover do vincular_parceiros se o seu id_vendas for vinculado sozinho, se não, editar o seu id e id_vendas para 0
+- [X] boa tarde.. ta dando erro no app nos limites de compra por prova 757... ela tem limite de 15 compras de cabeceiro e 15 de pezeiro.. o llimite de cabeceiros foi atingido e bloqueeou tbm o limite de pezeiros
 
 - [ ] quando (cancelar ou editar parceiro) a inscrição remover o id e id_vendas (pezeiro ou cabeceira) de quem está cancelando do vincular_parceiros, 
     e quando editar mudar o status para Pendente
@@ -91,8 +92,6 @@ Fazer no Aplicativo
 
 - [ ] Mudar o id_vendas_cabeceira e id_vendas_pezeiro para pegar de id_vendas (antes estava id_compra)
 - [ ] Mudar o 'Pendente' nas páginas de "MEUS PARCEIROS" em "COMPRAS" para 'Aguardando Confirmação'
-
-    
 
 Erros
 - [?] Quando um cliente já tem, por exemplo, 4 inscrições compradas em uma mesma prova, e outro competidor for fazer 4+ inscrições na mesma prova com esse cliente, os vincular_parceiros duplicam e editam o id_venda incorretamente.

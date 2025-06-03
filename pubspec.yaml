@@ -63,7 +63,7 @@ dependencies:
   package_info_plus: ^8.2.0
   easy_image_viewer: ^1.5.1
   flutter_launcher_icons: ^0.14.3
-  skeletonizer: ^1.4.3
+  skeletonizer: ^2.0.1
   syncfusion_flutter_calendar: ^28.2.4
   syncfusion_localizations: ^28.2.4
   flutter_swipe_action_cell: ^3.1.5

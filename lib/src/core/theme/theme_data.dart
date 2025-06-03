@@ -37,11 +37,6 @@ ThemeData get lightTheme => ThemeData(
         backgroundColor: _lightColorScheme.primary,
         foregroundColor: _lightColorScheme.onPrimary,
       ),
-      cardTheme: const CardTheme(
-        color: Colors.white,
-        elevation: 2,
-        surfaceTintColor: Colors.white,
-      ),
       inputDecorationTheme: _inputDecorationTheme,
       dropdownMenuTheme: DropdownMenuThemeData(
         inputDecorationTheme: _inputDecorationTheme,
