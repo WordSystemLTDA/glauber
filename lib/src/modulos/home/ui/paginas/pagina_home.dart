@@ -43,7 +43,9 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
               length: state.categorias.length,
               vsync: this,
             );
+
             verificarModalidadesUsuario();
+            verificarConfirmarParceiros();
           }
 
           if (_categoriaController != null) {
@@ -69,6 +71,19 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
           ),
         );
       }
+    });
+  }
+
+  void verificarConfirmarParceiros() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var usuario = context.read<UsuarioProvider>().usuario;
+
+      if (usuario == null) return;
+
+      Navigator.pushNamed(
+        context,
+        AppRotas.confirmarParceiros,
+      );
     });
   }
 

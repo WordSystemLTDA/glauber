@@ -2,11 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compras.dart';
-import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_parceiros.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -40,6 +43,8 @@ class CardCompras extends StatefulWidget {
 }
 
 class _CardComprasState extends State<CardCompras> {
+  SearchController searchController = SearchController();
+
   Color corCompra(ComprasModelo item) {
     if (item.status == 'Cancelado') {
       return Colors.yellow;
@@ -52,8 +57,12 @@ class _CardComprasState extends State<CardCompras> {
 
   @override
   Widget build(BuildContext context) {
+    var competidoresServico = context.read<CompetidoresServico>();
+    var comprasServico = context.read<ComprasServico>();
     double tamanhoCard = 125;
     var item = widget.item;
+
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
       height: (item.provas[0].idmodalidade == '4') ? 130 : 170,
@@ -241,39 +250,216 @@ class _CardComprasState extends State<CardCompras> {
                   bottom: -5,
                   left: 0,
                   right: 0,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (item.provas[0].idmodalidade == '3') {
-                        return;
-                      }
+                  child: SearchAnchor(
+                    viewBuilder: (suggestions) {
+                      return ListView.builder(
+                        itemCount: suggestions.length,
+                        padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                        itemBuilder: (context, index) {
+                          var itemN = suggestions.elementAt(index);
 
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ModalParceiros(idCompra: item.id, idProva: item.provas[0].id, idEvento: item.idEvento);
+                          return itemN;
                         },
                       );
                     },
-                    style: ButtonStyle(
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+                    isFullScreen: true,
+                    searchController: searchController,
+                    builder: (BuildContext context, SearchController controller) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (item.provas[0].idmodalidade == '3') {
+                            return;
+                          }
+
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (context) {
+                          //     return ModalParceiros(idCompra: item.id, idProva: item.provas[0].id, idEvento: item.idEvento);
+                          //   },
+                          // );
+
+                          if (item.provas[0].permitirEditarParceiros == 'Sim') {
+                            controller.openView();
+                          }
+                        },
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+                            ),
+                          ),
+                          backgroundColor: WidgetStatePropertyAll(item.parceiros.isEmpty
+                              ? const Color.fromARGB(255, 237, 237, 237)
+                              : (item.parceiros[0].parceiroTemCompra == 'Aguardando'
+                                  ? Colors.red[200]
+                                  : item.parceiros[0].parceiroTemCompra == 'Sim'
+                                      ? Colors.green[200]
+                                      : const Color.fromARGB(255, 237, 237, 237))),
+                          foregroundColor:
+                              WidgetStatePropertyAll(item.parceiros.isEmpty ? Colors.black : (item.parceiros[0].parceiroTemCompra == 'Não' ? Colors.black87 : Colors.white)),
                         ),
-                      ),
-                      backgroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 237, 237, 237)),
-                      foregroundColor: WidgetStatePropertyAll(Colors.black87),
-                    ),
-                    child: item.provas[0].idmodalidade == '3'
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("Animal: ", style: TextStyle(fontSize: 14)),
-                              Text(item.provas[0].animalSelecionado?.nomedoanimal ?? '0', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                              // Text(item.provas[0].animalSelecionado?.racadoanimal ?? '0', style: TextStyle(fontSize: 12)),
-                            ],
-                          )
-                        : Text("Ver meus Parceiros"),
+                        child: item.provas[0].idmodalidade == '3'
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text("Animal: ", style: TextStyle(fontSize: 14)),
+                                  Text(item.provas[0].animalSelecionado?.nomedoanimal ?? '0', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                  // Text(item.provas[0].animalSelecionado?.racadoanimal ?? '0', style: TextStyle(fontSize: 12)),
+                                ],
+                              )
+                            : Text(item.parceiros.isEmpty ? "Sem Competidor" : item.parceiros[0].nomeParceiro),
+                      );
+                    },
+                    suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                      final keyword = controller.value.text;
+                      var usuarioProvider = context.read<UsuarioProvider>();
+                      List<CompetidoresModelo>? competidores =
+                          await competidoresServico.listarCompetidores(widget.item.idCabeceira, usuarioProvider.usuario, keyword, widget.item.provas[0].id);
+
+                      Iterable<Widget> widgets = competidores.map((competidor) {
+                        return Card(
+                          elevation: 3.0,
+                          color: (competidor.ativo == 'Não' || item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) && competidor.id != '0'
+                              ? const Color(0xFFfbe5ea)
+                              : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
+                                  ? Colors.blue[50]
+                                  : null,
+                          shape: (competidor.ativo == 'Não' || item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty) && competidor.id != '0'
+                              ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.red), borderRadius: BorderRadius.circular(5))
+                              : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
+                                  ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.blue), borderRadius: BorderRadius.circular(5))
+                                  : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          // color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Colors.red : null,
+                          child: ListTile(
+                            onTap: () async {
+                              if ((competidor.ativo == 'Sim' && (item.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty)) || competidor.id == '0') {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext contextDialog) {
+                                    return AlertDialog(
+                                      title: const Text('Substituir'),
+                                      content: const SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text("Deseja realmente substituir esse parceiro?"),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Cancelar'),
+                                          onPressed: () {
+                                            Navigator.of(contextDialog).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text('Sim'),
+                                          onPressed: () async {
+                                            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                                              if (mounted) {
+                                                controller.closeView('');
+                                                FocusScope.of(context).unfocus();
+
+                                                // print(parceiro.toMap());
+                                                // print(competidor.id);
+
+                                                await comprasServico
+                                                    .editarParceiro(item.parceiros[0].id, item.parceiros[0].idParceiro, competidor.id, item.parceiros[0].nomeModalidade)
+                                                    .then((value) {
+                                                  var (sucesso, mensagem) = value;
+
+                                                  if (sucesso) {
+                                                    if (mounted) {
+                                                      // setState(() {
+                                                      //   parceiro.idParceiro = competidor.id;
+                                                      //   parceiro.nomeParceiro = competidor.nome;
+                                                      //   parceiro.parceiroTemCompra = 'Não';
+                                                      // });
+                                                      // widget.aoSalvar();
+                                                      if (context.mounted) {
+                                                        Navigator.pop(context);
+                                                      }
+                                                    }
+                                                  } else {
+                                                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                                      if (mounted) {
+                                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                          content: Text(mensagem),
+                                                          backgroundColor: Colors.red,
+                                                        ));
+                                                      }
+                                                    });
+                                                  }
+                                                });
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            leading: Text(competidor.id),
+                            trailing: competidor.ativo == 'Não'
+                                ? const Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Competidor já'),
+                                      Text('Fez todas as inscrições'),
+                                    ],
+                                  )
+                                : competidor.ativo == 'Somatoria'
+                                    ? const Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text('HandiCap do Competidor'),
+                                          Text('Estoura a somatória'),
+                                        ],
+                                      )
+                                    : competidor.ativo == 'HCMinMax'
+                                        ? const Column(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text('HandiCap do Competidor'),
+                                              Text('Não é compatível com a prova'),
+                                            ],
+                                          )
+                                        : null,
+                            title: Text(
+                              competidor.nome,
+                              style: TextStyle(
+                                  color: item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty
+                                      ? Colors.black
+                                      : isDarkMode
+                                          ? Colors.white
+                                          : null),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  competidor.apelido,
+                                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                ),
+                                if (competidor.nomeCidade.isNotEmpty)
+                                  Text(
+                                    "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                                    style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+
+                      return widgets;
+                    },
                   ),
                 ),
             ],

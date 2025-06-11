@@ -81,15 +81,6 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(parceiro.nomeModalidade),
-                      // const SizedBox(height: 5),
-                      // SizedBox(
-                      //   width: 230,
-                      //   child: Text(
-                      //     parceiro.nomeProva,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     maxLines: 1,
-                      //   ),
-                      // ),
                       const SizedBox(height: 5),
                       Text(
                         parceiro.nomeParceiro,

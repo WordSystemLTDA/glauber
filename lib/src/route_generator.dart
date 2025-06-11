@@ -13,6 +13,7 @@ import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_selecionar_pagamentos.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
+import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_confirmar_parceiros.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
@@ -86,6 +87,9 @@ class RouteGenerator {
       case AppRotas.sucessoCompra:
         final argumentos = settings.arguments as PaginaSucessoCompraArgumentos;
         return buildRoute(PaginaSucessoCompra(argumentos: argumentos), settings: settings);
+      case AppRotas.confirmarParceiros:
+        // final argumentos = settings.arguments as PaginaSucessoCompraArgumentos;
+        return buildRoute(PaginaConfirmarParceiros(), settings: settings);
       default:
         return _errorRoute();
     }

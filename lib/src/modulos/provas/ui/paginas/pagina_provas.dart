@@ -432,66 +432,111 @@ class _PaginaProvasState extends State<PaginaProvas> {
 
   void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento, String idmodalidade) {
     if (mounted) {
-      var novaProva = ProvaModelo(
-        id: prova.id,
-        nomeProva: prova.nomeProva,
-        valor: prova.valor,
-        hcMinimo: prova.hcMinimo,
-        permitirSorteio: prova.permitirSorteio,
-        hcMaximo: prova.hcMaximo,
-        idListaCompeticao: prova.idListaCompeticao,
-        habilitarAoVivo: '',
-        avulsa: prova.avulsa,
-        quantMinima: prova.quantMinima,
-        quantMaxima: prova.quantMaxima,
-        permitirCompra: prova.permitirCompra,
-        idCabeceira: prova.idCabeceira,
-        competidores: prova.competidores,
-        nomeCabeceira: prova.nomeCabeceira,
-        somatoriaHandicaps: prova.somatoriaHandicaps,
-        sorteio: prova.sorteio,
-        permitirEditarParceiros: prova.permitirEditarParceiros,
-        liberarReembolso: prova.liberarReembolso,
-        idmodalidade: idmodalidade,
-      );
-
       // Irá permitir escolher so um pacote por prova
       if (evento.liberacaoDeCompra == '1') {
-        var valoresDuplicados = provasCarrinho.where((element) => element.id == novaProva.id);
+        var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
 
-        if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
+        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
           setState(() {
-            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
           });
         }
 
         if (valoresDuplicados.isNotEmpty) {
           setState(() {
-            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira != novaProva.idCabeceira);
+            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira != prova.idCabeceira);
           });
 
           for (var i = 0; i < quantidade; i++) {
+            var novaProva = ProvaModelo(
+              id: prova.id,
+              nomeProva: prova.nomeProva,
+              valor: prova.valor,
+              hcMinimo: prova.hcMinimo,
+              permitirSorteio: prova.permitirSorteio,
+              hcMaximo: prova.hcMaximo,
+              idListaCompeticao: prova.idListaCompeticao,
+              habilitarAoVivo: '',
+              avulsa: prova.avulsa,
+              quantMinima: prova.quantMinima,
+              quantMaxima: prova.quantMaxima,
+              permitirCompra: prova.permitirCompra,
+              idCabeceira: prova.idCabeceira,
+              competidores: [(prova.competidores ?? [])[i]],
+              nomeCabeceira: prova.nomeCabeceira,
+              somatoriaHandicaps: prova.somatoriaHandicaps,
+              sorteio: prova.sorteio,
+              permitirEditarParceiros: prova.permitirEditarParceiros,
+              liberarReembolso: prova.liberarReembolso,
+              idmodalidade: idmodalidade,
+            );
+
             setState(() {
               provasCarrinho.add(novaProva);
             });
           }
         } else {
           for (var i = 0; i < quantidade; i++) {
+            var novaProva = ProvaModelo(
+              id: prova.id,
+              nomeProva: prova.nomeProva,
+              valor: prova.valor,
+              hcMinimo: prova.hcMinimo,
+              permitirSorteio: prova.permitirSorteio,
+              hcMaximo: prova.hcMaximo,
+              idListaCompeticao: prova.idListaCompeticao,
+              habilitarAoVivo: '',
+              avulsa: prova.avulsa,
+              quantMinima: prova.quantMinima,
+              quantMaxima: prova.quantMaxima,
+              permitirCompra: prova.permitirCompra,
+              idCabeceira: prova.idCabeceira,
+              competidores: [(prova.competidores ?? [])[i]],
+              nomeCabeceira: prova.nomeCabeceira,
+              somatoriaHandicaps: prova.somatoriaHandicaps,
+              sorteio: prova.sorteio,
+              permitirEditarParceiros: prova.permitirEditarParceiros,
+              liberarReembolso: prova.liberarReembolso,
+              idmodalidade: idmodalidade,
+            );
+
             setState(() {
               provasCarrinho.add(novaProva);
             });
           }
         }
-
-        // Poderá escolher multiplos pacotes por prova
       } else if (evento.liberacaoDeCompra == '2') {
-        if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
+        // Poderá escolher multiplos pacotes por prova
+        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
           setState(() {
-            provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
+            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
           });
         }
 
         for (var i = 0; i < quantidade; i++) {
+          var novaProva = ProvaModelo(
+            id: prova.id,
+            nomeProva: prova.nomeProva,
+            valor: prova.valor,
+            hcMinimo: prova.hcMinimo,
+            permitirSorteio: prova.permitirSorteio,
+            hcMaximo: prova.hcMaximo,
+            idListaCompeticao: prova.idListaCompeticao,
+            habilitarAoVivo: '',
+            avulsa: prova.avulsa,
+            quantMinima: prova.quantMinima,
+            quantMaxima: prova.quantMaxima,
+            permitirCompra: prova.permitirCompra,
+            idCabeceira: prova.idCabeceira,
+            competidores: [(prova.competidores ?? [])[i]],
+            nomeCabeceira: prova.nomeCabeceira,
+            somatoriaHandicaps: prova.somatoriaHandicaps,
+            sorteio: prova.sorteio,
+            permitirEditarParceiros: prova.permitirEditarParceiros,
+            liberarReembolso: prova.liberarReembolso,
+            idmodalidade: idmodalidade,
+          );
+
           setState(() {
             provasCarrinho.add(novaProva);
           });

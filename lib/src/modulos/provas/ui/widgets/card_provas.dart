@@ -187,14 +187,6 @@ class _CardProvasState extends State<CardProvas> {
                       return true;
                     }
 
-                    // if (state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))) {
-                    //   return false;
-                    // }
-
-                    // if (listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty) {
-                    //   return false;
-                    // }
-
                     if ((state.permitirCompraModelo.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
                         ? false
                         : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
