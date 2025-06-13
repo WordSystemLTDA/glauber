@@ -59,9 +59,9 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
               side: BorderSide(
-                color: parceiro.parceiroTemCompra == 'Sim'
+                color: parceiro.parceiroTemCompra == 'Confirmado'
                     ? Colors.green
-                    : parceiro.parceiroTemCompra == 'Aguardando'
+                    : parceiro.parceiroTemCompra == 'Pendente'
                         ? const Color.fromARGB(255, 209, 130, 3)
                         : Colors.transparent,
               )),
@@ -113,17 +113,17 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                           bottom: 10,
                           right: 5,
                           child: Text(
-                            parceiro.parceiroTemCompra == 'Aguardando'
+                            parceiro.parceiroTemCompra == 'Pendente'
                                 ? 'Pendente'
-                                : parceiro.parceiroTemCompra == 'Sim'
+                                : parceiro.parceiroTemCompra == 'Confirmado'
                                     ? 'Confirmado'
                                     : '',
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: parceiro.parceiroTemCompra == 'Sim'
+                                color: parceiro.parceiroTemCompra == 'Confirmado'
                                     ? Colors.green
-                                    : parceiro.parceiroTemCompra == 'Aguardando'
+                                    : parceiro.parceiroTemCompra == 'Pendente'
                                         ? Colors.red
                                         : null),
                           ),
@@ -194,11 +194,6 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
 
                                     if (sucesso) {
                                       if (mounted) {
-                                        // setState(() {
-                                        //   parceiro.idParceiro = competidor.id;
-                                        //   parceiro.nomeParceiro = competidor.nome;
-                                        //   parceiro.parceiroTemCompra = 'Não';
-                                        // });
                                         widget.aoSalvar();
                                         if (context.mounted) {
                                           Navigator.pop(context);

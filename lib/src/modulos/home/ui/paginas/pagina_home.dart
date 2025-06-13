@@ -5,6 +5,7 @@ import 'package:provadelaco/src/core/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
 import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
+import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_propagandas.dart';
@@ -74,16 +75,22 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     });
   }
 
-  void verificarConfirmarParceiros() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  void verificarConfirmarParceiros() async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var usuario = context.read<UsuarioProvider>().usuario;
 
       if (usuario == null) return;
 
-      Navigator.pushNamed(
-        context,
-        AppRotas.confirmarParceiros,
-      );
+      var servico = context.read<HomeServico>();
+      var usuarioProvider = context.read<UsuarioProvider>();
+
+      var dados = await servico.listarConfirmarParceiros(usuarioProvider.usuario?.id ?? '0');
+
+      if (mounted) {
+        if (dados.lacarcabeca.isNotEmpty || dados.lacarpe.isNotEmpty) {
+          Navigator.pushNamed(context, AppRotas.confirmarParceiros);
+        }
+      }
     });
   }
 

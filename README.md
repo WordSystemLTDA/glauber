@@ -72,9 +72,9 @@ Fazer no Aplicativo
     e quando editar mudar o status para Pendente
 
 - SOMENTE AVULSA
-  - [ ] Cada card de venda tem que ter o seu parceiro respectivo
+  - [X] Cada card de venda tem que ter o seu parceiro respectivo
     - aparecer o nome do parceiro caso tenha, e caso não tenha aparecer: 'Sorteio'
-  - [ ] Aparece para o parceiro confirmar a inscrição
+  - [X] Aparece para o parceiro confirmar a inscrição
     - aparecer uma página inteira
     - aparecer em lista
     - aparecer modo agrupado por provas, deixar aberto como padrão

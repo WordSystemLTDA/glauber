@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_modelo.dart';
+import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/confirmar_parceiros_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
@@ -18,7 +19,7 @@ class HomeServicoImpl implements HomeServico {
   Future<HomeModelo> listar(int categoria) async {
     var url = 'home/listar.php?categoria=$categoria';
 
-    var response = await client.post(url: url, body: jsonEncode(''));
+    var response = await client.get(url: url);
 
     var jsonData = jsonDecode(response.data);
     bool sucesso = jsonData['sucesso'];
@@ -59,7 +60,7 @@ class HomeServicoImpl implements HomeServico {
   Future<RetornoConfirmarParceirosModelo> listarConfirmarParceiros(String idcliente) async {
     var url = 'home/listar_parceiros_aguardando_confirmacao.php?id_cliente=$idcliente';
 
-    var response = await client.post(url: url, body: jsonEncode(''));
+    var response = await client.get(url: url);
 
     var jsonData = jsonDecode(response.data);
 
@@ -79,5 +80,27 @@ class HomeServicoImpl implements HomeServico {
       lacarcabeca: lacarcabeca,
       lacarpe: lacarpe,
     );
+  }
+
+  @override
+  Future<({String mensagem, bool sucesso})> confirmarParceiro(ParceirosModelo parceiro, String idprovas, String idcliente, UsuarioModelo? usuario) async {
+    var url = 'home/aceitar_parceiro.php';
+
+    var campos = {
+      'idparceiro': parceiro.idparceiro,
+      'idvendasparceiro': parceiro.idvendasparceiro,
+      'modalidade': parceiro.modalidade,
+      'idprovas': idprovas,
+      'id_cliente': idcliente,
+      'usuario': usuario == null ? {} : usuario.toMap(),
+    };
+
+    var response = await client.post(url: url, body: campos);
+    var jsonData = jsonDecode(response.data);
+
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+
+    return (sucesso: sucesso, mensagem: mensagem);
   }
 }

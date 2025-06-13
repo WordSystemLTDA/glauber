@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provadelaco/src/modulos/home/interator/modelos/confirmar_parceiros_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provider/provider.dart';
@@ -32,16 +33,141 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
     var servico = context.read<HomeServico>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
-    dados = await servico.listarConfirmarParceiros('4');
+    dados = await servico.listarConfirmarParceiros(usuarioProvider.usuario?.id ?? '0');
     setState(() {});
   }
 
-  void recusarInscricao(String nome) {
-    print('$nome foi recusado e enviado para sorteio.');
+  void listarCompras({bool? resetar}) {
+    var comprasStore = context.read<ComprasProvedor>();
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    if (usuarioProvider.usuario != null) {
+      comprasStore.listar(usuarioProvider.usuario, resetar ?? false);
+    }
   }
 
-  void confirmarInscricao(String nome) {
-    print('$nome foi confirmado e vinculado à venda.');
+  void recusarInscricao(ParceirosModelo parceiro) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Recusar Inscrição'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Deseja realmente recusar a inscrição de ${parceiro.nomeparceiro}?'),
+              const SizedBox(height: 10),
+              const Text(
+                'Após recusar, a inscrição com esse parceiro irá para sorteio automaticamente.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Recusar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void confirmarInscricao(ParceirosModelo parceiro, ConfirmarParceirosModelo prova) {
+    showDialog(
+      context: context,
+      builder: (contextDialog) {
+        return AlertDialog(
+          title: const Text('Confirmar Inscrição'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Deseja realmente confirmar a inscrição de ${parceiro.nomeparceiro}?'),
+              const SizedBox(height: 10),
+              Text(
+                'Você vai laçar: ${parceiro.modalidade == '1' ? 'PÉ' : 'CABEÇA'}',
+                style: TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 10),
+              Text('Parceiro: ${parceiro.nomeparceiro}'),
+              Text('Cidade: ${parceiro.nomecidade}'),
+              Text('Laço: ${parceiro.modalidade == '1' ? 'Cabeça' : 'Pé'}'),
+              Text('HC Cabeceira: ${parceiro.hccabeceira}'),
+              Text('HC Pezeiro: ${parceiro.hcpezeiro}'),
+              const SizedBox(height: 10),
+              const Text(
+                'Após confirmar, o parceiro será adicionado à sua lista de parceiros.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(contextDialog).pop();
+              },
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () async {
+                var servico = context.read<HomeServico>();
+                var usuarioProvider = context.read<UsuarioProvider>();
+
+                var resultado = await servico.confirmarParceiro(parceiro, prova.id, usuarioProvider.usuario?.id ?? '0', usuarioProvider.usuario);
+
+                if (resultado.sucesso) {
+                  if (contextDialog.mounted) {
+                    Navigator.of(contextDialog).pop();
+                  }
+
+                  if (mounted) {
+                    listarCompras(resetar: true);
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(resultado.mensagem),
+                      backgroundColor: Colors.green,
+                    ));
+
+                    Navigator.of(context).pop();
+                  }
+                } else {
+                  if (contextDialog.mounted) {
+                    Navigator.of(contextDialog).pop();
+                  }
+
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Erro: ${resultado.mensagem}'),
+                      backgroundColor: Colors.red,
+                    ));
+                  }
+                }
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -53,8 +179,8 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
           controller: _tabController,
           indicatorSize: TabBarIndicatorSize.tab,
           tabs: const [
-            Tab(text: 'Laçar Pé'),
-            Tab(text: 'Laçar Cabeça'),
+            Tab(text: 'Você vai laçar Pé'),
+            Tab(text: 'Você vai laçar Cabeça'),
           ],
         ),
       ),
@@ -82,36 +208,51 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
             initiallyExpanded: true,
             children: parceirosFiltrados.map((parceiro) {
               return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Nome: ${parceiro.nomeparceiro}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Text('Cidade: ${parceiro.nomecidade}'),
-                      Text('Laço: ${parceiro.modalidade}'),
-                      Text('Handicap: ${parceiro.hccabeceira}'),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            onPressed: () => recusarInscricao(parceiro.id),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
+                          Text('Nome: ${parceiro.nomeparceiro}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Cidade: ${parceiro.nomecidade}'),
+                          Text('Laço: ${parceiro.modalidade == '1' ? 'Cabeça' : 'Pé'}'),
+                          Text('HC Cabeceira: ${parceiro.hccabeceira}'),
+                          Text('HC Pezeiro: ${parceiro.hcpezeiro}'),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                              onPressed: () => recusarInscricao(parceiro),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Recusar'),
                             ),
-                            child: const Text('Recusar'),
                           ),
                           const SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () => confirmarInscricao(parceiro.id),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
+                          SizedBox(
+                            width: 120,
+                            child: ElevatedButton(
+                              onPressed: () => confirmarInscricao(parceiro, prova),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Confirmar'),
                             ),
-                            child: const Text('Confirmar'),
                           ),
                         ],
                       ),

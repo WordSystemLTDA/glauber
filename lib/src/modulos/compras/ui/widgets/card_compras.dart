@@ -8,6 +8,7 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compras.dart';
+import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_parceiros.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
@@ -271,12 +272,19 @@ class _CardComprasState extends State<CardCompras> {
                             return;
                           }
 
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (context) {
-                          //     return ModalParceiros(idCompra: item.id, idProva: item.provas[0].id, idEvento: item.idEvento);
-                          //   },
-                          // );
+                          if (item.provas[0].avulsa == 'Não') {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ModalParceiros(
+                                  idCompra: item.id,
+                                  idProva: item.provas[0].id,
+                                  idEvento: item.idEvento,
+                                );
+                              },
+                            );
+                            return;
+                          }
 
                           if (item.provas[0].permitirEditarParceiros == 'Sim') {
                             controller.openView();
@@ -288,15 +296,18 @@ class _CardComprasState extends State<CardCompras> {
                               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
                             ),
                           ),
-                          backgroundColor: WidgetStatePropertyAll(item.parceiros.isEmpty
+                          backgroundColor: WidgetStatePropertyAll((item.parceiros.isEmpty || item.provas[0].avulsa == 'Não')
                               ? const Color.fromARGB(255, 237, 237, 237)
-                              : (item.parceiros[0].parceiroTemCompra == 'Aguardando'
+                              : (item.parceiros[0].parceiroTemCompra == 'Pendente'
                                   ? Colors.red[200]
-                                  : item.parceiros[0].parceiroTemCompra == 'Sim'
+                                  : item.parceiros[0].parceiroTemCompra == 'Confirmado'
                                       ? Colors.green[200]
                                       : const Color.fromARGB(255, 237, 237, 237))),
-                          foregroundColor:
-                              WidgetStatePropertyAll(item.parceiros.isEmpty ? Colors.black : (item.parceiros[0].parceiroTemCompra == 'Não' ? Colors.black87 : Colors.white)),
+                          foregroundColor: WidgetStatePropertyAll(
+                            (item.parceiros.isEmpty || item.provas[0].avulsa == 'Não')
+                                ? Colors.black
+                                : (item.parceiros[0].parceiroTemCompra == 'Sem Parceiro' ? Colors.black87 : Colors.white),
+                          ),
                         ),
                         child: item.provas[0].idmodalidade == '3'
                             ? Row(
@@ -305,10 +316,18 @@ class _CardComprasState extends State<CardCompras> {
                                 children: [
                                   Text("Animal: ", style: TextStyle(fontSize: 14)),
                                   Text(item.provas[0].animalSelecionado?.nomedoanimal ?? '0', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                  // Text(item.provas[0].animalSelecionado?.racadoanimal ?? '0', style: TextStyle(fontSize: 12)),
                                 ],
                               )
-                            : Text(item.parceiros.isEmpty ? "Sem Competidor" : item.parceiros[0].nomeParceiro),
+                            : item.provas[0].avulsa == 'Sim'
+                                ? Text(
+                                    (item.parceiros.isEmpty
+                                        ? "Sorteio"
+                                        : item.parceiros[0].nomeParceiro == 'Sem Competidor'
+                                            ? 'Sorteio'
+                                            : item.parceiros[0].nomeParceiro),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                  )
+                                : Text('Ver seus Parceiros (${item.parceiros.length})', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       );
                     },
                     suggestionsBuilder: (BuildContext context, SearchController controller) async {
@@ -361,9 +380,6 @@ class _CardComprasState extends State<CardCompras> {
                                                 controller.closeView('');
                                                 FocusScope.of(context).unfocus();
 
-                                                // print(parceiro.toMap());
-                                                // print(competidor.id);
-
                                                 await comprasServico
                                                     .editarParceiro(item.parceiros[0].id, item.parceiros[0].idParceiro, competidor.id, item.parceiros[0].nomeModalidade)
                                                     .then((value) {
@@ -371,13 +387,10 @@ class _CardComprasState extends State<CardCompras> {
 
                                                   if (sucesso) {
                                                     if (mounted) {
-                                                      // setState(() {
-                                                      //   parceiro.idParceiro = competidor.id;
-                                                      //   parceiro.nomeParceiro = competidor.nome;
-                                                      //   parceiro.parceiroTemCompra = 'Não';
-                                                      // });
-                                                      // widget.aoSalvar();
                                                       if (context.mounted) {
+                                                        if (widget.atualizarLista != null) {
+                                                          widget.atualizarLista!();
+                                                        }
                                                         Navigator.pop(context);
                                                       }
                                                     }

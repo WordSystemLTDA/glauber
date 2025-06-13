@@ -75,7 +75,12 @@ class _AppBarSombraState extends State<AppBarSombra> {
           if (widget.aparecerIconeNotificacao ?? false) ...[
             IconButton(
               icon: const Icon(Icons.notifications_outlined),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRotas.confirmarParceiros,
+                );
+              },
             ),
           ]
         ],
