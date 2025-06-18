@@ -381,7 +381,12 @@ class _CardComprasState extends State<CardCompras> {
                                                 FocusScope.of(context).unfocus();
 
                                                 await comprasServico
-                                                    .editarParceiro(item.parceiros[0].id, item.parceiros[0].idParceiro, competidor.id, item.parceiros[0].nomeModalidade)
+                                                    .editarParceiro(
+                                                  item.parceiros[0].id,
+                                                  item.parceiros[0].idParceiro,
+                                                  competidor.id,
+                                                  item.parceiros[0].nomeModalidade,
+                                                )
                                                     .then((value) {
                                                   var (sucesso, mensagem) = value;
 
