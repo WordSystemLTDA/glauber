@@ -13,5 +13,5 @@ abstract interface class ComprasServico {
   Future<(bool, String)> transferirCompras(List<ComprasModelo> comprasTransferencia, String novoCliente);
   Future<(bool, String, RetornoGerarPagamentos?)> gerarPagamentos(List<ComprasModelo> comprasPagamentos, UsuarioModelo? usuario);
   Future<(bool, String)> editarParceiro(String idParceiroVenda, String idParceiroOriginal, String idNovoParceiro, String modalidade);
-  Future<(bool, String)> editarReembolsoVenda(String id);
+  Future<(bool, String)> editarReembolsoVenda(String id, String idCliente, String modalidade);
 }

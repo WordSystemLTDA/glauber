@@ -49,7 +49,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
   void recusarInscricao(ParceirosModelo parceiro) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (contextDialog) {
         return AlertDialog(
           title: const Text('Recusar Inscrição'),
           content: Column(
@@ -67,13 +67,13 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(contextDialog).pop();
               },
               child: const Text('Não'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                recusarParceiro(contextDialog, parceiro);
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -85,6 +85,76 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
         );
       },
     );
+  }
+
+  void recusarParceiro(BuildContext contextDialog, ParceirosModelo parceiro) async {
+    var servico = context.read<HomeServico>();
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    var resultado = await servico.recusarParceiro(parceiro, usuarioProvider.usuario?.id ?? '0');
+
+    if (resultado.sucesso) {
+      if (contextDialog.mounted) {
+        Navigator.of(contextDialog).pop();
+      }
+
+      if (mounted) {
+        listarCompras(resetar: true);
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(resultado.mensagem),
+          backgroundColor: Colors.green,
+        ));
+
+        Navigator.of(context).pop();
+      }
+    } else {
+      if (contextDialog.mounted) {
+        Navigator.of(contextDialog).pop();
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Erro: ${resultado.mensagem}'),
+          backgroundColor: Colors.red,
+        ));
+      }
+    }
+  }
+
+  void confirmarParceiro(BuildContext contextDialog, ParceirosModelo parceiro, ConfirmarParceirosModelo prova) async {
+    var servico = context.read<HomeServico>();
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    var resultado = await servico.confirmarParceiro(parceiro, prova.id, usuarioProvider.usuario?.id ?? '0', usuarioProvider.usuario);
+
+    if (resultado.sucesso) {
+      if (contextDialog.mounted) {
+        Navigator.of(contextDialog).pop();
+      }
+
+      if (mounted) {
+        listarCompras(resetar: true);
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(resultado.mensagem),
+          backgroundColor: Colors.green,
+        ));
+
+        Navigator.of(context).pop();
+      }
+    } else {
+      if (contextDialog.mounted) {
+        Navigator.of(contextDialog).pop();
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Erro: ${resultado.mensagem}'),
+          backgroundColor: Colors.red,
+        ));
+      }
+    }
   }
 
   void confirmarInscricao(ParceirosModelo parceiro, ConfirmarParceirosModelo prova) {
@@ -125,38 +195,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
             ),
             TextButton(
               onPressed: () async {
-                var servico = context.read<HomeServico>();
-                var usuarioProvider = context.read<UsuarioProvider>();
-
-                var resultado = await servico.confirmarParceiro(parceiro, prova.id, usuarioProvider.usuario?.id ?? '0', usuarioProvider.usuario);
-
-                if (resultado.sucesso) {
-                  if (contextDialog.mounted) {
-                    Navigator.of(contextDialog).pop();
-                  }
-
-                  if (mounted) {
-                    listarCompras(resetar: true);
-
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(resultado.mensagem),
-                      backgroundColor: Colors.green,
-                    ));
-
-                    Navigator.of(context).pop();
-                  }
-                } else {
-                  if (contextDialog.mounted) {
-                    Navigator.of(contextDialog).pop();
-                  }
-
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Erro: ${resultado.mensagem}'),
-                      backgroundColor: Colors.red,
-                    ));
-                  }
-                }
+                confirmarParceiro(contextDialog, parceiro, prova);
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -178,9 +217,9 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
         bottom: TabBar(
           controller: _tabController,
           indicatorSize: TabBarIndicatorSize.tab,
-          tabs: const [
-            Tab(text: 'Você vai laçar Pé'),
-            Tab(text: 'Você vai laçar Cabeça'),
+          tabs: [
+            Tab(text: 'Para laçar Pé (${(dados?.lacarpe ?? []).length})'),
+            Tab(text: 'Para laçar Cabeça (${(dados?.lacarcabeca ?? []).length})'),
           ],
         ),
       ),

@@ -66,7 +66,7 @@ class _CardComprasState extends State<CardCompras> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      height: (item.provas[0].idmodalidade == '4') ? 130 : 170,
+      height: (item.provas[0].idmodalidade == '4' || item.status == 'Cancelado') ? 130 : 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
@@ -191,7 +191,7 @@ class _CardComprasState extends State<CardCompras> {
                                                     return AlertDialog(
                                                       title: const Text('Cuidado!'),
                                                       content: const Text(
-                                                          'ATENÇÃO, SE VOCÊ CANCELAR, NÃO PODERÁ FAZER INSCRIÇÃO NOVAMENTE NESTA PROVA. TEM CERTEZA QUE DESEJA CONTINUAR?'),
+                                                          'ATENÇÃO, SE VOCÊ CANCELAR, NÃO PODERÁ FAZER INSCRIÇÃO NOVAMENTE NESTA PROVA E PERDERÁ AS VINCULAÇÕES COM SEUS PARCEIROS. TEM CERTEZA QUE DESEJA CONTINUAR?'),
                                                       actions: [
                                                         TextButton(
                                                           onPressed: () {
@@ -201,7 +201,14 @@ class _CardComprasState extends State<CardCompras> {
                                                         ),
                                                         TextButton(
                                                           onPressed: () async {
-                                                            await context.read<ComprasServico>().editarReembolsoVenda(item.id).then((value) {
+                                                            await context
+                                                                .read<ComprasServico>()
+                                                                .editarReembolsoVenda(
+                                                                  item.id,
+                                                                  item.idCliente,
+                                                                  item.idCabeceira ?? '0',
+                                                                )
+                                                                .then((value) async {
                                                               if (context.mounted) {
                                                                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -246,7 +253,7 @@ class _CardComprasState extends State<CardCompras> {
                   ],
                 ),
               ),
-              if (item.provas[0].idmodalidade != '4')
+              if (item.provas[0].idmodalidade != '4' && item.status != 'Cancelado')
                 Positioned(
                   bottom: -5,
                   left: 0,

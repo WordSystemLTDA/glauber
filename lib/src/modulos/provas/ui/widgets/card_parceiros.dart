@@ -28,6 +28,12 @@ class _CardParceirosState extends State<CardParceiros> {
   SearchController searchController = SearchController();
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var competidoresServico = context.read<CompetidoresServico>();
     var item = widget.item;

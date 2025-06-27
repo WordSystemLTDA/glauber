@@ -195,11 +195,13 @@ class ComprasServicoImpl implements ComprasServico {
   }
 
   @override
-  Future<(bool, String)> editarReembolsoVenda(String id) async {
+  Future<(bool, String)> editarReembolsoVenda(String id, String idcliente, String modalidade) async {
     var url = 'compras/editar_reembolso_venda.php';
 
     var campos = {
       'id_venda': id,
+      'modalidade': modalidade,
+      'idcliente': idcliente,
     };
 
     Response response = await client.post(

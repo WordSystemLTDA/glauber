@@ -89,10 +89,31 @@ class HomeServicoImpl implements HomeServico {
     var campos = {
       'idparceiro': parceiro.idparceiro,
       'idvendasparceiro': parceiro.idvendasparceiro,
+      'idvincularparceiros': parceiro.id,
       'modalidade': parceiro.modalidade,
       'idprovas': idprovas,
       'id_cliente': idcliente,
       'usuario': usuario == null ? {} : usuario.toMap(),
+    };
+
+    var response = await client.post(url: url, body: campos);
+    var jsonData = jsonDecode(response.data);
+
+    bool sucesso = jsonData['sucesso'];
+    String mensagem = jsonData['mensagem'];
+
+    return (sucesso: sucesso, mensagem: mensagem);
+  }
+
+  @override
+  Future<({String mensagem, bool sucesso})> recusarParceiro(ParceirosModelo parceiro, String idcliente) async {
+    var url = 'home/recusar_parceiro.php';
+
+    var campos = {
+      'idparceiro': parceiro.idparceiro,
+      'idvincularparceiros': parceiro.id,
+      'modalidade': parceiro.modalidade,
+      'id_cliente': idcliente,
     };
 
     var response = await client.post(url: url, body: campos);

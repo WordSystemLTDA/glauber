@@ -6,4 +6,5 @@ abstract interface class HomeServico {
   Future<HomeModelo> listar(int categoria);
   Future<RetornoConfirmarParceirosModelo> listarConfirmarParceiros(String idcliente);
   Future<({bool sucesso, String mensagem})> confirmarParceiro(ParceirosModelo parceiro, String idprovas, String idcliente, UsuarioModelo? usuario);
+  Future<({String mensagem, bool sucesso})> recusarParceiro(ParceirosModelo parceiro, String idcliente);
 }
