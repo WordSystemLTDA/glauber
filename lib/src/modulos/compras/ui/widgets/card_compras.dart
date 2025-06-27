@@ -66,7 +66,7 @@ class _CardComprasState extends State<CardCompras> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      height: (item.provas[0].idmodalidade == '4' || item.status == 'Cancelado') ? 130 : 170,
+      height: (item.provas[0].idmodalidade == '4' || item.status == 'Cancelado' || item.parceiros.isEmpty) ? 130 : 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
@@ -253,7 +253,7 @@ class _CardComprasState extends State<CardCompras> {
                   ],
                 ),
               ),
-              if (item.provas[0].idmodalidade != '4' && item.status != 'Cancelado')
+              if (item.provas[0].idmodalidade != '4' && item.status != 'Cancelado' && item.parceiros.isNotEmpty)
                 Positioned(
                   bottom: -5,
                   left: 0,
