@@ -114,7 +114,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
                           right: 5,
                           child: Text(
                             parceiro.parceiroTemCompra == 'Pendente'
-                                ? 'Pendente'
+                                ? 'À Confirmar'
                                 : parceiro.parceiroTemCompra == 'Confirmado'
                                     ? 'Confirmado'
                                     : '',

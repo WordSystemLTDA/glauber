@@ -5,12 +5,14 @@ class CardOrdemDeEntradaProva extends StatefulWidget {
   final ProvaParceirosModelos item;
   final bool mostrarOpcoes;
   final bool selecionado;
+  final String nomeprova;
 
   const CardOrdemDeEntradaProva({
     super.key,
     required this.item,
     required this.mostrarOpcoes,
     required this.selecionado,
+    required this.nomeprova,
   });
 
   @override
@@ -44,9 +46,25 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          if (widget.nomeprova == 'FINAL') ...[
+                            Text(
+                              "Ranking: ${itemParceiro.ranking}",
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                          ] else if (widget.nomeprova == 'CLASSIFICAÇÃO FINAL') ...[
+                            Text(
+                              "Classificação: ${itemParceiro.classificacao}",
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                          ] else ...[
+                            Text(
+                              "Inscrição: ${itemParceiro.numeroDaInscricao}",
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                            ),
+                          ],
                           Text(
-                            "Inscrição: ${itemParceiro.numeroDaInscricao}",
-                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                            "Somatória: ${itemParceiro.somatoria}",
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                           ),
                           Text("#${itemParceiro.id}"),
                         ],
@@ -116,24 +134,48 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                   ),
                   Row(
                     children: [
-                      Expanded(
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Ranking: ${itemParceiro.ranking}',
-                            textAlign: TextAlign.center,
+                      if (widget.nomeprova == 'FINAL') ...[
+                        Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              'Inscrição: ${itemParceiro.numeroDaInscricao}',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Classificação: ${itemParceiro.classificacao}',
-                            textAlign: TextAlign.center,
+                      ] else ...[
+                        Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              'Ranking: ${itemParceiro.ranking}',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
+                      if (widget.nomeprova == 'CLASSIFICAÇÃO FINAL') ...[
+                        Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              'Inscrição: ${itemParceiro.numeroDaInscricao}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ] else ...[
+                        Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              'Classificação: ${itemParceiro.classificacao}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ]
                     ],
                   ),
                 ],

@@ -247,6 +247,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: CardOrdemDeEntradaProva(
                                         selecionado: true,
+                                        nomeprova: nomeProvaSelecionada,
                                         item: itemListaCompeticaoSelecionada!.ordemDeEntradas[0].quemEstaCorrendoAgora!,
                                         mostrarOpcoes: true,
                                       ),
@@ -263,6 +264,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
 
                                       return CardOrdemDeEntradaProva(
                                         item: item,
+                                        nomeprova: nomeProvaSelecionada,
                                         mostrarOpcoes: true,
                                         selecionado: false,
                                       );
@@ -316,6 +318,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                             padding: const EdgeInsets.all(10.0),
                                             child: CardOrdemDeEntradaProva(
                                               selecionado: true,
+                                              nomeprova: nomeProvaSelecionada,
                                               item: state.ordemdeentradas[0].quemEstaCorrendoAgora!,
                                               mostrarOpcoes: true,
                                             ),
@@ -332,6 +335,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
 
                                             return CardOrdemDeEntradaProva(
                                               item: item,
+                                              nomeprova: nomeProvaSelecionada,
                                               mostrarOpcoes: true,
                                               selecionado: false,
                                             );

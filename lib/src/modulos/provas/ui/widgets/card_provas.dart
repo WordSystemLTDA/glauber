@@ -77,6 +77,12 @@ class _CardProvasState extends State<CardProvas> {
     await verificarPermitirCompraProvedor
         .verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item?.id, jaExisteCarrinho, quantidadeCarrinho)
         .then((state) {
+      if (state.permitirCompraModelo.mensagem == 'Você já comprou essa modalidade.' || state.permitirCompraModelo.mensagem == 'Você já comprou essa prova.') {
+        if (mounted) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: AppRotas.compras), (Route<dynamic> route) => false);
+        }
+      }
+
       if (state.permitirCompraModelo.liberado) {
         if (usuarioProvider.usuario!.ativoProva == 'Sim' && confirmar) {
           if (mounted) {
