@@ -16,6 +16,8 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
   RetornoConfirmarParceirosModelo? dados;
   late TabController _tabController;
 
+  bool salvandoInformacoes = false;
+
   @override
   void initState() {
     super.initState();
@@ -50,44 +52,64 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
     showDialog(
       context: context,
       builder: (contextDialog) {
-        return AlertDialog(
-          title: const Text('Recusar Inscrição'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Deseja realmente recusar a inscrição de ${parceiro.nomeparceiro}?'),
-              const SizedBox(height: 10),
-              const Text(
-                'Após recusar, a inscrição com esse parceiro irá para sorteio automaticamente.',
-                style: TextStyle(color: Colors.red),
+        return StatefulBuilder(builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: const Text('Recusar Inscrição'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Deseja realmente recusar a inscrição de ${parceiro.nomeparceiro}?'),
+                const SizedBox(height: 10),
+                const Text(
+                  'Após recusar, a inscrição com esse parceiro irá para sorteio automaticamente.',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(contextDialog).pop();
+                },
+                child: const Text('Não'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (salvandoInformacoes) {
+                    return;
+                  }
+
+                  setStateDialog(() {
+                    salvandoInformacoes = true;
+                  });
+
+                  await recusarParceiro(contextDialog, parceiro);
+
+                  // setStateDialog(() {
+                  //   salvandoInformacoes = false;
+                  // });
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: salvandoInformacoes
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Recusar'),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(contextDialog).pop();
-              },
-              child: const Text('Não'),
-            ),
-            TextButton(
-              onPressed: () {
-                recusarParceiro(contextDialog, parceiro);
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Recusar'),
-            ),
-          ],
-        );
+          );
+        });
       },
     );
   }
 
-  void recusarParceiro(BuildContext contextDialog, ParceirosModelo parceiro) async {
+  Future<void> recusarParceiro(BuildContext contextDialog, ParceirosModelo parceiro) async {
     var servico = context.read<HomeServico>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
@@ -122,7 +144,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
     }
   }
 
-  void confirmarParceiro(BuildContext contextDialog, ParceirosModelo parceiro, ConfirmarParceirosModelo prova) async {
+  Future<void> confirmarParceiro(BuildContext contextDialog, ParceirosModelo parceiro, ConfirmarParceirosModelo prova) async {
     var servico = context.read<HomeServico>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
@@ -161,50 +183,70 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
     showDialog(
       context: context,
       builder: (contextDialog) {
-        return AlertDialog(
-          title: const Text('Confirmar Inscrição'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Deseja realmente confirmar a inscrição de ${parceiro.nomeparceiro}?'),
-              const SizedBox(height: 10),
-              Text(
-                'Você vai laçar: ${parceiro.modalidade == '1' ? 'PÉ' : 'CABEÇA'}',
-                style: TextStyle(fontSize: 20),
+        return StatefulBuilder(builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: const Text('Confirmar Inscrição'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Deseja realmente confirmar a inscrição de ${parceiro.nomeparceiro}?'),
+                const SizedBox(height: 10),
+                Text(
+                  'Você vai laçar: ${parceiro.modalidade == '1' ? 'PÉ' : 'CABEÇA'}',
+                  style: TextStyle(fontSize: 20),
+                ),
+                const SizedBox(height: 10),
+                Text('Parceiro: ${parceiro.nomeparceiro}'),
+                Text('Cidade: ${parceiro.nomecidade}'),
+                Text('Laço: ${parceiro.modalidade == '1' ? 'Cabeça' : 'Pé'}'),
+                Text('HC Cabeceira: ${parceiro.hccabeceira}'),
+                Text('HC Pezeiro: ${parceiro.hcpezeiro}'),
+                const SizedBox(height: 10),
+                const Text(
+                  'Após confirmar, o parceiro será adicionado à sua lista de parceiros.',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(contextDialog).pop();
+                },
+                child: const Text('Não'),
               ),
-              const SizedBox(height: 10),
-              Text('Parceiro: ${parceiro.nomeparceiro}'),
-              Text('Cidade: ${parceiro.nomecidade}'),
-              Text('Laço: ${parceiro.modalidade == '1' ? 'Cabeça' : 'Pé'}'),
-              Text('HC Cabeceira: ${parceiro.hccabeceira}'),
-              Text('HC Pezeiro: ${parceiro.hcpezeiro}'),
-              const SizedBox(height: 10),
-              const Text(
-                'Após confirmar, o parceiro será adicionado à sua lista de parceiros.',
-                style: TextStyle(color: Colors.red),
+              TextButton(
+                onPressed: () async {
+                  if (salvandoInformacoes) {
+                    return;
+                  }
+
+                  setStateDialog(() {
+                    salvandoInformacoes = true;
+                  });
+
+                  await confirmarParceiro(contextDialog, parceiro, prova);
+
+                  // setStateDialog(() {
+                  //   salvandoInformacoes = false;
+                  // });
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: salvandoInformacoes
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Confirmar'),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(contextDialog).pop();
-              },
-              child: const Text('Não'),
-            ),
-            TextButton(
-              onPressed: () async {
-                confirmarParceiro(contextDialog, parceiro, prova);
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Confirmar'),
-            ),
-          ],
-        );
+          );
+        });
       },
     );
   }
