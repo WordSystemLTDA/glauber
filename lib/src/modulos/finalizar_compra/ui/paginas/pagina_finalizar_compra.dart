@@ -247,7 +247,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             return const Text('Erro ao listar informações.');
           }
 
-          if (metodoPagamento == '0') {
+          if (metodoPagamento == '0' && (dados.pagamentos.firstOrNull?.id ?? '0') != '0') {
             metodoPagamento = dados.pagamentos.firstOrNull?.id ?? '0';
           }
 
