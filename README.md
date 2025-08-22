@@ -7,6 +7,14 @@ Criação de Tabela
 
 - COLOCAR TODOS COMO NULL PADRÃO
 
+- [ ] botão de selecionar metodo de pagamento deixar direto selecionado
+- [ ] Glauber faz uma inscrição avulsa
+      João faz uma inscrição avulsa com o parceiro Glauber
+        
+      glauber confirma a inscrição
+      mas o glauber cria uma nova venda quando confirma
+      tem que usar a venda que está como sorteio
+
 <!-- - hora_pgto foi criada na tabela vendas (fazer quando pagar a venda (data_pgto)) -->
 <!-- - id_animal foi criada na tabela itens_venda (quando inserir animal na venda) -->
 <!-- - modalidade foi criada na tabela itens_venda (3 tambores, laço em dupla, laço individual) -->
@@ -17,6 +25,8 @@ Criação de Tabela
 
 - vendas
   [x] hora_pgto
+
+
 
 - itens_venda
   [x] id_modalidade (3 tambores, laço em dupla, laço individual)

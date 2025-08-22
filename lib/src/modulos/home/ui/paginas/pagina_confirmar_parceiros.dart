@@ -18,6 +18,9 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
 
   bool salvandoInformacoes = false;
 
+  int quantidadeParceirosPe = 0;
+  int quantidadeParceirosCabeca = 0;
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +39,10 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
     var usuarioProvider = context.read<UsuarioProvider>();
 
     dados = await servico.listarConfirmarParceiros(usuarioProvider.usuario?.id ?? '0');
+
+    quantidadeParceirosPe = (dados?.lacarpe ?? []).fold(0, (previousValue, element) => previousValue + element.parceiros.length);
+    quantidadeParceirosCabeca = (dados?.lacarcabeca ?? []).fold(0, (previousValue, element) => previousValue + element.parceiros.length);
+
     setState(() {});
   }
 
@@ -85,10 +92,6 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
                   });
 
                   await recusarParceiro(contextDialog, parceiro);
-
-                  // setStateDialog(() {
-                  //   salvandoInformacoes = false;
-                  // });
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -106,7 +109,9 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
           );
         });
       },
-    );
+    ).then((_) {
+      salvandoInformacoes = false;
+    });
   }
 
   Future<void> recusarParceiro(BuildContext contextDialog, ParceirosModelo parceiro) async {
@@ -128,7 +133,11 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
           backgroundColor: Colors.green,
         ));
 
-        Navigator.of(context).pop();
+        if ((quantidadeParceirosCabeca + quantidadeParceirosPe) == 1) {
+          Navigator.of(context).pop();
+        } else {
+          listar();
+        }
       }
     } else {
       if (contextDialog.mounted) {
@@ -163,7 +172,11 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
           backgroundColor: Colors.green,
         ));
 
-        Navigator.of(context).pop();
+        if ((quantidadeParceirosCabeca + quantidadeParceirosPe) == 1) {
+          Navigator.of(context).pop();
+        } else {
+          listar();
+        }
       }
     } else {
       if (contextDialog.mounted) {
@@ -227,10 +240,6 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
                   });
 
                   await confirmarParceiro(contextDialog, parceiro, prova);
-
-                  // setStateDialog(() {
-                  //   salvandoInformacoes = false;
-                  // });
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -248,32 +257,48 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
           );
         });
       },
-    );
+    ).then((_) {
+      salvandoInformacoes = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Confirmar Parceiros'),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorSize: TabBarIndicatorSize.tab,
-          tabs: [
-            Tab(text: 'Para laçar Pé (${(dados?.lacarpe ?? []).length})'),
-            Tab(text: 'Para laçar Cabeça (${(dados?.lacarcabeca ?? []).length})'),
-          ],
-        ),
-      ),
-      body: dados == null
-          ? const Center(child: CircularProgressIndicator())
-          : TabBarView(
-              controller: _tabController,
-              children: [
-                _buildListView('1'),
-                _buildListView('2'),
-              ],
+    return PopScope(
+      canPop: (dados?.lacarcabeca ?? []).isEmpty && (dados?.lacarpe ?? []).isEmpty, // Set to true to allow popping, false to prevent
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          // If the pop was not successful, you can handle it here
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Você precisa confirmar ou recusar seus parceiros antes de fechar essa tela.'),
+              backgroundColor: Colors.red,
             ),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Confirmar Parceiros'),
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabs: [
+              Tab(text: 'Para laçar Pé ($quantidadeParceirosPe)'),
+              Tab(text: 'Para laçar Cabeça ($quantidadeParceirosCabeca)'),
+            ],
+          ),
+        ),
+        body: dados == null
+            ? const Center(child: CircularProgressIndicator())
+            : TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildListView('1'),
+                  _buildListView('2'),
+                ],
+              ),
+      ),
     );
   }
 
@@ -295,9 +320,10 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,8 +335,8 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
                           Text('HC Pezeiro: ${parceiro.hcpezeiro}'),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             width: 120,

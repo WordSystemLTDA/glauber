@@ -64,14 +64,14 @@ class _AppBarSombraState extends State<AppBarSombra> {
               )
             : widget.titulo,
         actions: [
-          if (widget.aparecerIconeCalendario ?? false) ...[
-            IconButton(
-              icon: const Icon(Icons.calendar_month_outlined),
-              onPressed: () {
-                Navigator.pushNamed(context, AppRotas.calendario);
-              },
-            ),
-          ],
+          // if (widget.aparecerIconeCalendario ?? false) ...[
+          //   IconButton(
+          //     icon: const Icon(Icons.calendar_month_outlined),
+          //     onPressed: () {
+          //       Navigator.pushNamed(context, AppRotas.calendario);
+          //     },
+          //   ),
+          // ],
           if (widget.aparecerIconeNotificacao ?? false) ...[
             IconButton(
               icon: const Icon(Icons.notifications_outlined),
