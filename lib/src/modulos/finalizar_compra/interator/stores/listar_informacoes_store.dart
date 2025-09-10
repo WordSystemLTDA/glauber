@@ -9,7 +9,7 @@ class ListarInformacoesStore extends ValueNotifier<ListarInformacoesEstado> {
 
   ListarInformacoesStore(this._servico) : super(ListarInformacoesEstadoInicial());
 
-  void listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
+  Future<ListarInformacoesEstado> listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
     value = CarregandoInformacoes();
 
     var (sucesso, mensagem, dados) = await _servico.listarInformacoes(usuario, provas, idEvento, editando, idVenda);
@@ -19,5 +19,7 @@ class ListarInformacoesStore extends ValueNotifier<ListarInformacoesEstado> {
     } else {
       value = ErroAoListar(erro: Exception(mensagem));
     }
+
+    return value;
   }
 }

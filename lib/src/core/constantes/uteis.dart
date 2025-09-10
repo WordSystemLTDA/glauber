@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
@@ -15,9 +14,9 @@ class Utils {
     return "${dataSplit[2]}$to${dataSplit[1]}$to${dataSplit[0]}";
   }
 
-  @pragma('vm:entry-point')
-  void notificationTapBackground(NotificationResponse notificationResponse) {
-    // handle action
-    debugPrint(notificationResponse.payload);
-  }
+  // @pragma('vm:entry-point')
+  // void notificationTapBackground(NotificationResponse notificationResponse) {
+  //   // handle action
+  //   debugPrint(notificationResponse.payload);
+  // }
 }

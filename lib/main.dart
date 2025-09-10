@@ -1,11 +1,7 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_widget.dart';
-import 'package:provadelaco/src/core/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/core/firebase/notification_service.dart';
 import 'package:provadelaco/src/core/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/network/dio_cliente.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
@@ -23,11 +19,6 @@ import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_s
 import 'package:provadelaco/src/modulos/buscar/data/servicos/buscar_servico_impl.dart';
 import 'package:provadelaco/src/modulos/buscar/interator/servicos/buscar_servico.dart';
 import 'package:provadelaco/src/modulos/buscar/interator/stores/buscar_store.dart';
-import 'package:provadelaco/src/modulos/calendario/data/servicos/agenda_servico_impl.dart';
-import 'package:provadelaco/src/modulos/calendario/interator/servicos/agenda_servico.dart';
-import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_info_store.dart';
-import 'package:provadelaco/src/modulos/calendario/interator/stores/agenda_store.dart';
-import 'package:provadelaco/src/modulos/calendario/ui/widgets/agenda_datasource.dart';
 import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
 import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
@@ -90,26 +81,26 @@ extension EmailValidator on String {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      name: 'provasdelaco',
-      options: FirebaseOptions(
-        apiKey: "AIzaSyDZ6lea3HfYNHHk56a6XjfyklgXNmKi1EU",
-        appId: '1:558343760209:web:40cdf70d0e292a66800b70',
-        messagingSenderId: "558343760209",
-        projectId: "provasdelaco",
-      ),
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+  // if (kIsWeb) {
+  //   await Firebase.initializeApp(
+  //     name: 'provasdelaco',
+  //     options: FirebaseOptions(
+  //       apiKey: "AIzaSyDZ6lea3HfYNHHk56a6XjfyklgXNmKi1EU",
+  //       appId: '1:558343760209:web:40cdf70d0e292a66800b70',
+  //       messagingSenderId: "558343760209",
+  //       projectId: "provasdelaco",
+  //     ),
+  //   );
+  // } else {
+  //   await Firebase.initializeApp();
+  // }
 
   HttpOverrides.global = MyHttpOverrides();
 
   final app = MultiProvider(
     providers: [
-      Provider<NotificationService>(create: (context) => NotificationService()),
-      Provider<FirebaseMessagingService>(create: (context) => FirebaseMessagingService(context.read())),
+      // Provider<NotificationService>(create: (context) => NotificationService()),
+      // Provider<FirebaseMessagingService>(create: (context) => FirebaseMessagingService(context.read())),
       ChangeNotifierProvider(create: (context) => ThemeController()),
       Provider<IHttpClient>(create: (context) => DioClient()),
       ChangeNotifierProvider(create: (context) => UsuarioProvider()),
@@ -160,10 +151,10 @@ void main() async {
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaStore(context.read())),
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaProvaStore(context.read())),
       // Calendário
-      Provider<AgendaServico>(create: (context) => AgendaServicoImpl(context.read())),
-      Provider<AgendaDataSource>(create: (context) => AgendaDataSource([], context.read())),
-      ChangeNotifierProvider(create: (context) => AgendaStore(context.read<AgendaServico>(), context.read<AgendaDataSource>())),
-      ChangeNotifierProvider(create: (context) => AgendaInfoStore(context.read<AgendaServico>())),
+      // Provider<AgendaServico>(create: (context) => AgendaServicoImpl(context.read())),
+      // Provider<AgendaDataSource>(create: (context) => AgendaDataSource([], context.read())),
+      // ChangeNotifierProvider(create: (context) => AgendaStore(context.read<AgendaServico>(), context.read<AgendaDataSource>())),
+      // ChangeNotifierProvider(create: (context) => AgendaInfoStore(context.read<AgendaServico>())),
 
       Provider(create: (context) => ServicoAnimais(context.read(), context.read())),
       ChangeNotifierProvider(create: (context) => ProvedorAnimal(context.read<ServicoAnimais>())),

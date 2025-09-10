@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
-import 'package:provadelaco/src/core/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/core/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -69,12 +68,12 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                   if (mounted) {
                     final autenticacaoServico = context.read<AutenticacaoServico>();
-                    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                    // final firebaseMessagingService = context.read<FirebaseMessagingService>();
                     final usuarioProvider = context.read<UsuarioProvider>();
                     final comprasProvedor = context.read<ComprasProvedor>();
-                    String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
+                    // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
-                    autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
+                    autenticacaoServico.sair(usuarioProvider.usuario, '').then((resposta) {
                       var (sucessoAoExcluirToken, _) = resposta;
 
                       if (sucessoAoExcluirToken) {

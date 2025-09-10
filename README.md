@@ -7,8 +7,8 @@ Criação de Tabela
 
 - COLOCAR TODOS COMO NULL PADRÃO
 
-- [ ] botão de selecionar metodo de pagamento deixar direto selecionado
-- [ ] Glauber faz uma inscrição avulsa
+- [X] botão de selecionar metodo de pagamento deixar direto selecionado
+- [X] Glauber faz uma inscrição avulsa
       João faz uma inscrição avulsa com o parceiro Glauber
         
       glauber confirma a inscrição

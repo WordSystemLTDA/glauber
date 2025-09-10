@@ -69,14 +69,16 @@ class AutenticacaoStore extends ValueNotifier<AutenticacaoEstado> {
 
   Future<dynamic> listarInformacoesLoginSocial(BuildContext context, tiposLogin) async {
     if (tiposLogin == TiposLogin.google) {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: [
+      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+
+      await googleSignIn.authorizationClient.authorizationForScopes(
+        [
           'email',
           'https://www.googleapis.com/auth/contacts.readonly',
         ],
       );
 
-      var usuario = await googleSignIn.signIn();
+      var usuario = await googleSignIn.authenticate();
 
       return usuario;
     } else if (tiposLogin == TiposLogin.apple) {

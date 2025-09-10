@@ -625,6 +625,7 @@ class _CardProvasState extends State<CardProvas> {
                                   var item = widget.nomesCabeceira![index];
 
                                   return Badge(
+                                    key: Key("${prova.id}-${item.id}"),
                                     isLabelVisible: quantidadeExisteCarrinho(prova, item: item) != 0,
                                     label: Text(quantidadeExisteCarrinho(prova, item: item).toString()),
                                     offset: const Offset(-2, 3),

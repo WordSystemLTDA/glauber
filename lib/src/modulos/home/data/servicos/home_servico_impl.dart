@@ -97,7 +97,7 @@ class HomeServicoImpl implements HomeServico {
     };
 
     var response = await client.post(url: url, body: campos);
-    var jsonData = jsonDecode(response.data);
+    var jsonData = response.data;
 
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];

@@ -204,6 +204,7 @@ class _PageViewProvasState extends State<PageViewProvas> {
                   var prova = provas[index];
 
                   return CardProvas(
+                    key: Key(prova.id),
                     prova: prova,
                     evento: evento,
                     nomesCabeceira: nomesCabeceira,
