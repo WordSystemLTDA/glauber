@@ -16,7 +16,7 @@ class HomeStore extends ValueNotifier<HomeEstado> {
 
   HomeStore(this._homeServico) : super(EstadoInicial());
 
-  void listar(BuildContext context, int categoria) async {
+  Future<void> listar(BuildContext context, int categoria) async {
     value = Carregando();
 
     var resposta = await _homeServico.listar(categoria);

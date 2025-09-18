@@ -1,7 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
+import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
+import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
 
 class AppBarSombra extends StatefulWidget implements PreferredSizeWidget {
@@ -29,6 +33,8 @@ class _AppBarSombraState extends State<AppBarSombra> {
   @override
   Widget build(BuildContext context) {
     var usuarioProvider = context.read<UsuarioProvider>();
+    var competidoresServico = context.read<CompetidoresServico>();
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(boxShadow: [
@@ -53,10 +59,92 @@ class _AppBarSombraState extends State<AppBarSombra> {
                         children: [
                           const Icon(Icons.people_outline, size: 16),
                           const SizedBox(width: 5),
-                          Text(
-                            "ID: ${usuarioProvider.usuario!.id!}",
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                          ),
+                          if (kDebugMode) ...[
+                            SearchAnchor(
+                              viewBuilder: (suggestions) {
+                                if (suggestions.isEmpty) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(top: 50.0),
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Text('Nenhum competidor disponível para essa Prova.'),
+                                    ),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  itemCount: suggestions.length,
+                                  padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
+                                  itemBuilder: (context, index) {
+                                    var itemN = suggestions.elementAt(index);
+
+                                    return itemN;
+                                  },
+                                );
+                              },
+                              isFullScreen: true,
+                              builder: (BuildContext context, SearchController controller) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    controller.openView();
+                                  },
+                                  child: Text(
+                                    "ID: ${usuarioProvider.usuario!.id!}",
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                                  ),
+                                );
+                              },
+                              suggestionsBuilder: (BuildContext context, SearchController controller) async {
+                                final keyword = controller.value.text;
+                                var usuarioProvider = context.read<UsuarioProvider>();
+
+                                List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores('1', usuarioProvider.usuario, keyword, '713');
+
+                                Iterable<Widget> widgets = competidores.map((competidor) {
+                                  return Card(
+                                    elevation: 3.0,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                    child: ListTile(
+                                      onTap: () {
+                                        usuarioProvider.setUsuario(usuarioProvider.usuario!.copyWith(
+                                          id: () => competidor.id,
+                                          nome: () => competidor.nome,
+                                          apelido: () => competidor.apelido,
+                                        ));
+                                        controller.closeView('');
+                                      },
+                                      leading: Text(competidor.id),
+                                      title: Text(
+                                        competidor.nome,
+                                        style: TextStyle(color: isDarkMode ? Colors.white : null),
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            competidor.apelido,
+                                            style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                          ),
+                                          if (competidor.nomeCidade.isNotEmpty)
+                                            Text(
+                                              "${competidor.nomeCidade} - ${competidor.siglaEstado}",
+                                              style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+
+                                return widgets;
+                              },
+                            ),
+                          ] else ...[
+                            Text(
+                              "ID: ${usuarioProvider.usuario!.id!}",
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ],
                       )
                   ],
@@ -64,14 +152,6 @@ class _AppBarSombraState extends State<AppBarSombra> {
               )
             : widget.titulo,
         actions: [
-          // if (widget.aparecerIconeCalendario ?? false) ...[
-          //   IconButton(
-          //     icon: const Icon(Icons.calendar_month_outlined),
-          //     onPressed: () {
-          //       Navigator.pushNamed(context, AppRotas.calendario);
-          //     },
-          //   ),
-          // ],
           if (widget.aparecerIconeNotificacao ?? false) ...[
             IconButton(
               icon: const Icon(Icons.notifications_outlined),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -9,6 +10,7 @@ import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo
 import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compras.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_parceiros.dart';
+import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/competidores_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +56,26 @@ class _CardComprasState extends State<CardCompras> {
     } else {
       return Colors.green;
     }
+  }
+
+  Future<bool> verificarConfirmarParceiros() async {
+    var usuario = context.read<UsuarioProvider>().usuario;
+
+    if (usuario == null) return false;
+
+    var servico = context.read<HomeServico>();
+    var usuarioProvider = context.read<UsuarioProvider>();
+
+    var dados = await servico.listarConfirmarParceiros(usuarioProvider.usuario?.id ?? '0');
+
+    if (mounted) {
+      if (dados.lacarcabeca.isNotEmpty || dados.lacarpe.isNotEmpty) {
+        Navigator.pushNamed(context, AppRotas.confirmarParceiros);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @override
@@ -274,22 +296,29 @@ class _CardComprasState extends State<CardCompras> {
                     searchController: searchController,
                     builder: (BuildContext context, SearchController controller) {
                       return ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          var temQueConfirmarParceiros = await verificarConfirmarParceiros();
+                          if (temQueConfirmarParceiros) {
+                            return;
+                          }
+
                           if (item.provas[0].idmodalidade == '3') {
                             return;
                           }
 
                           if (item.provas[0].avulsa == 'Não') {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return ModalParceiros(
-                                  idCompra: item.id,
-                                  idProva: item.provas[0].id,
-                                  idEvento: item.idEvento,
-                                );
-                              },
-                            );
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ModalParceiros(
+                                    idCompra: item.id,
+                                    idProva: item.provas[0].id,
+                                    idEvento: item.idEvento,
+                                  );
+                                },
+                              );
+                            }
                             return;
                           }
 
@@ -356,7 +385,6 @@ class _CardComprasState extends State<CardCompras> {
                               : (competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax')
                                   ? RoundedRectangleBorder(side: const BorderSide(width: 1, color: Colors.blue), borderRadius: BorderRadius.circular(5))
                                   : RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          // color: widget.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Colors.red : null,
                           child: ListTile(
                             onTap: () async {
                               if ((competidor.ativo == 'Sim' && (item.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty)) || competidor.id == '0') {

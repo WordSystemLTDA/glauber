@@ -35,6 +35,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   @override
   void initState() {
     super.initState();
+
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
