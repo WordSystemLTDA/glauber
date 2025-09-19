@@ -664,7 +664,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                       children: <TextSpan>[
                                         TextSpan(
                                           text: ' Termos de uso',
-                                          style: const TextStyle(color: Colors.red),
+                                          style: const TextStyle(color: Colors.red, fontSize: 16),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
                                               abrirTermosDeUso();
