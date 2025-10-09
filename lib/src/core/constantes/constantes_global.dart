@@ -4,5 +4,5 @@ class ConstantesGlobal {
 
   static var apiUrl = 'http://192.168.2.104/sistema/api_gsequine/api_glauber/';
   // static var apiUrl = 'https://provadelaco.com.br/apis/provadelaco/api1/';
-  static const apiUrl = 'https://gsequine.com.br/apis/gsequine/api21/';
+  // static const apiUrl = 'https://gsequine.com.br/apis/gsequine/api21/';
 }
