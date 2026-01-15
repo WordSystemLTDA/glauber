@@ -14,20 +14,12 @@ class OrdemDeEntradaStore extends ValueNotifier<OrdemDeEntradaEstado> {
 
     List<OrdemDeEntradaModelo> ordemdeentradas = await _servico.listar(usuario);
 
-    if (ordemdeentradas.isNotEmpty) {
-      value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
-    } else {
-      value = OrdemDeEntradaErroAoListar(erro: Exception('Erro ao listar'));
-    }
+    value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
   }
 
   void atualizarLista(UsuarioModelo? usuario) async {
     List<OrdemDeEntradaModelo> ordemdeentradas = await _servico.listar(usuario);
 
-    if (ordemdeentradas.isNotEmpty) {
-      value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
-    } else {
-      value = OrdemDeEntradaErroAoListar(erro: Exception('Erro ao listar'));
-    }
+    value = OrdemDeEntradaCarregado(ordemdeentradas: ordemdeentradas);
   }
 }

@@ -14,13 +14,13 @@ import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_suces
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_confirmar_parceiros.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_editar_usuario.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_aovivo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:provadelaco/src/modulos/splash/ui/paginas/pagina_splash.dart';
+import 'package:provadelaco/src/ui/core/ordem_de_entrada/widgets/ordem_de_entrada_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
