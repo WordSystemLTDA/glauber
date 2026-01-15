@@ -7,14 +7,14 @@ import 'package:provadelaco/src/ui/core/ordem_de_entrada/widgets/ordem_de_entrad
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class PaginaOrdemDeEntrada extends StatefulWidget {
-  const PaginaOrdemDeEntrada({super.key});
+class OrdemDeEntradaScreen extends StatefulWidget {
+  const OrdemDeEntradaScreen({super.key});
 
   @override
-  State<PaginaOrdemDeEntrada> createState() => _PaginaOrdemDeEntradaState();
+  State<OrdemDeEntradaScreen> createState() => _OrdemDeEntradaScreenState();
 }
 
-class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with AutomaticKeepAliveClientMixin {
+class _OrdemDeEntradaScreenState extends State<OrdemDeEntradaScreen> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();

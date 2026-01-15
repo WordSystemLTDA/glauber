@@ -7,11 +7,11 @@ import 'package:provadelaco/src/core/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/orderdeentrada_estado_prova.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_prova_store.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/widgets/card_ordemdeentrada_prova.dart';
 import 'package:provadelaco/src/modulos/provas/interator/estados/provas_ao_vivo_estado.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/modelo_prova_ao_vivo.dart';
 import 'package:provadelaco/src/modulos/provas/interator/stores/provas_aovivo_store.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_lista_competicao.dart';
+import 'package:provadelaco/src/ui/core/ordem_de_entrada/widgets/ordem_de_entrada_card_prova.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
