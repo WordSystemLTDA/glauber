@@ -57,8 +57,16 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var listarInformacoesStore = context.read<ListarInformacoesStore>();
       var usuarioProvider = context.read<UsuarioProvider>();
 
-      listarInformacoesStore.listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false,
-          widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '');
+      listarInformacoesStore
+          .listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false,
+              widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '')
+          .then((response) {
+        if (response is CarregadoInformacoes) {
+          if (metodoPagamento == '0' && (response.dados.pagamentos.firstOrNull?.id ?? '0') != '0') {
+            metodoPagamento = response.dados.pagamentos.firstOrNull?.id ?? '0';
+          }
+        }
+      });
 
       finalizarCompraStore.addListener(() {
         FinalizarCompraEstado state = finalizarCompraStore.value;
@@ -245,10 +253,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
 
           if (state is ErroAoListar) {
             return const Text('Erro ao listar informações.');
-          }
-
-          if (metodoPagamento == '0' && (dados.pagamentos.firstOrNull?.id ?? '0') != '0') {
-            metodoPagamento = dados.pagamentos.firstOrNull?.id ?? '0';
           }
 
           return Skeletonizer(
@@ -660,7 +664,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                       children: <TextSpan>[
                                         TextSpan(
                                           text: ' Termos de uso',
-                                          style: const TextStyle(color: Colors.red),
+                                          style: const TextStyle(color: Colors.red, fontSize: 16),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
                                               abrirTermosDeUso();

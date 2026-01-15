@@ -185,9 +185,13 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erro: ${resultado.mensagem}'),
+          content: Text(resultado.mensagem),
           backgroundColor: Colors.red,
+          duration: Duration(seconds: 30),
+          showCloseIcon: true,
         ));
+
+        listar();
       }
     }
   }

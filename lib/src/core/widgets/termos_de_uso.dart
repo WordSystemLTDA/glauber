@@ -42,6 +42,10 @@ class TermosDeUso extends StatelessWidget {
                       text:
                           'Qualquer forma de transferência ou sublicença, ou acesso, distribuição, reprodução, cópia, retransmissão, publicação, venda ou exploração (comercial ou não) não autorizados de qualquer parte dos Serviços incluindo, mas não se limitando a todo conteúdo, serviços, produtos digitais, ferramentas ou produtos, é expressamente proibida por estes Termos.\n\n',
                     ),
+                    TextSpan(text: '• Bloqueio de Cadastro:\n\n', style: estiloTituloTermos),
+                    TextSpan(
+                      text: 'Em caso de inadimplência, o competidor concorda que ficará impossibilitado de participar de qualquer evento que use este aplicativo.\n\n',
+                    ),
                     TextSpan(text: 'Condições de compra:\n\n', style: estiloTituloTermos),
                     TextSpan(text: "- Limite de compra por Usuário: até ingressos para cada dia de evento.\n"),
                     TextSpan(
@@ -88,21 +92,6 @@ class TermosDeUso extends StatelessWidget {
                       text:
                           'Em caso de cópias do e-Ticket, o sistema de segurança validará apenas o primeiro acesso. Após validados uma vez, o e-Ticket não poderá ser reutilizado. Não nos responsabilizamos por qualquer PERDA, DANO ou ROUBO do seu e-Ticket. Nós da ${configProvider.configs!.nomeApp} e a Empresa pelo evento não se responsabiliza pela transferência de ingressos ou revenda do mesmo.\n\n',
                     ),
-                    // TextSpan(text: 'Reembolso:\n\n', style: estiloTituloTermos),
-                    // TextSpan(
-                    //   text:
-                    //       '- O prazo para reembolso é de {dadosEmpresa.dias_de_cancelamento} dias contando a data da compra, desde que seja {dadosEmpresa.dias_limite_de_cancelamento} dias antes do evento, para que seja realizada a devolução do valor do ingresso.\n\n',
-                    // ),
-                    // TextSpan(text: '- O valor referente à taxa administrativa não será devolvido.\n\n'),
-                    // TextSpan(
-                    //   text:
-                    //       '- Onde solicitar o reembolso? Deverá ser solicitado no proprio app ou site, na aba compra, clicando em cima do ingresso, vai ter a opção para reembolso, e você será redirecionando para uma conversa no whatssap direto com a empresa promovedora do evento. Não sendo de responsabilidade do ${configProvider.configs!.nomeApp}.\n\n',
-                    // ),
-                    // TextSpan(text: 'Reembolso:\n\n', style: estiloTituloTermos),
-                    // TextSpan(
-                    //   text:
-                    //       'Essa EMPRESA ou ORGANIZAÇÃO não permite Reembolso dos Ingressos. Em caso de dúvida entre em contato com a EMPRESA ou ORGANIZAÇÃO do Evento para mais informações. A ${configProvider.configs!.nomeApp} não se responsabiliza com reembolso devido que os pagamentos é feito diretamente aos responsáveis do Evento.',
-                    // ),
                   ],
                 ),
               ),

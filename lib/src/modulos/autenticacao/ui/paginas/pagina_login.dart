@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
-import 'package:provadelaco/src/core/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/core/widgets/logo_app.dart';
 import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.dart';
 import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
@@ -35,9 +34,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
   void entrarComEmail() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
-    final firebaseMessagingService = context.read<FirebaseMessagingService>();
+    // final firebaseMessagingService = context.read<FirebaseMessagingService>();
 
-    String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
+    // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
       if (mounted) {
@@ -54,17 +53,17 @@ class _PaginaLoginState extends State<PaginaLogin> {
     }
 
     if (mounted) {
-      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, tokenNotificacao);
+      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, '');
     }
   }
 
   void entrarSocial(TiposLogin tipoLogin) async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
-    final FirebaseMessagingService firebaseMessagingService = context.read<FirebaseMessagingService>();
-    String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
+    // final FirebaseMessagingService firebaseMessagingService = context.read<FirebaseMessagingService>();
+    // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (mounted) {
-      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, tokenNotificacao);
+      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, '');
     }
   }
 

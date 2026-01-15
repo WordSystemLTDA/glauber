@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
-import 'package:provadelaco/src/core/firebase/firebase_messaging_service.dart';
 import 'package:provadelaco/src/core/theme/theme_controller.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
@@ -152,11 +150,11 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                               child: const Text('Sim'),
                               onPressed: () async {
                                 final autenticacaoServico = context.read<AutenticacaoServico>();
-                                final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                                // final firebaseMessagingService = context.read<FirebaseMessagingService>();
                                 var usuarioProvider = context.read<UsuarioProvider>();
-                                String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
+                                // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
-                                autenticacaoServico.excluirConta(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
+                                autenticacaoServico.excluirConta(usuarioProvider.usuario, '').then((resposta) {
                                   var (sucessoAoExcluirConta, mensagem) = resposta;
 
                                   if (sucessoAoExcluirConta) {
@@ -219,12 +217,12 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                   onPressed: () async {
                     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                       final autenticacaoServico = context.read<AutenticacaoServico>();
-                      final firebaseMessagingService = context.read<FirebaseMessagingService>();
+                      // final firebaseMessagingService = context.read<FirebaseMessagingService>();
                       final usuarioProvider = context.read<UsuarioProvider>();
                       final comprasProvedor = context.read<ComprasProvedor>();
-                      String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
+                      // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
-                      autenticacaoServico.sair(usuarioProvider.usuario, tokenNotificacao).then((resposta) {
+                      autenticacaoServico.sair(usuarioProvider.usuario, '').then((resposta) {
                         var (sucessoAoExcluirToken, _) = resposta;
 
                         if (sucessoAoExcluirToken) {

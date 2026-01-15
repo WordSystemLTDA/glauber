@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/core/firebase/firebase_messaging_service.dart';
-import 'package:provadelaco/src/core/firebase/notification_service.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
 import 'package:provider/provider.dart';
@@ -35,18 +32,18 @@ class _PaginaSplashState extends State<PaginaSplash> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       verificarLogin();
-      initializeFirebaseMessaging();
-      checkForNotifications();
+      // initializeFirebaseMessaging();
+      // checkForNotifications();
     });
   }
 
-  initializeFirebaseMessaging() async {
-    await Provider.of<FirebaseMessagingService>(context, listen: false).initialize();
-  }
+  // initializeFirebaseMessaging() async {
+  //   await Provider.of<FirebaseMessagingService>(context, listen: false).initialize();
+  // }
 
-  checkForNotifications() async {
-    await Provider.of<NotificationService>(context, listen: false).checkForNotifications();
-  }
+  // checkForNotifications() async {
+  //   await Provider.of<NotificationService>(context, listen: false).checkForNotifications();
+  // }
 
   void verificarLogin() async {
     if (mounted) {
@@ -64,11 +61,11 @@ class _PaginaSplashState extends State<PaginaSplash> {
       } else {
         if (mounted) {
           final autenticacaoServico = context.read<AutenticacaoServico>();
-          final firebaseMessagingService = context.read<FirebaseMessagingService>();
+          // final firebaseMessagingService = context.read<FirebaseMessagingService>();
 
-          String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
+          // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
-          autenticacaoServico.verificar(usuario, tokenNotificacao).then((resposta) async {
+          autenticacaoServico.verificar(usuario, '').then((resposta) async {
             var (sucesso, _, usuarioRetorno) = resposta;
 
             if (sucesso) {

@@ -34,6 +34,9 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
       HomeStore homeStore = context.read<HomeStore>();
       homeStore.listar(context, categoriasIndex);
 
+      verificarModalidadesUsuario();
+      verificarConfirmarParceiros();
+
       homeStore.addListener(() {
         HomeEstado state = homeStore.value;
 
@@ -44,9 +47,6 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
               length: state.categorias.length,
               vsync: this,
             );
-
-            verificarModalidadesUsuario();
-            verificarConfirmarParceiros();
           }
 
           if (_categoriaController != null) {
@@ -55,6 +55,14 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    if (_categoriaController != null) {
+      _categoriaController!.dispose();
+    }
+    super.dispose();
   }
 
   void verificarModalidadesUsuario() {
@@ -75,7 +83,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     });
   }
 
-  void verificarConfirmarParceiros() async {
+  Future<void> verificarConfirmarParceiros() async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var usuario = context.read<UsuarioProvider>().usuario;
 
@@ -92,14 +100,6 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
         }
       }
     });
-  }
-
-  @override
-  void dispose() {
-    if (_categoriaController != null) {
-      _categoriaController!.dispose();
-    }
-    super.dispose();
   }
 
   @override
@@ -241,6 +241,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                       var item = eventos[index];
 
                       return CardEventos(
+                        key: Key(item.id),
                         evento: item,
                         aparecerInformacoes: true,
                       );

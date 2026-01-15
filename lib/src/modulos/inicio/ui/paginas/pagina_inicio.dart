@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
@@ -11,7 +11,6 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/modulos/compras/ui/paginas/pagina_compras.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_finalizar_compra.dart';
 import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
@@ -84,7 +83,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
     });
   }
 
-  void funcaoMudarRota(RemoteMessage? message) {
+  void funcaoMudarRota(dynamic message) {
     if (mounted) {
       if (message != null) {
         String rotaApp = message.data['rota'] ?? '';
@@ -146,13 +145,13 @@ class _PaginaInicioState extends State<PaginaInicio> {
   }
 
   void abrirPaginaQuandoClicaNotificacao() async {
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
-      funcaoMudarRota(message);
-    });
+    // FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    //   funcaoMudarRota(message);
+    // });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
-      funcaoMudarRota(message);
-    });
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+    //   funcaoMudarRota(message);
+    // });
   }
 
   void verificar() {
