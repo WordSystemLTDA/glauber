@@ -6,46 +6,41 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
-import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
+import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
+import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomeStore extends ValueNotifier<HomeEstado> {
+class HomeStore extends ChangeNotifier {
   final HomeServico _homeServico;
 
-  HomeStore(this._homeServico) : super(EstadoInicial());
+  HomeStore(this._homeServico);
+
+  bool carregando = false;
+  List<EventoModelo> eventos = [];
+  List<EventoModelo> eventosTopo = [];
+  List<PropagandaModelo> propagandas = [];
+  List<CategoriaModelo> categorias = [];
 
   Future<void> listar(BuildContext context, int categoria) async {
-    value = Carregando();
+    carregando = true;
+    notifyListeners();
 
     var resposta = await _homeServico.listar(categoria);
 
-    if (resposta.sucesso) {
-      var configProvider = context.read<ConfigProvider>();
-      configProvider.setConfig(resposta.dadosConfig);
+    var configProvider = context.read<ConfigProvider>();
+    configProvider.setConfig(resposta.dadosConfig);
 
-      verificarAtualizacao(context, resposta.dadosConfig);
+    verificarAtualizacao(context, resposta.dadosConfig);
 
-      value = Carregado(eventos: resposta.eventos, eventosTopo: resposta.eventosTopo, propagandas: resposta.propagandas, categorias: resposta.categorias);
-    } else {
-      value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
-    }
-  }
-
-  void atualizarLista(BuildContext context, int categoria) async {
-    var resposta = await _homeServico.listar(categoria);
-
-    if (resposta.sucesso) {
-      var configProvider = context.read<ConfigProvider>();
-      configProvider.setConfig(resposta.dadosConfig);
-
-      verificarAtualizacao(context, resposta.dadosConfig);
-
-      value = Carregado(eventos: resposta.eventos, eventosTopo: resposta.eventosTopo, propagandas: resposta.propagandas, categorias: resposta.categorias);
-    } else {
-      value = ErroAoCarregar(erro: Exception('Erro ao listar.'));
-    }
+    eventos = resposta.eventos;
+    eventosTopo = resposta.eventosTopo;
+    propagandas = resposta.propagandas;
+    categorias = resposta.categorias;
+    carregando = false;
+    notifyListeners();
   }
 
   void verificarAtualizacao(context, ConfigModelo versoes) async {

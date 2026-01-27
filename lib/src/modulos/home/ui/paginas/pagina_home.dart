@@ -1,16 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/core/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
-import 'package:provadelaco/src/modulos/home/interator/estados/home_estado.dart';
 import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
 import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_propagandas.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaHome extends StatefulWidget {
   const PaginaHome({super.key});
@@ -37,23 +34,23 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
       verificarModalidadesUsuario();
       verificarConfirmarParceiros();
 
-      homeStore.addListener(() {
-        HomeEstado state = homeStore.value;
+      // homeStore.addListener(() {
+      //   HomeEstado state = homeStore.value;
 
-        if (state is Carregado) {
-          if (mounted) {
-            _categoriaController = TabController(
-              initialIndex: 0,
-              length: state.categorias.length,
-              vsync: this,
-            );
-          }
+      //   if (state is Carregado) {
+      //     if (mounted) {
+      //       _categoriaController = TabController(
+      //         initialIndex: 0,
+      //         length: state.categorias.length,
+      //         vsync: this,
+      //       );
+      //     }
 
-          if (_categoriaController != null) {
-            _categoriaController!.animateTo(categoriasIndex);
-          }
-        }
-      });
+      //     if (_categoriaController != null) {
+      //       _categoriaController!.animateTo(categoriasIndex);
+      //     }
+      //   }
+      // });
     });
   }
 
@@ -110,75 +107,89 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
     super.build(context);
     HomeStore homeStore = context.read<HomeStore>();
 
-    return ValueListenableBuilder<HomeEstado>(
-      valueListenable: homeStore,
-      builder: (context, state, _) {
-        var eventosTopo = state is Carregando ? DadosFakes.dadosFakesEventos : state.eventosTopo;
-        var eventos = state is Carregando ? DadosFakes.dadosFakesEventos : state.eventos;
-        var propagandas = state is Carregando ? DadosFakes.dadosFakesPropagandas : state.propagandas;
-        var categorias = state is Carregando ? DadosFakes.dadosFakesCategoria : state.categorias;
-
+    return ListenableBuilder(
+      listenable: homeStore,
+      builder: (context, _) {
         return RefreshIndicator(
           onRefresh: () async {
-            homeStore.atualizarLista(context, categoriasIndex);
+            homeStore.listar(context, categoriasIndex);
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 30),
-            child: Skeletonizer(
-              enabled: state is Carregando,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 10),
-                  // Carrosel de Eventos
-                  if (eventosTopo.isNotEmpty) ...[
-                    SizedBox(
-                      height: 220,
-                      child: CarouselSlider.builder(
-                        options: CarouselOptions(
-                          height: 220.0,
-                          autoPlay: true,
-                          aspectRatio: 2.0,
-                          pauseAutoPlayOnTouch: true,
-                          autoPlayInterval: const Duration(seconds: 10),
-                          enlargeCenterPage: true,
-                          enlargeStrategy: CenterPageEnlargeStrategy.height,
-                        ),
-                        itemCount: eventosTopo.length,
-                        itemBuilder: (context, index, realIndex) {
-                          var item = eventosTopo[index];
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                // Carrosel de Eventos
+                if (homeStore.eventosTopo.isNotEmpty) ...[
+                  SizedBox(
+                    height: 220,
+                    child: CarouselSlider.builder(
+                      options: CarouselOptions(
+                        height: 220.0,
+                        autoPlay: true,
+                        aspectRatio: 2.0,
+                        pauseAutoPlayOnTouch: true,
+                        autoPlayInterval: const Duration(seconds: 10),
+                        enlargeCenterPage: true,
+                        enlargeStrategy: CenterPageEnlargeStrategy.height,
+                      ),
+                      itemCount: homeStore.eventosTopo.length,
+                      itemBuilder: (context, index, realIndex) {
+                        var item = homeStore.eventosTopo[index];
 
-                          return CardEventos(
-                            evento: item,
-                            aparecerInformacoes: true,
-                          );
+                        return CardEventos(
+                          evento: item,
+                          aparecerInformacoes: true,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+                if (_categoriaController != null && _categoriaController?.length == homeStore.categorias.length) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      height: 40,
+                      child: TabBar(
+                        tabAlignment: TabAlignment.start,
+                        dividerColor: Colors.transparent,
+                        controller: _categoriaController,
+                        isScrollable: true,
+                        onTap: (categoria) async {
+                          if (categoriasIndex == categoria) {
+                            return;
+                          }
+
+                          setState(() {
+                            categoriasIndex = categoria;
+                          });
+
+                          homeStore.listar(context, int.parse(homeStore.categorias[categoria].id));
                         },
+                        tabs: homeStore.categorias
+                            .map((e) => Tab(
+                                  child: Text(e.nome, style: const TextStyle(fontSize: 16)),
+                                ))
+                            .toList(),
                       ),
                     ),
-                  ],
-                  if (_categoriaController != null && _categoriaController?.length == categorias.length) ...[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        height: 40,
+                  ),
+                ],
+                // Categorias
+                if (_categoriaController == null) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      height: 40,
+                      child: DefaultTabController(
+                        length: homeStore.categorias.length,
                         child: TabBar(
                           tabAlignment: TabAlignment.start,
                           dividerColor: Colors.transparent,
-                          controller: _categoriaController,
                           isScrollable: true,
-                          onTap: (categoria) async {
-                            if (categoriasIndex == categoria) {
-                              return;
-                            }
-
-                            setState(() {
-                              categoriasIndex = categoria;
-                            });
-
-                            homeStore.listar(context, int.parse(categorias[categoria].id));
-                          },
-                          tabs: categorias
+                          tabs: homeStore.categorias
                               .map((e) => Tab(
                                     child: Text(e.nome, style: const TextStyle(fontSize: 16)),
                                   ))
@@ -186,69 +197,47 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
                         ),
                       ),
                     ),
-                  ],
-                  // Categorias
-                  if (_categoriaController == null) ...[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        height: 40,
-                        child: DefaultTabController(
-                          length: categorias.length,
-                          child: TabBar(
-                            tabAlignment: TabAlignment.start,
-                            dividerColor: Colors.transparent,
-                            isScrollable: true,
-                            tabs: categorias
-                                .map((e) => Tab(
-                                      child: Text(e.nome, style: const TextStyle(fontSize: 16)),
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                  // Carrosel de Propagandas
-                  const SizedBox(height: 10),
-                  if (propagandas.isNotEmpty) ...[
-                    SizedBox(
-                      height: 110,
-                      child: CarouselSlider.builder(
-                        options: CarouselOptions(
-                          height: 110.0,
-                          autoPlay: true,
-                          aspectRatio: 2.0,
-                          pauseAutoPlayOnTouch: true,
-                          autoPlayInterval: const Duration(seconds: 20),
-                        ),
-                        itemCount: propagandas.length,
-                        itemBuilder: (context, index, realIndex) {
-                          var item = propagandas[index];
-
-                          return CardPropagandas(propaganda: item);
-                        },
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: eventos.length,
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 50),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      var item = eventos[index];
-
-                      return CardEventos(
-                        key: Key(item.id),
-                        evento: item,
-                        aparecerInformacoes: true,
-                      );
-                    },
                   ),
                 ],
-              ),
+                // Carrosel de Propagandas
+                const SizedBox(height: 10),
+                if (homeStore.propagandas.isNotEmpty) ...[
+                  SizedBox(
+                    height: 110,
+                    child: CarouselSlider.builder(
+                      options: CarouselOptions(
+                        height: 110.0,
+                        autoPlay: true,
+                        aspectRatio: 2.0,
+                        pauseAutoPlayOnTouch: true,
+                        autoPlayInterval: const Duration(seconds: 20),
+                      ),
+                      itemCount: homeStore.propagandas.length,
+                      itemBuilder: (context, index, realIndex) {
+                        var item = homeStore.propagandas[index];
+
+                        return CardPropagandas(propaganda: item);
+                      },
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 10),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: homeStore.eventos.length,
+                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 50),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    var item = homeStore.eventos[index];
+
+                    return CardEventos(
+                      key: Key(item.id),
+                      evento: item,
+                      aparecerInformacoes: true,
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         );

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/core/constantes/dados_fakes.dart';
 import 'package:provadelaco/src/core/constantes/uteis.dart';
 import 'package:provadelaco/src/core/widgets/termos_de_uso.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';

@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_informacoes_estado.dart';
+import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
 import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
 
-class ListarInformacoesStore extends ValueNotifier<ListarInformacoesEstado> {
+class ListarInformacoesStore extends ChangeNotifier {
   final ListarInformacoesServico _servico;
 
-  ListarInformacoesStore(this._servico) : super(ListarInformacoesEstadoInicial());
+  ListarInformacoesStore(this._servico);
 
-  Future<ListarInformacoesEstado> listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
-    value = CarregandoInformacoes();
+  bool carregando = false;
+  ListarInformacoesModelo? dados;
 
-    var (sucesso, mensagem, dados) = await _servico.listarInformacoes(usuario, provas, idEvento, editando, idVenda);
+  Future<ListarInformacoesModelo> listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
+    carregando = true;
+    notifyListeners();
 
-    if (sucesso) {
-      value = CarregadoInformacoes(dados: dados);
-    } else {
-      value = ErroAoListar(erro: Exception(mensagem));
-    }
+    var (sucesso, mensagem, result) = await _servico.listarInformacoes(usuario, provas, idEvento, editando, idVenda);
 
-    return value;
+    dados = result;
+
+    carregando = true;
+    notifyListeners();
+
+    return result;
   }
 }

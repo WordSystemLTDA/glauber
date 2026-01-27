@@ -4,7 +4,7 @@ import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/order
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/prova_parceiros_modelo.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
 
-class OrdemDeEntradaProvaStore extends ValueNotifier<OrdemDeEntradaEstadoProva> {
+class OrdemDeEntradaProvaStore extends ChangeNotifier {
   final OrdemDeEntradaServico _servico;
 
   OrdemDeEntradaProvaStore(this._servico) : super(OrdemDeEntradaEstadoProvaInicial());

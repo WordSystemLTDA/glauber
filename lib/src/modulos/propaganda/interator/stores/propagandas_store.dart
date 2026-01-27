@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/estados/propagandas_estado.dart';
-
 import 'package:provadelaco/src/modulos/propaganda/interator/servicos/propagandas_servico.dart';
 
-class PropagandasStore extends ValueNotifier<PropagandasEstado> {
+class PropagandasStore extends ChangeNotifier {
   final PropagandasServico _servico;
 
-  PropagandasStore(this._servico) : super(PropagandasEstadoInicial());
+  PropagandasStore(this._servico);
+
+  bool carregando = false;
+  PropagandaModelo? propagandas;
 
   void listar(String idPropaganda) async {
-    value = PropagandasCarregando();
+    carregando = true;
+    notifyListeners();
 
     PropagandaModelo? propagandas = await _servico.listar(idPropaganda);
 
     if (propagandas != null) {
-      value = PropagandasCarregado(propagandas: propagandas);
-    } else {
-      value = PropagandasErroAoListar(erro: Exception('Erro ao listar'));
+      propagandas = propagandas;
     }
+
+    carregando = false;
+    notifyListeners();
   }
 }
