@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
+import 'package:provadelaco/src/domain/models/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_cadastro.dart';
 
 class PaginaSelecionarModalidadesArgumentos {

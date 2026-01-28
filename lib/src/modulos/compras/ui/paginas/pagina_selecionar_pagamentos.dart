@@ -1,8 +1,8 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_compras.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_pagar_inscricoes.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +27,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
   }
 
   void listar() async {
-    await context.read<ComprasServico>().listarSomenteInscricoes(1).then((value) {
+    await context.read<ComprasServicoImpl>().listarSomenteInscricoes(1).then((value) {
       inscricoes.value = value;
     }).whenComplete(() {
       carregando.value = false;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/pagamentos_modelo.dart';
+import 'package:provadelaco/src/domain/models/pagamentos_modelo.dart';
 
 class ModalPagamentosDisponiveis extends StatefulWidget {
   final List<PagamentosModelo> pagamentosDisponiveis;

@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
+import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
 
 sealed class PropagandasEstado {}
 

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
+import 'package:provadelaco/src/data/repositories/compras_provedor.dart';
+import 'package:provadelaco/src/data/servicos/verificar_pagamento_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/verificar_pagamento_estado.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_pagamento_store.dart';
+import 'package:provadelaco/src/domain/models/retorno_compra_modelo.dart';
+import 'package:provadelaco/src/data/repositories/verificar_pagamento_store.dart';
 import 'package:provadelaco/src/modulos/inicio/ui/paginas/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -56,7 +56,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
     if (widget.argumentos.dados.tipoRetorno == 'verificacao') {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (mounted) {
-          var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
+          var verificarPagamentoServico = context.read<VerificarPagamentoServicoImpl>();
 
           _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
             verificarPagamentoServico.verificarPagamento(widget.argumentos.dados.txid!, widget.argumentos.metodoPagamento).then((sucesso) {

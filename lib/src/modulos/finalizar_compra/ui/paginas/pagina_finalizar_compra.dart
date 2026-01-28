@@ -7,17 +7,17 @@ import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/core/widgets/termos_de_uso.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/cartao_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/dados_edicao_venda_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_compra_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/formulario_editar_compra_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/listar_informacoes_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
+import 'package:provadelaco/src/domain/models/cartao_modelo.dart';
+import 'package:provadelaco/src/domain/models/dados_edicao_venda_modelo.dart';
+import 'package:provadelaco/src/domain/models/formulario_compra_modelo.dart';
+import 'package:provadelaco/src/domain/models/formulario_editar_compra_modelo.dart';
+import 'package:provadelaco/src/domain/models/listar_informacoes_modelo.dart';
+import 'package:provadelaco/src/data/repositories/finalizar_compra_store.dart';
+import 'package:provadelaco/src/data/repositories/listar_informacoes_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/paginas/pagina_sucesso_compra.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/widgets/card_cartao.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/widgets/modal_selecionar_cartao.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/domain/models/prova_modelo.dart';
 import 'package:provider/provider.dart';
 
 class PaginaFinalizarCompraArgumentos {

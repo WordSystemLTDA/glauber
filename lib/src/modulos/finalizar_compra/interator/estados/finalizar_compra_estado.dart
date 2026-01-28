@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/retorno_compra_modelo.dart';
+import 'package:provadelaco/src/domain/models/retorno_compra_modelo.dart';
 
 sealed class FinalizarCompraEstado {}
 

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provadelaco/src/data/servicos/listar_cartoes_servico_impl.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_cartoes_estado.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/cartao_modelo.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_cartoes_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_cartoes_store.dart';
+import 'package:provadelaco/src/domain/models/cartao_modelo.dart';
+import 'package:provadelaco/src/data/repositories/listar_cartoes_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/widgets/card_cartao.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -230,7 +230,7 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
   }
 
   void aparecerModalExcluirCartao(CartaoModelo cartao) {
-    var listarCartoesServico = context.read<ListarCartoesServico>();
+    var listarCartoesServico = context.read<ListarCartoesServicoImpl>();
     var listarCartoesStore = context.read<ListarCartoesStore>();
 
     showDialog<void>(

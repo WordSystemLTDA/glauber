@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/ordem_de_entrada_modelo.dart';
+import 'package:provadelaco/src/domain/models/ordem_de_entrada_modelo.dart';
 
 sealed class OrdemDeEntradaEstado {}
 

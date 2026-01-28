@@ -10,8 +10,8 @@ import 'package:provadelaco/src/essencial/providers/config/config_provider.dart'
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/modulos/animais/paginas/pagina_animais.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
+import 'package:provadelaco/src/data/servicos/autenticacao_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/compras_provedor.dart';
 import 'package:provider/provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
@@ -149,7 +149,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                             TextButton(
                               child: const Text('Sim'),
                               onPressed: () async {
-                                final autenticacaoServico = context.read<AutenticacaoServico>();
+                                final autenticacaoServico = context.read<AutenticacaoServicoImpl>();
                                 // final firebaseMessagingService = context.read<FirebaseMessagingService>();
                                 var usuarioProvider = context.read<UsuarioProvider>();
                                 // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
@@ -216,7 +216,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                   child: const Text('Sair'),
                   onPressed: () async {
                     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-                      final autenticacaoServico = context.read<AutenticacaoServico>();
+                      final autenticacaoServico = context.read<AutenticacaoServicoImpl>();
                       // final firebaseMessagingService = context.read<FirebaseMessagingService>();
                       final usuarioProvider = context.read<UsuarioProvider>();
                       final comprasProvedor = context.read<ComprasProvedor>();

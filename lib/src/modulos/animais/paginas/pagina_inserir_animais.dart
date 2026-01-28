@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/core/constantes/uteis.dart';
 import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
-import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
-import 'package:provadelaco/src/modulos/animais/servicos/servico_animais.dart';
+import 'package:provadelaco/src/domain/models/modelo_animal.dart';
+import 'package:provadelaco/src/data/servicos/servico_animais.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInserirAnimais extends StatefulWidget {

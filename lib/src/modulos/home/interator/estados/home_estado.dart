@@ -1,6 +1,6 @@
-import 'package:provadelaco/src/modulos/home/interator/modelos/categoria_modelo.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
+import 'package:provadelaco/src/domain/models/categoria_modelo.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
 
 sealed class HomeEstado {
   final List<EventoModelo> eventos;

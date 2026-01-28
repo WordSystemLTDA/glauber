@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/estados/orderdeentrada_estado.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
-import 'package:provadelaco/src/ui/core/ordem_de_entrada/widgets/ordem_de_entrada_card.dart';
+import 'package:provadelaco/src/data/repositories/ordemdeentrada_store.dart';
+import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/widgets/ordem_de_entrada_card.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaOrdemDeEntrada extends StatefulWidget {
   const PaginaOrdemDeEntrada({super.key});
@@ -44,19 +42,15 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
     }
 
     return Scaffold(
-      body: ValueListenableBuilder<OrdemDeEntradaEstado>(
-        valueListenable: ordemDeEntradaStore,
-        builder: (context, state, _) {
-          var ordemdeentradas = state is OrdemDeEntradaCarregando
-              ? []
-              : state is OrdemDeEntradaCarregado
-                  ? state.ordemdeentradas
-                  : [];
+      body: ListenableBuilder(
+        listenable: ordemDeEntradaStore,
+        builder: (context, _) {
+          var ordemdeentradas = ordemDeEntradaStore.ordemdeentradas;
 
-          if (state is OrdemDeEntradaErroAoListar || (state is OrdemDeEntradaCarregado && state.ordemdeentradas.isEmpty)) {
+          if (ordemDeEntradaStore.ordemdeentradas.isEmpty) {
             return RefreshIndicator(
               onRefresh: () async {
-                ordemDeEntradaStore.atualizarLista(usuarioProvider.usuario);
+                ordemDeEntradaStore.listar(usuarioProvider.usuario);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -74,24 +68,21 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
             );
           }
 
-          return Skeletonizer(
-            enabled: state is OrdemDeEntradaCarregando,
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ordemDeEntradaStore.atualizarLista(usuarioProvider.usuario);
+          return RefreshIndicator(
+            onRefresh: () async {
+              ordemDeEntradaStore.listar(usuarioProvider.usuario);
+            },
+            child: ListView.builder(
+              itemCount: ordemdeentradas.length,
+              padding: const EdgeInsets.all(15),
+              itemBuilder: (context, index) {
+                var item = ordemdeentradas[index];
+          
+                return CardOrdemDeEntrada(
+                  item: item,
+                  mostrarOpcoes: false,
+                );
               },
-              child: ListView.builder(
-                itemCount: ordemdeentradas.length,
-                padding: const EdgeInsets.all(15),
-                itemBuilder: (context, index) {
-                  var item = ordemdeentradas[index];
-
-                  return CardOrdemDeEntrada(
-                    item: item,
-                    mostrarOpcoes: false,
-                  );
-                },
-              ),
             ),
           );
         },

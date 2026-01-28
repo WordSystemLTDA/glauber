@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/core/constantes/uteis.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provider/provider.dart';
 
 class ModalCompras extends StatefulWidget {
@@ -32,7 +32,7 @@ class _ModalComprasState extends State<ModalCompras> {
       });
     }
 
-    var comprasServico = context.read<ComprasServico>();
+    var comprasServico = context.read<ComprasServicoImpl>();
 
     await comprasServico.listarPorId(widget.idCompra, widget.idProva, widget.idEvento).then((value) {
       item = value;

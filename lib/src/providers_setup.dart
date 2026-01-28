@@ -4,59 +4,42 @@ import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.dart';
-import 'package:provadelaco/src/modulos/animais/provedores/provedor_animal.dart';
-import 'package:provadelaco/src/modulos/animais/servicos/servico_animais.dart';
-import 'package:provadelaco/src/modulos/autenticacao/data/servicos/autenticacao_servico_impl.dart';
-import 'package:provadelaco/src/modulos/autenticacao/data/servicos/handicap_servico_impl.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/handicap_servico.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/handicap_store.dart';
-import 'package:provadelaco/src/modulos/buscar/data/servicos/buscar_servico_impl.dart';
-import 'package:provadelaco/src/modulos/buscar/interator/servicos/buscar_servico.dart';
-import 'package:provadelaco/src/modulos/buscar/interator/stores/buscar_store.dart';
-import 'package:provadelaco/src/modulos/compras/data/servicos/compras_servico_impl.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
-import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/finalizar_compra_servico_impl.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_cartoes_servico_impl.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/listar_informacoes_servico_impl.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/data/servicos/verificar_pagamento_servico_impl.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/finalizar_compra_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_cartoes_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/listar_informacoes_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/finalizar_compra_store.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_cartoes_store.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/listar_informacoes_store.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_pagamento_store.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/stores/verificar_permitir_compra_provedor.dart';
-import 'package:provadelaco/src/modulos/home/data/servicos/home_servico_impl.dart';
-import 'package:provadelaco/src/modulos/home/interator/servicos/home_servico.dart';
-import 'package:provadelaco/src/modulos/home/interator/stores/home_store.dart';
-import 'package:provadelaco/src/modulos/inicio/data/servicos/mudar_senha_servico_impl.dart';
-import 'package:provadelaco/src/modulos/inicio/interator/servicos/mudar_senha_servico.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/data/servicos/ordermdeentrada_servico_impl.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/servicos/ordemdeentrada_servico.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_prova_store.dart';
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/stores/ordemdeentrada_store.dart';
-import 'package:provadelaco/src/modulos/perfil/data/servicos/cidade_servico_impl.dart';
-import 'package:provadelaco/src/modulos/perfil/data/servicos/editar_usuario_servico_impl.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario_servico.dart';
-import 'package:provadelaco/src/modulos/propaganda/data/servicos/propagandas_servico_impl.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/servicos/propagandas_servico.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/stores/propagandas_store.dart';
-import 'package:provadelaco/src/modulos/provas/data/servicos/competidores_servico_impl.dart';
-import 'package:provadelaco/src/modulos/provas/data/servicos/denunciar_servico_impl.dart';
-import 'package:provadelaco/src/modulos/provas/data/servicos/prova_sevico_impl.dart';
-import 'package:provadelaco/src/modulos/provas/interator/servicos/competidores_servico.dart';
-import 'package:provadelaco/src/modulos/provas/interator/servicos/denunciar_servico.dart';
-import 'package:provadelaco/src/modulos/provas/interator/servicos/prova_servico.dart';
-import 'package:provadelaco/src/modulos/provas/interator/stores/provas_aovivo_store.dart';
-import 'package:provadelaco/src/modulos/provas/interator/stores/provas_provedor.dart';
-import 'package:provadelaco/src/modulos/provas/interator/stores/provas_store.dart';
+import 'package:provadelaco/src/data/repositories/provedor_animal.dart';
+import 'package:provadelaco/src/data/servicos/servico_animais.dart';
+import 'package:provadelaco/src/data/servicos/autenticacao_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/handicap_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/autenticacao_store.dart';
+import 'package:provadelaco/src/data/repositories/handicap_store.dart';
+import 'package:provadelaco/src/data/servicos/buscar_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/buscar_store.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/compras_provedor.dart';
+import 'package:provadelaco/src/data/repositories/transferencia_provedor.dart';
+import 'package:provadelaco/src/data/servicos/finalizar_compra_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/listar_cartoes_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/listar_informacoes_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/verificar_pagamento_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/finalizar_compra_store.dart';
+import 'package:provadelaco/src/data/repositories/listar_cartoes_store.dart';
+import 'package:provadelaco/src/data/repositories/listar_informacoes_store.dart';
+import 'package:provadelaco/src/data/repositories/verificar_pagamento_store.dart';
+import 'package:provadelaco/src/data/repositories/verificar_permitir_compra_provedor.dart';
+import 'package:provadelaco/src/data/servicos/home_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/home_store.dart';
+import 'package:provadelaco/src/data/servicos/mudar_senha_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/ordermdeentrada_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/ordemdeentrada_prova_store.dart';
+import 'package:provadelaco/src/data/repositories/ordemdeentrada_store.dart';
+import 'package:provadelaco/src/data/servicos/cidade_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/editar_usuario_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/propagandas_servico_impl.dart';
+import 'package:provadelaco/src/data/repositories/propagandas_store.dart';
+import 'package:provadelaco/src/data/servicos/competidores_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/denunciar_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/prova_sevico_impl.dart';
+import 'package:provadelaco/src/data/repositories/provas_aovivo_store.dart';
+import 'package:provadelaco/src/data/repositories/provas_provedor.dart';
+import 'package:provadelaco/src/data/repositories/provas_store.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -68,48 +51,48 @@ List<SingleChildWidget> get providers => [
       ChangeNotifierProvider(create: (context) => UsuarioProvider()),
       ChangeNotifierProvider(create: (context) => ConfigProvider()),
       // Inicio
-      Provider<MudarSenhaServico>(create: (context) => MudarSenhaServicoImpl(context.read())),
+      Provider<MudarSenhaServicoImpl>(create: (context) => MudarSenhaServicoImpl(context.read())),
       // Autenticação
-      Provider<HandiCapServico>(create: (context) => HandiCapServicoImpl(context.read())),
-      Provider<AutenticacaoServico>(create: (context) => AutenticacaoServicoImpl(context.read())),
+      Provider<HandiCapServicoImpl>(create: (context) => HandiCapServicoImpl(context.read())),
+      Provider<AutenticacaoServicoImpl>(create: (context) => AutenticacaoServicoImpl(context.read())),
       Provider(create: (context) => ListarDadosServicosImpl(context.read())),
       ChangeNotifierProvider(create: (context) => AutenticacaoStore(context.read())),
       ChangeNotifierProvider(create: (context) => HandiCapStore(context.read())),
       // Home
-      Provider<HomeServico>(create: (context) => HomeServicoImpl(context.read())),
+      Provider<HomeServicoImpl>(create: (context) => HomeServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => HomeStore(context.read())),
       // Editar Usuario
-      Provider<CidadeServico>(create: (context) => CidadeServicoImpl(context.read())),
-      Provider<EditarUsuarioServico>(create: (context) => EditarUsuarioServicoImpl(context.read())),
+      Provider<CidadeServicoImpl>(create: (context) => CidadeServicoImpl(context.read())),
+      Provider<EditarUsuarioServicoImpl>(create: (context) => EditarUsuarioServicoImpl(context.read())),
       // Buscar
-      Provider<BuscarServico>(create: (context) => BuscarServicoImpl(context.read())),
+      Provider<BuscarServicoImpl>(create: (context) => BuscarServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => BuscarStore(context.read())),
       // Provas
-      Provider<CompetidoresServico>(create: (context) => CompetidoresServicoImpl(context.read())),
-      Provider<DenunciarServico>(create: (context) => DenunciarServicoImpl(context.read())),
-      Provider<ProvaServico>(create: (context) => ProvaServicoImpl(context.read())),
+      Provider<CompetidoresServico>(create: (context) => CompetidoresServico(context.read())),
+      Provider<DenunciarServico>(create: (context) => DenunciarServico(context.read())),
+      Provider<ProvaServico>(create: (context) => ProvaServico(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasStore(context.read())),
       ChangeNotifierProvider(create: (context) => ProvasAoVivoStore(context.read())),
       ChangeNotifierProvider(create: (context) => VerificarPermitirCompraProvedor(context.read())),
       // Propagandas
-      Provider<PropagandasServico>(create: (context) => PropagandasServicoImpl(context.read())),
+      Provider<PropagandasServicoImpl>(create: (context) => PropagandasServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => PropagandasStore(context.read())),
       // Finalizar Compra
-      Provider<FinalizarCompraServico>(create: (context) => FinalizarCompraServicoImpl(context.read())),
-      Provider<VerificarPagamentoServico>(create: (context) => VerificarPagamentoServicoImpl(context.read())),
-      Provider<ListarInformacoesServico>(create: (context) => ListarInformacoesServicoImpl(context.read())),
-      Provider<ListarCartoesServico>(create: (context) => ListarCartoesServicoImpl(context.read())),
+      Provider<FinalizarCompraServicoImpl>(create: (context) => FinalizarCompraServicoImpl(context.read())),
+      Provider<VerificarPagamentoServicoImpl>(create: (context) => VerificarPagamentoServicoImpl(context.read())),
+      Provider<ListarInformacoesServicoImpl>(create: (context) => ListarInformacoesServicoImpl(context.read())),
+      Provider<ListarCartoesServicoImpl>(create: (context) => ListarCartoesServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => FinalizarCompraStore(context.read())),
       ChangeNotifierProvider(create: (context) => VerificarPagamentoStore(context.read())),
       ChangeNotifierProvider(create: (context) => ListarInformacoesStore(context.read())),
 
       ChangeNotifierProvider(create: (context) => ListarCartoesStore(context.read())),
       // Compras
-      Provider<ComprasServico>(create: (context) => ComprasServicoImpl(context.read<IHttpClient>(), context.read<UsuarioProvider>())),
+      Provider<ComprasServicoImpl>(create: (context) => ComprasServicoImpl(context.read<IHttpClient>(), context.read<UsuarioProvider>())),
       ChangeNotifierProvider(create: (context) => ComprasProvedor(context.read())),
       ChangeNotifierProvider(create: (context) => TransferenciaProvedor(context.read())),
       // Ordem de Entrada
-      Provider<OrdemDeEntradaServico>(create: (context) => OrdemDeEntradaServicoImpl(context.read())),
+      Provider<OrdemDeEntradaServicoImpl>(create: (context) => OrdemDeEntradaServicoImpl(context.read())),
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaStore(context.read())),
       ChangeNotifierProvider(create: (context) => OrdemDeEntradaProvaStore(context.read())),
       // Calendário

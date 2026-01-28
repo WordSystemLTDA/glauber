@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
+import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
 
 class CardPropagandas extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/modulos/buscar/interator/estados/buscar_estado.dart';
-import 'package:provadelaco/src/modulos/buscar/interator/stores/buscar_store.dart';
+import 'package:provadelaco/src/data/repositories/buscar_store.dart';
 import 'package:provadelaco/src/modulos/buscar/ui/widgets/card_buscas.dart';
 import 'package:provider/provider.dart';
 

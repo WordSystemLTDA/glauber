@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/core/constantes/uteis.dart';
 import 'package:provadelaco/src/core/widgets/termos_de_uso.dart';
-import 'package:provadelaco/src/modulos/animais/modelos/modelo_animal.dart';
+import 'package:provadelaco/src/domain/models/modelo_animal.dart';
 import 'package:provadelaco/src/modulos/animais/paginas/pagina_animais.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/estados/provas_estado.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/stores/provas_provedor.dart';
+import 'package:provadelaco/src/domain/models/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/prova_modelo.dart';
+import 'package:provadelaco/src/data/repositories/provas_provedor.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/card_provas.dart';
 import 'package:provadelaco/src/modulos/provas/ui/widgets/modal_denunciar.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +21,7 @@ class PageViewProvas extends StatefulWidget {
   final List<ProvaModelo> provas;
   final List<NomesCabeceiraModelo>? nomesCabeceira;
   final List<ProvaModelo> provasCarrinho;
-  final ProvasEstado state;
+
   final String modalidade;
   final Function(ProvaModelo prova, EventoModelo evento, String quantParceiros, String modalidade) adicionarNoCarrinho;
   final Function(int quantidade, ProvaModelo prova, EventoModelo evento, String modalidade) adicionarAvulsaNoCarrinho;
@@ -34,7 +33,7 @@ class PageViewProvas extends StatefulWidget {
     required this.provas,
     this.nomesCabeceira,
     required this.provasCarrinho,
-    required this.state,
+
     required this.adicionarNoCarrinho,
     required this.adicionarAvulsaNoCarrinho,
     required this.modalidade,
@@ -81,11 +80,11 @@ class _PageViewProvasState extends State<PageViewProvas> {
     );
   }
 
-  void abrirDenunciar(ProvasEstado provasEstado) {
+  void abrirDenunciar() {
     showDialog(
       context: context,
       builder: (contextDialog) {
-        return ModalDenunciar(provasEstado: provasEstado);
+        return ModalDenunciar();
       },
     );
   }
@@ -93,10 +92,10 @@ class _PageViewProvasState extends State<PageViewProvas> {
   void selecionarAnimal() {
     var provasProvedor = context.read<ProvasProvedor>();
 
-    Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true)).then(<ModeloAnimal>(value) {
+    Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true)).then((value) {
       if (value == null) return;
 
-      provasProvedor.animalSelecionado = value;
+      provasProvedor.animalSelecionado = value as ModeloAnimal;
     });
   }
 
@@ -313,7 +312,7 @@ class _PageViewProvasState extends State<PageViewProvas> {
                                 width: width / 2.4,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    abrirDenunciar(widget.state);
+                                    abrirDenunciar();
                                   },
                                   style: const ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(Colors.transparent),

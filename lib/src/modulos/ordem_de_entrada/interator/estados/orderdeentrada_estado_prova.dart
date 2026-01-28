@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/ordem_de_entrada/interator/modelos/prova_parceiros_modelo.dart';
+import 'package:provadelaco/src/domain/models/prova_parceiros_modelo.dart';
 
 sealed class OrdemDeEntradaEstadoProva {}
 

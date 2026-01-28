@@ -1,0 +1,35 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:provadelaco/src/data/servicos/buscar_servico_impl.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
+import 'package:provadelaco/src/modulos/buscar/interator/estados/buscar_estado.dart';
+
+class BuscarStore extends ChangeNotifier {
+  final BuscarServicoImpl _servico;
+
+  BuscarStore(this._servico) : super();
+
+  Timer? debounce;
+
+  bool carregando = false;
+
+  List<EventoModelo> eventos = [];
+
+  void listarEventoPorNome(String nomeBusca) async {
+    carregando = true;
+    notifyListeners();
+
+    if (debounce?.isActive ?? false) {
+      debounce!.cancel();
+    }
+
+    debounce = Timer(const Duration(seconds: 1), () async {
+      var resposta = await _servico.listarEventoPorNome(nomeBusca);
+
+      eventos = resposta;
+      carregando = false;
+      notifyListeners();
+    });
+  }
+}

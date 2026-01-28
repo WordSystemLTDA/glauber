@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/servicos/autenticacao_servico.dart';
+import 'package:provadelaco/src/data/servicos/autenticacao_servico_impl.dart';
 import 'package:provider/provider.dart';
 
 class PaginaSplash extends StatefulWidget {
@@ -60,7 +60,7 @@ class _PaginaSplashState extends State<PaginaSplash> {
         return;
       } else {
         if (mounted) {
-          final autenticacaoServico = context.read<AutenticacaoServico>();
+          final autenticacaoServico = context.read<AutenticacaoServicoImpl>();
           // final firebaseMessagingService = context.read<FirebaseMessagingService>();
 
           // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();

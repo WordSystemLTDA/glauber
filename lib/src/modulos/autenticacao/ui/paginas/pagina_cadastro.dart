@@ -8,10 +8,10 @@ import 'package:provadelaco/src/core/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/stores/autenticacao_store.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
+import 'package:provadelaco/src/domain/models/modelo_modalidades_cadastro.dart';
+import 'package:provadelaco/src/data/repositories/autenticacao_store.dart';
+import 'package:provadelaco/src/data/servicos/cidade_servico_impl.dart';
+import 'package:provadelaco/src/domain/models/cidade_modelo.dart';
 import 'package:provider/provider.dart';
 
 class PaginaCadastroArgumentos {
@@ -263,7 +263,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   @override
   Widget build(BuildContext context) {
     var autenticacaoStore = context.read<AutenticacaoStore>();
-    var cidadeServico = context.read<CidadeServico>();
+    var cidadeServico = context.read<CidadeServicoImpl>();
 
     return GestureDetector(
       onTap: () {
@@ -359,7 +359,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
                         List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
 
-                        Iterable<Widget> widgets = cidades!.map((cidade) {
+                        Iterable<Widget> widgets = cidades.map((cidade) {
                           return GestureDetector(
                             onTap: () {
                               controller.closeView('');

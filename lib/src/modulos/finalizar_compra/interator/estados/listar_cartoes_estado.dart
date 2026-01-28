@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/cartao_modelo.dart';
+import 'package:provadelaco/src/domain/models/cartao_modelo.dart';
 
 sealed class ListarCartoesEstado {}
 

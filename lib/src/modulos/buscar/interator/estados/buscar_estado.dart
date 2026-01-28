@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
 
 sealed class BuscarEstado {
   final List<EventoModelo> eventos;

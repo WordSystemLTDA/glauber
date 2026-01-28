@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/app_routes.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 
 class CardBuscas extends StatefulWidget {

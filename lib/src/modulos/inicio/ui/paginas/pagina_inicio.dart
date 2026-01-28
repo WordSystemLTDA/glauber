@@ -14,7 +14,7 @@ import 'package:provadelaco/src/modulos/home/ui/paginas/pagina_home.dart';
 import 'package:provadelaco/src/modulos/ordem_de_entrada/ui/paginas/pagina_ordemdeentrada.dart';
 import 'package:provadelaco/src/modulos/perfil/ui/paginas/pagina_perfil.dart';
 import 'package:provadelaco/src/modulos/propaganda/ui/paginas/pagina_propaganda.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/domain/models/prova_modelo.dart';
 import 'package:provadelaco/src/modulos/provas/ui/paginas/pagina_provas.dart';
 import 'package:provider/provider.dart';
 

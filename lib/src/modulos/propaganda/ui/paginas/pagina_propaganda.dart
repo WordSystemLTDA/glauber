@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/modelos/propaganda_modelo.dart';
-import 'package:provadelaco/src/modulos/propaganda/interator/stores/propagandas_store.dart';
+import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
+import 'package:provadelaco/src/data/repositories/propagandas_store.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 

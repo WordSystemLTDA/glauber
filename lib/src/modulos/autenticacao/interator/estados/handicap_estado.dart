@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/handicaps_modelo.dart';
+import 'package:provadelaco/src/domain/models/handicaps_modelo.dart';
 
 sealed class HandiCapEstado {
   final List<HandiCapsModelos> handicaps;

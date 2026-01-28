@@ -1,4 +1,4 @@
-import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 
 sealed class ComprasEstado {}
 

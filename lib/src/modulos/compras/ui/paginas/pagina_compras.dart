@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
 import 'package:provadelaco/src/modulos/compras/interator/estados/transferencia_estado.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/clientes_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/compras_provedor.dart';
-import 'package:provadelaco/src/modulos/compras/interator/provedor/transferencia_provedor.dart';
-import 'package:provadelaco/src/modulos/compras/interator/servicos/compras_servico.dart';
+import 'package:provadelaco/src/domain/models/clientes_modelo.dart';
+import 'package:provadelaco/src/domain/models/compras_modelo.dart';
+import 'package:provadelaco/src/data/repositories/compras_provedor.dart';
+import 'package:provadelaco/src/data/repositories/transferencia_provedor.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_compras.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -898,7 +898,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                           suggestionsBuilder: (BuildContext context, SearchController controller) async {
                                             final keyword = controller.value.text;
 
-                                            List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientesNormal(keyword);
+                                            List<ClientesModelo>? clientes = await context.read<ComprasServicoImpl>().listarClientesNormal(keyword);
 
                                             Iterable<Widget> widgets = clientes.map((cliente) {
                                               return GestureDetector(

@@ -2,8 +2,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/modelo_banners_carrossel.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/modelo_banners_carrossel.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CardBannerCarrossel extends StatelessWidget {

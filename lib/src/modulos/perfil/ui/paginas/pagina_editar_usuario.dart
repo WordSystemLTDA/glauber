@@ -10,12 +10,12 @@ import 'package:provadelaco/src/core/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/modelos/modelo_modalidades_cadastro.dart';
+import 'package:provadelaco/src/domain/models/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/modelos/cidade_modelo.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/modelos/formulario_editar_usuario_modelo.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/servicos/cidade_servico.dart';
-import 'package:provadelaco/src/modulos/perfil/interator/servicos/editar_usuario_servico.dart';
+import 'package:provadelaco/src/data/servicos/cidade_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/editar_usuario_servico_impl.dart';
+import 'package:provadelaco/src/domain/models/cidade_modelo.dart';
+import 'package:provadelaco/src/domain/models/formulario_editar_usuario_modelo.dart';
 import 'package:provider/provider.dart';
 
 class PaginaEditarUsuario extends StatefulWidget {
@@ -189,7 +189,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       salvando = true;
     });
 
-    var editarUsuarioServico = context.read<EditarUsuarioServico>();
+    var editarUsuarioServico = context.read<EditarUsuarioServicoImpl>();
 
     var datanascimentoF = _dataNascimentoController.text.split('/');
     var datanascimento = datanascimentoF.isEmpty ? '0000-00-00' : "${datanascimentoF[2]}-${datanascimentoF[1]}-${datanascimentoF[0]}";
@@ -373,7 +373,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    var cidadeServico = context.read<CidadeServico>();
+    var cidadeServico = context.read<CidadeServicoImpl>();
 
     return Consumer<UsuarioProvider>(builder: (context, usuario, chil) {
       return GestureDetector(
@@ -869,7 +869,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
 
                           List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
 
-                          Iterable<Widget> widgets = cidades!.map((cidade) {
+                          Iterable<Widget> widgets = cidades.map((cidade) {
                             return GestureDetector(
                               onTap: () {
                                 controller.closeView('');

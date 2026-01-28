@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/src/modulos/compras/interator/modelos/compras_modelo.dart';
+import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/modal_compra_paga.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/servicos/verificar_pagamento_servico.dart';
+import 'package:provadelaco/src/data/servicos/verificar_pagamento_servico_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -44,7 +44,7 @@ class _ModalCompraNaoPagaState extends State<ModalCompraNaoPaga> {
     if (widget.item.quandoInscricaoNaoPaga == 'mostrar_qrcode_pix' && widget.item.idFormaPagamento != '6') {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (mounted) {
-          var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
+          var verificarPagamentoServico = context.read<VerificarPagamentoServicoImpl>();
 
           _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
             verificarPagamentoServico.verificarPagamento(widget.item.id, widget.item.idFormaPagamento).then((sucesso) {

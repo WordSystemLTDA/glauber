@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/modelos/nomes_cabeceira_modelo.dart';
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/modelo_prova_ao_vivo.dart';
+import 'package:provadelaco/src/domain/models/nomes_cabeceira_modelo.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/modelo_prova_ao_vivo.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CardListaCompeticao extends StatefulWidget {

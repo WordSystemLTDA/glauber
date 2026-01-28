@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:provadelaco/src/modulos/home/interator/modelos/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/permitir_compra_modelo.dart';
-import 'package:provadelaco/src/modulos/provas/interator/modelos/prova_modelo.dart';
+import 'package:provadelaco/src/domain/models/evento_modelo.dart';
+import 'package:provadelaco/src/domain/models/permitir_compra_modelo.dart';
+import 'package:provadelaco/src/domain/models/prova_modelo.dart';
 
 sealed class VerificarPermitirCompraEstado {}
 
