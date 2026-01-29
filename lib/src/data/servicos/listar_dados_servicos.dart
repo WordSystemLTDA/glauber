@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:provadelaco/src/essencial/modelos/dados_modelo.dart';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 
-class ListarDadosServicosImpl {
+class ListarDadosServicos {
   final IHttpClient client;
 
-  ListarDadosServicosImpl(this.client);
+  ListarDadosServicos(this.client);
 
   Future<DadosModelo> listarDados() async {
     var url = 'dados/listar_dados.php';

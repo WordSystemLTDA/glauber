@@ -12,8 +12,8 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dar
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
 import 'package:provadelaco/src/domain/models/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
-import 'package:provadelaco/src/data/servicos/cidade_servico_impl.dart';
-import 'package:provadelaco/src/data/servicos/editar_usuario_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/cidade_servico.dart';
+import 'package:provadelaco/src/data/servicos/editar_usuario_servico.dart';
 import 'package:provadelaco/src/domain/models/cidade_modelo.dart';
 import 'package:provadelaco/src/domain/models/formulario_editar_usuario_modelo.dart';
 import 'package:provider/provider.dart';
@@ -189,7 +189,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       salvando = true;
     });
 
-    var editarUsuarioServico = context.read<EditarUsuarioServicoImpl>();
+    var editarUsuarioServico = context.read<EditarUsuarioServico>();
 
     var datanascimentoF = _dataNascimentoController.text.split('/');
     var datanascimento = datanascimentoF.isEmpty ? '0000-00-00' : "${datanascimentoF[2]}-${datanascimentoF[1]}-${datanascimentoF[0]}";
@@ -373,7 +373,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    var cidadeServico = context.read<CidadeServicoImpl>();
+    var cidadeServico = context.read<CidadeServico>();
 
     return Consumer<UsuarioProvider>(builder: (context, usuario, chil) {
       return GestureDetector(

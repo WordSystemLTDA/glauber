@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 
-class MudarSenhaServicoImpl {
+class MudarSenhaServico {
   final IHttpClient client;
 
-  MudarSenhaServicoImpl(this.client);
+  MudarSenhaServico(this.client);
 
   Future<bool> mudarSenha(UsuarioModelo? usuario, String senha) async {
     var url = 'clientes/mudar_senha.php';

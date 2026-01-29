@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/data/servicos/competidores_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/competidores_servico.dart';
 import 'package:provadelaco/src/domain/models/competidores_modelo.dart';
 import 'package:provider/provider.dart';
 

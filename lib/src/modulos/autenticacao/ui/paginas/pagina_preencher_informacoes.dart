@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/widgets/handicaps_dialog.dart';
-import 'package:provadelaco/src/data/servicos/autenticacao_servico_impl.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/data/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/data/repositories/autenticacao_store.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -36,31 +35,6 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
   void initState() {
     super.initState();
     setarInformacoes();
-    final autenticacaoStore = context.read<AutenticacaoStore>();
-
-    autenticacaoStore.addListener(() {
-      AutenticacaoEstado state = autenticacaoStore.value;
-      if (state is Cadastrado) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
-          }
-        });
-      } else if (state is ErroAoCadastrar) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.erro.toString().substring(11)),
-              action: SnackBarAction(
-                label: 'OK',
-                onPressed: () {},
-              ),
-            ));
-          }
-        });
-      }
-    });
   }
 
   @override
@@ -84,7 +58,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
     }
   }
 
-  void cadastrar() {
+  void cadastrar() async {
     var autenticacaoStore = context.read<AutenticacaoStore>();
     String nome = _nomeController.text;
     String hcCabeceira = idHcCabeceira;
@@ -103,7 +77,22 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
         content: Center(child: Text('Algum dos dois HandiCap precisa ser preenchido.')),
       ));
     } else {
-      autenticacaoStore.cadastrarSocial(context, widget.argumentos.usuario, widget.argumentos.tipoLogin, _nomeController.text, hcCabeceira, hcPiseiro);
+      var resposta = await autenticacaoStore.cadastrarSocial(context, widget.argumentos.usuario, widget.argumentos.tipoLogin, _nomeController.text, hcCabeceira, hcPiseiro);
+
+      if (!mounted) return;
+
+      if (resposta.sucesso) {
+        Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(resposta.mensagem),
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+      }
     }
   }
 
@@ -115,9 +104,9 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: ValueListenableBuilder(
-        valueListenable: autenticacaoStore,
-        builder: (context, state, _) {
+      child: ListenableBuilder(
+        listenable: autenticacaoStore,
+        builder: (context, _) {
           return Scaffold(
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -219,7 +208,7 @@ class _PaginaPreencherInformacoesState extends State<PaginaPreencherInformacoes>
                       onPressed: () {
                         cadastrar();
                       },
-                      child: state is Cadastrando ? const CircularProgressIndicator() : const Text('Cadastrar-se'),
+                      child: autenticacaoStore.cadastrando ? const CircularProgressIndicator() : const Text('Cadastrar-se'),
                     ),
                   )
                 ],

@@ -4,7 +4,7 @@ import 'package:provadelaco/src/domain/models/modelo_animal.dart';
 import 'package:provadelaco/src/domain/models/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/domain/models/pagamentos_modelo.dart';
 import 'package:provadelaco/src/domain/models/evento_modelo.dart';
-import 'package:provadelaco/src/data/servicos/prova_sevico_impl.dart';
+import 'package:provadelaco/src/data/servicos/prova_sevico.dart';
 import 'package:provadelaco/src/domain/models/modalidade_prova_modelo.dart';
 
 class ProvasStore extends ChangeNotifier {

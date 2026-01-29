@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/data/servicos/ordermdeentrada_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/ordermdeentrada_servico.dart';
 import 'package:provadelaco/src/domain/models/prova_parceiros_modelo.dart';
 
 class OrdemDeEntradaProvaStore extends ChangeNotifier {
-  final OrdemDeEntradaServicoImpl _servico;
+  final OrdemDeEntradaServico _servico;
 
   OrdemDeEntradaProvaStore(this._servico) : super();
 

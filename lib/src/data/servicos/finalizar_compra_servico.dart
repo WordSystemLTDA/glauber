@@ -6,10 +6,10 @@ import 'package:provadelaco/src/domain/models/formulario_compra_modelo.dart';
 import 'package:provadelaco/src/domain/models/formulario_editar_compra_modelo.dart';
 import 'package:provadelaco/src/domain/models/retorno_compra_modelo.dart';
 
-class FinalizarCompraServicoImpl {
+class FinalizarCompraServico {
   final IHttpClient client;
 
-  FinalizarCompraServicoImpl(this.client);
+  FinalizarCompraServico(this.client);
 
   Future<RetornoCompraModelo> inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
     var url = 'vendas/inserir.php';

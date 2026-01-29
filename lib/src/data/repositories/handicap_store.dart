@@ -1,20 +1,25 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/data/servicos/handicap_servico_impl.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
+import 'package:provadelaco/src/data/servicos/handicap_servico.dart';
+import 'package:provadelaco/src/domain/models/handicaps_modelo.dart';
 
-class HandiCapStore extends ValueNotifier<HandiCapEstado> {
-  final HandiCapServicoImpl _handiCapServico;
+class HandiCapStore extends ChangeNotifier {
+  final HandiCapServico _handiCapServico;
 
-  HandiCapStore(this._handiCapServico) : super(HandiCapEstadoInicial());
+  HandiCapStore(this._handiCapServico) : super();
+
+  bool carregando = false;
+
+  List<HandiCapsModelos> handicaps = [];
 
   void listar() async {
-    value = HandiCapCarregando();
+    carregando = true;
+    notifyListeners();
 
-    _handiCapServico.listar().then((dados) {
-      value = HandiCapCarregado(handicaps: dados);
-    }).onError((error, stackTrace) {
-      value = HandiCapErro(erro: Exception(error));
-    });
+    var dados = await _handiCapServico.listar();
+
+    handicaps = dados;
+    carregando = false;
+    notifyListeners();
   }
 }

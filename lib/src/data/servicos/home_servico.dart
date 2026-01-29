@@ -9,10 +9,10 @@ import 'package:provadelaco/src/domain/models/evento_modelo.dart';
 import 'package:provadelaco/src/domain/models/home_modelo.dart';
 import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
 
-class HomeServicoImpl {
+class HomeServico {
   final IHttpClient client;
 
-  HomeServicoImpl(this.client);
+  HomeServico(this.client);
 
   Future<HomeModelo> listar(int categoria) async {
     var url = 'home/listar.php?categoria=$categoria';

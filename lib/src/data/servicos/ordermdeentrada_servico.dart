@@ -9,10 +9,10 @@ import 'package:provadelaco/src/domain/models/ordem_de_entrada_modelo.dart';
 import 'package:provadelaco/src/domain/models/prova_parceiros_modelo.dart';
 import 'package:share_plus/share_plus.dart';
 
-class OrdemDeEntradaServicoImpl {
+class OrdemDeEntradaServico {
   final IHttpClient client;
 
-  OrdemDeEntradaServicoImpl(this.client);
+  OrdemDeEntradaServico(this.client);
 
   Future<List<OrdemDeEntradaModelo>> listar(UsuarioModelo? usuario) async {
     var idCliente = usuario!.id;

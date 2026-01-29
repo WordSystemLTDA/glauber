@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
-import 'package:provadelaco/src/data/servicos/verificar_pagamento_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/verificar_pagamento_servico.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -51,7 +51,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
   }
 
   void gerarPagamento() async {
-    var comprasServico = context.read<ComprasServicoImpl>();
+    var comprasServico = context.read<ComprasServico>();
     var usuario = context.read<UsuarioProvider>().usuario;
 
     await comprasServico.gerarPagamentos(widget.comprasPagamentos, usuario).then((value) {
@@ -76,7 +76,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
   void iniciarVerificacaoPagamento() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) {
-        var verificarPagamentoServico = context.read<VerificarPagamentoServicoImpl>();
+        var verificarPagamentoServico = context.read<VerificarPagamentoServico>();
         setState(() {
           _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
             await verificarPagamentoServico.verificarPagamentoGerado(txid, widget.comprasPagamentos.first.idFormaPagamento).then((sucesso) {

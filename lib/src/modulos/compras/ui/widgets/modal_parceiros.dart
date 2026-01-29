@@ -3,10 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/card_parceiros_compra.dart';
-import 'package:provadelaco/src/data/servicos/competidores_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/competidores_servico.dart';
 import 'package:provadelaco/src/domain/models/competidores_modelo.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +37,7 @@ class _ModalParceirosState extends State<ModalParceiros> {
       });
     }
 
-    var comprasServico = context.read<ComprasServicoImpl>();
+    var comprasServico = context.read<ComprasServico>();
 
     await comprasServico.listarPorId(widget.idCompra, widget.idProva, widget.idEvento).then((value) {
       item = value;

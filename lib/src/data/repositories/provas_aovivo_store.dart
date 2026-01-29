@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/domain/models/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/src/domain/models/evento_modelo.dart';
-import 'package:provadelaco/src/data/servicos/prova_sevico_impl.dart';
+import 'package:provadelaco/src/data/servicos/prova_sevico.dart';
 import 'package:provadelaco/src/domain/models/modelo_prova_ao_vivo.dart';
 
 class ProvasAoVivoStore extends ChangeNotifier {

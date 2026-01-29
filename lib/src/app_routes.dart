@@ -27,5 +27,5 @@ class AppRotas {
 
   static const paginaInicial = splash;
 
-  static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 }

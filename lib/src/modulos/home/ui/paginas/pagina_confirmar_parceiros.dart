@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/data/repositories/compras_provedor.dart';
-import 'package:provadelaco/src/data/servicos/home_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/home_servico.dart';
 import 'package:provadelaco/src/domain/models/confirmar_parceiros_modelo.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
   }
 
   void listar() async {
-    var servico = context.read<HomeServicoImpl>();
+    var servico = context.read<HomeServico>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
     dados = await servico.listarConfirmarParceiros(usuarioProvider.usuario?.id ?? '0');
@@ -115,7 +115,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
   }
 
   Future<void> recusarParceiro(BuildContext contextDialog, ParceirosModelo parceiro) async {
-    var servico = context.read<HomeServicoImpl>();
+    var servico = context.read<HomeServico>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
     var resultado = await servico.recusarParceiro(parceiro, usuarioProvider.usuario?.id ?? '0');
@@ -154,7 +154,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
   }
 
   Future<void> confirmarParceiro(BuildContext contextDialog, ParceirosModelo parceiro, ConfirmarParceirosModelo prova) async {
-    var servico = context.read<HomeServicoImpl>();
+    var servico = context.read<HomeServico>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
     var resultado = await servico.confirmarParceiro(parceiro, prova.id, usuarioProvider.usuario?.id ?? '0', usuarioProvider.usuario);

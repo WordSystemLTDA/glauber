@@ -4,10 +4,10 @@ import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/domain/models/cartao_modelo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ListarCartoesServicoImpl {
+class ListarCartoesServico {
   final IHttpClient client;
 
-  ListarCartoesServicoImpl(this.client);
+  ListarCartoesServico(this.client);
 
   Future<List<CartaoModelo>> listarCartoes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

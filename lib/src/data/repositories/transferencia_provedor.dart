@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
-
-import 'package:provadelaco/src/modulos/compras/interator/estados/transferencia_estado.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 
-class TransferenciaProvedor extends ValueNotifier<TransferenciaEstado> {
-  final ComprasServicoImpl _comprasServico;
+class TransferenciaProvedor extends ChangeNotifier {
+  final ComprasServico _comprasServico;
 
-  TransferenciaProvedor(this._comprasServico) : super(TransferenciaEstadoInicial());
+  TransferenciaProvedor(this._comprasServico) : super();
 
-  void transferirCompras(List<ComprasModelo> comprasTransferencia, String novoCliente) async {
-    value = Transferindo();
+  bool carregando = false;
 
-    var resposta = await _comprasServico.transferirCompras(comprasTransferencia, novoCliente);
+  Future<({bool sucesso, String mensagem})> transferirCompras(List<ComprasModelo> comprasTransferencia, String novoCliente) async {
+    carregando = true;
+    notifyListeners();
 
-    var (sucesso, mensagem) = resposta;
+    var (:sucesso, :mensagem) = await _comprasServico.transferirCompras(comprasTransferencia, novoCliente);
 
-    if (sucesso) {
-      value = TransferidoComSucesso(mensagem: mensagem);
-    } else {
-      value = ErroAoTransferir(erro: Exception(mensagem));
-    }
+    carregando = false;
+    notifyListeners();
+
+    return (sucesso: sucesso, mensagem: mensagem);
   }
 }

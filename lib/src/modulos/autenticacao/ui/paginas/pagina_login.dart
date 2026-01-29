@@ -7,9 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/core/widgets/logo_app.dart';
-import 'package:provadelaco/src/essencial/servicos/listar_dados_servicos_impl.dart';
-import 'package:provadelaco/src/data/servicos/autenticacao_servico_impl.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/data/servicos/listar_dados_servicos.dart';
+import 'package:provadelaco/src/data/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/data/repositories/autenticacao_store.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +34,6 @@ class _PaginaLoginState extends State<PaginaLogin> {
   void entrarComEmail() async {
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
     // final firebaseMessagingService = context.read<FirebaseMessagingService>();
-
     // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
@@ -53,7 +51,22 @@ class _PaginaLoginState extends State<PaginaLogin> {
     }
 
     if (mounted) {
-      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, '');
+      var resposta = await autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, '');
+
+      if (!mounted) return;
+
+      if (resposta.sucesso) {
+        Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(child: Text(resposta.mensagem)),
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+      }
     }
   }
 
@@ -63,47 +76,37 @@ class _PaginaLoginState extends State<PaginaLogin> {
     // String? tokenNotificacao = kIsWeb ? '' : await firebaseMessagingService.getDeviceFirebaseToken();
 
     if (mounted) {
-      autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, '');
+      var resposta = await autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, '');
+
+      if (!mounted) return;
+
+      if (resposta.sucesso) {
+        Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
+      } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(child: Text(resposta.mensagem)),
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
-    final autenticacaoStore = context.read<AutenticacaoStore>();
-    final listarDadosServicosImpl = context.read<ListarDadosServicosImpl>();
+    final listarDadosServicos = context.read<ListarDadosServicos>();
 
-    listarDadosServicosImpl.listarDados().then((value) {
+    listarDadosServicos.listarDados().then((value) {
       setState(() {
         celularSuporte = value.celularSuporte;
         ativoCadastro = value.ativoCadastro;
         possuiCadastro1 = value.possuiCadastro1;
         possuiCadastro2 = value.possuiCadastro2;
       });
-    });
-
-    autenticacaoStore.addListener(() {
-      AutenticacaoEstado state = autenticacaoStore.value;
-      if (state is Autenticado) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            Navigator.pushNamedAndRemoveUntil(context, AppRotas.inicio, (Route<dynamic> route) => false);
-          }
-        });
-      } else if (state is AutenticacaoErro) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Center(child: Text(state.erro.toString().substring(11))),
-              action: SnackBarAction(
-                label: 'OK',
-                onPressed: () {},
-              ),
-            ));
-          }
-        });
-      }
     });
   }
 
@@ -119,9 +122,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
     var width = MediaQuery.of(context).size.width;
     final AutenticacaoStore autenticacaoStore = context.read<AutenticacaoStore>();
 
-    return ValueListenableBuilder<AutenticacaoEstado>(
-      valueListenable: autenticacaoStore,
-      builder: (context, state, _) {
+    return ListenableBuilder(
+      listenable: autenticacaoStore,
+      builder: (context, _) {
         return GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -133,9 +136,9 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   child: Center(
                     child: RefreshIndicator(
                       onRefresh: () async {
-                        final listarDadosServicosImpl = context.read<ListarDadosServicosImpl>();
+                        final listarDadosServicos = context.read<ListarDadosServicos>();
 
-                        listarDadosServicosImpl.listarDados().then((value) {
+                        listarDadosServicos.listarDados().then((value) {
                           setState(() {
                             celularSuporte = value.celularSuporte;
                             ativoCadastro = value.ativoCadastro;
@@ -325,8 +328,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                             onPressed: () {
                                               Navigator.of(contextDialog).pop();
                                               // Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades,
-                                                  arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
+                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
                                             },
                                           ),
                                           TextButton(
@@ -410,7 +412,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                   ),
                 ),
               ),
-              if (state is Carregando)
+              if (autenticacaoStore.entrando)
                 Opacity(
                   opacity: 0.5,
                   child: Container(

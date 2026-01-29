@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
-import 'package:provadelaco/src/modulos/compras/interator/estados/transferencia_estado.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/domain/models/clientes_modelo.dart';
 import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provadelaco/src/data/repositories/compras_provedor.dart';
@@ -43,40 +42,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var transferenciaProvedor = context.read<TransferenciaProvedor>();
-
-      transferenciaProvedor.addListener(() {
-        TransferenciaEstado state = transferenciaProvedor.value;
-
-        if (state is TransferidoComSucesso) {
-          if (mounted) {
-            Navigator.pop(context);
-
-            setState(() {
-              comprasTransferencia.clear();
-              idClienteSelecionado = '0';
-              textoClientesController.text = '';
-            });
-
-            listarCompras(resetar: true);
-
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              showCloseIcon: true,
-              backgroundColor: Colors.green,
-              content: Center(child: Text(state.mensagem)),
-            ));
-          }
-        } else if (state is ErroAoTransferir) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            showCloseIcon: true,
-            backgroundColor: Colors.red,
-            content: Center(child: Text(state.erro.toString())),
-          ));
-        }
-      });
-      listarCompras();
-    });
+    listarCompras();
   }
 
   void listarCompras({bool? resetar}) {
@@ -125,10 +91,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         builder: (BuildContext context, Widget? child) {
           return Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: (comprasStore.compras.atuais.isEmpty ||
-                    comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
-                ? null
-                : _buildFloatingActionButton(),
+            floatingActionButton:
+                (comprasStore.compras.atuais.isEmpty || comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
+                    ? null
+                    : _buildFloatingActionButton(),
             body: Column(
               children: [
                 const TabBar(
@@ -407,9 +373,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar
-                                                ? const Center(child: CircularProgressIndicator())
-                                                : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -631,9 +595,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar
-                                                ? const Center(child: CircularProgressIndicator())
-                                                : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -775,9 +737,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar
-                                                ? const Center(child: CircularProgressIndicator())
-                                                : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -851,9 +811,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                         showModalBottomSheet(
                           context: context,
                           builder: (contextModal) {
-                            return ValueListenableBuilder<TransferenciaEstado>(
-                              valueListenable: transferenciaProvedor,
-                              builder: (context, state, _) {
+                            return ListenableBuilder(
+                              listenable: transferenciaProvedor,
+                              builder: (context, _) {
                                 return GestureDetector(
                                   onTap: () {
                                     FocusScope.of(contextModal).unfocus();
@@ -898,7 +858,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                           suggestionsBuilder: (BuildContext context, SearchController controller) async {
                                             final keyword = controller.value.text;
 
-                                            List<ClientesModelo>? clientes = await context.read<ComprasServicoImpl>().listarClientesNormal(keyword);
+                                            List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientesNormal(keyword);
 
                                             Iterable<Widget> widgets = clientes.map((cliente) {
                                               return GestureDetector(
@@ -931,8 +891,33 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         SizedBox(
                                           width: double.infinity,
                                           child: ElevatedButton(
-                                            onPressed: () {
-                                              transferenciaProvedor.transferirCompras(comprasTransferencia, idClienteSelecionado);
+                                            onPressed: () async {
+                                              var resposta = await transferenciaProvedor.transferirCompras(comprasTransferencia, idClienteSelecionado);
+                                              if (!context.mounted) return;
+
+                                              if (resposta.sucesso) {
+                                                Navigator.pop(context);
+
+                                                setState(() {
+                                                  comprasTransferencia.clear();
+                                                  idClienteSelecionado = '0';
+                                                  textoClientesController.text = '';
+                                                });
+
+                                                listarCompras(resetar: true);
+
+                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                  showCloseIcon: true,
+                                                  backgroundColor: Colors.green,
+                                                  content: Center(child: Text(resposta.mensagem)),
+                                                ));
+                                              } else {
+                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                  showCloseIcon: true,
+                                                  backgroundColor: Colors.red,
+                                                  content: Center(child: Text(resposta.mensagem)),
+                                                ));
+                                              }
                                             },
                                             style: ButtonStyle(
                                               backgroundColor: const WidgetStatePropertyAll(Colors.green),
@@ -943,7 +928,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                 ),
                                               ),
                                             ),
-                                            child: state is Transferindo
+                                            child: transferenciaProvedor.carregando
                                                 ? const Center(
                                                     child: SizedBox(
                                                       width: 20,

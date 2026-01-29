@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 
-class VerificarPagamentoServicoImpl {
+class VerificarPagamentoServico {
   final IHttpClient client;
 
-  VerificarPagamentoServicoImpl(this.client);
+  VerificarPagamentoServico(this.client);
 
-  Future<bool> verificarPagamento(String txid, String idFormaPagamento) async {
+  Future<({bool sucesso})> verificarPagamento(String txid, String idFormaPagamento) async {
     var url = 'pagamentos/verificar_pagamento.php';
 
     var campos = {
@@ -21,7 +21,7 @@ class VerificarPagamentoServicoImpl {
     bool sucesso = jsonData['sucesso'];
     // dynamic resultado = jsonData['resultado'];
 
-    return sucesso;
+    return (sucesso: sucesso);
   }
 
   Future<bool> verificarPagamentoGerado(String txid, String idFormaPagamento) async {

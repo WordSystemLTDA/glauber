@@ -2,7 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provadelaco/src/data/servicos/denunciar_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/denunciar_servico.dart';
 import 'package:provadelaco/src/data/repositories/provas_store.dart';
 import 'package:provider/provider.dart';
 

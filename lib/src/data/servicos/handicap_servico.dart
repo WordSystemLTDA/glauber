@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/domain/models/handicaps_modelo.dart';
 
-class HandiCapServicoImpl {
+class HandiCapServico {
   final IHttpClient client;
 
-  HandiCapServicoImpl(this.client);
+  HandiCapServico(this.client);
 
   Future<List<HandiCapsModelos>> listar() async {
     var url = 'handicaps/listar.php';

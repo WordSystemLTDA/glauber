@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provadelaco/src/data/servicos/listar_cartoes_servico_impl.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/listar_cartoes_estado.dart';
+import 'package:provadelaco/src/data/servicos/listar_cartoes_servico.dart';
 import 'package:provadelaco/src/domain/models/cartao_modelo.dart';
 import 'package:provadelaco/src/data/repositories/listar_cartoes_store.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/ui/widgets/card_cartao.dart';
@@ -60,9 +59,9 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
     var cartaoSelecionado = widget.cartaoSelecionado;
     var cartaoMemoria = widget.cartaoMemoria;
 
-    return ValueListenableBuilder<ListarCartoesEstado>(
-      valueListenable: listarCartoesStore,
-      builder: (context, state, _) {
+    return ListenableBuilder(
+      listenable: listarCartoesStore,
+      builder: (context, _) {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -100,7 +99,7 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
                   ),
                 ),
               ),
-              if (state is! CartoesCarregadoInformacoes && cartaoMemoria.isEmpty) ...[
+              if (listarCartoesStore.carregando == false && cartaoMemoria.isEmpty) ...[
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Center(
@@ -108,16 +107,16 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
                   ),
                 )
               ],
-              if (state is CartoesCarregadoInformacoes || cartaoMemoria.isNotEmpty) ...[
+              if (listarCartoesStore.carregando || cartaoMemoria.isNotEmpty) ...[
                 Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
                     separatorBuilder: (context, index) {
                       return const SizedBox(height: 10);
                     },
-                    itemCount: [...(state is! CartoesCarregadoInformacoes ? [] : state.cartoes), ...cartaoMemoria].length,
+                    itemCount: [...(listarCartoesStore.carregando == false ? [] : listarCartoesStore.cartoes), ...cartaoMemoria].length,
                     itemBuilder: (context, index) {
-                      CartaoModelo itemCartao = [...(state is! CartoesCarregadoInformacoes ? [] : state.cartoes), ...cartaoMemoria][index];
+                      CartaoModelo itemCartao = [...(listarCartoesStore.carregando == false ? [] : listarCartoesStore.cartoes), ...cartaoMemoria][index];
 
                       return CardCartao(
                         cartao: itemCartao,
@@ -230,7 +229,7 @@ class _ModalSelecionarCartaoState extends State<ModalSelecionarCartao> {
   }
 
   void aparecerModalExcluirCartao(CartaoModelo cartao) {
-    var listarCartoesServico = context.read<ListarCartoesServicoImpl>();
+    var listarCartoesServico = context.read<ListarCartoesServico>();
     var listarCartoesStore = context.read<ListarCartoesStore>();
 
     showDialog<void>(

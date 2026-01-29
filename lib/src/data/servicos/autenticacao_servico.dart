@@ -23,10 +23,10 @@ enum TiposLogin {
   }
 }
 
-class AutenticacaoServicoImpl {
+class AutenticacaoServico {
   final IHttpClient client;
 
-  AutenticacaoServicoImpl(this.client);
+  AutenticacaoServico(this.client);
 
   Future<(bool, String, UsuarioModelo?)> entrar(String email, String senha, TiposLogin tipoLogin, dynamic usuario, String? tokenNotificacao) async {
     var url = 'autenticacao/entrar.php';
@@ -135,7 +135,7 @@ class AutenticacaoServicoImpl {
     }
   }
 
-  Future<(bool, String, UsuarioModelo?)> cadastrarSocial(dynamic usuario, TiposLogin tipoLogin, String nome, String hcCabeceira, String hcPiseiro) async {
+  Future<({bool sucesso, String mensagem, UsuarioModelo? usuario})> cadastrarSocial(dynamic usuario, TiposLogin tipoLogin, String nome, String hcCabeceira, String hcPiseiro) async {
     var url = 'autenticacao/cadastrar_social.php';
 
     String? idSocialLogin = '';
@@ -178,13 +178,13 @@ class AutenticacaoServicoImpl {
 
     if (response.statusCode == 200 && sucesso == true) {
       UsuarioModelo usuarioRetorno = UsuarioModelo.fromMap({...result['resultado'], 'foto': foto});
-      return (sucesso, mensagem, usuarioRetorno);
+      return (sucesso: sucesso, mensagem: mensagem, usuario: usuarioRetorno);
     } else {
-      return (false, mensagem, null);
+      return (sucesso: false, mensagem: mensagem, usuario: null);
     }
   }
 
-  Future<(bool, String)> cadastrar(
+  Future<({bool sucesso, String mensagem})> cadastrar(
     String? idcliente,
     String nome,
     String apelido,
@@ -228,9 +228,9 @@ class AutenticacaoServicoImpl {
     String mensagem = result['mensagem'];
 
     if (response.statusCode == 200) {
-      return (sucesso, mensagem);
+      return (sucesso: sucesso, mensagem: mensagem);
     } else {
-      return (false, mensagem);
+      return (sucesso: false, mensagem: mensagem);
     }
   }
 

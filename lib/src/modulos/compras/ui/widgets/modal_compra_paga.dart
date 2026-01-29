@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/src/core/widgets/mostrar_hora_atual.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/modulos/compras/ui/widgets/dashed_line.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -208,7 +208,7 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
                                 baixandoPDF = true;
                               });
 
-                              var comprasServico = context.read<ComprasServicoImpl>();
+                              var comprasServico = context.read<ComprasServico>();
 
                               comprasServico.baixarPDF(item.id).then((sucesso) {
                                 if (sucesso) {

@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:provadelaco/src/data/servicos/buscar_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/buscar_servico.dart';
 import 'package:provadelaco/src/domain/models/evento_modelo.dart';
-import 'package:provadelaco/src/modulos/buscar/interator/estados/buscar_estado.dart';
 
 class BuscarStore extends ChangeNotifier {
-  final BuscarServicoImpl _servico;
+  final BuscarServico _servico;
 
   BuscarStore(this._servico) : super();
 

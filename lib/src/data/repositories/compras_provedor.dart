@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/domain/models/retorno_compras_modelo.dart';
 
 class ComprasProvedor extends ChangeNotifier {
-  final ComprasServicoImpl _servico;
+  final ComprasServico _servico;
   int pagina1 = 1;
   int pagina2 = 1;
   int pagina3 = 1;

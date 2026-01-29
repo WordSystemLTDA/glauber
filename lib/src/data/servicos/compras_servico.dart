@@ -12,11 +12,11 @@ import 'package:provadelaco/src/domain/models/retorno_compras_modelo.dart';
 import 'package:provadelaco/src/domain/models/retorno_gerar_pagamentos.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ComprasServicoImpl {
+class ComprasServico {
   final IHttpClient client;
   final UsuarioProvider usuarioProvedor;
 
-  ComprasServicoImpl(this.client, this.usuarioProvedor);
+  ComprasServico(this.client, this.usuarioProvedor);
 
   Future<RetornoComprasModelo> listar(int pagina1, int pagina2, int pagina3) async {
     var url = 'compras/listar.php';
@@ -116,7 +116,7 @@ class ComprasServicoImpl {
     return true;
   }
 
-  Future<(bool, String)> transferirCompras(List<ComprasModelo> comprasTransferencia, String novoCliente) async {
+  Future<({bool sucesso, String mensagem})> transferirCompras(List<ComprasModelo> comprasTransferencia, String novoCliente) async {
     var url = 'transferencia/transferir.php';
 
     var campos = {
@@ -133,7 +133,7 @@ class ComprasServicoImpl {
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];
 
-    return (sucesso, mensagem);
+    return (sucesso: sucesso, mensagem: mensagem);
   }
 
   Future<(bool, String, RetornoGerarPagamentos?)> gerarPagamentos(List<ComprasModelo> comprasPagamentos, UsuarioModelo? usuario) async {

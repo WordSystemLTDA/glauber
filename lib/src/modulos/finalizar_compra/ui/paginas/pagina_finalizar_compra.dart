@@ -5,6 +5,7 @@ import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/core/constantes/uteis.dart';
 import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/core/widgets/termos_de_uso.dart';
+import 'package:provadelaco/src/domain/models/retorno_compra_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
 import 'package:provadelaco/src/domain/models/cartao_modelo.dart';
@@ -55,8 +56,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var usuarioProvider = context.read<UsuarioProvider>();
 
       listarInformacoesStore
-          .listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false,
-              widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '')
+          .listarInformacoes(
+              usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false, widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '')
           .then((response) {
         if (metodoPagamento == '0' && (response.pagamentos.firstOrNull?.id ?? '0') != '0') {
           metodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
@@ -65,46 +66,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
 
       finalizarCompraStore.addListener(() {
         FinalizarCompraEstado state = finalizarCompraStore.value;
-
-        if (state is CompraRealizadaComSucesso) {
-          if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: const Text('Sucesso ao editar a forma de pagamento dessa inscrição.'),
-                backgroundColor: Colors.green,
-                action: SnackBarAction(
-                  label: 'OK',
-                  onPressed: () {},
-                ),
-              ));
-              Navigator.pushReplacementNamed(
-                context,
-                AppRotas.sucessoCompra,
-                arguments: PaginaSucessoCompraArgumentos(dados: state.dados, metodoPagamento: metodoPagamento),
-              );
-            }
-          } else {
-            if (mounted) {
-              Navigator.pushReplacementNamed(
-                context,
-                AppRotas.sucessoCompra,
-                arguments: PaginaSucessoCompraArgumentos(dados: state.dados, metodoPagamento: metodoPagamento),
-              );
-            }
-          }
-        } else if (state is ErroAoTentarComprar) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.erro.toString().substring(11)),
-              backgroundColor: Colors.red,
-              action: SnackBarAction(
-                label: 'OK',
-                onPressed: () {},
-              ),
-            ));
-          }
-        }
       });
     });
   }
@@ -136,12 +97,15 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     );
   }
 
-  void salvar(ListarInformacoesModelo dados) {
+  void salvar(ListarInformacoesModelo dados) async {
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
     var usuarioProvider = context.read<UsuarioProvider>();
+    
+    DadosRetornoCompraModelo? dadosR; 
+    String mensagemR = '';
 
     if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
-      finalizarCompraStore.editar(
+      var (:dados, :mensagem) = await finalizarCompraStore.editar(
         usuarioProvider.usuario,
         FormularioEditarCompraModelo(
           idVenda: widget.argumentos.dadosEdicaoVendaModelo!.idVenda,
@@ -159,12 +123,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         ),
       );
     } else {
-      // widget.argumentos.provas.map((e) => print(e.toMap()));
-      // log('opa', error: widget.argumentos.provas);
-      // print(widget.argumentos.provas.where((element) => element.id == '188').length);
-      // print(widget.argumentos.provas.where((element) => element.id == '189').length);
-
-      // return;
       finalizarCompraStore.inserir(
         usuarioProvider.usuario,
         FormularioCompraModelo(
@@ -183,6 +141,46 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           cartao: cartaoSelecionado,
         ),
       );
+    }
+
+    if (state is CompraRealizadaComSucesso) {
+      if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Sucesso ao editar a forma de pagamento dessa inscrição.'),
+            backgroundColor: Colors.green,
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          ));
+          Navigator.pushReplacementNamed(
+            context,
+            AppRotas.sucessoCompra,
+            arguments: PaginaSucessoCompraArgumentos(dados: state.dados, metodoPagamento: metodoPagamento),
+          );
+        }
+      } else {
+        if (mounted) {
+          Navigator.pushReplacementNamed(
+            context,
+            AppRotas.sucessoCompra,
+            arguments: PaginaSucessoCompraArgumentos(dados: state.dados, metodoPagamento: metodoPagamento),
+          );
+        }
+      }
+    } else if (state is ErroAoTentarComprar) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(state.erro.toString().substring(11)),
+          backgroundColor: Colors.red,
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ));
+      }
     }
   }
 
@@ -254,8 +252,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             padding: const EdgeInsets.all(10.0),
             child: RefreshIndicator(
               onRefresh: () async {
-                listarInformacoesStore.listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false,
-                    widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '');
+                listarInformacoesStore.listarInformacoes(
+                    usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false, widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '');
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -414,9 +412,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              itemParcela.parcela == 1
-                                                  ? 'Crédito á vista'
-                                                  : '${itemParcela.parcela}x de ${(retornarValorTotal(dados) / itemParcela.parcela).obterReal()}',
+                                              itemParcela.parcela == 1 ? 'Crédito á vista' : '${itemParcela.parcela}x de ${(retornarValorTotal(dados) / itemParcela.parcela).obterReal()}',
                                               style: const TextStyle(
                                                 fontSize: 12,
                                               ),

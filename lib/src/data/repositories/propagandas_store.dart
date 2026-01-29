@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/data/servicos/propagandas_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/propagandas_servico.dart';
 import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
 
 class PropagandasStore extends ChangeNotifier {
-  final PropagandasServicoImpl _servico;
+  final PropagandasServico _servico;
 
   PropagandasStore(this._servico);
 

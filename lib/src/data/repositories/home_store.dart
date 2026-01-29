@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/core/constantes/funcoes_global.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/config/config_provider.dart';
-import 'package:provadelaco/src/data/servicos/home_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/home_servico.dart';
 import 'package:provadelaco/src/domain/models/categoria_modelo.dart';
 import 'package:provadelaco/src/domain/models/evento_modelo.dart';
 import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeStore extends ChangeNotifier {
-  final HomeServicoImpl _homeServico;
+  final HomeServico _homeServico;
 
   HomeStore(this._homeServico);
 

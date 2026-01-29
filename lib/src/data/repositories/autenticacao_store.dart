@@ -4,25 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_servico.dart';
-import 'package:provadelaco/src/data/servicos/autenticacao_servico_impl.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
+import 'package:provadelaco/src/data/servicos/autenticacao_servico.dart';
 import 'package:provadelaco/src/domain/models/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_preencher_informacoes.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AutenticacaoStore extends ChangeNotifier {
-  final AutenticacaoServicoImpl _autenticacaoServico;
+  final AutenticacaoServico _autenticacaoServico;
 
   AutenticacaoStore(this._autenticacaoServico) : super();
 
   bool entrando = false;
   bool cadastrando = false;
 
-  bool autenticado = true;
-
-  String erro = '';
-
-  void entrar(BuildContext context, String email, String senha, TiposLogin tiposLogin, String? tokenNotificacao) async {
+  Future<({bool sucesso, String mensagem})> entrar(BuildContext context, String email, String senha, TiposLogin tiposLogin, String? tokenNotificacao) async {
     entrando = true;
     notifyListeners();
 
@@ -33,19 +28,16 @@ class AutenticacaoStore extends ChangeNotifier {
 
           if (sucesso) {
             UsuarioServico.salvarUsuario(context, usuarioRetorno!);
-            autenticado = true;
-            notifyListeners();
-          } else {
-            erro = AutenticacaoErro(erro: Exception(mensagem));
           }
+
+          return (sucesso: sucesso, mensagem: mensagem);
         }).onError((error, stackTrace) {
-          erro = AutenticacaoErro(erro: Exception(error));
+          return (sucesso: false, mensagem: error.toString());
         });
       } else {
         await listarInformacoesLoginSocial(context, tiposLogin).then((usuario) async {
           if (usuario == null) {
-            value = AutenticacaoErro(erro: Exception('Login cancelado pelo Usuário'));
-            return;
+            return (sucesso: false, mensagem: 'Login cancelado pelo Usuário');
           }
 
           await _autenticacaoServico.entrar(email, senha, tiposLogin, usuario, tokenNotificacao).then((resposta) {
@@ -53,25 +45,21 @@ class AutenticacaoStore extends ChangeNotifier {
 
             if (sucesso) {
               UsuarioServico.salvarUsuario(context, usuarioRetorno!);
-              value = Autenticado();
             } else {
-              value = AutenticacaoErro(erro: Exception('Preencha as informações acima.'));
-
               Navigator.pushNamed(
                 context,
                 AppRotas.preencherInformacoes,
                 arguments: PaginaPreencherInformacoesArgumentos(usuario: usuario, tokenNotificacao: tokenNotificacao!, tipoLogin: tiposLogin),
               );
             }
-          }).onError((error, stackTrace) {
-            value = AutenticacaoErro(erro: Exception(error));
           });
-        }).onError((error, stackTrace) {
-          value = AutenticacaoErro(erro: Exception(error));
         });
       }
+
+      return (sucesso: true, mensagem: 'Sucesso');
     } catch (e) {
-      value = AutenticacaoErro(erro: Exception(e));
+      // value = AutenticacaoErro(erro: Exception(e));
+      return (sucesso: false, mensagem: e.toString());
     }
   }
 
@@ -101,24 +89,23 @@ class AutenticacaoStore extends ChangeNotifier {
     }
   }
 
-  void cadastrarSocial(BuildContext context, usuario, tipoLogin, String nome, hcCabeceira, hcPiseiro) async {
-    value = Cadastrando();
+  Future<({bool sucesso, String mensagem})> cadastrarSocial(BuildContext context, usuarioCadastro, tipoLogin, String nome, hcCabeceira, hcPiseiro) async {
+    cadastrando = true;
+    notifyListeners();
 
-    _autenticacaoServico.cadastrarSocial(usuario, tipoLogin, nome, hcCabeceira, hcPiseiro).then((resposta) {
-      var (sucesso, mensagem, usuarioRetorno) = resposta;
+    var (:sucesso, :mensagem, :usuario) = await _autenticacaoServico.cadastrarSocial(usuarioCadastro, tipoLogin, nome, hcCabeceira, hcPiseiro);
 
-      if (sucesso) {
-        UsuarioServico.salvarUsuario(context, usuarioRetorno!);
-        value = Cadastrado();
-      } else {
-        value = ErroAoCadastrar(erro: Exception(mensagem));
-      }
-    }).onError((error, stackTrace) {
-      value = ErroAoCadastrar(erro: Exception(error));
-    });
+    if (sucesso) {
+      UsuarioServico.salvarUsuario(context, usuario!);
+    }
+
+    cadastrando = false;
+    notifyListeners();
+
+    return (sucesso: sucesso, mensagem: mensagem);
   }
 
-  void cadastrar({
+  Future<({bool sucesso, String mensagem})> cadastrar({
     String? idcliente,
     required String nome,
     required String apelido,
@@ -135,10 +122,10 @@ class AutenticacaoStore extends ChangeNotifier {
     required List<ModeloModalidadesCadastro> modalidades,
     required bool jaEstaCadastrado,
   }) async {
-    value = Cadastrando();
+    cadastrando = true;
+    notifyListeners();
 
-    _autenticacaoServico
-        .cadastrar(
+    var (:sucesso, :mensagem) = await _autenticacaoServico.cadastrar(
       idcliente,
       nome,
       apelido,
@@ -154,17 +141,11 @@ class AutenticacaoStore extends ChangeNotifier {
       sexo,
       modalidades,
       jaEstaCadastrado,
-    )
-        .then((resposta) {
-      var (sucesso, mensagem) = resposta;
+    );
 
-      if (sucesso) {
-        value = Cadastrado();
-      } else {
-        value = ErroAoCadastrar(erro: Exception(mensagem));
-      }
-    }).onError((error, stackTrace) {
-      value = ErroAoCadastrar(erro: Exception(error));
-    });
+    cadastrando = false;
+    notifyListeners();
+
+    return (sucesso: sucesso, mensagem: mensagem);
   }
 }

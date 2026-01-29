@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/domain/models/propaganda_modelo.dart';
 
-class PropagandasServicoImpl {
+class PropagandasServico {
   final IHttpClient client;
 
-  PropagandasServicoImpl(this.client);
+  PropagandasServico(this.client);
 
   Future<PropagandaModelo?> listar(String idPropaganda) async {
     var url = 'propagandas/listar_por_id.php';

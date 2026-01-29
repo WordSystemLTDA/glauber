@@ -5,10 +5,10 @@ import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart'
 import 'package:provadelaco/src/domain/models/listar_informacoes_modelo.dart';
 import 'package:provadelaco/src/domain/models/prova_modelo.dart';
 
-class ListarInformacoesServicoImpl {
+class ListarInformacoesServico {
   final IHttpClient client;
 
-  ListarInformacoesServicoImpl(this.client);
+  ListarInformacoesServico(this.client);
 
   Future<(bool, String, ListarInformacoesModelo)> listarInformacoes(UsuarioModelo? usuario, List<ProvaModelo> provas, String idEvento, bool editando, String idVenda) async {
     var url = 'vendas/listar_informacoes.php';

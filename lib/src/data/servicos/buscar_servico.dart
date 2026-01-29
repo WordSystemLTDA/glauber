@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/domain/models/evento_modelo.dart';
 
-class BuscarServicoImpl {
+class BuscarServico {
   final IHttpClient client;
 
-  BuscarServicoImpl(this.client);
+  BuscarServico(this.client);
 
   Future<List<EventoModelo>> listarEventoPorNome(String nomeBusca) async {
     var url = "eventos/listar_por_nome.php?nome=$nomeBusca";

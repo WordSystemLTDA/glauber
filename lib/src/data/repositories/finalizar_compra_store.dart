@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/src/domain/models/retorno_compra_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
-import 'package:provadelaco/src/data/servicos/finalizar_compra_servico_impl.dart';
-import 'package:provadelaco/src/modulos/finalizar_compra/interator/estados/finalizar_compra_estado.dart';
+import 'package:provadelaco/src/data/servicos/finalizar_compra_servico.dart';
 import 'package:provadelaco/src/domain/models/formulario_compra_modelo.dart';
 import 'package:provadelaco/src/domain/models/formulario_editar_compra_modelo.dart';
 
-class FinalizarCompraStore extends ValueNotifier<FinalizarCompraEstado> {
-  final FinalizarCompraServicoImpl _servico;
+class FinalizarCompraStore extends ChangeNotifier {
+  final FinalizarCompraServico _servico;
 
-  FinalizarCompraStore(this._servico) : super(FinalizarCompraEstadoInicial());
+  FinalizarCompraStore(this._servico) : super();
 
-  void editar(UsuarioModelo? usuario, FormularioEditarCompraModelo dados) async {
-    value = Carregando();
+  bool carregando = false;
+
+  Future<({DadosRetornoCompraModelo? dados, String mensagem})> editar(UsuarioModelo? usuario, FormularioEditarCompraModelo dados) async {
+    carregando = true;
+    notifyListeners();
 
     var dadosRetorno = await _servico.editar(usuario, dados);
 
-    if (dadosRetorno.sucesso) {
-      value = CompraRealizadaComSucesso(dados: dadosRetorno.dados);
-    } else {
-      value = ErroAoTentarComprar(erro: Exception(dadosRetorno.mensagem));
-    }
+    carregando = true;
+    notifyListeners();
+
+    return (dados: dadosRetorno.dados, mensagem: dadosRetorno.mensagem);
   }
 
-  void inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
-    value = Carregando();
+  Future<({DadosRetornoCompraModelo? dados, String mensagem})> inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
+    carregando = true;
+    notifyListeners();
 
     var dadosRetorno = await _servico.inserir(usuario, dados);
 
-    if (dadosRetorno.sucesso) {
-      value = CompraRealizadaComSucesso(dados: dadosRetorno.dados);
-    } else {
-      value = ErroAoTentarComprar(erro: Exception(dadosRetorno.mensagem));
-    }
+    carregando = true;
+    notifyListeners();
+
+    return (dados: dadosRetorno.dados, mensagem: dadosRetorno.mensagem);
   }
 }

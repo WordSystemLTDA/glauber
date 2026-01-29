@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:provadelaco/src/essencial/network/http_cliente.dart';
 import 'package:provadelaco/src/domain/models/formulario_editar_usuario_modelo.dart';
 
-class EditarUsuarioServicoImpl {
+class EditarUsuarioServico {
   final IHttpClient client;
 
-  EditarUsuarioServicoImpl(this.client);
+  EditarUsuarioServico(this.client);
 
   Future<(bool, String)> editarUsuario(FormularioEditarUsuarioModelo dados) async {
     var url = 'clientes/editar.php';

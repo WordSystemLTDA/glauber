@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:provadelaco/src/core/constantes/constantes_global.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/data/servicos/compras_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/compras_servico.dart';
 import 'package:provadelaco/src/domain/models/compras_modelo.dart';
 import 'package:provadelaco/src/domain/models/parceiros_compra_modelo.dart';
-import 'package:provadelaco/src/data/servicos/competidores_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/competidores_servico.dart';
 import 'package:provadelaco/src/domain/models/competidores_modelo.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class _CardParceirosCompraState extends State<CardParceirosCompra> {
   @override
   Widget build(BuildContext context) {
     var competidoresServico = context.read<CompetidoresServico>();
-    var comprasServico = context.read<ComprasServicoImpl>();
+    var comprasServico = context.read<ComprasServico>();
     var item = widget.item;
     var parceiro = widget.parceiro;
 

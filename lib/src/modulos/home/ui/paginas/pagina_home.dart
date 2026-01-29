@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/src/app_routes.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
 import 'package:provadelaco/src/modulos/autenticacao/ui/paginas/pagina_selecionar_modalidades.dart';
-import 'package:provadelaco/src/data/servicos/home_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/home_servico.dart';
 import 'package:provadelaco/src/data/repositories/home_store.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_eventos.dart';
 import 'package:provadelaco/src/modulos/home/ui/widgets/card_propagandas.dart';
@@ -86,7 +86,7 @@ class _PaginaHomeState extends State<PaginaHome> with TickerProviderStateMixin, 
 
       if (usuario == null) return;
 
-      var servico = context.read<HomeServicoImpl>();
+      var servico = context.read<HomeServico>();
       var usuarioProvider = context.read<UsuarioProvider>();
 
       var dados = await servico.listarConfirmarParceiros(usuarioProvider.usuario?.id ?? '0');

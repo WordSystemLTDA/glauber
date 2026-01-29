@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/handicap_estado.dart';
 import 'package:provadelaco/src/domain/models/handicaps_modelo.dart';
 import 'package:provadelaco/src/data/repositories/handicap_store.dart';
 import 'package:provider/provider.dart';
@@ -47,41 +46,37 @@ class _HandiCapsDialogState extends State<HandiCapsDialog> {
             ),
             const Divider(),
             Expanded(
-              child: ValueListenableBuilder<HandiCapEstado>(
-                valueListenable: handiCapStore,
-                builder: (context, state, _) {
-                  if (state is HandiCapCarregando) {
+              child: ListenableBuilder(
+                listenable: handiCapStore,
+                builder: (context, _) {
+                  if (handiCapStore.carregando) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
 
-                  if (state is HandiCapCarregado) {
-                    return ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const Divider(height: 0.5, color: Color.fromARGB(255, 233, 233, 233));
-                      },
-                      shrinkWrap: true,
-                      itemCount: widget.mostrarSomente.isEmpty
-                          ? state.handicaps.length
-                          : state.handicaps.where((element) => widget.mostrarSomente.contains(double.parse(element.valor))).toList().length,
-                      // padding: const EdgeInsets.symmetric(vertical: 15),
-                      itemBuilder: (context, index) {
-                        var item = widget.mostrarSomente.isEmpty
-                            ? state.handicaps[index]
-                            : state.handicaps.where((element) => widget.mostrarSomente.contains(double.parse(element.valor))).toList()[index];
+                  return ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return const Divider(height: 0.5, color: Color.fromARGB(255, 233, 233, 233));
+                    },
+                    shrinkWrap: true,
+                    itemCount: widget.mostrarSomente.isEmpty
+                        ? handiCapStore.handicaps.length
+                        : handiCapStore.handicaps.where((element) => widget.mostrarSomente.contains(double.parse(element.valor))).toList().length,
+                    // padding: const EdgeInsets.symmetric(vertical: 15),
+                    itemBuilder: (context, index) {
+                      var item = widget.mostrarSomente.isEmpty
+                          ? handiCapStore.handicaps[index]
+                          : handiCapStore.handicaps.where((element) => widget.mostrarSomente.contains(double.parse(element.valor))).toList()[index];
 
-                        return ListTile(
-                          onTap: () {
-                            widget.aoMudar(item, state.handicaps);
-                          },
-                          title: Text(item.nome),
-                        );
-                      },
-                    );
-                  }
-
-                  return const Text('Erro ao tentar Listar HandiCaps');
+                      return ListTile(
+                        onTap: () {
+                          widget.aoMudar(item, handiCapStore.handicaps);
+                        },
+                        title: Text(item.nome),
+                      );
+                    },
+                  );
                 },
               ),
             ),

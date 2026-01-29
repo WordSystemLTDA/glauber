@@ -142,7 +142,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                   IconButton(
                                     icon: Icon(Icons.edit),
                                     onPressed: () {
-                                      // Implement edit functionality
+                                      // ement edit functionality
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
                                           return PaginaInserirAnimais(modeloAnimais: item);
@@ -155,7 +155,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                   IconButton(
                                     icon: Icon(Icons.delete),
                                     onPressed: () {
-                                      // Implement delete functionality
+                                      // ement delete functionality
                                       provedor.excluir(item.id);
                                     },
                                   ),

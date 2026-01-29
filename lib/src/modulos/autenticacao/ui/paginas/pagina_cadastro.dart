@@ -7,10 +7,9 @@ import 'package:provadelaco/src/core/widgets/app_bar_sombra.dart';
 import 'package:provadelaco/src/core/widgets/handicaps_dialog.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_modelo.dart';
 import 'package:provadelaco/src/essencial/providers/usuario/usuario_provider.dart';
-import 'package:provadelaco/src/modulos/autenticacao/interator/estados/autenticacao_estado.dart';
 import 'package:provadelaco/src/domain/models/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/src/data/repositories/autenticacao_store.dart';
-import 'package:provadelaco/src/data/servicos/cidade_servico_impl.dart';
+import 'package:provadelaco/src/data/servicos/cidade_servico.dart';
 import 'package:provadelaco/src/domain/models/cidade_modelo.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +55,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   @override
   void initState() {
     super.initState();
-    final autenticacaoStore = context.read<AutenticacaoStore>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
     if (widget.argumentos.jaEstaCadastrado == true) {
@@ -82,35 +80,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
         }
       }
     }
-
-    autenticacaoStore.addListener(() {
-      AutenticacaoEstado state = autenticacaoStore.value;
-      if (state is Cadastrado) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            if (widget.argumentos.jaEstaCadastrado) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
-              Navigator.pushNamedAndRemoveUntil(context, AppRotas.login, (Route<dynamic> route) => false);
-            }
-          }
-        });
-      } else if (state is ErroAoCadastrar) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.erro.toString().substring(11)),
-              action: SnackBarAction(
-                label: 'OK',
-                onPressed: () {},
-              ),
-            ));
-          }
-        });
-      }
-    });
   }
 
   @override
@@ -129,7 +98,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     super.dispose();
   }
 
-  void cadastrar() {
+  void cadastrar() async {
     var usuarioProvider = context.read<UsuarioProvider>();
     var autenticacaoStore = context.read<AutenticacaoStore>();
 
@@ -187,8 +156,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
     // Laço em Dupla
     if (widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
-      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) &&
-          widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
+      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) && widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
           backgroundColor: Colors.red,
@@ -219,11 +187,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
 
     var dataNascimentoF = _dataNascimentoController.text.split('/');
-    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty))
-        ? '0000-00-00'
-        : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
+    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty)) ? '0000-00-00' : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
 
-    autenticacaoStore.cadastrar(
+    var resposta = await autenticacaoStore.cadastrar(
       idcliente: widget.argumentos.jaEstaCadastrado ? usuarioProvider.usuario?.id : '0',
       nome: nome.trimLeft().trimRight(),
       apelido: apelido.trimLeft().trimRight(),
@@ -240,6 +206,25 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       tipodecategoriaprofissional: profissional,
       jaEstaCadastrado: widget.argumentos.jaEstaCadastrado,
     );
+    if (!mounted) return;
+
+    if (resposta.sucesso) {
+      if (widget.argumentos.jaEstaCadastrado) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, AppRotas.login, (Route<dynamic> route) => false);
+      }
+    } else {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(resposta.mensagem),
+        action: SnackBarAction(
+          label: 'OK',
+          onPressed: () {},
+        ),
+      ));
+    }
 
     if (widget.argumentos.jaEstaCadastrado) {
       usuarioProvider.setUsuario(UsuarioModelo.fromMap({
@@ -263,15 +248,15 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   @override
   Widget build(BuildContext context) {
     var autenticacaoStore = context.read<AutenticacaoStore>();
-    var cidadeServico = context.read<CidadeServicoImpl>();
+    var cidadeServico = context.read<CidadeServico>();
 
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: ValueListenableBuilder(
-        valueListenable: autenticacaoStore,
-        builder: (context, state, _) {
+      child: ListenableBuilder(
+        listenable: autenticacaoStore,
+        builder: (context, _) {
           return Scaffold(
             appBar: const AppBarSombra(
               titulo: Text("Cadastre-se"),
@@ -627,7 +612,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                       onPressed: () {
                         cadastrar();
                       },
-                      child: state is Cadastrando ? const CircularProgressIndicator() : Text(widget.argumentos.jaEstaCadastrado ? 'Salvar' : 'Cadastrar-se'),
+                      child: autenticacaoStore.cadastrando ? const CircularProgressIndicator() : Text(widget.argumentos.jaEstaCadastrado ? 'Salvar' : 'Cadastrar-se'),
                     ),
                   )
                 ],
