@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provadelaco/src/app_widget.dart';
-import 'package:provadelaco/src/providers_setup.dart';
+import 'package:provadelaco/app_widget.dart';
+import 'package:provadelaco/config/dependencies.dart';
 import 'package:provider/provider.dart';
 
 class MyHttpOverrides extends HttpOverrides {
