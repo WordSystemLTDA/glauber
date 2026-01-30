@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/config/constantes/uteis.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
+import 'package:provadelaco/utils/currency_formatter.dart';
 import 'package:provider/provider.dart';
 
 class ModalCompras extends StatefulWidget {
@@ -112,7 +111,7 @@ class _ModalComprasState extends State<ModalCompras> {
                       children: [
                         const Text('Valor ingresso'),
                         Text(
-                          Utils.coverterEmReal.format(double.parse(item!.valorIngresso)),
+                          CurrencyFormatter.coverterEmReal.format(double.parse(item!.valorIngresso)),
                           style: const TextStyle(color: Colors.green),
                         ),
                       ],
@@ -123,7 +122,7 @@ class _ModalComprasState extends State<ModalCompras> {
                       children: [
                         const Text('Valor taxa'),
                         Text(
-                          Utils.coverterEmReal.format(double.parse(item!.valorTaxa)),
+                          CurrencyFormatter.coverterEmReal.format(double.parse(item!.valorTaxa)),
                           style: const TextStyle(color: Colors.green),
                         ),
                       ],
@@ -134,7 +133,7 @@ class _ModalComprasState extends State<ModalCompras> {
                       children: [
                         const Text('Valor desconto'),
                         Text(
-                          Utils.coverterEmReal.format(double.parse(item!.valorDesconto)),
+                          CurrencyFormatter.coverterEmReal.format(double.parse(item!.valorDesconto)),
                           style: const TextStyle(color: Colors.green),
                         ),
                       ],
@@ -146,7 +145,7 @@ class _ModalComprasState extends State<ModalCompras> {
                         children: [
                           const Text('Valor filiação'),
                           Text(
-                            Utils.coverterEmReal.format(double.parse(item!.valorFiliacao)),
+                            CurrencyFormatter.coverterEmReal.format(double.parse(item!.valorFiliacao)),
                             style: const TextStyle(color: Colors.green),
                           ),
                         ],
@@ -158,7 +157,7 @@ class _ModalComprasState extends State<ModalCompras> {
                       children: [
                         const Text('Valor total'),
                         Text(
-                          Utils.coverterEmReal.format(double.parse(item!.valorTotal)),
+                          CurrencyFormatter.coverterEmReal.format(double.parse(item!.valorTotal)),
                           style: const TextStyle(color: Colors.green),
                         ),
                       ],
@@ -211,7 +210,7 @@ class _ModalComprasState extends State<ModalCompras> {
                               const SizedBox(height: 5),
                               Text(provas.nomeProva),
                               const SizedBox(height: 5),
-                              Text(Utils.coverterEmReal.format(double.parse(provas.valor)), style: const TextStyle(color: Colors.green)),
+                              Text(CurrencyFormatter.coverterEmReal.format(double.parse(provas.valor)), style: const TextStyle(color: Colors.green)),
                             ],
                           ),
                         ),

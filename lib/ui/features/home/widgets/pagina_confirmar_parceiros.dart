@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/repositories/compras_provedor.dart';
-import 'package:provadelaco/data/servicos/home_servico.dart';
-import 'package:provadelaco/domain/models/confirmar_parceiros/confirmar_parceiros_modelo.dart';
+import 'package:provadelaco/data/repositories/compras_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/home_servico.dart';
+import 'package:provadelaco/domain/models/confirmar_parceiros/confirmar_parceiros.dart';
 import 'package:provider/provider.dart';
 
 class PaginaConfirmarParceiros extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
 import 'package:provadelaco/domain/models/ordem_de_entrada_modelo.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';

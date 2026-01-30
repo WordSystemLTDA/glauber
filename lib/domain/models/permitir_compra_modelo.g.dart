@@ -14,7 +14,7 @@ PermitirCompraModelo _$PermitirCompraModeloFromJson(Map<String, dynamic> json) =
       quantMaximaAvulsa: json['quantMaximaAvulsa'] as String?,
       quantParceiros: json['quantParceiros'] as String?,
       permVincularParceiro: json['permVincularParceiro'] as String?,
-      competidoresJaSelecionados: (json['competidoresJaSelecionados'] as List<dynamic>?)?.map((e) => CompetidoresModelo2.fromJson(e as Map<String, dynamic>)).toList(),
+      competidoresJaSelecionados: (json['competidoresJaSelecionados'] as List<dynamic>?)?.map((e) => CompetidoresModelo.fromJson(e as Map<String, dynamic>)).toList(),
       idCabeceiraInvalido: json['idCabeceiraInvalido'] as String?,
     );
 

@@ -2,8 +2,8 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provadelaco/data/servicos/denunciar_servico.dart';
-import 'package:provadelaco/data/repositories/provas_store.dart';
+import 'package:provadelaco/data/repositories/provas_repository.dart';
+import 'package:provadelaco/data/services/denunciar_servico.dart';
 import 'package:provider/provider.dart';
 
 class ModalDenunciar extends StatefulWidget {
@@ -30,7 +30,7 @@ class _ModalDenunciarState extends State<ModalDenunciar> {
 
   @override
   Widget build(BuildContext context) {
-    var provasEstado = context.read<ProvasStore>();
+    var provasEstado = context.read<ProvasProvedor>();
 
     return Dialog(
       child: StatefulBuilder(builder: (context, setStateDialog) {

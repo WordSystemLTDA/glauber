@@ -1,16 +1,16 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/autenticacao_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/cidade_servico.dart';
+import 'package:provadelaco/domain/models/cidade/cidade.dart';
+import 'package:provadelaco/domain/models/modelo_modalidades_cadastro.dart';
+import 'package:provadelaco/domain/models/usuario_modelo.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/handicaps_dialog.dart';
-import 'package:provadelaco/domain/models/usuario_modelo.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/domain/models/modelo_modalidades_cadastro.dart';
-import 'package:provadelaco/data/repositories/autenticacao_store.dart';
-import 'package:provadelaco/data/servicos/cidade_servico.dart';
-import 'package:provadelaco/domain/models/cidade/cidade_modelo.dart';
 import 'package:provider/provider.dart';
 
 class PaginaCadastroArgumentos {
@@ -156,7 +156,8 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
     // Laço em Dupla
     if (widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
-      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) && widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
+      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) &&
+          widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
           backgroundColor: Colors.red,
@@ -187,7 +188,9 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
 
     var dataNascimentoF = _dataNascimentoController.text.split('/');
-    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty)) ? '0000-00-00' : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
+    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty))
+        ? '0000-00-00'
+        : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
 
     var resposta = await autenticacaoStore.cadastrar(
       idcliente: widget.argumentos.jaEstaCadastrado ? usuarioProvider.usuario?.id : '0',

@@ -1,17 +1,17 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
-import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/uteis.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
+import 'package:provadelaco/data/repositories/provas_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/repositories/verificar_permitir_compra_repository.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/nomes_cabeceira_modelo.dart';
-import 'package:provadelaco/data/repositories/verificar_permitir_compra_provedor.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
+import 'package:provadelaco/domain/models/prova/prova.dart';
+import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/features/inicio/widgets/pagina_inicio.dart';
-import 'package:provadelaco/domain/models/prova/prova_modelo.dart';
-import 'package:provadelaco/data/repositories/provas_store.dart';
-import 'package:provadelaco/ui/features/provas/widgets/pagina_aovivo.dart';
 import 'package:provadelaco/ui/features/provas/widgets/modal_detalhes_prova.dart';
+import 'package:provadelaco/ui/features/provas/widgets/pagina_aovivo.dart';
+import 'package:provadelaco/utils/currency_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -305,13 +305,13 @@ class _CardProvasState extends State<CardProvas> {
                   if (state.permitirCompra.rota! == '/compras') {
                     Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: state.permitirCompra.rota!)).then((value) {
                       if (mounted) {
-                        context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                        context.read<ProvasProvedor>().listar(usuarioProvider.usuario, widget.idEvento, '');
                       }
                     });
                   } else {
                     Navigator.pushNamed(context, state.permitirCompra.rota!).then((value) {
                       if (mounted) {
-                        context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                        context.read<ProvasProvedor>().listar(usuarioProvider.usuario, widget.idEvento, '');
                       }
                     });
                   }
@@ -418,13 +418,13 @@ class _CardProvasState extends State<CardProvas> {
                 if (prova.permitirCompra.rota! == '/compras') {
                   Navigator.pushNamed(context, AppRotas.inicio, arguments: PaginaInicioArgumentos(rota: prova.permitirCompra.rota!)).then((value) {
                     if (mounted) {
-                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                      context.read<ProvasProvedor>().listar(usuarioProvider.usuario, widget.idEvento, '');
                     }
                   });
                 } else {
                   Navigator.pushNamed(context, prova.permitirCompra.rota!).then((value) {
                     if (mounted) {
-                      context.read<ProvasStore>().listar(usuarioProvider.usuario, widget.idEvento, '');
+                      context.read<ProvasProvedor>().listar(usuarioProvider.usuario, widget.idEvento, '');
                     }
                   });
                 }
@@ -579,7 +579,7 @@ class _CardProvasState extends State<CardProvas> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            Utils.coverterEmReal.format(double.parse(prova.valor)),
+                                            CurrencyFormatter.coverterEmReal.format(double.parse(prova.valor)),
                                             style: const TextStyle(fontSize: 18, color: Colors.green),
                                           ),
                                           if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) &&

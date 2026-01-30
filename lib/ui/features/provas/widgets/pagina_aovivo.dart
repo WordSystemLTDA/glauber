@@ -3,12 +3,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/repositories/ordemdeentrada_prova_store.dart';
+import 'package:provadelaco/data/repositories/ordemdeentrada_prova_repository.dart';
+import 'package:provadelaco/data/repositories/provas_aovivo_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
 import 'package:provadelaco/domain/models/modelo_prova_ao_vivo.dart';
-import 'package:provadelaco/data/repositories/provas_aovivo_store.dart';
-import 'package:provadelaco/ui/features/provas/widgets/card_lista_competicao.dart';
 import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/ordem_de_entrada_card_prova.dart';
+import 'package:provadelaco/ui/features/provas/widgets/card_lista_competicao.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -252,7 +252,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                   padding: const EdgeInsets.all(10),
                                   itemBuilder: (context, index) {
                                     var item = itemListaCompeticaoSelecionada!.ordemDeEntradas[index];
-                  
+
                                     return CardOrdemDeEntradaProva(
                                       item: item,
                                       nomeprova: nomeProvaSelecionada,
@@ -275,7 +275,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                     ),
                                   );
                                 }
-                  
+
                                 if (ordemDeEntradaProvaStore.carregando == false) {
                                   if (ordemDeEntradaProvaStore.ordemdeentradas.isEmpty) {
                                     return const Padding(
@@ -291,7 +291,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                       ),
                                     );
                                   }
-                  
+
                                   return Column(
                                     children: [
                                       if (ordemDeEntradaProvaStore.ordemdeentradas[0].quemEstaCorrendoAgora != null) ...[
@@ -323,7 +323,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                         padding: const EdgeInsets.all(10),
                                         itemBuilder: (context, index) {
                                           var item = ordemDeEntradaProvaStore.ordemdeentradas[index];
-                  
+
                                           return CardOrdemDeEntradaProva(
                                             item: item,
                                             nomeprova: nomeProvaSelecionada,
@@ -335,7 +335,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                     ],
                                   );
                                 }
-                  
+
                                 return RefreshIndicator(
                                   onRefresh: () async {
                                     ordemDeEntradaProvaStore.listar(usuarioProvider.usuario, idListaCompeticao);
@@ -371,7 +371,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                             itemCount: listaCompeticao.length,
                             itemBuilder: (context, index) {
                               var item = listaCompeticao[index];
-                  
+
                               return CardListaCompeticao(
                                 item: item,
                                 evento: evento,
@@ -384,7 +384,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                     nomeProvaSelecionada = itemListaCompeticao.nome;
                                     itemListaCompeticaoSelecionada = itemListaCompeticao;
                                   });
-                  
+
                                   ordemDeEntradaProvaStore.listarPorListaCompeticao(
                                       usuarioProvider.usuario, itemListaCompeticao.id, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
                                 },

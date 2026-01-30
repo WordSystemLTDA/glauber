@@ -2,18 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/competidores_servico.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/data/services/home_servico.dart';
+import 'package:provadelaco/domain/models/competidores/competidores.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
-import 'package:provadelaco/config/constantes/funcoes_global.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
 import 'package:provadelaco/ui/features/compras/widgets/modal_compras.dart';
 import 'package:provadelaco/ui/features/compras/widgets/modal_parceiros.dart';
-import 'package:provadelaco/data/servicos/home_servico.dart';
-import 'package:provadelaco/data/servicos/competidores_servico.dart';
-import 'package:provadelaco/domain/models/competidores/competidores_modelo.dart';
+import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -179,7 +178,7 @@ class _CardComprasState extends State<CardCompras> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
+                                  Whatsapp.abrir(item.numeroCelular);
                                 },
                                 icon: const FaIcon(
                                   FontAwesomeIcons.whatsapp,

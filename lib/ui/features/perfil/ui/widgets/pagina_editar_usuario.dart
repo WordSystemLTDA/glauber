@@ -2,20 +2,20 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/cidade_servico.dart';
+import 'package:provadelaco/data/services/editar_usuario_servico.dart';
+import 'package:provadelaco/data/services/usuario_servico.dart';
+import 'package:provadelaco/domain/models/cidade/cidade.dart';
+import 'package:provadelaco/domain/models/formulario_editar_usuario_modelo.dart';
+import 'package:provadelaco/domain/models/modelo_modalidades_cadastro.dart';
+import 'package:provadelaco/domain/models/usuario_modelo.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
-import 'package:provadelaco/utils/rg_formatter.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/handicaps_dialog.dart';
-import 'package:provadelaco/domain/models/usuario_modelo.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/usuario_servico.dart';
-import 'package:provadelaco/domain/models/modelo_modalidades_cadastro.dart';
-import 'package:provadelaco/data/servicos/cidade_servico.dart';
-import 'package:provadelaco/data/servicos/editar_usuario_servico.dart';
-import 'package:provadelaco/domain/models/cidade/cidade_modelo.dart';
-import 'package:provadelaco/domain/models/formulario_editar_usuario_modelo.dart';
 import 'package:provadelaco/ui/features/autenticacao/widgets/pagina_selecionar_modalidades.dart';
+import 'package:provadelaco/utils/rg_formatter.dart';
 import 'package:provider/provider.dart';
 
 class PaginaEditarUsuario extends StatefulWidget {
@@ -130,7 +130,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
     super.dispose();
   }
 
-  void editar(usuario) {
+  void editar(dynamic usuario) {
     // 3 Tambores
     if (tambores3 == 'Sim') {
       if (_dataNascimentoController.text.isEmpty) {

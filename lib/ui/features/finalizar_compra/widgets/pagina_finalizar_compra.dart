@@ -1,32 +1,32 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/uteis.dart';
-import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
-import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
-import 'package:provadelaco/domain/models/retorno_compra_modelo.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/domain/models/cartao/cartao_modelo.dart';
-import 'package:provadelaco/domain/models/venda/dados_edicao_venda_modelo.dart';
+import 'package:provadelaco/data/repositories/finalizar_compra_repository.dart';
+import 'package:provadelaco/data/repositories/listar_informacoes_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/domain/models/cartao/cartao.dart';
 import 'package:provadelaco/domain/models/formulario_compra_modelo.dart';
 import 'package:provadelaco/domain/models/formulario_editar_compra_modelo.dart';
 import 'package:provadelaco/domain/models/listar_informacoes_modelo.dart';
-import 'package:provadelaco/data/repositories/finalizar_compra_store.dart';
-import 'package:provadelaco/data/repositories/listar_informacoes_store.dart';
+import 'package:provadelaco/domain/models/prova/prova.dart';
+import 'package:provadelaco/domain/models/retorno_compra_modelo.dart';
+import 'package:provadelaco/routing/routes.dart';
+import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
+import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/card_cartao.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/modal_selecionar_cartao.dart';
-import 'package:provadelaco/domain/models/prova/prova_modelo.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_sucesso_compra.dart';
+import 'package:provadelaco/utils/currency_formatter.dart';
 import 'package:provider/provider.dart';
 
 class PaginaFinalizarCompraArgumentos {
   final List<ProvaModelo> provas;
   final String idEvento;
   bool? editarVenda;
-  DadosEdicaoVendaModelo? dadosEdicaoVendaModelo;
+  final String? idVenda;
+  final String? metodoPagamento;
 
-  PaginaFinalizarCompraArgumentos({required this.provas, required this.idEvento, this.editarVenda, this.dadosEdicaoVendaModelo});
+  PaginaFinalizarCompraArgumentos({required this.provas, required this.idEvento, this.idVenda, this.metodoPagamento, this.editarVenda});
 }
 
 class PaginaFinalizarCompra extends StatefulWidget {
@@ -54,8 +54,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var usuarioProvider = context.read<UsuarioProvider>();
 
       listarInformacoesStore
-          .listarInformacoes(
-              usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false, widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '')
+          .listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false, widget.argumentos.idVenda ?? '')
           .then((response) {
         if (metodoPagamento == '0' && (response.pagamentos.firstOrNull?.id ?? '0') != '0') {
           metodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
@@ -107,7 +106,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var (:dadosRetorno, :mensagem) = await finalizarCompraStore.editar(
         usuarioProvider.usuario,
         FormularioEditarCompraModelo(
-          idVenda: widget.argumentos.dadosEdicaoVendaModelo!.idVenda,
+          idVenda: widget.argumentos.idVenda ?? '',
           idEvento: widget.argumentos.idEvento,
           idProva: widget.argumentos.provas[0].id,
           idEmpresa: dados.evento.idEmpresa,
@@ -258,7 +257,12 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             child: RefreshIndicator(
               onRefresh: () async {
                 listarInformacoesStore.listarInformacoes(
-                    usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false, widget.argumentos.dadosEdicaoVendaModelo?.idVenda ?? '');
+                  usuarioProvider.usuario,
+                  widget.argumentos.provas,
+                  widget.argumentos.idEvento,
+                  widget.argumentos.editarVenda ?? false,
+                  widget.argumentos.idVenda ?? '',
+                );
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -417,7 +421,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              itemParcela.parcela == 1 ? 'Crédito á vista' : '${itemParcela.parcela}x de ${(retornarValorTotal(dados) / itemParcela.parcela).obterReal()}',
+                                              itemParcela.parcela == 1
+                                                  ? 'Crédito á vista'
+                                                  : '${itemParcela.parcela}x de ${(retornarValorTotal(dados) / itemParcela.parcela).obterReal()}',
                                               style: const TextStyle(
                                                 fontSize: 12,
                                               ),
@@ -469,7 +475,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                             style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            Utils.coverterEmReal.format(double.parse(dados.prova.valor.toString())),
+                            CurrencyFormatter.coverterEmReal.format(double.parse(dados.prova.valor.toString())),
                             style: const TextStyle(fontSize: 16, color: Colors.green),
                           ),
                         ],

@@ -2,21 +2,21 @@ import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/uteis.dart';
-import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
+import 'package:provadelaco/config/assets.dart';
+import 'package:provadelaco/data/repositories/provas_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/pagamentos_modelo.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
-import 'package:provadelaco/domain/models/prova/prova_modelo.dart';
-import 'package:provadelaco/data/repositories/provas_provedor.dart';
-import 'package:provadelaco/data/repositories/provas_store.dart';
+import 'package:provadelaco/domain/models/prova/prova.dart';
+import 'package:provadelaco/routing/routes.dart';
+import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_finalizar_compra.dart';
-import 'package:provadelaco/ui/features/provas/widgets/pagina_aovivo.dart';
 import 'package:provadelaco/ui/features/provas/widgets/card_banner_carrossel_evento.dart';
 import 'package:provadelaco/ui/features/provas/widgets/modal_localizacao.dart';
 import 'package:provadelaco/ui/features/provas/widgets/modal_pagamentos_disponiveis.dart';
-import 'package:provadelaco/ui/features/provas/widgets/page_view.dart';
+import 'package:provadelaco/ui/features/provas/widgets/page_view_provas.dart';
+import 'package:provadelaco/ui/features/provas/widgets/pagina_aovivo.dart';
+import 'package:provadelaco/utils/currency_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -43,7 +43,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var provasStore = context.read<ProvasStore>();
+      var provasStore = context.read<ProvasProvedor>();
       var usuarioProvider = context.read<UsuarioProvider>();
       provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento, '');
     });
@@ -51,7 +51,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
 
   @override
   Widget build(BuildContext context) {
-    var provasStore = context.read<ProvasStore>();
+    var provasStore = context.read<ProvasProvedor>();
 
     var width = MediaQuery.of(context).size.width;
 
@@ -85,7 +85,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                           Text("${provasCarrinho.length.toString()} ${provasCarrinho.length == 1 ? 'Item' : 'Itens'}"),
                           const SizedBox(width: 10),
                           Text(
-                            Utils.coverterEmReal.format(valorTotal),
+                            CurrencyFormatter.coverterEmReal.format(valorTotal),
                             style: const TextStyle(color: Colors.white),
                           ),
                           // const SizedBox(width: 10),
@@ -139,7 +139,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                               itemCount: evento.bannersCarrossel.length + 1,
                               itemBuilder: (context, index, realIndex) {
                                 var bannerCarrossel = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? index : (index - 1)];
-                
+
                                 return CardBannerCarrossel(
                                   evento: evento,
                                   bannerCarrossel: bannerCarrossel,
@@ -245,7 +245,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                             const SizedBox(width: 10),
                             ActionChip(
                               avatar: Lottie.asset(
-                                'assets/lotties/aovivo.json',
+                                Assets.aovivo,
                                 width: 20,
                                 height: 20,
                                 repeat: true,
@@ -315,7 +315,6 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                         modalidade: e.modalidade,
                                         nomesCabeceira: nomesCabeceira,
                                         provasCarrinho: provasCarrinho,
-                            
                                         adicionarAvulsaNoCarrinho: (quantidade, prova, evento, modalidade) {
                                           adicionarAvulsaNoCarrinho(quantidade, prova, evento, modalidade);
                                         },
@@ -536,7 +535,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     }
   }
 
-  void abrirLocalizacao(evento) {
+  void abrirLocalizacao(EventoModelo evento) {
     showDialog(
       context: context,
       builder: (context) {

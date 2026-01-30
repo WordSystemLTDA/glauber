@@ -3,15 +3,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provadelaco/data/repositories/compras_repository.dart';
+import 'package:provadelaco/data/repositories/config_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/autenticacao_servico.dart';
+import 'package:provadelaco/data/services/usuario_servico.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/funcoes_global.dart';
 import 'package:provadelaco/ui/core/themes/theme_controller.dart';
-import 'package:provadelaco/data/repositories/config_provider.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/usuario_servico.dart';
 import 'package:provadelaco/ui/features/animais/widgets/pagina_animais.dart';
-import 'package:provadelaco/data/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/data/repositories/compras_provedor.dart';
+import 'package:provadelaco/utils/atualizacao.dart';
+import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 
 class PaginaPerfil extends StatefulWidget {
@@ -70,7 +71,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
         var usuarioProvider = context.read<UsuarioProvider>();
 
         if (usuarioProvider.usuario != null && usuarioProvider.usuario!.celularSuporte!.isNotEmpty) {
-          FuncoesGlobais.abrirWhatsapp(usuarioProvider.usuario!.celularSuporte!);
+          Whatsapp.abrir(usuarioProvider.usuario!.celularSuporte!);
         }
       }
     },
@@ -86,7 +87,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
             usuarioProvider.usuario!.atualizacaoAndroid!.isNotEmpty &&
             usuarioProvider.usuario!.atualizacaoIos != null &&
             usuarioProvider.usuario!.atualizacaoIos!.isNotEmpty) {
-          FuncoesGlobais.abrirLinkAtualizacao(usuarioProvider.usuario!.atualizacaoAndroid!, usuarioProvider.usuario!.atualizacaoIos!);
+          Atualizacao.abrirLinkAtualizacao(usuarioProvider.usuario!.atualizacaoAndroid!, usuarioProvider.usuario!.atualizacaoIos!);
         }
       }
     },
@@ -275,7 +276,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
   void setarInformacoes() async {
     var configProvider = context.read<ConfigProvider>();
 
-    var versao = await FuncoesGlobais.getVersaoInstalada();
+    var versao = await Atualizacao.getVersaoInstalada();
 
     var ultimaVersaoIos = configProvider.configs!.versaoAppIos;
     var ultimaVersaoAndroid = configProvider.configs!.versaoAppAndroid;

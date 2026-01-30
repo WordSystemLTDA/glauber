@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provadelaco/data/repositories/autenticacao_repository.dart';
+import 'package:provadelaco/data/services/autenticacao_servico.dart';
 import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/core/ui/handicaps_dialog.dart';
-import 'package:provadelaco/data/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/data/repositories/autenticacao_store.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 

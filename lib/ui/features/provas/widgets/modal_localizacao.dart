@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ModalLocalizacao extends StatefulWidget {

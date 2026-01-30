@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 import 'package:provadelaco/domain/models/dados_provas_modelo.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/pagamentos_modelo.dart';
 import 'package:provadelaco/domain/models/parcela_disponiveis_modelo.dart';
 import 'package:provadelaco/domain/models/valor_adicional_modelo.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
 
 class ListarInformacoesModelo {
   final DadosProvasModelo prova;

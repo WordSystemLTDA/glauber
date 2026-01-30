@@ -2,7 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/modelo_banners_carrossel.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

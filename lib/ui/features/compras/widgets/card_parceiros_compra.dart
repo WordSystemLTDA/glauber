@@ -1,13 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/competidores_servico.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/domain/models/competidores/competidores.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/domain/models/parceiros_compra_modelo.dart';
-import 'package:provadelaco/data/servicos/competidores_servico.dart';
-import 'package:provadelaco/domain/models/competidores/competidores_modelo.dart';
 import 'package:provider/provider.dart';
 
 class CardParceirosCompra extends StatefulWidget {

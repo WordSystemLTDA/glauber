@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/repositories/home_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/home_servico.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
 import 'package:provadelaco/ui/features/autenticacao/widgets/pagina_selecionar_modalidades.dart';
-import 'package:provadelaco/data/servicos/home_servico.dart';
-import 'package:provadelaco/data/repositories/home_store.dart';
 import 'package:provadelaco/ui/features/home/widgets/card_eventos.dart';
 import 'package:provadelaco/ui/features/home/widgets/card_propagandas.dart';
 import 'package:provider/provider.dart';

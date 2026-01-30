@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/ui/core/ui/mostrar_hora_atual.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
 import 'package:provadelaco/ui/core/ui/dashed_line.dart';
+import 'package:provadelaco/ui/core/ui/mostrar_hora_atual.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -23,7 +23,7 @@ class _ModalCompraPagaState extends State<ModalCompraPaga> {
   // Track if the PDF was downloaded here.
   bool baixandoPDF = false;
 
-  void updateProgress(done, total) {
+  void updateProgress(double done, double total) {
     progress = done / total;
     _setState(() {
       if (progress >= 1) {

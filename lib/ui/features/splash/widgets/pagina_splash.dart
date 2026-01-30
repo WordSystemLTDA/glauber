@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/services/autenticacao_servico.dart';
+import 'package:provadelaco/data/services/usuario_servico.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/data/servicos/usuario_servico.dart';
-import 'package:provadelaco/data/servicos/autenticacao_servico.dart';
 import 'package:provider/provider.dart';
 
 class PaginaSplash extends StatefulWidget {

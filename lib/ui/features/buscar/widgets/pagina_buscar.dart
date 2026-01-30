@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/repositories/buscar_repository.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
-import 'package:provadelaco/data/repositories/buscar_store.dart';
 import 'package:provadelaco/ui/features/buscar/widgets/card_buscas.dart';
 import 'package:provider/provider.dart';
 

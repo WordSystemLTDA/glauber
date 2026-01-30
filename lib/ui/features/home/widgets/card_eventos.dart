@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
 import 'package:provadelaco/ui/features/provas/widgets/pagina_provas.dart';
 
 class CardEventos extends StatefulWidget {

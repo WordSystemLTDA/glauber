@@ -1,8 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 
 class RetornoListaCompraModelo {
   final String id;

@@ -1,9 +1,8 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
 import 'package:provadelaco/ui/features/compras/widgets/card_compras.dart';
 import 'package:provadelaco/ui/features/compras/widgets/modal_pagar_inscricoes.dart';
 import 'package:provider/provider.dart';

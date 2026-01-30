@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/repositories/ordemdeentrada_store.dart';
+import 'package:provadelaco/data/repositories/ordemdeentrada_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
 import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/ordem_de_entrada_card.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +77,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> with Automa
               padding: const EdgeInsets.all(15),
               itemBuilder: (context, index) {
                 var item = ordemdeentradas[index];
-          
+
                 return CardOrdemDeEntrada(
                   item: item,
                   mostrarOpcoes: false,

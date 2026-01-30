@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/config/constantes/uteis.dart';
+import 'package:provadelaco/data/services/servico_animais.dart';
+import 'package:provadelaco/domain/models/animal/animal.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
-import 'package:provadelaco/domain/models/animal/modelo_animal.dart';
-import 'package:provadelaco/data/servicos/servico_animais.dart';
+import 'package:provadelaco/utils/date_formatter.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInserirAnimais extends StatefulWidget {
@@ -164,7 +164,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                         .editar(
                           id: widget.modeloAnimais!.id,
                           nome: nomeController.text,
-                          dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
+                          dataNascimento: DateFormatter.trocarFormatacaoData(dataNascimentoController.text),
                           sexo: sexo,
                           padrao: padrao,
                           raca: racaDoAnimalController.text,
@@ -190,7 +190,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                         .read<ServicoAnimais>()
                         .inserir(
                           nome: nomeController.text,
-                          dataNascimento: Utils.trocarFormatacaoData(dataNascimentoController.text),
+                          dataNascimento: DateFormatter.trocarFormatacaoData(dataNascimentoController.text),
                           sexo: sexo,
                           padrao: padrao,
                           raca: racaDoAnimalController.text,
@@ -269,7 +269,7 @@ class _PaginaInserirAnimaisState extends State<PaginaInserirAnimais> {
                               context: context,
                               firstDate: DateTime(1950),
                               lastDate: DateTime(2100),
-                              initialDate: DateTime.parse(Utils.trocarFormatacaoData(dataNascimentoController.text)),
+                              initialDate: DateTime.parse(DateFormatter.trocarFormatacaoData(dataNascimentoController.text)),
                             );
 
                             if (time != null) {

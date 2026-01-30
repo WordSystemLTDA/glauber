@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/competidores_servico.dart';
+import 'package:provadelaco/domain/models/competidores/competidores.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/competidores_servico.dart';
-import 'package:provadelaco/domain/models/competidores/competidores_modelo.dart';
 import 'package:provider/provider.dart';
 
 class AppBarSombra extends StatefulWidget implements PreferredSizeWidget {

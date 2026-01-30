@@ -2,20 +2,20 @@ import 'dart:convert';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/domain/models/prova/prova.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/funcoes_global.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/drawer_customizado.dart';
 import 'package:provadelaco/ui/core/ui/logo_app.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
 import 'package:provadelaco/ui/features/compras/widgets/pagina_compras.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_finalizar_compra.dart';
 import 'package:provadelaco/ui/features/home/widgets/pagina_home.dart';
 import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/pagina_ordemdeentrada.dart';
 import 'package:provadelaco/ui/features/perfil/widgets/pagina_perfil.dart';
 import 'package:provadelaco/ui/features/propaganda/widgets/pagina_propaganda.dart';
-import 'package:provadelaco/domain/models/prova/prova_modelo.dart';
 import 'package:provadelaco/ui/features/provas/widgets/pagina_provas.dart';
+import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 
 class PaginaInicioArgumentos {
@@ -245,7 +245,7 @@ class _PaginaInicioState extends State<PaginaInicio> {
                     ),
                     child: const Text('Abrir WhatsApp'),
                     onPressed: () async {
-                      FuncoesGlobais.abrirWhatsapp(usuarioProvider.celularSuporte!);
+                      Whatsapp.abrir(usuarioProvider.celularSuporte!);
                     },
                   ),
                 ],

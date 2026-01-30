@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
-import 'package:provadelaco/config/constantes/funcoes_global.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/competidores_servico.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/domain/models/competidores/competidores.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/ui/features/compras/widgets/card_parceiros_compra.dart';
-import 'package:provadelaco/data/servicos/competidores_servico.dart';
-import 'package:provadelaco/domain/models/competidores/competidores_modelo.dart';
+import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 
 class ModalParceiros extends StatefulWidget {
@@ -136,7 +135,7 @@ class _ModalParceirosState extends State<ModalParceiros> {
                                         : IconButton(
                                             onPressed: () {
                                               if (competidor.celular != null && competidor.celular!.isNotEmpty) {
-                                                FuncoesGlobais.abrirWhatsapp(competidor.celular!);
+                                                Whatsapp.abrir(competidor.celular!);
                                               }
                                             },
                                             icon: const FaIcon(

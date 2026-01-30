@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/data/repositories/compras_provedor.dart';
-import 'package:provadelaco/data/servicos/verificar_pagamento_servico.dart';
+import 'package:provadelaco/config/assets.dart';
+import 'package:provadelaco/data/repositories/compras_repository.dart';
+import 'package:provadelaco/data/repositories/verificar_pagamento_repository.dart';
+import 'package:provadelaco/data/services/verificar_pagamento_servico.dart';
 import 'package:provadelaco/domain/models/retorno_compra_modelo.dart';
-import 'package:provadelaco/data/repositories/verificar_pagamento_store.dart';
+import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/features/inicio/widgets/pagina_inicio.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -87,7 +88,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  'assets/lotties/sucesso.json',
+                  Assets.sucesso,
                   width: 145,
                   height: 145,
                   fit: BoxFit.fill,
@@ -129,7 +130,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  'assets/lotties/sucesso.json',
+                  Assets.sucesso,
                   width: 145,
                   height: 145,
                   fit: BoxFit.fill,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provadelaco/domain/models/cartao/cartao_modelo.dart';
+import 'package:provadelaco/domain/models/cartao/cartao.dart';
 
 class CardCartao extends StatefulWidget {
   final Function() aoClicar;

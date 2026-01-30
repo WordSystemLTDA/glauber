@@ -1,14 +1,13 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:provadelaco/config/config.dart';
+import 'package:provadelaco/data/repositories/compras_repository.dart';
+import 'package:provadelaco/data/repositories/transferencia_repository.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/domain/models/clientes/clientes.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/constantes_global.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-import 'package:provadelaco/domain/models/clientes/clientes_modelo.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
-import 'package:provadelaco/data/repositories/compras_provedor.dart';
-import 'package:provadelaco/data/repositories/transferencia_provedor.dart';
 import 'package:provadelaco/ui/features/compras/widgets/card_compras.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -92,10 +91,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         builder: (BuildContext context, Widget? child) {
           return Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton:
-                (comprasStore.compras.atuais.isEmpty || comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
-                    ? null
-                    : _buildFloatingActionButton(),
+            floatingActionButton: (comprasStore.compras.atuais.isEmpty ||
+                    comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
+                ? null
+                : _buildFloatingActionButton(),
             body: Column(
               children: [
                 const TabBar(
@@ -374,7 +373,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar
+                                                ? const Center(child: CircularProgressIndicator())
+                                                : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -596,7 +597,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar
+                                                ? const Center(child: CircularProgressIndicator())
+                                                : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -738,7 +741,9 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar
+                                                ? const Center(child: CircularProgressIndicator())
+                                                : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },

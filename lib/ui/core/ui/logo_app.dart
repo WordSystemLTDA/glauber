@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/data/repositories/config_provider.dart';
+import 'package:provadelaco/data/repositories/config_repository.dart';
 import 'package:provider/provider.dart';
 
 class LogoApp extends StatefulWidget {

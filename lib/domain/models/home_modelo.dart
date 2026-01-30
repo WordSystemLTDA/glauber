@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:provadelaco/domain/models/config/config_modelo.dart';
-import 'package:provadelaco/domain/models/categoria/categoria_modelo.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
+import 'package:provadelaco/domain/models/categoria/categoria.dart';
+import 'package:provadelaco/domain/models/config/config.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/propaganda_modelo.dart';
 
 class HomeModelo {

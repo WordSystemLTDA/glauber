@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/repositories/animal_repository.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/uteis.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/features/animais/widgets/pagina_inserir_animais.dart';
-import 'package:provadelaco/data/repositories/provedor_animal.dart';
+import 'package:provadelaco/utils/date_formatter.dart';
 import 'package:provider/provider.dart';
 
 class PaginaAnimaisArgumentos {
@@ -126,7 +126,7 @@ class _PaginaAnimaisState extends State<PaginaAnimais> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "${(DateTime.now().year - DateTime.parse(Utils.trocarFormatacaoData(item.datanascianimal, pattern: '/', to: '-')).year).toString()} anos",
+                                          "${(DateTime.now().year - DateTime.parse(DateFormatter.trocarFormatacaoData(item.datanascianimal, pattern: '/', to: '-')).year).toString()} anos",
                                           style: TextStyle(fontSize: 12),
                                         ),
                                         Text(item.padrao == 'Sim' ? 'Padrão' : ''),

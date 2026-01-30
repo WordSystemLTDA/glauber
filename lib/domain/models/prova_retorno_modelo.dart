@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provadelaco/domain/models/animal/modelo_animal.dart';
+import 'package:provadelaco/domain/models/animal/animal.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
+import 'package:provadelaco/domain/models/modalidade_prova_modelo.dart';
 import 'package:provadelaco/domain/models/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/domain/models/pagamentos_modelo.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
-import 'package:provadelaco/domain/models/modalidade_prova_modelo.dart';
 
 part 'prova_retorno_modelo.g.dart';
 

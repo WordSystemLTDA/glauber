@@ -4,12 +4,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/data/repositories/usuario_provider.dart';
-import 'package:provadelaco/data/servicos/compras_servico.dart';
-
-import 'package:provadelaco/domain/models/compras/compras_modelo.dart';
+import 'package:provadelaco/config/assets.dart';
+import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/data/services/compras_servico.dart';
+import 'package:provadelaco/data/services/verificar_pagamento_servico.dart';
+import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/ui/core/ui/dashed_line.dart';
-import 'package:provadelaco/data/servicos/verificar_pagamento_servico.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -150,7 +150,7 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Lottie.asset(
-                        'assets/lotties/sucesso.json',
+                        Assets.sucesso,
                         width: 145,
                         height: 145,
                         fit: BoxFit.fill,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/data/repositories/handicap_repository.dart';
 import 'package:provadelaco/domain/models/handicaps_modelo.dart';
-import 'package:provadelaco/data/repositories/handicap_store.dart';
 import 'package:provider/provider.dart';
 
 class HandiCapsDialog extends StatefulWidget {

@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provadelaco/domain/models/competidores/competidores_modelo2.dart';
+import 'package:provadelaco/domain/models/competidores/competidores.dart';
 
 part 'permitir_compra_modelo.g.dart';
 
@@ -13,7 +13,7 @@ class PermitirCompraModelo {
   final String? quantMaximaAvulsa;
   final String? quantParceiros;
   final String? permVincularParceiro;
-  final List<CompetidoresModelo2>? competidoresJaSelecionados;
+  final List<CompetidoresModelo>? competidoresJaSelecionados;
   final String? idCabeceiraInvalido;
 
   const PermitirCompraModelo({

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provadelaco/config/constantes/funcoes_global.dart';
-import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
+import 'package:provadelaco/data/repositories/propagandas_repository.dart';
 import 'package:provadelaco/domain/models/propaganda_modelo.dart';
-import 'package:provadelaco/data/repositories/propagandas_store.dart';
+import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
+import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -110,7 +110,7 @@ class _PaginaPropagandaState extends State<PaginaPropaganda> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      FuncoesGlobais.abrirWhatsapp(propaganda.celular);
+                                      Whatsapp.abrir(propaganda.celular);
                                     },
                                     color: Colors.green,
                                     icon: const FaIcon(FontAwesomeIcons.whatsapp),

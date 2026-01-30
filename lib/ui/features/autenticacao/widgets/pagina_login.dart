@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provadelaco/data/repositories/autenticacao_repository.dart';
+import 'package:provadelaco/data/services/autenticacao_servico.dart';
+import 'package:provadelaco/data/services/listar_dados_servicos.dart';
 import 'package:provadelaco/routing/routes.dart';
-import 'package:provadelaco/config/constantes/funcoes_global.dart';
 import 'package:provadelaco/ui/core/ui/logo_app.dart';
-import 'package:provadelaco/data/servicos/listar_dados_servicos.dart';
-import 'package:provadelaco/data/servicos/autenticacao_servico.dart';
-import 'package:provadelaco/data/repositories/autenticacao_store.dart';
 import 'package:provadelaco/ui/features/autenticacao/widgets/pagina_selecionar_modalidades.dart';
+import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
@@ -234,7 +234,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                                     ElevatedButton(
                                                       onPressed: () {
                                                         if (celularSuporte.isNotEmpty) {
-                                                          FuncoesGlobais.abrirWhatsapp(celularSuporte);
+                                                          Whatsapp.abrir(celularSuporte);
                                                         }
                                                       },
                                                       child: const Row(
@@ -328,7 +328,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                             onPressed: () {
                                               Navigator.of(contextDialog).pop();
                                               // Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
+                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades,
+                                                  arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
                                             },
                                           ),
                                           TextButton(
@@ -366,7 +367,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                                             onPressed: () {
                                                               Navigator.of(contextDialog).pop();
                                                               if (celularSuporte.isNotEmpty) {
-                                                                FuncoesGlobais.abrirWhatsapp(celularSuporte);
+                                                                Whatsapp.abrir(celularSuporte);
                                                               }
                                                             },
                                                           ),

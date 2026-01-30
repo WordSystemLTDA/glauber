@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:provadelaco/domain/models/prova/prova_modelo.dart';
+import 'package:provadelaco/domain/models/prova/prova.dart';
 
 part 'modalidade_prova_modelo.g.dart';
 

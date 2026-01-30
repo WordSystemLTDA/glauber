@@ -16,7 +16,7 @@ class ThemeController extends ValueNotifier<ThemeMode> {
     onInitialThemeSetEvent();
   }
 
-  onInitialThemeSetEvent() async {
+  void onInitialThemeSetEvent() async {
     final bool hasDarkTheme = await isDark();
     if (hasDarkTheme) {
       value = ThemeMode.dark;

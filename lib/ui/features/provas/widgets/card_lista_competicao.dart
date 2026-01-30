@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provadelaco/domain/models/nomes_cabeceira_modelo.dart';
-import 'package:provadelaco/domain/models/evento/evento_modelo.dart';
+import 'package:provadelaco/config/assets.dart';
+import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/modelo_prova_ao_vivo.dart';
+import 'package:provadelaco/domain/models/nomes_cabeceira_modelo.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CardListaCompeticao extends StatefulWidget {
@@ -157,7 +158,7 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Lottie.asset(
-                                                'assets/lotties/aovivo.json',
+                                                Assets.aovivo,
                                                 width: 20,
                                                 height: 20,
                                                 repeat: true,
