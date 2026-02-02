@@ -26,3 +26,4 @@ JEITOS DE FAZER INSCRIÇÃO COM PARCEIRO
 PARA FAZER
 
 - [ ] Lista infinita na Página ao vivo
+

@@ -32,7 +32,7 @@ class OrdemDeEntradaServico {
     }
   }
 
-  Future<List<ProvaParceirosModelos>> listarPorProva(UsuarioModelo? usuario, String idProva) async {
+  Future<({List<ProvaParceirosModelos> lista, ProvaParceirosModelos? quemEstaCorrendoAgora})> listarPorProva(UsuarioModelo? usuario, String idProva) async {
     // var idCliente = usuario!.id;
     var url = "ordem_de_entrada/listar_por_provas.php?id_prova=$idProva";
 
@@ -42,11 +42,14 @@ class OrdemDeEntradaServico {
     bool sucesso = jsonData['sucesso'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return List<ProvaParceirosModelos>.from(jsonData['dados'].map((elemento) {
+      var lista = List<ProvaParceirosModelos>.from(jsonData['dados'].map((elemento) {
         return ProvaParceirosModelos.fromMap(elemento);
       }));
+      var quemEstaCorrendoAgora = ProvaParceirosModelos.fromMap(jsonData['quemEstaCorrendoAgora']);
+
+      return (lista: lista, quemEstaCorrendoAgora: quemEstaCorrendoAgora);
     } else {
-      return [];
+      return (lista: List<ProvaParceirosModelos>.empty(), quemEstaCorrendoAgora: null);
     }
   }
 

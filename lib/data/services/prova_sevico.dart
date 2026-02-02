@@ -59,7 +59,7 @@ class ProvaServico {
     var url = 'provas/listar_ao_vivo.php?id_evento=$idEvento&idEmpresa=$idEmpresa';
 
     var response = await client.dio.get(url);
-    var jsonData = jsonDecode(response.data);
+    var jsonData = response.data;
 
     return ModeloProvaAoVivoRetorno.fromMap(jsonData);
   }

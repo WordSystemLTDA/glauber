@@ -223,7 +223,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                           if (idListaCompeticao == '-1' || idListaCompeticao == '-2') ...[
                             Column(
                               children: [
-                                if (itemListaCompeticaoSelecionada!.ordemDeEntradas[0].quemEstaCorrendoAgora != null) ...[
+                                if (itemListaCompeticaoSelecionada!.quemEstaCorrendoAgora != null) ...[
                                   const Padding(
                                     padding: EdgeInsets.only(left: 10, top: 10),
                                     child: Align(
@@ -239,7 +239,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                     child: CardOrdemDeEntradaProva(
                                       selecionado: true,
                                       nomeprova: nomeProvaSelecionada,
-                                      item: itemListaCompeticaoSelecionada!.ordemDeEntradas[0].quemEstaCorrendoAgora!,
+                                      item: itemListaCompeticaoSelecionada!.quemEstaCorrendoAgora!,
                                       mostrarOpcoes: true,
                                     ),
                                   ),
@@ -294,7 +294,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
 
                                   return Column(
                                     children: [
-                                      if (ordemDeEntradaProvaStore.ordemdeentradas[0].quemEstaCorrendoAgora != null) ...[
+                                      if (ordemDeEntradaProvaStore.quemEstaCorrendoAgora != null) ...[
                                         const Padding(
                                           padding: EdgeInsets.only(left: 10, top: 10),
                                           child: Align(
@@ -310,7 +310,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                           child: CardOrdemDeEntradaProva(
                                             selecionado: true,
                                             nomeprova: nomeProvaSelecionada,
-                                            item: ordemDeEntradaProvaStore.ordemdeentradas[0].quemEstaCorrendoAgora!,
+                                            item: ordemDeEntradaProvaStore.quemEstaCorrendoAgora!,
                                             mostrarOpcoes: true,
                                           ),
                                         ),

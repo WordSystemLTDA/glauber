@@ -137,7 +137,7 @@ class _PaginaSucessoCompraState extends State<PaginaSucessoCompra> {
                   repeat: false,
                 ),
                 Text(
-                  dados.tituloRetorno!,
+                  dados.tituloRetorno ?? 'Erro ao processar compra',
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 if (dados.tipoRetorno == 'normal') ...[

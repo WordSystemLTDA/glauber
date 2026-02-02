@@ -12,27 +12,27 @@ class FinalizarCompraStore extends ChangeNotifier {
 
   bool carregando = false;
 
-  Future<({DadosRetornoCompraModelo? dadosRetorno, String mensagem})> editar(UsuarioModelo? usuario, FormularioEditarCompraModelo dados) async {
+  Future<({RetornoCompraModelo? dadosRetorno, String mensagem})> editar(UsuarioModelo? usuario, FormularioEditarCompraModelo dados) async {
     carregando = true;
     notifyListeners();
 
     var dadosRetorno = await _servico.editar(usuario, dados);
 
-    carregando = true;
+    carregando = false;
     notifyListeners();
 
-    return (dadosRetorno: dadosRetorno.dados, mensagem: dadosRetorno.mensagem);
+    return (dadosRetorno: dadosRetorno, mensagem: dadosRetorno.mensagem);
   }
 
-  Future<({DadosRetornoCompraModelo? dadosRetorno, String mensagem})> inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
+  Future<({RetornoCompraModelo? dadosRetorno, String mensagem})> inserir(UsuarioModelo? usuario, FormularioCompraModelo dados) async {
     carregando = true;
     notifyListeners();
 
     var dadosRetorno = await _servico.inserir(usuario, dados);
 
-    carregando = true;
+    carregando = false;
     notifyListeners();
 
-    return (dadosRetorno: dadosRetorno.dados, mensagem: dadosRetorno.mensagem);
+    return (dadosRetorno: dadosRetorno, mensagem: dadosRetorno.mensagem);
   }
 }

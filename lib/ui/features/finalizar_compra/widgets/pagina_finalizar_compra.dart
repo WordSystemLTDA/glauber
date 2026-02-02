@@ -99,7 +99,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
     var usuarioProvider = context.read<UsuarioProvider>();
 
-    DadosRetornoCompraModelo? dadosRetornoVar;
+    RetornoCompraModelo? dadosRetornoVar;
     String mensagemRetorno = '';
 
     if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
@@ -147,7 +147,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       mensagemRetorno = mensagem;
     }
 
-    if (dadosRetornoVar != null) {
+    if (dadosRetornoVar != null && dadosRetornoVar.sucesso) {
       if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -161,7 +161,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           Navigator.pushReplacementNamed(
             context,
             AppRotas.sucessoCompra,
-            arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar, metodoPagamento: metodoPagamento),
+            arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar.dados, metodoPagamento: metodoPagamento),
           );
         }
       } else {
@@ -169,7 +169,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           Navigator.pushReplacementNamed(
             context,
             AppRotas.sucessoCompra,
-            arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar, metodoPagamento: metodoPagamento),
+            arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar.dados, metodoPagamento: metodoPagamento),
           );
         }
       }

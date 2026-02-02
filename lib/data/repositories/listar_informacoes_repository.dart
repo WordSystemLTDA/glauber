@@ -20,7 +20,7 @@ class ListarInformacoesStore extends ChangeNotifier {
 
     dados = result;
 
-    carregando = true;
+    carregando = false;
     notifyListeners();
 
     return result;

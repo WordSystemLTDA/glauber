@@ -9,6 +9,7 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
   OrdemDeEntradaProvaStore(this._servico) : super();
 
   List<ProvaParceirosModelos> ordemdeentradas = [];
+  ProvaParceirosModelos? quemEstaCorrendoAgora;
 
   bool carregando = false;
 
@@ -16,9 +17,10 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
     carregando = true;
     notifyListeners();
 
-    List<ProvaParceirosModelos> lista = await _servico.listarPorProva(usuario, idProva);
+    var (:lista, :quemEstaCorrendoAgora) = await _servico.listarPorProva(usuario, idProva);
 
     ordemdeentradas = lista;
+    this.quemEstaCorrendoAgora = quemEstaCorrendoAgora;
     carregando = false;
     notifyListeners();
   }

@@ -28,9 +28,9 @@ class ComprasServico {
       'pagina3': pagina3,
     };
 
-    var response = await client.dio.post(url, data: jsonEncode(campos));
+    var response = await client.dio.get(url, queryParameters: campos);
 
-    var jsonData = jsonDecode(response.data);
+    var jsonData = response.data;
     bool sucesso = jsonData['sucesso'];
 
     if (response.statusCode == 200 && sucesso == true) {
