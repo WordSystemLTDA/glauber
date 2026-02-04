@@ -53,8 +53,8 @@ class OrdemDeEntradaServico {
     }
   }
 
-  Future<List<ProvaParceirosModelos>> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento) async {
-    var url = "ordem_de_entrada/listar_por_lista_competicao.php?id_empresa=$idEmpresa&id_evento=$idEvento&id_lista_competicao=$idListaCompeticao";
+  Future<List<ProvaParceirosModelos>> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa) async {
+    var url = "ordem_de_entrada/listar_por_lista_competicao.php?id_empresa=$idEmpresa&id_evento=$idEvento&id_lista_competicao=$idListaCompeticao&pesquisa=$pesquisa";
 
     var response = await client.dio.get(url);
 

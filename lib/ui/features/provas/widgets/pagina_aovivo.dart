@@ -38,6 +38,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
   String idListaCompeticao = '0';
   String nomeProvaSelecionada = '';
   ModeloProvaAoVivo? itemListaCompeticaoSelecionada;
+  String filtroSelecionado = '';
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
           idListaCompeticao = widget.argumentos.idListaCompeticao!;
           nomeProvaSelecionada = widget.argumentos.nomeProva!;
         });
-        ordemDeEntradaProvaStore.listarPorListaCompeticao(usuarioProvider.usuario, idListaCompeticao, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
+        ordemDeEntradaProvaStore.listarPorListaCompeticao(usuarioProvider.usuario, idListaCompeticao, widget.argumentos.idEmpresa, widget.argumentos.idEvento, '');
       }
 
       provasAoVivoStore.listar(usuarioProvider.usuario, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
@@ -80,7 +81,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
               return RefreshIndicator(
                 onRefresh: () async {
                   if (idListaCompeticao != '0' && idListaCompeticao != '-1' && idListaCompeticao != '-2') {
-                    ordemDeEntradaProvaStore.listarPorListaCompeticao(usuarioProvider.usuario, idListaCompeticao, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
+                    ordemDeEntradaProvaStore.listarPorListaCompeticao(usuarioProvider.usuario, idListaCompeticao, widget.argumentos.idEmpresa, widget.argumentos.idEvento, '');
                   } else {
                     await provasAoVivoStore.listar(usuarioProvider.usuario, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
                     if (idListaCompeticao == '-1' || idListaCompeticao == '-2') {
@@ -217,6 +218,75 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                               idListaCompeticao == "0" ? 'Listas de Competições!' : "Lista: $nomeProvaSelecionada",
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                             ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: 'Pesquisar na lista',
+                                    prefixIcon: Icon(Icons.search),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      ordemDeEntradaProvaStore.listarPorListaCompeticao(
+                                        usuarioProvider.usuario,
+                                        idListaCompeticao,
+                                        widget.argumentos.idEmpresa,
+                                        widget.argumentos.idEvento,
+                                        value,
+                                      );
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              DropdownMenu(
+                                width: 150,
+                                initialSelection: filtroSelecionado,
+                                dropdownMenuEntries: [
+                                  DropdownMenuEntry(value: '20', label: "#2"),
+                                  DropdownMenuEntry(value: '25', label: "#2,5"),
+                                  DropdownMenuEntry(value: '30', label: "#3"),
+                                  DropdownMenuEntry(value: '35', label: "#3,5"),
+                                  DropdownMenuEntry(value: '40', label: "#4"),
+                                  DropdownMenuEntry(value: '50', label: "#5"),
+                                  DropdownMenuEntry(value: '60', label: "#6"),
+                                  DropdownMenuEntry(value: '70', label: "#7"),
+                                  DropdownMenuEntry(value: '80', label: "#8"),
+                                  DropdownMenuEntry(value: '90', label: "#9"),
+                                  DropdownMenuEntry(value: '100', label: "#10"),
+                                  DropdownMenuEntry(value: '110', label: "#11"),
+                                  DropdownMenuEntry(value: '120', label: "#12"),
+                                  DropdownMenuEntry(value: '140', label: "#AB"),
+                                  DropdownMenuEntry(value: '150', label: "LIGA"),
+                                  DropdownMenuEntry(value: '160', label: "ETR"),
+                                  DropdownMenuEntry(value: '201', label: "W.U 2"),
+                                  DropdownMenuEntry(value: '251', label: "W.U 2,5"),
+                                  DropdownMenuEntry(value: '301', label: "W.U 3"),
+                                  DropdownMenuEntry(value: '351', label: "W.U 3,5"),
+                                  DropdownMenuEntry(value: '401', label: "W.U 4"),
+                                  DropdownMenuEntry(value: '501', label: "W.U 5"),
+                                  DropdownMenuEntry(value: '601', label: "W.U 6"),
+                                  DropdownMenuEntry(value: '701', label: "W.U 7"),
+                                  DropdownMenuEntry(value: '801', label: "W.U 8"),
+                                  DropdownMenuEntry(value: '901', label: "W.U 9"),
+                                  DropdownMenuEntry(value: '1001', label: "W.U 10"),
+                                  DropdownMenuEntry(value: '1101', label: "W.U 11"),
+                                  DropdownMenuEntry(value: '1201', label: "W.U 12"),
+                                  DropdownMenuEntry(value: '1401', label: "W.U AB"),
+                                  DropdownMenuEntry(value: '1601', label: "W.U ETR"),
+                                ],
+                                onSelected: (value) {
+                                  setState(() {
+                                    filtroSelecionado = value ?? '';
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ),
                         if (idListaCompeticao != '0') ...[
@@ -386,7 +456,12 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                   });
 
                                   ordemDeEntradaProvaStore.listarPorListaCompeticao(
-                                      usuarioProvider.usuario, itemListaCompeticao.id, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
+                                    usuarioProvider.usuario,
+                                    itemListaCompeticao.id,
+                                    widget.argumentos.idEmpresa,
+                                    widget.argumentos.idEvento,
+                                    '',
+                                  );
                                 },
                               );
                             },

@@ -25,12 +25,11 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento) async {
+  void listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa) async {
     carregando = true;
     notifyListeners();
 
-    List<ProvaParceirosModelos> lista = await _servico.listarPorListaCompeticao(usuario, idListaCompeticao, idEmpresa, idEvento);
-
+    List<ProvaParceirosModelos> lista = await _servico.listarPorListaCompeticao(usuario, idListaCompeticao, idEmpresa, idEvento, pesquisa);
     ordemdeentradas = lista;
     carregando = false;
     notifyListeners();

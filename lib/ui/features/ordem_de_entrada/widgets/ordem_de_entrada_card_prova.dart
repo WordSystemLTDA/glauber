@@ -43,43 +43,17 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (widget.nomeprova == 'FINAL') ...[
-                            Text(
-                              "Ranking: ${itemParceiro.ranking}",
-                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                          ] else if (widget.nomeprova == 'CLASSIFICAÇÃO FINAL') ...[
-                            Text(
-                              "Classificação: ${itemParceiro.classificacao}",
-                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                          ] else ...[
-                            Text(
-                              "Inscrição: ${itemParceiro.numeroDaInscricao}",
-                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                          Text(
-                            "Somatória: ${itemParceiro.somatoria}",
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                          Text("#${itemParceiro.id}"),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
+                      // const SizedBox(height: 5),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Cabeceiro: #${itemParceiro.idClienteCabeceira} ${itemParceiro.nomeClienteCabeceira}",
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            "${itemParceiro.nomeClienteCabeceira.toUpperCase()}${itemParceiro.sorteiocabeceira.contains('Sim') ? ' (SORTEIO)' : ''}",
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                           ),
                           Text(
-                            "Pezeiro: #${itemParceiro.idClientePezeiro} ${itemParceiro.nomeClientePezeiro}",
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            "${itemParceiro.nomeClientePezeiro.toUpperCase()}${itemParceiro.sorteiopezeiro.contains('Sim') ? ' (SORTEIO)' : ''}",
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                           ),
                         ],
                       ),
@@ -89,98 +63,80 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                 ),
               ],
             ),
-            SizedBox(
-              width: double.infinity,
-              child: Wrap(
-                spacing: 8.0, // gap between adjacent chips
-                runSpacing: 4.0, // gap between lines
-                alignment: WrapAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      const Text('1 BOI'),
-                      Text(itemParceiro.boi1),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text('2 BOI'),
-                      Text(itemParceiro.boi2),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text('3 BOI'),
-                      Text(itemParceiro.boi3),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text('4 BOI'),
-                      Text(itemParceiro.boi4),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text('Final'),
-                      Text(itemParceiro.finalT),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text('Média'),
-                      Text(itemParceiro.medio),
-                    ],
-                  ),
+            Row(
+              spacing: 8.0, // gap between adjacent chips
+              // runSpacing: 4.0, // gap between lines
+              // alignment: WrapAlignment.spaceBetween,
+              children: [
+                if (itemParceiro.boi1 != '')
                   Row(
                     children: [
-                      if (widget.nomeprova == 'FINAL') ...[
-                        Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              'Inscrição: ${itemParceiro.numeroDaInscricao}',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ] else ...[
-                        Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              'Ranking: ${itemParceiro.ranking}',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                      if (widget.nomeprova == 'CLASSIFICAÇÃO FINAL') ...[
-                        Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              'Inscrição: ${itemParceiro.numeroDaInscricao}',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ] else ...[
-                        Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              'Classificação: ${itemParceiro.classificacao}',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ]
+                      const Text('1:', style: TextStyle(color: Color.fromARGB(255, 107, 107, 107))),
+                      Text(itemParceiro.boi1 == '' ? '0' : itemParceiro.boi1),
                     ],
                   ),
+                if (itemParceiro.boi2 != '')
+                  Row(
+                    children: [
+                      const Text('2:', style: TextStyle(color: Color.fromARGB(255, 107, 107, 107))),
+                      Text(itemParceiro.boi2 == '' ? '0' : itemParceiro.boi2),
+                    ],
+                  ),
+                if (itemParceiro.boi3 != '')
+                  Row(
+                    children: [
+                      const Text('3:', style: TextStyle(color: Color.fromARGB(255, 107, 107, 107))),
+                      Text(itemParceiro.boi3 == '' ? '0' : itemParceiro.boi3),
+                    ],
+                  ),
+                if (itemParceiro.boi4 != '')
+                  Row(
+                    children: [
+                      const Text('4:', style: TextStyle(color: Color.fromARGB(255, 107, 107, 107))),
+                      Text(itemParceiro.boi4 == '' ? '0' : itemParceiro.boi4),
+                    ],
+                  ),
+                if (itemParceiro.finalT != '')
+                  Row(
+                    children: [
+                      const Text('F:', style: TextStyle(color: Color.fromARGB(255, 107, 107, 107))),
+                      Text(itemParceiro.finalT == '' ? '0' : itemParceiro.finalT),
+                    ],
+                  ),
+                if (itemParceiro.medio != '')
+                  Row(
+                    children: [
+                      const Text('M:', style: TextStyle(color: Color.fromARGB(255, 107, 107, 107))),
+                      Text(double.parse(itemParceiro.medio).toStringAsFixed(2)),
+                    ],
+                  ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Inscrição: ${itemParceiro.numeroDaInscricao}',
+                  textAlign: TextAlign.center,
+                ),
+                if (widget.nomeprova == 'CLASSIFICAÇÃO FINAL') ...[
+                  Text(
+                    'Classificação: ${itemParceiro.ranking}',
+                    textAlign: TextAlign.center,
+                  ),
+                ] else ...[
+                  Text(
+                    'Ranking: ${itemParceiro.classificacao}',
+                    textAlign: TextAlign.center,
+                  ),
                 ],
-              ),
-            )
+                Text(
+                  itemParceiro.somatoria,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -6,6 +6,8 @@ class ProvaParceirosModelos {
   final String somatoria;
   final String numeroDaInscricao;
   final String sorteio;
+  final String sorteiocabeceira;
+  final String sorteiopezeiro;
   final String boi1;
   final String boi2;
   final String boi3;
@@ -24,6 +26,8 @@ class ProvaParceirosModelos {
     required this.somatoria,
     required this.numeroDaInscricao,
     required this.sorteio,
+    required this.sorteiocabeceira,
+    required this.sorteiopezeiro,
     required this.boi1,
     required this.boi2,
     required this.boi3,
@@ -44,6 +48,8 @@ class ProvaParceirosModelos {
       'somatoria': somatoria,
       'numeroDaInscricao': numeroDaInscricao,
       'sorteio': sorteio,
+      'sorteiocabeceira': sorteiocabeceira,
+      'sorteiopezeiro': sorteiopezeiro,
       'boi1': boi1,
       'boi2': boi2,
       'boi3': boi3,
@@ -65,6 +71,8 @@ class ProvaParceirosModelos {
       somatoria: map['somatoria'] ?? '',
       numeroDaInscricao: map['numeroDaInscricao'] ?? '',
       sorteio: map['sorteio'] ?? '',
+      sorteiocabeceira: map['sorteiocabeceira'] ?? '',
+      sorteiopezeiro: map['sorteiopezeiro'] ?? '',
       boi1: map['boi1'] ?? '',
       boi2: map['boi2'] ?? '',
       boi3: map['boi3'] ?? '',
@@ -89,6 +97,8 @@ class ProvaParceirosModelos {
     String? somatoria,
     String? numeroDaInscricao,
     String? sorteio,
+    String? sorteiocabeceira,
+    String? sorteiopezeiro,
     String? boi1,
     String? boi2,
     String? boi3,
@@ -107,6 +117,8 @@ class ProvaParceirosModelos {
       somatoria: somatoria ?? this.somatoria,
       numeroDaInscricao: numeroDaInscricao ?? this.numeroDaInscricao,
       sorteio: sorteio ?? this.sorteio,
+      sorteiocabeceira: sorteiocabeceira ?? this.sorteiocabeceira,
+      sorteiopezeiro: sorteiopezeiro ?? this.sorteiopezeiro,
       boi1: boi1 ?? this.boi1,
       boi2: boi2 ?? this.boi2,
       boi3: boi3 ?? this.boi3,
@@ -124,7 +136,7 @@ class ProvaParceirosModelos {
 
   @override
   String toString() {
-    return 'ProvaParceirosModelos(id: $id, somatoria: $somatoria, numeroDaInscricao: $numeroDaInscricao, sorteio: $sorteio, boi1: $boi1, boi2: $boi2, boi3: $boi3, boi4: $boi4, finalT: $finalT, medio: $medio, ranking: $ranking, classificacao: $classificacao, idClienteCabeceira: $idClienteCabeceira, idClientePezeiro: $idClientePezeiro, nomeClienteCabeceira: $nomeClienteCabeceira, nomeClientePezeiro: $nomeClientePezeiro)';
+    return 'ProvaParceirosModelos(id: $id, somatoria: $somatoria, numeroDaInscricao: $numeroDaInscricao, sorteio: $sorteio, sorteiocabeceira: $sorteiocabeceira, sorteiopezeiro: $sorteiopezeiro, boi1: $boi1, boi2: $boi2, boi3: $boi3, boi4: $boi4, finalT: $finalT, medio: $medio, ranking: $ranking, classificacao: $classificacao, idClienteCabeceira: $idClienteCabeceira, idClientePezeiro: $idClientePezeiro, nomeClienteCabeceira: $nomeClienteCabeceira, nomeClientePezeiro: $nomeClientePezeiro)';
   }
 
   @override
@@ -136,6 +148,8 @@ class ProvaParceirosModelos {
         other.somatoria == somatoria &&
         other.numeroDaInscricao == numeroDaInscricao &&
         other.sorteio == sorteio &&
+        other.sorteiocabeceira == sorteiocabeceira &&
+        other.sorteiopezeiro == sorteiopezeiro &&
         other.boi1 == boi1 &&
         other.boi2 == boi2 &&
         other.boi3 == boi3 &&
@@ -156,6 +170,8 @@ class ProvaParceirosModelos {
         somatoria.hashCode ^
         numeroDaInscricao.hashCode ^
         sorteio.hashCode ^
+        sorteiocabeceira.hashCode ^
+        sorteiopezeiro.hashCode ^
         boi1.hashCode ^
         boi2.hashCode ^
         boi3.hashCode ^
