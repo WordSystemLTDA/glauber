@@ -93,7 +93,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 250,
+                        height: 150,
                         child: Stack(
                           children: [
                             Positioned.fill(

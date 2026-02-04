@@ -112,6 +112,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
             var provas = provasStore.provas;
             var nomesCabeceira = provasStore.nomesCabeceira;
 
+            if (provasStore.carregando) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
             if (evento != null) {
               return RefreshIndicator(
                 onRefresh: () async {

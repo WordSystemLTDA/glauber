@@ -113,6 +113,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
           ));
         }
       } else if (widget.permVincularParceiro == 'Sim') {
+        print('aa');
         for (var i = 0;
             i < quantidade - (widget.prova.permitirCompra.competidoresJaSelecionados != null ? widget.prova.permitirCompra.competidoresJaSelecionados!.length : 0);
             i++) {
