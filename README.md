@@ -35,7 +35,6 @@ fazer tela de parcelamento de filiação
 competidores disponiveis
 aparecer no handicap pe e cabeça
 
-
 na tela de confirmação de parceiros
 quando não tiver venda nenhuma naquela prova, ir para tela de compra 
 

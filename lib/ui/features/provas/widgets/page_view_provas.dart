@@ -43,298 +43,144 @@ class PageViewProvas extends StatefulWidget {
 }
 
 class _PageViewProvasState extends State<PageViewProvas> {
-  late List<ProvaModelo> provas = [];
-  late EventoModelo evento;
-  late List<NomesCabeceiraModelo>? nomesCabeceira = [];
-  late List<ProvaModelo> provasCarrinho = [];
-
-  @override
-  void initState() {
-    super.initState();
-    setarCampos();
-  }
-
-  void setarCampos() {
-    provas = widget.provas;
-    evento = widget.evento;
-    nomesCabeceira = widget.nomesCabeceira;
-    provasCarrinho = widget.provasCarrinho;
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (mounted) {
-        var provasProvedor = context.read<ProvasProvedor>();
-        provasProvedor.animalSelecionado = widget.animalPadrao;
-      }
-    });
-  }
-
-  void abrirTermosDeUso() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Dialog(
-          child: TermosDeUso(),
-        );
-      },
-    );
-  }
-
-  void abrirDenunciar() {
-    showDialog(
-      context: context,
-      builder: (contextDialog) {
-        return ModalDenunciar();
-      },
-    );
-  }
-
-  void selecionarAnimal() {
-    var provasProvedor = context.read<ProvasProvedor>();
-
-    Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true)).then((value) {
-      if (value == null) return;
-
-      provasProvedor.animalSelecionado = value as ModeloAnimal;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    final provedor = context.watch<ProvasProvedor>();
 
-    return Consumer<ProvasProvedor>(
-      builder: (context, provedor, child) {
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              if (widget.modalidade == '3') ...[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 100,
-                    child: provedor.animalSelecionado == null
-                        ? Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            child: InkWell(
-                              onTap: () {
-                                selecionarAnimal();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Selecionar Animal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        : Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            child: InkWell(
-                              onTap: () {
-                                selecionarAnimal();
-                              },
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: Image.network(
-                                      provedor.animalSelecionado!.foto,
-                                      width: 92,
-                                      height: 105,
-                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) return child;
-                                        return SizedBox(
-                                          width: 92,
-                                          height: 105,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              value:
-                                                  loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                        return SizedBox(
-                                          width: 92,
-                                          height: 105,
-                                          child: const Icon(Icons.error_outline, color: Colors.grey),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 15.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(provedor.animalSelecionado!.nomedoanimal, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                          Text(provedor.animalSelecionado!.racadoanimal),
-                                          Text(provedor.animalSelecionado!.sexo),
-                                          Text(
-                                            "${(DateTime.now().year - DateTime.parse(DateFormatter.trocarFormatacaoData(provedor.animalSelecionado!.datanascianimal, pattern: '/', to: '-')).year).toString()} anos",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-              ],
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(10),
-                itemCount: provas.length,
-                itemBuilder: (context, index) {
-                  var prova = provas[index];
-
-                  return CardProvas(
-                    key: Key(prova.id),
-                    prova: prova,
-                    evento: evento,
-                    nomesCabeceira: nomesCabeceira,
-                    idEvento: evento.id,
-                    modalidade: widget.modalidade,
-                    provasCarrinho: provasCarrinho,
-                    adicionarAvulsaNoCarrinho: (quantidade, prova, evento) {
-                      widget.adicionarAvulsaNoCarrinho(quantidade, prova, evento, widget.modalidade);
-                    },
-                    adicionarNoCarrinho: (prova, evento, quantParceiros) {
-                      widget.adicionarNoCarrinho(prova, evento, quantParceiros, widget.modalidade);
-                    },
-                    removerDoCarrinho: (prova) {
-                      setState(() {
-                        provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
-                      });
-                    },
+    return CustomScrollView(
+      key: PageStorageKey(widget.modalidade),
+      physics: const BouncingScrollPhysics(),
+      // padding: const EdgeInsets.only(bottom: 100), // Slivers handle padding differently
+      slivers: [
+        if (widget.modalidade == '3') SliverToBoxAdapter(child: _buildAnimalSelectionCard(provedor)),
+        if (widget.provas.isEmpty)
+          SliverFillRemaining(child: _buildEmptyState())
+        else
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final prova = widget.provas[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: CardProvas(
+                      prova: prova,
+                      evento: widget.evento,
+                      nomesCabeceira: widget.nomesCabeceira,
+                      idEvento: widget.evento.id,
+                      modalidade: widget.modalidade,
+                      provasCarrinho: widget.provasCarrinho,
+                      adicionarNoCarrinho: (prova, evento, quantParceiros) => widget.adicionarNoCarrinho(prova, evento, quantParceiros, widget.modalidade),
+                      adicionarAvulsaNoCarrinho: (quantidade, prova, evento) => widget.adicionarAvulsaNoCarrinho(quantidade, prova, evento, widget.modalidade),
+                      removerDoCarrinho: (p) => setState(() => widget.provasCarrinho.remove(p)),
+                    ),
                   );
                 },
+                childCount: widget.provas.length,
               ),
-              if (provas.isEmpty) ...[
-                const Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text('Não há provas para essa modalidade.', style: TextStyle(fontSize: 16)),
-                  ),
-                ),
-              ],
-              Padding(
-                padding: EdgeInsets.only(top: provas.length > 4 ? 50 : 300),
-                child: Card(
-                  margin: EdgeInsets.zero,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(bottom: 10),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                    ),
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: provasCarrinho.isNotEmpty ? 110 : (!kIsWeb && Platform.isAndroid ? 50 : 20)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.pin_drop_outlined, size: 20),
-                                  Opacity(
-                                    opacity: 0.6,
-                                    child: Text(" ${evento.nomeCidade}", style: const TextStyle(fontSize: 15)),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 10),
-                              Row(
-                                children: [
-                                  const Icon(Icons.date_range, size: 20),
-                                  Opacity(
-                                    opacity: 0.6,
-                                    child: Text(" ${DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento))}", style: const TextStyle(fontSize: 15)),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          const Text('Descrição do evento', style: TextStyle(fontSize: 16)),
-                          if (evento.descricao1.isNotEmpty) ...[
-                            const SizedBox(height: 15),
-                            Text(evento.descricao1),
-                          ],
-                          if (evento.descricao2.isNotEmpty) ...[
-                            const SizedBox(height: 10),
-                            Text(evento.descricao2),
-                          ],
-                          if (evento.descricao1.isEmpty && evento.descricao2.isEmpty) ...[
-                            const SizedBox(height: 15),
-                            const Text('...'),
-                          ],
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: width / 2.4,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    abrirTermosDeUso();
-                                  },
-                                  style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                                    elevation: WidgetStatePropertyAll(0),
-                                    side: WidgetStatePropertyAll<BorderSide>(
-                                      BorderSide(width: 1, color: Colors.grey),
-                                    ),
-                                  ),
-                                  child: const Text('Termos de Uso', style: TextStyle(color: Colors.grey)),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              SizedBox(
-                                width: width / 2.4,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    abrirDenunciar();
-                                  },
-                                  style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(Colors.transparent),
-                                    elevation: WidgetStatePropertyAll(0),
-                                    side: WidgetStatePropertyAll<BorderSide>(
-                                      BorderSide(width: 1, color: Colors.red),
-                                    ),
-                                  ),
-                                  child: const Text('Denunciar', style: TextStyle(color: Colors.red)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        );
-      },
+        SliverToBoxAdapter(child: _buildEventFooterInfo()),
+        const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
+      ],
     );
   }
+
+  Widget _buildAnimalSelectionCard(ProvasProvedor provedor) {
+    final animal = provedor.animalSelecionado;
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: InkWell(
+        onTap: selecionarAnimal,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+            border: Border.all(color: animal == null ? const Color(0xFFF71808).withOpacity(0.3) : Colors.transparent),
+          ),
+          child: Row(
+            children: [
+              _buildAnimalImage(animal),
+              const SizedBox(width: 16),
+              Expanded(
+                child: animal == null
+                    ? const Text('Toque para selecionar um animal', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(animal.nomedoanimal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                          Text('${animal.racadoanimal} • ${animal.sexo}', style: TextStyle(color: Colors.grey.shade600)),
+                        ],
+                      ),
+              ),
+              const Icon(Icons.swap_horiz, color: Color(0xFFF71808)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimalImage(ModeloAnimal? animal) {
+    return Container(
+      width: 70,
+      height: 70,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: animal == null
+          ? const Icon(Icons.pets, size: 30, color: Colors.grey)
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(animal.foto, fit: BoxFit.cover),
+            ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 60),
+      child: Column(
+        children: [
+          Icon(Icons.event_busy, size: 80, color: Colors.grey.shade300),
+          const SizedBox(height: 16),
+          const Text('Nenhuma prova nesta modalidade.', style: TextStyle(color: Colors.grey, fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventFooterInfo() {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Divider(color: Colors.grey.shade300),
+          const SizedBox(height: 16),
+          Text(widget.evento.descricao1, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600, height: 1.5)),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(onPressed: abrirDenunciar, icon: const Icon(Icons.flag, color: Colors.red), label: const Text('Denunciar Evento', style: TextStyle(color: Colors.red))),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void selecionarAnimal() async {
+    final animal = await Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true));
+    if (animal != null) {
+      context.read<ProvasProvedor>().animalSelecionado = animal as ModeloAnimal;
+    }
+  }
+
+  void abrirDenunciar() => showDialog(context: context, builder: (_) => ModalDenunciar());
 }

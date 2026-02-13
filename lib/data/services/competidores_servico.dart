@@ -20,7 +20,7 @@ class CompetidoresServico {
 
     if (sucesso == true) {
       return List<CompetidoresModelo>.from(dados.map((elemento) {
-        return CompetidoresModelo.fromJson(elemento);
+        return CompetidoresModelo.fromMap(elemento);
       }));
     } else {
       return [];
@@ -38,7 +38,7 @@ class CompetidoresServico {
 
     if (sucesso == true) {
       return List<CompetidoresModelo>.from(dados.map((elemento) {
-        return CompetidoresModelo.fromJson(elemento);
+        return CompetidoresModelo.fromMap(elemento);
       }));
     } else {
       return [];

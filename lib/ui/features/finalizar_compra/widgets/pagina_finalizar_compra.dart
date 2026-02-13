@@ -26,7 +26,13 @@ class PaginaFinalizarCompraArgumentos {
   final String? idVenda;
   final String? metodoPagamento;
 
-  PaginaFinalizarCompraArgumentos({required this.provas, required this.idEvento, this.idVenda, this.metodoPagamento, this.editarVenda});
+  PaginaFinalizarCompraArgumentos({
+    required this.provas,
+    required this.idEvento,
+    this.idVenda,
+    this.metodoPagamento,
+    this.editarVenda,
+  });
 }
 
 class PaginaFinalizarCompra extends StatefulWidget {
@@ -39,7 +45,6 @@ class PaginaFinalizarCompra extends StatefulWidget {
 
 class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   bool concorda = false;
-
   String metodoPagamento = "0";
   int parcela = 1;
   CartaoModelo? cartaoSelecionado;
@@ -48,51 +53,69 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var listarInformacoesStore = context.read<ListarInformacoesStore>();
       var usuarioProvider = context.read<UsuarioProvider>();
 
       listarInformacoesStore
-          .listarInformacoes(usuarioProvider.usuario, widget.argumentos.provas, widget.argumentos.idEvento, widget.argumentos.editarVenda ?? false, widget.argumentos.idVenda ?? '')
+          .listarInformacoes(
+        usuarioProvider.usuario,
+        widget.argumentos.provas,
+        widget.argumentos.idEvento,
+        widget.argumentos.editarVenda ?? false,
+        widget.argumentos.idVenda ?? '',
+      )
           .then((response) {
         if (metodoPagamento == '0' && (response.pagamentos.firstOrNull?.id ?? '0') != '0') {
-          metodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
+          setState(() {
+            metodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
+          });
         }
       });
-
-      // finalizarCompraStore.addListener(() {
-      //   FinalizarCompraEstado state = finalizarCompraStore.value;
-      // });
     });
   }
 
   bool permitirClickConcluir() {
     var finalizarCompraStore = context.read<FinalizarCompraStore>();
-    if (finalizarCompraStore.carregando) {
-      return false;
-    }
+    if (finalizarCompraStore.carregando) return false;
 
     if (concorda && metodoPagamento != '0') {
-      if (metodoPagamento == '3' && (cartaoSelecionado != null && parcela != -1)) {
-        return true;
-      } else if (metodoPagamento != '3') {
-        return true;
+      if (metodoPagamento == '3') {
+        return cartaoSelecionado != null && parcela != -1;
       }
+      return true;
     }
-
     return false;
   }
 
   void abrirTermosDeUso() {
     showDialog(
       context: context,
-      builder: (context) {
-        return const Dialog(
-          child: TermosDeUso(),
-        );
-      },
+      builder: (context) => const Dialog(child: TermosDeUso()),
     );
+  }
+
+  String _removeSymbols(String input) {
+    return input.replaceAll(RegExp(r'[^\p{L}\s]', unicode: true), '');
+  }
+
+  double retornarValorTotal(ListarInformacoesModelo dados) {
+    double valorTotal = double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva);
+    double desconto = double.parse(dados.valorDescontoPorProva ?? '0');
+
+    if (metodoPagamento == '3') {
+      valorTotal += double.parse(dados.taxaCartao);
+    }
+
+    if (dados.valorAdicional != null) {
+      double valorAdicional = double.parse(dados.valorAdicional!.valor);
+      if (dados.valorAdicional!.tipo == 'soma') {
+        valorTotal += valorAdicional;
+      } else if (dados.valorAdicional!.tipo == 'diminuir') {
+        valorTotal -= valorAdicional;
+      }
+    }
+    return valorTotal - desconto;
   }
 
   void salvar(ListarInformacoesModelo dados) async {
@@ -102,7 +125,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     RetornoCompraModelo? dadosRetornoVar;
     String mensagemRetorno = '';
 
-    if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
+    if (widget.argumentos.editarVenda == true) {
       var (:dadosRetorno, :mensagem) = await finalizarCompraStore.editar(
         usuarioProvider.usuario,
         FormularioEditarCompraModelo(
@@ -120,7 +143,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           cartao: cartaoSelecionado,
         ),
       );
-
       dadosRetornoVar = dadosRetorno;
       mensagemRetorno = mensagem;
     } else {
@@ -142,549 +164,337 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           cartao: cartaoSelecionado,
         ),
       );
-
       dadosRetornoVar = dadosRetorno;
       mensagemRetorno = mensagem;
     }
 
     if (dadosRetornoVar != null && dadosRetornoVar.sucesso) {
-      if (widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text('Sucesso ao editar a forma de pagamento dessa inscrição.'),
-            backgroundColor: Colors.green,
-            action: SnackBarAction(
-              label: 'OK',
-              onPressed: () {},
-            ),
-          ));
-          Navigator.pushReplacementNamed(
-            context,
-            AppRotas.sucessoCompra,
-            arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar.dados, metodoPagamento: metodoPagamento),
-          );
-        }
-      } else {
-        if (mounted) {
-          Navigator.pushReplacementNamed(
-            context,
-            AppRotas.sucessoCompra,
-            arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar.dados, metodoPagamento: metodoPagamento),
-          );
-        }
-      }
-    } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(mensagemRetorno),
-          backgroundColor: Colors.red,
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {},
-          ),
-        ));
-      }
-    }
-  }
-
-  double retornarValorTotal(ListarInformacoesModelo dados) {
-    double valorTotal = double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva);
-
-    double desconto = double.parse(dados.valorDescontoPorProva ?? '0');
-
-    if (metodoPagamento == '3') {
-      valorTotal = valorTotal + double.parse(dados.taxaCartao);
-    }
-
-    if (dados.valorAdicional != null) {
-      if (dados.valorAdicional!.tipo == 'soma') {
-        valorTotal = valorTotal + double.parse(dados.valorAdicional!.valor);
-      } else if (dados.valorAdicional!.tipo == 'diminuir') {
-        valorTotal = valorTotal - double.parse(dados.valorAdicional!.valor);
-      }
-    }
-
-    return valorTotal - desconto;
-  }
-
-  void abrirModalCartoes() {
-    showModalBottomSheet(
-      context: context,
-      useSafeArea: true,
-      showDragHandle: true,
-      builder: (context) {
-        return ModalSelecionarCartao(
-          cartaoSelecionado: cartaoSelecionado,
-          parcela: parcela,
-          cartaoMemoria: cartaoMemoria,
-          aoMudarCartao: (cartao) {
-            setState(() {
-              cartaoSelecionado = cartao;
-            });
-          },
+        Navigator.pushReplacementNamed(
+          context,
+          AppRotas.sucessoCompra,
+          arguments: PaginaSucessoCompraArgumentos(dados: dadosRetornoVar.dados, metodoPagamento: metodoPagamento),
         );
-      },
-    );
+      }
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagemRetorno), backgroundColor: Colors.red));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var finalizarCompraStore = context.read<FinalizarCompraStore>();
-    var listarInformacoesStore = context.read<ListarInformacoesStore>();
-    var usuarioProvider = context.read<UsuarioProvider>();
+    var listarStore = context.watch<ListarInformacoesStore>();
+    var finalizarStore = context.watch<FinalizarCompraStore>();
+
+    if (listarStore.carregando) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (listarStore.dados == null) return const Scaffold(body: Center(child: Text('Erro ao carregar.')));
+
+    final dados = listarStore.dados!;
 
     return Scaffold(
-      appBar: AppBarSombra(
-        titulo: Text((widget.argumentos.editarVenda != null && widget.argumentos.editarVenda!) ? 'Editar Venda' : "Finalizar Compra"),
-      ),
-      body: ListenableBuilder(
-        listenable: listarInformacoesStore,
-        builder: (context, _) {
-          if (listarInformacoesStore.carregando) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (listarInformacoesStore.dados == null) {
-            return const Text('Erro ao listar informações.');
-          }
-
-          ListarInformacoesModelo dados = listarInformacoesStore.dados!;
-
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: RefreshIndicator(
-              onRefresh: () async {
-                listarInformacoesStore.listarInformacoes(
-                  usuarioProvider.usuario,
-                  widget.argumentos.provas,
-                  widget.argumentos.idEvento,
-                  widget.argumentos.editarVenda ?? false,
-                  widget.argumentos.idVenda ?? '',
-                );
-              },
+      appBar: AppBarSombra(titulo: Text(widget.argumentos.editarVenda == true ? 'Editar Venda' : "Finalizar Compra")),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            bottom: 230, 
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    children: [
-                      const SizedBox(width: double.infinity, height: 0),
-                      const Text('Métodos de Pagamento', style: TextStyle(fontSize: 16)),
-                      const SizedBox(width: double.infinity, height: 10),
-                      if (dados.pagamentos.isEmpty) ...[
-                        SizedBox(
-                          width: width,
-                          child: const Center(child: Text('Nenhum pagamento está diponivel.')),
+                  _buildSelecaoPagamento(dados, width),
+                  const SizedBox(height: 20),
+                  _buildResumoGeral(dados),
+                  if (metodoPagamento == '3') ...[
+                    const SizedBox(height: 20),
+                    _buildSelecaoParcelas(dados),
+                    const SizedBox(height: 12),
+                    CardCartao(
+                      cartao: cartaoSelecionado ?? CartaoModelo(nomeCartao: '', numeroCartao: '', expiracaoCartao: '', cpfTitularCartao: ''),
+                      aparecerSeta: true,
+                      aparecerVazio: cartaoSelecionado == null,
+                      tamanhoCard: width - 24,
+                      aparecerSombra: 1,
+                      aoClicar: () => showModalBottomSheet(
+                        context: context,
+                        useSafeArea: true,
+                        builder: (context) => ModalSelecionarCartao(
+                          cartaoSelecionado: cartaoSelecionado,
+                          parcela: parcela,
+                          cartaoMemoria: cartaoMemoria,
+                          aoMudarCartao: (c) => setState(() => cartaoSelecionado = c),
                         ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          _buildRodapeDetalhado(dados, width, finalizarStore),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelecaoPagamento(ListarInformacoesModelo dados, double width) {
+    return Column(
+      children: [
+        const Text('Forma de Pagamento', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: width,
+          child: SegmentedButton<String>(
+            style: SegmentedButton.styleFrom(
+              selectedBackgroundColor: const Color(0xFFF71808),
+              selectedForegroundColor: Colors.white,
+              backgroundColor: Colors.grey.shade100,
+              foregroundColor: Colors.black87,
+              side: BorderSide(color: Colors.grey.shade300),
+            ),
+            segments: dados.pagamentos.map((p) => ButtonSegment(value: p.id, label: Text(p.nome))).toList(),
+            selected: {metodoPagamento},
+            showSelectedIcon: false,
+            onSelectionChanged: (s) => setState(() {
+              metodoPagamento = s.first;
+              parcela = (metodoPagamento == '3') ? 1 : -1;
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResumoGeral(ListarInformacoesModelo dados) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.receipt_long, color: Color(0xFFF71808)),
+              SizedBox(width: 10),
+              Text('Resumo do Pedido', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const Divider(height: 20),
+          
+          // INFORMAÇÕES DO EVENTO
+          Row(
+            children: [
+              const Icon(Icons.event, size: 18, color: Colors.grey),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  dados.evento.nomeEvento,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+              const SizedBox(width: 8),
+              Text(
+                dados.evento.dataEvento,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+              ),
+            ],
+          ),
+          const Divider(height: 24),
+
+          // FILIAÇÃO EM DESTAQUE
+          if (dados.valorAdicional != null) ...[
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.card_membership, color: Colors.blue),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Filiação', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
+                        if (dados.valorAdicional!.titulo.isNotEmpty)
+                          Text(dados.valorAdicional!.titulo, style: const TextStyle(fontSize: 12)),
                       ],
-                      if (dados.pagamentos.isNotEmpty) ...[
-                        SizedBox(
-                          width: width,
-                          child: SegmentedButton(
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                                (Set<WidgetState> states) {
-                                  if (states.contains(WidgetState.selected)) {
-                                    return const Color.fromARGB(222, 247, 24, 8);
-                                  }
-                                  return Colors.transparent;
-                                },
-                              ),
-                              foregroundColor: WidgetStateProperty.resolveWith<Color>(
-                                (Set<WidgetState> states) {
-                                  if (states.contains(WidgetState.selected)) {
-                                    return Colors.white;
-                                  }
-                                  return Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
-                                },
-                              ),
-                            ),
-                            segments: dados.pagamentos
-                                .map(
-                                  (itemPagamento) => ButtonSegment(
-                                    value: itemPagamento.id,
-                                    tooltip: "${itemPagamento.id}${itemPagamento.nome}",
-                                    label: Text(
-                                      itemPagamento.nome,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            selected: {metodoPagamento},
-                            showSelectedIcon: false,
-                            onSelectionChanged: (pagamento) {
-                              if (pagamento.first == '1' || pagamento.first == '4' || pagamento.first == '5' || pagamento.first == '6' || pagamento.first == '7') {
-                                if (dados.ativoPagamento == 'Sim') {
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext contextDialog) {
-                                      return AlertDialog(
-                                        title: const Text('Alerta'),
-                                        content: SingleChildScrollView(
-                                          child: ListBody(
-                                            children: <Widget>[
-                                              RichText(
-                                                textAlign: TextAlign.justify,
-                                                text: TextSpan(
-                                                  text: 'O pagamento deve ser realizado em até',
-                                                  style: TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white),
-                                                  children: <TextSpan>[
-                                                    TextSpan(text: " ${dados.tempoCancel} minutos", style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                    const TextSpan(text: '. Ápos isso, você precisa'),
-                                                    const TextSpan(text: ' gerar o pagamento novamente', style: TextStyle(color: Colors.red)),
-                                                    const TextSpan(text: '.'),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('OK'),
-                                            onPressed: () {
-                                              setState(() {
-                                                if (pagamento.first != '3') {
-                                                  parcela = -1;
-                                                } else {
-                                                  parcela = 1;
-                                                }
-
-                                                metodoPagamento = pagamento.first;
-                                              });
-                                              Navigator.of(contextDialog).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-
-                                  return;
-                                }
-                              }
-
-                              setState(() {
-                                if (pagamento.first != '3') {
-                                  parcela = -1;
-                                } else {
-                                  parcela = 1;
-                                }
-
-                                metodoPagamento = pagamento.first;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                      if (metodoPagamento == '3') ...[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: SizedBox(
-                              height: 55,
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(width: 5);
-                                },
-                                itemCount: dados.parcelasDisponiveisCartao.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  var itemParcela = dados.parcelasDisponiveisCartao[index];
-
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: parcela == itemParcela.parcela ? Colors.green : Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (parcela == itemParcela.parcela) {
-                                          setState(() {
-                                            parcela = -1;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            parcela = itemParcela.parcela;
-                                          });
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              itemParcela.parcela == 1
-                                                  ? 'Crédito á vista'
-                                                  : '${itemParcela.parcela}x de ${(retornarValorTotal(dados) / itemParcela.parcela).obterReal()}',
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            Text(
-                                              retornarValorTotal(dados).obterReal(),
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            children: [
-                              CardCartao(
-                                cartao: cartaoSelecionado ?? CartaoModelo(nomeCartao: '', numeroCartao: '', expiracaoCartao: '', cpfTitularCartao: ''),
-                                aparecerSeta: true,
-                                aparecerVazio: cartaoSelecionado == null,
-                                tamanhoCard: width - 20,
-                                aparecerSombra: 1,
-                                aoClicar: () {
-                                  abrirModalCartoes();
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Subtotal',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            CurrencyFormatter.coverterEmReal.format(double.parse(dados.prova.valor.toString())),
-                            style: const TextStyle(fontSize: 16, color: Colors.green),
-                          ),
-                        ],
-                      ),
-                      if (double.parse(dados.taxaCartao) != 0 && metodoPagamento == '3') ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Taxa Cartão',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              "+ ${double.parse(dados.taxaCartao).obterReal()}",
-                              style: const TextStyle(fontSize: 16, color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
-                      if (double.parse(dados.prova.taxaProva) != 0) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Taxa Admin.',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              "+ ${double.parse(dados.prova.taxaProva).obterReal()}",
-                              style: const TextStyle(fontSize: 16, color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
-                      if (parcela != -1 && metodoPagamento == '3') ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Parcelas',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              parcela == 1 ? 'Crédito á vista' : "${parcela}x de ${(retornarValorTotal(dados) / parcela).obterReal()}",
-                              style: const TextStyle(fontSize: 16, color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
-                      if (dados.valorAdicional != null) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  dados.valorAdicional!.titulo,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(width: 5),
-                                const Tooltip(
-                                  triggerMode: TooltipTriggerMode.tap,
-                                  showDuration: Duration(minutes: 5),
-                                  message: 'Esse valor é PAGO somente UMA VEZ, caso desejar comprar outras inscrições, você deve pagar essa inscrição primeiro para continuar.',
-                                  child: Icon(Icons.info_outline, size: 16),
-                                )
-                              ],
-                            ),
-                            Text(
-                              "${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${double.parse(dados.valorAdicional!.valor).obterReal()}",
-                              style: const TextStyle(fontSize: 16, color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
-                      if (double.parse(dados.valorDescontoPorProva ?? '0') > 0) ...[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Desconto',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              "- ${double.parse(dados.valorDescontoPorProva ?? '0').obterReal()}",
-                              style: const TextStyle(fontSize: 16, color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'Total: ',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      retornarValorTotal(dados).obterReal(),
-                                      style: const TextStyle(fontSize: 16, color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                                ListenableBuilder(
-                                  listenable: finalizarCompraStore,
-                                  builder: (context, _) {
-                                    return AbsorbPointer(
-                                      absorbing: !permitirClickConcluir(),
-                                      child: SizedBox(
-                                        width: 150,
-                                        height: 50,
-                                        child: ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor: WidgetStateProperty.all(
-                                              permitirClickConcluir() ? const Color.fromARGB(255, 247, 24, 8) : Colors.grey,
-                                            ),
-                                            foregroundColor: WidgetStateProperty.all(Colors.white),
-                                            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                              const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(Radius.circular(5)),
-                                              ),
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            if (finalizarCompraStore.carregando) {
-                                              return;
-                                            }
-
-                                            salvar(dados);
-                                          },
-                                          child: finalizarCompraStore.carregando
-                                              ? const SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircularProgressIndicator(
-                                                    color: Colors.white,
-                                                    strokeWidth: 2,
-                                                  ),
-                                                )
-                                              : const Text(
-                                                  'Concluir',
-                                                  style: TextStyle(fontSize: 16),
-                                                ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      SafeArea(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              concorda = concorda ? false : true;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: concorda,
-                                onChanged: (novoValor) {
-                                  setState(() {
-                                    concorda = novoValor!;
-                                  });
-                                },
-                              ),
-                              SizedBox(
-                                width: width - 100,
-                                child: RichText(
-                                  textAlign: TextAlign.left,
-                                  softWrap: true,
-                                  text: TextSpan(
-                                    text: "Li e aceito o contrato, a politica de privacidade e os ",
-                                    style: Theme.of(context).textTheme.titleSmall,
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: ' Termos de uso',
-                                        style: const TextStyle(color: Colors.red, fontSize: 16),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            abrirTermosDeUso();
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    '${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${double.parse(dados.valorAdicional!.valor).obterReal()}',
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
                   ),
                 ],
               ),
             ),
-          );
-        },
+            const SizedBox(height: 16),
+          ],
+
+          // LISTA DE PROVAS COM COMPETIDORES
+          const Text('Inscrições', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey)),
+          const SizedBox(height: 10),
+          ...widget.argumentos.provas.map((prova) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(child: Text(prova.nomeProva, style: const TextStyle(fontWeight: FontWeight.w600))),
+                        Text(double.parse(prova.valor).obterReal()),
+                      ],
+                    ),
+                    if (prova.competidores != null && prova.competidores!.isNotEmpty)
+                      ...prova.competidores!.map((c) => Padding(
+                            padding: const EdgeInsets.only(left: 12, top: 4),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.person_outline, size: 14, color: Colors.grey),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    c.id == '0' ? 'Sorteio' : c.nome,
+                                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                  ],
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelecaoParcelas(ListarInformacoesModelo dados) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Parcelamento', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 60,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: dados.parcelasDisponiveisCartao.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final p = dados.parcelasDisponiveisCartao[index];
+              bool isSelected = parcela == p.parcela;
+              return InkWell(
+                onTap: () => setState(() => parcela = p.parcela),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: isSelected ? const Color(0xFFF71808).withOpacity(0.05) : Colors.white,
+                    border: Border.all(color: isSelected ? const Color(0xFFF71808) : Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(child: Text('${p.parcela}x de ${(retornarValorTotal(dados) / p.parcela).obterReal()}')),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRodapeDetalhado(ListarInformacoesModelo dados, double width, FinalizarCompraStore store) {
+    return Positioned(
+      bottom: 0, left: 0, right: 0,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -2))],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _linhaPrecoRodape('Subtotal', double.parse(dados.prova.valor).obterReal()),
+            if (metodoPagamento == '3')
+              _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
+            if (double.parse(dados.prova.taxaProva) > 0)
+              _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
+            if (double.parse(dados.valorDescontoPorProva ?? '0') > 0)
+              _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
+            
+            const Divider(height: 16),
+            _linhaPrecoRodape('Total', retornarValorTotal(dados).obterReal(), negrito: true, tamanho: 18, cor: const Color(0xFFF71808)),
+            
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity, height: 48,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: permitirClickConcluir() ? const Color(0xFFF71808) : Colors.grey.shade300,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: permitirClickConcluir() ? () => salvar(dados) : null,
+                child: store.carregando 
+                  ? const CircularProgressIndicator(color: Colors.white) 
+                  : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              ),
+            ),
+            
+            InkWell(
+              onTap: () => setState(() => concorda = !concorda),
+              child: Row(
+                children: [
+                  Checkbox(value: concorda, activeColor: const Color(0xFFF71808), onChanged: (v) => setState(() => concorda = v!)),
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Li e aceito os ",
+                        style: const TextStyle(color: Colors.black87, fontSize: 12),
+                        children: [
+                          TextSpan(
+                            text: "Termos de Uso",
+                            style: const TextStyle(color: Color(0xFFF71808), fontWeight: FontWeight.bold),
+                            recognizer: TapGestureRecognizer()..onTap = abrirTermosDeUso,
+                          ),
+                          const TextSpan(text: " e Contrato."),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _linhaPrecoRodape(String label, String valor, {Color? cor, bool negrito = false, double tamanho = 14}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(fontSize: tamanho, fontWeight: negrito ? FontWeight.bold : FontWeight.normal)),
+          Text(valor, style: TextStyle(fontSize: tamanho, fontWeight: FontWeight.bold, color: cor)),
+        ],
       ),
     );
   }

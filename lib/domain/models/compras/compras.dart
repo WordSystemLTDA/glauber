@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
+
 import 'package:provadelaco/domain/models/parceiros_compra_modelo.dart';
 import 'package:provadelaco/domain/models/prova/prova.dart';
 
@@ -69,7 +71,6 @@ class ComprasModelo extends Equatable {
     required this.idFormaPagamento,
     required this.quandoInscricaoNaoPaga,
     required this.mensagemQuandoInscricaoNaoPaga,
-    // required this.permitirEditarParceiros,
     required this.permVincularParceiro,
     this.pixVencido,
     required this.provas,
@@ -79,7 +80,7 @@ class ComprasModelo extends Equatable {
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'valorIngresso': valorIngresso,
       'valorTaxa': valorTaxa,
@@ -107,10 +108,9 @@ class ComprasModelo extends Equatable {
       'idFormaPagamento': idFormaPagamento,
       'quandoInscricaoNaoPaga': quandoInscricaoNaoPaga,
       'mensagemQuandoInscricaoNaoPaga': mensagemQuandoInscricaoNaoPaga,
-      // 'permitirEditarParceiros': permitirEditarParceiros,
       'permVincularParceiro': permVincularParceiro,
       'pixVencido': pixVencido,
-      'provas': provas.map((x) => x.toJson()).toList(),
+      'provas': provas.map((x) => x.toMap()).toList(),
       'parceiros': parceiros.map((x) => x.toMap()).toList(),
       'idCabeceira': idCabeceira,
       'reembolso': reembolso,
@@ -119,55 +119,159 @@ class ComprasModelo extends Equatable {
 
   factory ComprasModelo.fromMap(Map<String, dynamic> map) {
     return ComprasModelo(
-      id: map['id'] as String,
-      valorIngresso: map['valorIngresso'] as String,
-      valorTaxa: map['valorTaxa'] as String,
-      valorDesconto: map['valorDesconto'] as String,
-      valorTotal: map['valorTotal'] as String,
-      valorFiliacao: map['valorFiliacao'] as String,
-      status: map['status'] as String,
-      codigoQr: map['codigoQr'] as String,
-      codigoPIX: map['codigoPIX'] as String,
-      idCliente: map['idCliente'] as String,
-      dataCompra: map['dataCompra'] as String,
-      horaCompra: map['horaCompra'] as String,
-      pago: map['pago'] as String,
-      nomeProva: map['nomeProva'] as String,
-      nomeEmpresa: map['nomeEmpresa'] as String,
-      idEvento: map['idEvento'] as String,
-      idEmpresa: map['idEmpresa'] as String,
-      nomeEvento: map['nomeEvento'] as String,
-      dataEvento: map['dataEvento'] as String,
-      horaInicio: map['horaInicio'] as String,
-      horaInicioF: map['horaInicioF'] as String,
-      horaTermino: map['horaTermino'] as String,
-      numeroCelular: map['numeroCelular'] as String,
-      formaPagamento: map['formaPagamento'] as String,
-      idFormaPagamento: map['idFormaPagamento'] as String,
-      reembolso: map['reembolso'] as String,
-      quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] as String,
-      mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] as String,
-      // permitirEditarParceiros: map['permitirEditarParceiros'] as String,
-      permVincularParceiro: map['permVincularParceiro'] as String,
-      pixVencido: map['pixVencido'] != null ? map['pixVencido'] as String : null,
-      provas: List<ProvaModelo>.from(
-        (map['provas'] as List<dynamic>).map<ProvaModelo>(
-          (x) => ProvaModelo.fromJson(x as Map<String, dynamic>),
-        ),
-      ),
-      parceiros: List<ParceirosCompraModelo>.from(
-        (map['parceiros'] as List<dynamic>).map<ParceirosCompraModelo>(
-          (x) => ParceirosCompraModelo.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      idCabeceira: map['idCabeceira'] != null ? map['idCabeceira'] as String : null,
+      id: map['id'] ?? '',
+      valorIngresso: map['valorIngresso'] ?? '',
+      valorTaxa: map['valorTaxa'] ?? '',
+      valorDesconto: map['valorDesconto'] ?? '',
+      valorTotal: map['valorTotal'] ?? '',
+      valorFiliacao: map['valorFiliacao'] ?? '',
+      status: map['status'] ?? '',
+      codigoQr: map['codigoQr'] ?? '',
+      codigoPIX: map['codigoPIX'] ?? '',
+      idCliente: map['idCliente'] ?? '',
+      dataCompra: map['dataCompra'] ?? '',
+      horaCompra: map['horaCompra'] ?? '',
+      pago: map['pago'] ?? '',
+      nomeProva: map['nomeProva'] ?? '',
+      nomeEmpresa: map['nomeEmpresa'] ?? '',
+      idEvento: map['idEvento'] ?? '',
+      idEmpresa: map['idEmpresa'] ?? '',
+      nomeEvento: map['nomeEvento'] ?? '',
+      dataEvento: map['dataEvento'] ?? '',
+      horaInicio: map['horaInicio'] ?? '',
+      horaInicioF: map['horaInicioF'] ?? '',
+      horaTermino: map['horaTermino'] ?? '',
+      numeroCelular: map['numeroCelular'] ?? '',
+      formaPagamento: map['formaPagamento'] ?? '',
+      idFormaPagamento: map['idFormaPagamento'] ?? '',
+      quandoInscricaoNaoPaga: map['quandoInscricaoNaoPaga'] ?? '',
+      mensagemQuandoInscricaoNaoPaga: map['mensagemQuandoInscricaoNaoPaga'] ?? '',
+      permVincularParceiro: map['permVincularParceiro'] ?? '',
+      pixVencido: map['pixVencido'],
+      provas: List<ProvaModelo>.from(map['provas']?.map((x) => ProvaModelo.fromMap(x))),
+      parceiros: List<ParceirosCompraModelo>.from(map['parceiros']?.map((x) => ParceirosCompraModelo.fromMap(x))),
+      idCabeceira: map['idCabeceira'],
+      reembolso: map['reembolso'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ComprasModelo.fromJson(String source) => ComprasModelo.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ComprasModelo.fromJson(String source) => ComprasModelo.fromMap(json.decode(source));
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props {
+    return [
+      id,
+      valorIngresso,
+      valorTaxa,
+      valorDesconto,
+      valorTotal,
+      valorFiliacao,
+      status,
+      codigoQr,
+      codigoPIX,
+      idCliente,
+      dataCompra,
+      horaCompra,
+      pago,
+      nomeProva,
+      nomeEmpresa,
+      idEvento,
+      idEmpresa,
+      nomeEvento,
+      dataEvento,
+      horaInicio,
+      horaInicioF,
+      horaTermino,
+      numeroCelular,
+      formaPagamento,
+      idFormaPagamento,
+      quandoInscricaoNaoPaga,
+      mensagemQuandoInscricaoNaoPaga,
+      permVincularParceiro,
+      pixVencido,
+      provas,
+      parceiros,
+      idCabeceira,
+      reembolso,
+    ];
+  }
+
+  ComprasModelo copyWith({
+    String? id,
+    String? valorIngresso,
+    String? valorTaxa,
+    String? valorDesconto,
+    String? valorTotal,
+    String? valorFiliacao,
+    String? status,
+    String? codigoQr,
+    String? codigoPIX,
+    String? idCliente,
+    String? dataCompra,
+    String? horaCompra,
+    String? pago,
+    String? nomeProva,
+    String? nomeEmpresa,
+    String? idEvento,
+    String? idEmpresa,
+    String? nomeEvento,
+    String? dataEvento,
+    String? horaInicio,
+    String? horaInicioF,
+    String? horaTermino,
+    String? numeroCelular,
+    String? formaPagamento,
+    String? idFormaPagamento,
+    String? quandoInscricaoNaoPaga,
+    String? mensagemQuandoInscricaoNaoPaga,
+    String? permVincularParceiro,
+    ValueGetter<String?>? pixVencido,
+    List<ProvaModelo>? provas,
+    List<ParceirosCompraModelo>? parceiros,
+    ValueGetter<String?>? idCabeceira,
+    String? reembolso,
+  }) {
+    return ComprasModelo(
+      id: id ?? this.id,
+      valorIngresso: valorIngresso ?? this.valorIngresso,
+      valorTaxa: valorTaxa ?? this.valorTaxa,
+      valorDesconto: valorDesconto ?? this.valorDesconto,
+      valorTotal: valorTotal ?? this.valorTotal,
+      valorFiliacao: valorFiliacao ?? this.valorFiliacao,
+      status: status ?? this.status,
+      codigoQr: codigoQr ?? this.codigoQr,
+      codigoPIX: codigoPIX ?? this.codigoPIX,
+      idCliente: idCliente ?? this.idCliente,
+      dataCompra: dataCompra ?? this.dataCompra,
+      horaCompra: horaCompra ?? this.horaCompra,
+      pago: pago ?? this.pago,
+      nomeProva: nomeProva ?? this.nomeProva,
+      nomeEmpresa: nomeEmpresa ?? this.nomeEmpresa,
+      idEvento: idEvento ?? this.idEvento,
+      idEmpresa: idEmpresa ?? this.idEmpresa,
+      nomeEvento: nomeEvento ?? this.nomeEvento,
+      dataEvento: dataEvento ?? this.dataEvento,
+      horaInicio: horaInicio ?? this.horaInicio,
+      horaInicioF: horaInicioF ?? this.horaInicioF,
+      horaTermino: horaTermino ?? this.horaTermino,
+      numeroCelular: numeroCelular ?? this.numeroCelular,
+      formaPagamento: formaPagamento ?? this.formaPagamento,
+      idFormaPagamento: idFormaPagamento ?? this.idFormaPagamento,
+      quandoInscricaoNaoPaga: quandoInscricaoNaoPaga ?? this.quandoInscricaoNaoPaga,
+      mensagemQuandoInscricaoNaoPaga: mensagemQuandoInscricaoNaoPaga ?? this.mensagemQuandoInscricaoNaoPaga,
+      permVincularParceiro: permVincularParceiro ?? this.permVincularParceiro,
+      pixVencido: pixVencido != null ? pixVencido() : this.pixVencido,
+      provas: provas ?? this.provas,
+      parceiros: parceiros ?? this.parceiros,
+      idCabeceira: idCabeceira != null ? idCabeceira() : this.idCabeceira,
+      reembolso: reembolso ?? this.reembolso,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ComprasModelo(id: $id, valorIngresso: $valorIngresso, valorTaxa: $valorTaxa, valorDesconto: $valorDesconto, valorTotal: $valorTotal, valorFiliacao: $valorFiliacao, status: $status, codigoQr: $codigoQr, codigoPIX: $codigoPIX, idCliente: $idCliente, dataCompra: $dataCompra, horaCompra: $horaCompra, pago: $pago, nomeProva: $nomeProva, nomeEmpresa: $nomeEmpresa, idEvento: $idEvento, idEmpresa: $idEmpresa, nomeEvento: $nomeEvento, dataEvento: $dataEvento, horaInicio: $horaInicio, horaInicioF: $horaInicioF, horaTermino: $horaTermino, numeroCelular: $numeroCelular, formaPagamento: $formaPagamento, idFormaPagamento: $idFormaPagamento, quandoInscricaoNaoPaga: $quandoInscricaoNaoPaga, mensagemQuandoInscricaoNaoPaga: $mensagemQuandoInscricaoNaoPaga, permVincularParceiro: $permVincularParceiro, pixVencido: $pixVencido, provas: $provas, parceiros: $parceiros, idCabeceira: $idCabeceira, reembolso: $reembolso)';
+  }
 }

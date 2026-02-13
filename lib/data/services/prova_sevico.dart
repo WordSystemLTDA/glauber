@@ -30,7 +30,7 @@ class ProvaServico {
     ModeloAnimal? animalPadrao = jsonData['animalPadrao'] != null ? ModeloAnimal.fromJson(jsonData['animalPadrao']) : null;
 
     List<ModalidadeProvaModelo> provas = List<ModalidadeProvaModelo>.from(jsonData['provas'].map((elemento) {
-      return ModalidadeProvaModelo.fromJson(elemento);
+      return ModalidadeProvaModelo.fromMap(elemento);
     }));
 
     List<NomesCabeceiraModelo> nomesCabeceira = List<NomesCabeceiraModelo>.from(jsonData['nomesCabeceira'].map((elemento) {
@@ -72,6 +72,6 @@ class ProvaServico {
     var response = await client.dio.get(url);
     var jsonData = jsonDecode(response.data);
 
-    return PermitirCompraModelo.fromJson(jsonData);
+    return PermitirCompraModelo.fromMap(jsonData);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart' as cs;
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -22,7 +22,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaProvasArgumentos {
   final String idEvento;
-
   PaginaProvasArgumentos({required this.idEvento});
 }
 
@@ -36,547 +35,298 @@ class PaginaProvas extends StatefulWidget {
 
 class _PaginaProvasState extends State<PaginaProvas> {
   List<ProvaModelo> provasCarrinho = [];
-  final cs.CarouselSliderController _carrosselController = cs.CarouselSliderController();
+  final carousel.CarouselSliderController _carrosselController = carousel.CarouselSliderController();
 
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var provasStore = context.read<ProvasProvedor>();
-      var usuarioProvider = context.read<UsuarioProvider>();
-      provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento, '');
+      context.read<ProvasProvedor>().listar(
+            context.read<UsuarioProvider>().usuario,
+            widget.argumentos.idEvento,
+            '',
+          );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    var provasStore = context.read<ProvasProvedor>();
+    final provasStore = context.watch<ProvasProvedor>();
 
-    var width = MediaQuery.of(context).size.width;
+    double valorTotal = provasCarrinho.fold(0, (total, prova) => total + double.parse(prova.valor));
 
-    double valorTotal = provasCarrinho.fold(0, (previousValue, element) => previousValue + double.parse(element.valor));
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _buildCheckoutButton(valorTotal),
+      body: ListenableBuilder(
+        listenable: provasStore,
+        builder: (context, _) {
+          if (provasStore.carregando) {
+            return const Center(child: CircularProgressIndicator(color: Color(0xFFF71808)));
+          }
 
-    return Consumer<UsuarioProvider>(builder: (context, usuarioProvider, child) {
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Visibility(
-          visible: provasCarrinho.isNotEmpty,
-          child: Stack(
-            children: [
-              SizedBox(
-                width: 250,
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      AppRotas.finalizarCompra,
-                      arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento),
-                    );
-                  },
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  backgroundColor: const Color.fromARGB(255, 247, 24, 8),
-                  label: Column(
-                    children: [
-                      const Text('Confirmar Inscrição', style: TextStyle(fontSize: 11, color: Colors.white)),
-                      Row(
+          final evento = provasStore.evento;
+          if (evento == null) return const Center(child: Text('Evento não encontrado.'));
+
+          return DefaultTabController(
+            length: provasStore.provas.length,
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverAppBar(
+                    expandedHeight: 280.0,
+                    pinned: true,
+                    backgroundColor: const Color(0xFFF71808), // Ensure visible when collapsed
+                    automaticallyImplyLeading: false,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black.withOpacity(0.4),
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ),
+                    ),
+                    flexibleSpace: FlexibleSpaceBar(
+                      centerTitle: false,
+                      titlePadding: const EdgeInsets.only(left: 60, bottom: 16, right: 16),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("${provasCarrinho.length.toString()} ${provasCarrinho.length == 1 ? 'Item' : 'Itens'}"),
-                          const SizedBox(width: 10),
-                          Text(
-                            CurrencyFormatter.coverterEmReal.format(valorTotal),
-                            style: const TextStyle(color: Colors.white),
+                          Flexible(
+                            child: Text(
+                              evento.nomeEvento.toUpperCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          // const SizedBox(width: 10),
+                          Flexible(
+                            child: Text(
+                              DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 10,
+                                shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ],
+                      expandedTitleScale: 1.5, // Less scaling to avoid huge jumps
+                      background: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          carousel.CarouselSlider.builder(
+                            carouselController: _carrosselController,
+                            options: carousel.CarouselOptions(
+                              height: 320.0,
+                              viewportFraction: 1.0,
+                              autoPlay: evento.bannersCarrossel.isNotEmpty,
+                            ),
+                            itemCount: evento.bannersCarrossel.length + 1,
+                            itemBuilder: (context, index, _) {
+                              final banner = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? 0 : index - 1];
+                              return CardBannerCarrossel(evento: evento, bannerCarrossel: banner, index: index);
+                            },
+                          ),
+                          _buildGradientOverlay(),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  SliverToBoxAdapter(child: _buildActionChips(evento)),
+                  if (provasStore.provas.isNotEmpty)
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _SliverAppBarDelegate(
+                        TabBar(
+                          isScrollable: true,
+                          tabAlignment: TabAlignment.start,
+                          labelColor: const Color(0xFFF71808),
+                          unselectedLabelColor: Colors.grey,
+                          indicatorColor: const Color(0xFFF71808),
+                          dividerColor: Colors.transparent,
+                          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          tabs: provasStore.provas.map((m) => Tab(text: m.nomemodalidade)).toList(),
+                        ),
+                      ),
+                    ),
+                ];
+              },
+              body: provasStore.provas.isNotEmpty
+                  ? TabBarView(
+                      children: provasStore.provas.map((modalidade) {
+                        return PageViewProvas(
+                          evento: evento,
+                          animalPadrao: provasStore.animalPadrao,
+                          provas: modalidade.provas,
+                          modalidade: modalidade.modalidade,
+                          nomesCabeceira: provasStore.nomesCabeceira,
+                          provasCarrinho: provasCarrinho,
+                          adicionarNoCarrinho: adicionarNoCarrinho,
+                          adicionarAvulsaNoCarrinho: adicionarAvulsaNoCarrinho,
+                        );
+                      }).toList(),
+                    )
+                  : const Center(child: Text('Nenhuma prova disponível.')),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildGradientOverlay() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black.withOpacity(0.3),
+            Colors.transparent,
+            Colors.black.withOpacity(0.8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionChips(EventoModelo evento) {
+    return Container(
+      height: 60,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+          _customActionChip(Icons.location_on, 'Onde é?', () => abrirLocalizacao(evento)),
+          _customActionChip(Icons.live_tv, 'Ao Vivo', () {
+            Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.argumentos.idEvento, idEmpresa: evento.idEmpresa));
+          }, color: const Color(0xFFF71808)),
+          _customActionChip(Icons.description, 'Regulamento', abrirTermosDeUso),
+        ],
+      ),
+    );
+  }
+
+  Widget _customActionChip(IconData icon, String label, VoidCallback onTap, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: ActionChip(
+        avatar: Icon(icon, size: 18, color: color ?? Colors.black87),
+        label: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black12,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        onPressed: onTap,
+      ),
+    );
+  }
+
+  Widget _buildCheckoutButton(double valorTotal) {
+    if (provasCarrinho.isEmpty) return const SizedBox.shrink();
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(bottom: 20),
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: 65,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(colors: [Color(0xFFF71808), Color(0xFFB31206)]),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))],
+      ),
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, AppRotas.finalizarCompra, arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${provasCarrinho.length} ${provasCarrinho.length == 1 ? 'PROVA' : 'PROVAS'} SELECIONADA',
+                      style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+                  Text(CurrencyFormatter.coverterEmReal.format(valorTotal), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
               ),
-              const Positioned(
-                right: 10,
-                top: 0,
-                bottom: 0,
-                child: Icon(Icons.arrow_forward_ios_outlined, color: Colors.white),
+              const Row(
+                children: [
+                  Text('CONTINUAR', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                  SizedBox(width: 8),
+                  Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                ],
               ),
             ],
           ),
         ),
-        body: ListenableBuilder(
-          listenable: provasStore,
-          builder: (context, _) {
-            var evento = provasStore.evento;
-            var animalPadrao = provasStore.animalPadrao;
-            var provas = provasStore.provas;
-            var nomesCabeceira = provasStore.nomesCabeceira;
-
-            if (provasStore.carregando) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            if (evento != null) {
-              return RefreshIndicator(
-                onRefresh: () async {
-                  provasStore.listar(usuarioProvider.usuario, widget.argumentos.idEvento, '');
-                },
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 250,
-                      child: Stack(
-                        children: [
-                          SizedBox(
-                            height: 250,
-                            child: cs.CarouselSlider.builder(
-                              carouselController: _carrosselController,
-                              options: cs.CarouselOptions(
-                                height: 250.0,
-                                autoPlay: evento.bannersCarrossel.isNotEmpty ? true : false,
-                                aspectRatio: 2.0,
-                                enableInfiniteScroll: evento.bannersCarrossel.isNotEmpty ? true : false,
-                                pauseAutoPlayOnTouch: true,
-                                viewportFraction: 1.0,
-                                autoPlayInterval: const Duration(seconds: 10),
-                              ),
-                              itemCount: evento.bannersCarrossel.length + 1,
-                              itemBuilder: (context, index, realIndex) {
-                                var bannerCarrossel = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? index : (index - 1)];
-
-                                return CardBannerCarrossel(
-                                  evento: evento,
-                                  bannerCarrossel: bannerCarrossel,
-                                  index: index,
-                                );
-                              },
-                            ),
-                          ),
-                          if (evento.bannersCarrossel.isNotEmpty) ...[
-                            Positioned(
-                              left: 10,
-                              top: 0,
-                              bottom: 0,
-                              child: IconButton(
-                                color: Colors.grey,
-                                onPressed: () {
-                                  _carrosselController.previousPage();
-                                },
-                                icon: const Icon(Icons.arrow_back_ios_outlined),
-                              ),
-                            ),
-                          ],
-                          if (evento.bannersCarrossel.isNotEmpty) ...[
-                            Positioned(
-                              right: 10,
-                              top: 0,
-                              bottom: 0,
-                              child: IconButton(
-                                color: Colors.grey,
-                                onPressed: () {
-                                  _carrosselController.nextPage();
-                                },
-                                icon: const Icon(Icons.arrow_forward_ios_outlined),
-                              ),
-                            ),
-                          ],
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  // const Text('CASA DE SHOWS', style: TextStyle(color: Colors.white, fontSize: 16)),
-                                  Text(
-                                    evento.nomeEvento,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
-                                  ),
-                                  Text(
-                                    DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
-                                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                                  ),
-                                  const SizedBox(height: 5),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Skeleton.ignore(
-                            child: SafeArea(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Container(
-                                  width: 90,
-                                  decoration: const BoxDecoration(
-                                    color: Color.fromARGB(106, 0, 0, 0),
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                  child: IconButton(
-                                    icon: const Row(
-                                      children: [
-                                        Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
-                                        SizedBox(width: 10),
-                                        Text('Voltar', style: TextStyle(color: Colors.white, fontSize: 14)),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: width,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ActionChip(
-                              avatar: const Icon(Icons.location_on_outlined),
-                              label: const Text('Localização'),
-                              onPressed: () {
-                                abrirLocalizacao(evento);
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            ActionChip(
-                              avatar: Lottie.asset(
-                                Assets.aovivo,
-                                width: 20,
-                                height: 20,
-                                repeat: true,
-                              ),
-                              label: const Text('AO VIVO'),
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRotas.aovivo,
-                                  arguments: PaginaAoVivoArgumentos(
-                                    idEvento: widget.argumentos.idEvento,
-                                    idEmpresa: evento.idEmpresa,
-                                  ),
-                                );
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            ActionChip(
-                              avatar: const Icon(Icons.warning_amber),
-                              label: const Text('Termos de Uso'),
-                              onPressed: () {
-                                abrirTermosDeUso();
-                              },
-                            ),
-                            // const SizedBox(width: 10),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (provas.isNotEmpty && nomesCabeceira != null) ...[
-                      // const Padding(
-                      //   padding: EdgeInsets.only(left: 10),
-                      //   child: Align(
-                      //     alignment: Alignment.centerLeft,
-                      //     child: Text(
-                      //       'Escolha sua Prova',
-                      //       style: TextStyle(fontSize: 16),
-                      //     ),
-                      //   ),
-                      // ),
-                      Expanded(
-                        child: DefaultTabController(
-                          length: provas.length,
-                          initialIndex: 0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              TabBar(
-                                isScrollable: true,
-                                tabAlignment: TabAlignment.start,
-                                indicatorSize: TabBarIndicatorSize.tab,
-                                tabs: provas.map((e) {
-                                  return Tab(text: e.nomemodalidade);
-                                }).toList(),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
-                                  ),
-                                  child: TabBarView(
-                                    children: provas.map((e) {
-                                      return PageViewProvas(
-                                        evento: evento,
-                                        animalPadrao: animalPadrao,
-                                        provas: e.provas,
-                                        modalidade: e.modalidade,
-                                        nomesCabeceira: nomesCabeceira,
-                                        provasCarrinho: provasCarrinho,
-                                        adicionarAvulsaNoCarrinho: (quantidade, prova, evento, modalidade) {
-                                          adicionarAvulsaNoCarrinho(quantidade, prova, evento, modalidade);
-                                        },
-                                        adicionarNoCarrinho: (prova, evento, quantParceiros, modalidade) {
-                                          adicionarNoCarrinho(prova, evento, quantParceiros, modalidade);
-                                        },
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              );
-            }
-
-            return const Text('Erro ao listar Provas.');
-          },
-        ),
-      );
-    });
+      ),
+    );
   }
 
   void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento, String quantParceiros, String idmodalidade) {
-    var provasProvedor = context.read<ProvasProvedor>();
-    if (idmodalidade == '3') {
-      if (provasProvedor.animalSelecionado == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Você precisa selecionar um animal antes.'),
-          backgroundColor: Colors.red,
-        ));
-        return;
+    final provasProvedor = context.read<ProvasProvedor>();
+    if (idmodalidade == '3' && provasProvedor.animalSelecionado == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Selecione um animal primeiro!'), backgroundColor: Colors.orange));
+      return;
+    }
+
+    setState(() {
+      final novaProva = prova.copyWith(animalSelecionado: () => provasProvedor.animalSelecionado, idmodalidade: () => idmodalidade);
+      if (provasCarrinho.any((e) => e.id == novaProva.id && e.idCabeceira == novaProva.idCabeceira)) {
+        provasCarrinho.removeWhere((e) => e.id == novaProva.id && e.idCabeceira == novaProva.idCabeceira);
+      } else {
+        provasCarrinho.add(novaProva);
       }
-    }
-
-    var novaProva = ProvaModelo(
-      id: prova.id,
-      nomeProva: prova.nomeProva,
-      valor: prova.valor,
-      hcMinimo: prova.hcMinimo,
-      habilitarAoVivo: '',
-      hcMaximo: prova.hcMaximo,
-      idListaCompeticao: prova.idListaCompeticao,
-      permitirSorteio: prova.permitirSorteio,
-      avulsa: prova.avulsa,
-      quantMinima: prova.quantMinima,
-      quantMaxima: prova.quantMaxima,
-      permitirCompra: prova.permitirCompra,
-      idCabeceira: prova.idCabeceira,
-      competidores: prova.competidores,
-      nomeCabeceira: prova.nomeCabeceira,
-      somatoriaHandicaps: prova.somatoriaHandicaps,
-      sorteio: prova.sorteio,
-      permitirEditarParceiros: prova.permitirEditarParceiros,
-      liberarReembolso: prova.liberarReembolso,
-      animalSelecionado: provasProvedor.animalSelecionado,
-      idmodalidade: idmodalidade,
-    );
-
-    if (mounted) {
-      setState(() {
-        // Irá permitir escolher so um pacote por prova
-        if (evento.liberacaoDeCompra == '1') {
-          var valoresDuplicados = provasCarrinho.where((element) => element.id == novaProva.id);
-
-          if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
-            setState(() {
-              provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
-
-              if (int.tryParse(quantParceiros) != null && quantParceiros != '0') {
-                provasCarrinho.add(novaProva);
-              }
-            });
-          } else if (valoresDuplicados.isNotEmpty) {
-            setState(() {
-              provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
-              provasCarrinho.add(novaProva);
-            });
-          } else {
-            setState(() {
-              provasCarrinho.add(novaProva);
-            });
-          }
-
-          // Poderá escolher multiplos pacotes por prova
-        } else if (evento.liberacaoDeCompra == '2') {
-          if (provasCarrinho.where((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira).isNotEmpty) {
-            setState(() {
-              provasCarrinho.removeWhere((element) => element.id == novaProva.id && element.idCabeceira == novaProva.idCabeceira);
-            });
-          } else {
-            setState(() {
-              provasCarrinho.add(novaProva);
-            });
-          }
-        }
-      });
-    }
+    });
   }
 
   void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento, String idmodalidade) {
-    if (mounted) {
-      // Irá permitir escolher so um pacote por prova
-      if (evento.liberacaoDeCompra == '1') {
-        var valoresDuplicados = provasCarrinho.where((element) => element.id == prova.id);
-
-        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
-          setState(() {
-            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
-          });
-        }
-
-        if (valoresDuplicados.isNotEmpty) {
-          setState(() {
-            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira != prova.idCabeceira);
-          });
-
-          for (var i = 0; i < quantidade; i++) {
-            var novaProva = ProvaModelo(
-              id: prova.id,
-              nomeProva: prova.nomeProva,
-              valor: prova.valor,
-              hcMinimo: prova.hcMinimo,
-              permitirSorteio: prova.permitirSorteio,
-              hcMaximo: prova.hcMaximo,
-              idListaCompeticao: prova.idListaCompeticao,
-              habilitarAoVivo: '',
-              avulsa: prova.avulsa,
-              quantMinima: prova.quantMinima,
-              quantMaxima: prova.quantMaxima,
-              permitirCompra: prova.permitirCompra,
-              idCabeceira: prova.idCabeceira,
-              competidores: [(prova.competidores ?? [])[i]],
-              nomeCabeceira: prova.nomeCabeceira,
-              somatoriaHandicaps: prova.somatoriaHandicaps,
-              sorteio: prova.sorteio,
-              permitirEditarParceiros: prova.permitirEditarParceiros,
-              liberarReembolso: prova.liberarReembolso,
-              idmodalidade: idmodalidade,
-            );
-
-            setState(() {
-              provasCarrinho.add(novaProva);
-            });
-          }
-        } else {
-          for (var i = 0; i < quantidade; i++) {
-            var novaProva = ProvaModelo(
-              id: prova.id,
-              nomeProva: prova.nomeProva,
-              valor: prova.valor,
-              hcMinimo: prova.hcMinimo,
-              permitirSorteio: prova.permitirSorteio,
-              hcMaximo: prova.hcMaximo,
-              idListaCompeticao: prova.idListaCompeticao,
-              habilitarAoVivo: '',
-              avulsa: prova.avulsa,
-              quantMinima: prova.quantMinima,
-              quantMaxima: prova.quantMaxima,
-              permitirCompra: prova.permitirCompra,
-              idCabeceira: prova.idCabeceira,
-              competidores: [(prova.competidores ?? [])[i]],
-              nomeCabeceira: prova.nomeCabeceira,
-              somatoriaHandicaps: prova.somatoriaHandicaps,
-              sorteio: prova.sorteio,
-              permitirEditarParceiros: prova.permitirEditarParceiros,
-              liberarReembolso: prova.liberarReembolso,
-              idmodalidade: idmodalidade,
-            );
-
-            setState(() {
-              provasCarrinho.add(novaProva);
-            });
-          }
-        }
-      } else if (evento.liberacaoDeCompra == '2') {
-        // Poderá escolher multiplos pacotes por prova
-        if (provasCarrinho.where((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira).isNotEmpty) {
-          setState(() {
-            provasCarrinho.removeWhere((element) => element.id == prova.id && element.idCabeceira == prova.idCabeceira);
-          });
-        }
-
-        for (var i = 0; i < quantidade; i++) {
-          var novaProva = ProvaModelo(
-            id: prova.id,
-            nomeProva: prova.nomeProva,
-            valor: prova.valor,
-            hcMinimo: prova.hcMinimo,
-            permitirSorteio: prova.permitirSorteio,
-            hcMaximo: prova.hcMaximo,
-            idListaCompeticao: prova.idListaCompeticao,
-            habilitarAoVivo: '',
-            avulsa: prova.avulsa,
-            quantMinima: prova.quantMinima,
-            quantMaxima: prova.quantMaxima,
-            permitirCompra: prova.permitirCompra,
-            idCabeceira: prova.idCabeceira,
-            competidores: [(prova.competidores ?? [])[i]],
-            nomeCabeceira: prova.nomeCabeceira,
-            somatoriaHandicaps: prova.somatoriaHandicaps,
-            sorteio: prova.sorteio,
-            permitirEditarParceiros: prova.permitirEditarParceiros,
-            liberarReembolso: prova.liberarReembolso,
-            idmodalidade: idmodalidade,
-          );
-
-          setState(() {
-            provasCarrinho.add(novaProva);
-          });
-        }
+    setState(() {
+      provasCarrinho.removeWhere((e) => e.id == prova.id);
+      for (var i = 0; i < quantidade; i++) {
+        provasCarrinho.add(prova.copyWith(idmodalidade: () => idmodalidade));
       }
-    }
+    });
   }
 
-  void abrirLocalizacao(EventoModelo evento) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ModalLocalizacao(evento: evento);
-      },
+  void abrirLocalizacao(EventoModelo evento) => showDialog(context: context, builder: (_) => ModalLocalizacao(evento: evento));
+  void abrirTermosDeUso() => showDialog(context: context, builder: (_) => const Dialog(child: TermosDeUso()));
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar _tabBar;
+
+  _SliverAppBarDelegate(this._tabBar);
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.grey.shade50, // Match default background
+      child: _tabBar,
     );
   }
 
-  void abrirTermosDeUso() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Dialog(
-          child: TermosDeUso(),
-        );
-      },
-    );
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
-
-  void abrirPagamentosDisponiveis(List<PagamentosModelo> pagamentosDisponiveis) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ModalPagamentosDisponiveis(pagamentosDisponiveis: pagamentosDisponiveis);
-      },
-    );
-  }
-
-  // double setarTamanhoTopo(double height, state) {
-  //   var provas = state is ProvasCarregando ? DadosFakes.dadosFakesProvas : state.provas;
-
-  //   if (((height * 0.40) - ((provas.isNotEmpty ? provas.length : 1) * (provas.isNotEmpty ? 110 : 0))).isNegative) {
-  //     return 50;
-  //   } else {
-  //     return (height * 0.40) - ((provas.isNotEmpty ? provas.length : 1) * (provas.isNotEmpty ? 110 : 0));
-  //   }
-  // }
 }
