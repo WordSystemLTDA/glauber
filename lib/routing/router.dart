@@ -15,6 +15,7 @@ import 'package:provadelaco/ui/features/home/widgets/pagina_confirmar_parceiros.
 import 'package:provadelaco/ui/features/home/widgets/pagina_home.dart';
 import 'package:provadelaco/ui/features/inicio/widgets/pagina_inicio.dart';
 import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/pagina_ordemdeentrada.dart';
+import 'package:provadelaco/ui/features/competidores/widgets/pagina_competidores.dart';
 import 'package:provadelaco/ui/features/perfil/widgets/pagina_editar_usuario.dart';
 import 'package:provadelaco/ui/features/perfil/widgets/pagina_perfil.dart';
 import 'package:provadelaco/ui/features/propaganda/widgets/pagina_propaganda.dart';
@@ -74,6 +75,8 @@ class RouteGenerator {
       case AppRotas.propaganda:
         final argumentos = settings.arguments as PaginaPropagandaArgumentos;
         return buildRoute(PaginaPropaganda(argumentos: argumentos), settings: settings);
+      case AppRotas.competidores:
+        return buildRoute(const PaginaCompetidores(), settings: settings);
       case AppRotas.preencherInformacoes:
         final argumentos = settings.arguments as PaginaPreencherInformacoesArgumentos;
         return buildRoute(PaginaPreencherInformacoes(argumentos: argumentos), settings: settings);

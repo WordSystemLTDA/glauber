@@ -54,134 +54,116 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
 
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return SizedBox(
-      width: width,
-      height: tamanhoCard,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: const Offset(0, 4),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
         child: InkWell(
-          onTap: () {
-            aoClicarNoCard(item);
-          },
-          borderRadius: BorderRadius.circular(5),
-          child: Stack(
-            children: [
-              if (verificando) ...[
-                const Center(child: CircularProgressIndicator()),
-              ],
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Skeleton.shade(
-                          child: Container(
-                            width: 5,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                bottomLeft: Radius.circular(8),
-                              ),
-                            ),
-                            child: VerticalDivider(color: coresJaComprou(item), thickness: 5),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: (width - 90) - 50,
-                                child: Text(
-                                  item.nome,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                              SizedBox(
-                                width: (width - 90) - 50,
-                                child: Text(
-                                  "Competidores: ${item.ordemDeEntradas.length}",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: !isDarkMode ? const Color.fromARGB(255, 123, 123, 123) : const Color.fromARGB(255, 208, 208, 208), fontSize: 12),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => aoClicarNoCard(item),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                // Icon or Badge
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
-                  SizedBox(
-                    width: 90,
-                    height: tamanhoCard,
-                    child: Material(
-                      child: Card(
-                        clipBehavior: Clip.hardEdge,
-                        margin: EdgeInsets.zero,
-                        elevation: 5,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                        ),
-                        child: SizedBox(
-                          height: tamanhoCard,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
-                                  border: Border.all(width: 1, color: const Color.fromARGB(255, 255, 159, 152)),
-                                  color: const Color(0xFFfbe5ea),
-                                ),
-                                width: 90,
-                                height: tamanhoCard - 10,
-                                child: Material(
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (widget.aoSelecionar != null) {
-                                        widget.aoSelecionar!(item);
-                                      }
-                                    },
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Lottie.asset(
-                                                Assets.aovivo,
-                                                width: 20,
-                                                height: 20,
-                                                repeat: true,
-                                              ),
-                                              const Text('Ver', textAlign: TextAlign.center),
-                                            ],
-                                          ),
-                                          const Text('AO VIVO', textAlign: TextAlign.center),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                  child: Center(
+                    child: Text(
+                      item.ordemDeEntradas.length.toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                        fontSize: 18,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(width: 16),
+                
+                // Content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.nome,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.people_outline, size: 14, color: Colors.grey.shade600),
+                          const SizedBox(width: 4),
+                          Text(
+                            "${item.ordemDeEntradas.length} Competidores",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Trailing Action
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.deepPurple.withOpacity(0.3),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3)
+                      )
+                    ]
+                  ),
+                  child: const Row(
+                    children: [
+                      Text(
+                        "Ver",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(Icons.arrow_forward_ios, color: Colors.white, size: 10),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

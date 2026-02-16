@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:provadelaco/domain/models/cartao/cartao.dart';
 import 'package:provadelaco/domain/models/prova/prova.dart';
@@ -18,6 +17,8 @@ class FormularioCompraModelo {
   final String valorDesconto;
   final String valorTotal;
   final String? temValorFiliacao;
+  final String? filiacaoJaPaga;
+  final int? parcelasFiliacao;
   final String tipoDeVenda;
   final List<ProvaModelo> provas;
   final CartaoModelo? cartao;
@@ -33,6 +34,8 @@ class FormularioCompraModelo {
     required this.valorDesconto,
     required this.valorTotal,
     this.temValorFiliacao,
+    this.filiacaoJaPaga,
+    this.parcelasFiliacao,
     required this.tipoDeVenda,
     required this.provas,
     this.cartao,
@@ -50,6 +53,8 @@ class FormularioCompraModelo {
       'valorDesconto': valorDesconto,
       'valorTotal': valorTotal,
       'temValorFiliacao': temValorFiliacao,
+      'filiacaoJaPaga': filiacaoJaPaga,
+      'parcelasFiliacao': parcelasFiliacao,
       'tipoDeVenda': tipoDeVenda,
       'provas': provas.map((x) => x.toMap()).toList(),
       'cartao': cartao?.toMap(),
@@ -68,6 +73,8 @@ class FormularioCompraModelo {
       valorDesconto: map['valorDesconto'] ?? '',
       valorTotal: map['valorTotal'] ?? '',
       temValorFiliacao: map['temValorFiliacao'],
+      filiacaoJaPaga: map['filiacaoJaPaga'],
+      parcelasFiliacao: map['parcelasFiliacao']?.toInt(),
       tipoDeVenda: map['tipoDeVenda'] ?? '',
       provas: List<ProvaModelo>.from(map['provas']?.map((x) => ProvaModelo.fromMap(x))),
       cartao: map['cartao'] != null ? CartaoModelo.fromMap(map['cartao']) : null,
@@ -89,6 +96,8 @@ class FormularioCompraModelo {
     String? valorDesconto,
     String? valorTotal,
     ValueGetter<String?>? temValorFiliacao,
+    ValueGetter<String?>? filiacaoJaPaga,
+    ValueGetter<int?>? parcelasFiliacao,
     String? tipoDeVenda,
     List<ProvaModelo>? provas,
     ValueGetter<CartaoModelo?>? cartao,
@@ -104,6 +113,8 @@ class FormularioCompraModelo {
       valorDesconto: valorDesconto ?? this.valorDesconto,
       valorTotal: valorTotal ?? this.valorTotal,
       temValorFiliacao: temValorFiliacao != null ? temValorFiliacao() : this.temValorFiliacao,
+      filiacaoJaPaga: filiacaoJaPaga != null ? filiacaoJaPaga() : this.filiacaoJaPaga,
+      parcelasFiliacao: parcelasFiliacao != null ? parcelasFiliacao() : this.parcelasFiliacao,
       tipoDeVenda: tipoDeVenda ?? this.tipoDeVenda,
       provas: provas ?? this.provas,
       cartao: cartao != null ? cartao() : this.cartao,
@@ -112,7 +123,7 @@ class FormularioCompraModelo {
 
   @override
   String toString() {
-    return 'FormularioCompraModelo(idProva: $idProva, idEmpresa: $idEmpresa, idEvento: $idEvento, idFormaPagamento: $idFormaPagamento, valorIngresso: $valorIngresso, valorTaxa: $valorTaxa, valorTaxaCartao: $valorTaxaCartao, valorDesconto: $valorDesconto, valorTotal: $valorTotal, temValorFiliacao: $temValorFiliacao, tipoDeVenda: $tipoDeVenda, provas: $provas, cartao: $cartao)';
+    return 'FormularioCompraModelo(idProva: $idProva, idEmpresa: $idEmpresa, idEvento: $idEvento, idFormaPagamento: $idFormaPagamento, valorIngresso: $valorIngresso, valorTaxa: $valorTaxa, valorTaxaCartao: $valorTaxaCartao, valorDesconto: $valorDesconto, valorTotal: $valorTotal, temValorFiliacao: $temValorFiliacao, filiacaoJaPaga: $filiacaoJaPaga, parcelasFiliacao: $parcelasFiliacao, tipoDeVenda: $tipoDeVenda, provas: $provas, cartao: $cartao)';
   }
 
   @override
@@ -130,6 +141,8 @@ class FormularioCompraModelo {
       other.valorDesconto == valorDesconto &&
       other.valorTotal == valorTotal &&
       other.temValorFiliacao == temValorFiliacao &&
+      other.filiacaoJaPaga == filiacaoJaPaga &&
+      other.parcelasFiliacao == parcelasFiliacao &&
       other.tipoDeVenda == tipoDeVenda &&
       listEquals(other.provas, provas) &&
       other.cartao == cartao;
@@ -147,6 +160,8 @@ class FormularioCompraModelo {
       valorDesconto.hashCode ^
       valorTotal.hashCode ^
       temValorFiliacao.hashCode ^
+      filiacaoJaPaga.hashCode ^
+      parcelasFiliacao.hashCode ^
       tipoDeVenda.hashCode ^
       provas.hashCode ^
       cartao.hashCode;

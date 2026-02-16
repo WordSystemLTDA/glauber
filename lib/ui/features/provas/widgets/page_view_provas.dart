@@ -1,18 +1,13 @@
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provadelaco/data/repositories/provas_repository.dart';
 import 'package:provadelaco/domain/models/animal/animal.dart';
 import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/nomes_cabeceira_modelo.dart';
 import 'package:provadelaco/domain/models/prova/prova.dart';
-import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
 import 'package:provadelaco/ui/features/animais/widgets/pagina_animais.dart';
 import 'package:provadelaco/ui/features/provas/widgets/card_provas.dart';
 import 'package:provadelaco/ui/features/provas/widgets/modal_denunciar.dart';
-import 'package:provadelaco/utils/date_formatter.dart';
 import 'package:provider/provider.dart';
 
 class PageViewProvas extends StatefulWidget {

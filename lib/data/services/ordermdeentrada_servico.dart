@@ -53,8 +53,15 @@ class OrdemDeEntradaServico {
     }
   }
 
-  Future<List<ProvaParceirosModelos>> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa) async {
-    var url = "ordem_de_entrada/listar_por_lista_competicao.php?id_empresa=$idEmpresa&id_evento=$idEvento&id_lista_competicao=$idListaCompeticao&pesquisa=$pesquisa";
+  Future<({List<ProvaParceirosModelos> lista, List<Map<String, String>> somatoriasDisponiveis})> listarPorListaCompeticao(
+      UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa,
+      {String somatoria = '', int pagina = 0}) async {
+
+    var url = "ordem_de_entrada/listar_por_lista_competicao.php?id_empresa=$idEmpresa&id_evento=$idEvento&id_lista_competicao=$idListaCompeticao&pesquisa=$pesquisa&pagina=$pagina";
+    
+    if (somatoria.isNotEmpty) {
+      url += "&somatoria=$somatoria";
+    }
 
     var response = await client.dio.get(url);
 
@@ -62,11 +69,21 @@ class OrdemDeEntradaServico {
     bool sucesso = jsonData['sucesso'];
 
     if (response.statusCode == 200 && sucesso == true) {
-      return List<ProvaParceirosModelos>.from(jsonData['dados'].map((elemento) {
+      var lista = List<ProvaParceirosModelos>.from(jsonData['dados'].map((elemento) {
         return ProvaParceirosModelos.fromMap(elemento);
       }));
+
+      List<Map<String, String>> somatorias = [];
+      if (jsonData['somatoriasDisponiveis'] != null) {
+        somatorias = List<Map<String, String>>.from(jsonData['somatoriasDisponiveis'].map((e) => {
+              'valor': e['valor'].toString(),
+              'label': e['label'].toString(),
+            }));
+      }
+
+      return (lista: lista, somatoriasDisponiveis: somatorias);
     } else {
-      return [];
+      return (lista: <ProvaParceirosModelos>[], somatoriasDisponiveis: <Map<String, String>>[]);
     }
   }
 

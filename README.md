@@ -28,24 +28,22 @@ PARA FAZER
 - [ ] Lista infinita na Página ao vivo
 - [ ] Arrumar bug de estouro de competidores
 
-arrumar tela de provas ao vivo (pesquisa, lista infinita, filtro de somatoria (buscar somente as somatorias que existem na lista))
-
-fazer tela de parcelamento de filiação
-
 competidores disponiveis
 aparecer no handicap pe e cabeça
 
 na tela de confirmação de parceiros
 quando não tiver venda nenhuma naquela prova, ir para tela de compra 
 
-Gerar uma venda para a filiação
-na tela de finalizar compra aparecer um resumo das provas e filiação
-na tela de finalizar compra, quando entrar na tela aparecer uma modal de parcelamento de filiação
+[X] - arrumar tela de provas ao vivo (pesquisa, lista infinita, filtro de somatoria (buscar somente as somatorias que existem na lista))
+
+[x] - Gerar uma venda para a filiação
+[x] - na tela de finalizar compra aparecer um resumo das provas e filiação
+[x] - na tela de finalizar compra, quando entrar na tela aparecer uma modal de parcelamento de filiação
    - valor em 1x
    - valor em 2x - tem um acrescimo sempre de 50 reais
    - botão de confirmar, se não confirmar volta a tela de inscrição
 
-botão de listagem de competidores no menu lateral
+[X] - botão de listagem de competidores no menu lateral
  - aparecer o card de lista de competidores
    - nome
    - apelido

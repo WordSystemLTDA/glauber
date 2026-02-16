@@ -1,24 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
-import 'package:provadelaco/config/assets.dart';
 import 'package:provadelaco/data/repositories/provas_repository.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
 import 'package:provadelaco/domain/models/evento/evento.dart';
-import 'package:provadelaco/domain/models/pagamentos_modelo.dart';
 import 'package:provadelaco/domain/models/prova/prova.dart';
 import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_finalizar_compra.dart';
 import 'package:provadelaco/ui/features/provas/widgets/card_banner_carrossel_evento.dart';
 import 'package:provadelaco/ui/features/provas/widgets/modal_localizacao.dart';
-import 'package:provadelaco/ui/features/provas/widgets/modal_pagamentos_disponiveis.dart';
 import 'package:provadelaco/ui/features/provas/widgets/page_view_provas.dart';
 import 'package:provadelaco/ui/features/provas/widgets/pagina_aovivo.dart';
 import 'package:provadelaco/utils/currency_formatter.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class PaginaProvasArgumentos {
   final String idEvento;

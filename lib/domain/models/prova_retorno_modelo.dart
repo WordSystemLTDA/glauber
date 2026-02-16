@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import 'package:provadelaco/domain/models/animal/animal.dart';
 import 'package:provadelaco/domain/models/evento/evento.dart';

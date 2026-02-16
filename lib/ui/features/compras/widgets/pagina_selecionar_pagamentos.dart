@@ -92,6 +92,8 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     nomeEvento: "Aniversário João Vitor Fadel",
                     dataEvento: "2023-12-16",
                     horaInicio: "09:00:00",
+                    parcelas: '0',
+                    tipodevenda: '',
                     horaInicioF: "09:00 AM",
                     horaTermino: "19:00:00",
                     idEvento: '1',
@@ -115,7 +117,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     valorIngresso: "0.00",
                     valorTaxa: "0.00",
                     valorDesconto: "0.00",
-                    valorTotal: (num.parse(previousValue.valorTotal) + num.parse(element.valorTotal)).toString(),
+                    valorTotal: element.tipodevenda == 'Filiação' ? (num.parse(previousValue.valorTotal) + (num.parse(element.valorFiliacao) / (num.tryParse(element.parcelas) ?? 1))).toString() : ((num.parse(previousValue.valorTotal) + num.parse(element.valorTotal))).toString(),
                     status: "Pendente",
                     codigoQr: "MTAwMDAwMDAwMDE4Nw==",
                     codigoPIX: "00020126330014br.gov.bcb.pix0111061528269505204000053039865406150.005802BR5911SAGL84237736011Santo Incio62240520mpqrinter7002336949763044DB5",
@@ -124,6 +126,8 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     horaCompra: "13:16 PM",
                     pago: "Não",
                     nomeProva: "Sem nome prova",
+                    parcelas: '0',
+                    tipodevenda: '',
                     nomeEvento: "Aniversário João Vitor Fadel",
                     dataEvento: "2023-12-16",
                     horaInicio: "09:00:00",
@@ -145,8 +149,7 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
             ((comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length > 1
                         ? num.parse(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).first.valorTaxa)
                         : 0) *
-                    comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length -
-                1))
+                    comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length))
         .toString();
 
     return Scaffold(

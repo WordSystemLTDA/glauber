@@ -35,14 +35,16 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
-        listarCompras();
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController = ScrollController();
+      _scrollController.addListener(() {
+        if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
+          listarCompras();
+        }
+      });
 
-    listarCompras();
+      listarCompras();
+    });
   }
 
   void listarCompras({bool? resetar}) {
@@ -91,10 +93,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         builder: (BuildContext context, Widget? child) {
           return Scaffold(
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: (comprasStore.compras.atuais.isEmpty ||
-                    comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
-                ? null
-                : _buildFloatingActionButton(),
+            floatingActionButton:
+                (comprasStore.compras.atuais.isEmpty || comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
+                    ? null
+                    : _buildFloatingActionButton(),
             body: Column(
               children: [
                 const TabBar(
@@ -373,9 +375,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar
-                                                ? const Center(child: CircularProgressIndicator())
-                                                : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -464,10 +464,17 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
                                                               Text('Inscrições: ${item.compras.length}'),
-                                                              Text(
-                                                                double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
-                                                                style: const TextStyle(fontWeight: FontWeight.w500),
-                                                              )
+                                                              if (item.compras[0].parcelas != '0') ...[
+                                                                Text(
+                                                                  "${item.compras[0].parcelas} x de ${((double.tryParse(item.somaTotal) ?? 0) / num.tryParse(item.compras[0].parcelas)!).obterReal()}",
+                                                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                                                ),
+                                                              ] else ...[
+                                                                Text(
+                                                                  double.tryParse(item.somaTotal) != null ? ((double.tryParse(item.somaTotal) ?? 0)).obterReal() : '',
+                                                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                                                ),
+                                                              ],
                                                             ],
                                                           ),
                                                         ],
@@ -597,9 +604,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar
-                                                ? const Center(child: CircularProgressIndicator())
-                                                : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },
@@ -741,9 +746,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                         } else {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 32),
-                                            child: comprasStore.temMaisParaCarregar
-                                                ? const Center(child: CircularProgressIndicator())
-                                                : const Center(child: Text('Você chegou no fim da lista.')),
+                                            child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                           );
                                         }
                                       },

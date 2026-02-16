@@ -10,15 +10,16 @@ class CompetidoresServico {
   CompetidoresServico(this.client);
 
   Future<List<CompetidoresModelo>> listarCompetidores(String? idCabeceira, UsuarioModelo? usuario, String pesquisa, String idProva) async {
-    var idCliente = usuario != null ? usuario.id : 0;
-    var url = 'compras/listar_clientes.php?pesquisa=$pesquisa&id_prova=$idProva&id_cliente=$idCliente&id_cabeceira=$idCabeceira';
+    // Use the new endpoint that returns city/state and handicap fields
+    var pesquisaParam = Uri.encodeQueryComponent(pesquisa);
+    var url = 'compras/listar_competidores.php?pesquisa=$pesquisaParam';
 
     var response = await client.dio.get(url);
     var jsonData = jsonDecode(response.data);
     var dados = jsonData['dados'];
     var sucesso = jsonData['sucesso'];
 
-    if (sucesso == true) {
+    if (sucesso == true && dados != null) {
       return List<CompetidoresModelo>.from(dados.map((elemento) {
         return CompetidoresModelo.fromMap(elemento);
       }));

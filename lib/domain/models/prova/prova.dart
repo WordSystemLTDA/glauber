@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import 'package:provadelaco/domain/models/animal/animal.dart';
 import 'package:provadelaco/domain/models/competidores/competidores.dart';
@@ -132,7 +130,7 @@ class ProvaModelo {
       'animalSelecionado': animalSelecionado?.toMap(),
       'nomeCabeceira': nomeCabeceira,
       'idCabeceira': idCabeceira,
-      'competidores': competidores?.map((x) => x?.toMap())?.toList(),
+      'competidores': competidores?.map((x) => x.toMap()).toList(),
       'idmodalidade': idmodalidade,
     };
   }

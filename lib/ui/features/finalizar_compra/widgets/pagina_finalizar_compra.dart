@@ -15,8 +15,8 @@ import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/card_cartao.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/modal_selecionar_cartao.dart';
+import 'package:provadelaco/ui/features/finalizar_compra/widgets/modal_parcelamento_filiacao.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_sucesso_compra.dart';
-import 'package:provadelaco/utils/currency_formatter.dart';
 import 'package:provider/provider.dart';
 
 class PaginaFinalizarCompraArgumentos {
@@ -49,6 +49,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   int parcela = 1;
   CartaoModelo? cartaoSelecionado;
   List<CartaoModelo> cartaoMemoria = [];
+  int? parcelasFiliacao;
 
   @override
   void initState() {
@@ -71,7 +72,31 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             metodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
           });
         }
+
+        // Mostrar modal de parcelamento de filiação se houver valor não pago
+        if (response.valorAdicional != null && response.valorAdicional!.pago == 'Não') {
+          _mostrarModalParcelamentoFiliacao(response);
+        }
       });
+    });
+  }
+
+  void _mostrarModalParcelamentoFiliacao(ListarInformacoesModelo dados) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => ModalParcelamentoFiliacao(
+        dados: dados,
+        parcelasInicial: parcelasFiliacao,
+        aoConfirmar: (parcelas) {
+          setState(() => parcelasFiliacao = parcelas);
+        },
+      ),
+    ).then((confirmado) {
+      if (confirmado != true) {
+        // Se não confirmou, volta para a tela de inscrição
+        Navigator.pop(context);
+      }
     });
   }
 
@@ -95,10 +120,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     );
   }
 
-  String _removeSymbols(String input) {
-    return input.replaceAll(RegExp(r'[^\p{L}\s]', unicode: true), '');
-  }
-
   double retornarValorTotal(ListarInformacoesModelo dados) {
     double valorTotal = double.parse(dados.prova.valor) + double.parse(dados.prova.taxaProva);
     double desconto = double.parse(dados.valorDescontoPorProva ?? '0');
@@ -107,10 +128,16 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       valorTotal += double.parse(dados.taxaCartao);
     }
 
-    if (dados.valorAdicional != null) {
+    if (dados.valorAdicional != null && dados.valorAdicional!.pago == 'Não') {
       double valorAdicional = double.parse(dados.valorAdicional!.valor);
       if (dados.valorAdicional!.tipo == 'soma') {
-        valorTotal += valorAdicional;
+        
+        if (parcelasFiliacao == 2) {
+          // valorTotal += 50.0;
+          valorTotal += ((valorAdicional + 50) / 2);
+        } else {
+          valorTotal += valorAdicional;
+        }
       } else if (dados.valorAdicional!.tipo == 'diminuir') {
         valorTotal -= valorAdicional;
       }
@@ -139,7 +166,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           valorTaxaCartao: metodoPagamento == '3' ? dados.taxaCartao : '0',
           valorDesconto: dados.valorDescontoPorProva ?? '0',
           valorTotal: retornarValorTotal(dados).toString(),
-          temValorFiliacao: dados.valorAdicional?.valor,
+          temValorFiliacao: ((double.tryParse(dados.valorAdicional?.valor ?? '0') ?? 0) + ((parcelasFiliacao == 2) ? 50.0 : 0.0)).toStringAsFixed(2),
+          filiacaoJaPaga: dados.valorAdicional?.pago,
+          parcelasFiliacao: parcelasFiliacao,
           cartao: cartaoSelecionado,
         ),
       );
@@ -149,7 +178,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var (:dadosRetorno, :mensagem) = await finalizarCompraStore.inserir(
         usuarioProvider.usuario,
         FormularioCompraModelo(
-          temValorFiliacao: dados.valorAdicional?.valor,
+          temValorFiliacao: ((double.tryParse(dados.valorAdicional?.valor ?? '0') ?? 0) + ((parcelasFiliacao == 2) ? 50.0 : 0.0)).toStringAsFixed(2),
+          filiacaoJaPaga: dados.valorAdicional?.pago,
+          parcelasFiliacao: parcelasFiliacao,
           provas: widget.argumentos.provas,
           idEvento: widget.argumentos.idEvento,
           idProva: widget.argumentos.provas[0].id,
@@ -197,7 +228,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       body: Stack(
         children: [
           Positioned.fill(
-            bottom: 230, 
+            bottom: 230,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -284,7 +315,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             ],
           ),
           const Divider(height: 20),
-          
+
           // INFORMAÇÕES DO EVENTO
           Row(
             children: [
@@ -313,32 +344,52 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
 
           // FILIAÇÃO EM DESTAQUE
           if (dados.valorAdicional != null) ...[
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.card_membership, color: Colors.blue),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Filiação', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
-                        if (dados.valorAdicional!.titulo.isNotEmpty)
-                          Text(dados.valorAdicional!.titulo, style: const TextStyle(fontSize: 12)),
-                      ],
+            InkWell(
+              onTap: dados.valorAdicional!.pago == 'Não' ? () => _mostrarModalParcelamentoFiliacao(dados) : null,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: dados.valorAdicional!.pago == 'Não' ? Colors.blue.shade50 : Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: dados.valorAdicional!.pago == 'Não' ? Colors.blue.shade200 : Colors.green.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.card_membership, color: dados.valorAdicional!.pago == 'Não' ? Colors.blue : Colors.green),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Filiação', style: TextStyle(fontWeight: FontWeight.bold, color: dados.valorAdicional!.pago == 'Não' ? Colors.blue : Colors.green)),
+                          if (dados.valorAdicional!.titulo.isNotEmpty) Text(dados.valorAdicional!.titulo, style: const TextStyle(fontSize: 12)),
+                          if (parcelasFiliacao != null) ...[const SizedBox(height: 4), Text('${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}', style: const TextStyle(fontSize: 12, color: Colors.grey))],
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${double.parse(dados.valorAdicional!.valor).obterReal()}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
-                  ),
-                ],
+                    if (dados.valorAdicional!.pago == 'Não') ...[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${(double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)).obterReal()}',
+                            style: TextStyle(fontWeight: FontWeight.bold, color: dados.valorAdicional!.pago == 'Não' ? Colors.blue : Colors.green),
+                          ),
+                          // if (parcelasFiliacao == 2) ...[const SizedBox(height: 4), Text('+ ${50.obterReal()}', style: TextStyle(fontSize: 11, color: Colors.blue, fontWeight: FontWeight.w500))],
+                        ],
+                      ),
+                      SizedBox(width: 10),
+                      const Icon(Icons.warning, color: Colors.orange, size: 16),
+                    ] else ...[
+                      Text(
+                        'Já pago',
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                      ),
+                      SizedBox(width: 10),
+                      const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                    ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -419,7 +470,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
 
   Widget _buildRodapeDetalhado(ListarInformacoesModelo dados, double width, FinalizarCompraStore store) {
     return Positioned(
-      bottom: 0, left: 0, right: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -430,19 +483,15 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _linhaPrecoRodape('Subtotal', double.parse(dados.prova.valor).obterReal()),
-            if (metodoPagamento == '3')
-              _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
-            if (double.parse(dados.prova.taxaProva) > 0)
-              _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
-            if (double.parse(dados.valorDescontoPorProva ?? '0') > 0)
-              _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
-            
+            if (metodoPagamento == '3') _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
+            if (double.parse(dados.prova.taxaProva) > 0) _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
+            if (double.parse(dados.valorDescontoPorProva ?? '0') > 0) _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
             const Divider(height: 16),
             _linhaPrecoRodape('Total', retornarValorTotal(dados).obterReal(), negrito: true, tamanho: 18, cor: const Color(0xFFF71808)),
-            
             const SizedBox(height: 12),
             SizedBox(
-              width: double.infinity, height: 48,
+              width: double.infinity,
+              height: 48,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: permitirClickConcluir() ? const Color(0xFFF71808) : Colors.grey.shade300,
@@ -450,12 +499,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: permitirClickConcluir() ? () => salvar(dados) : null,
-                child: store.carregando 
-                  ? const CircularProgressIndicator(color: Colors.white) 
-                  : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                child: store.carregando ? const CircularProgressIndicator(color: Colors.white) : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
-            
             InkWell(
               onTap: () => setState(() => concorda = !concorda),
               child: Row(

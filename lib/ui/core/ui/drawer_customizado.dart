@@ -229,6 +229,14 @@ class _DrawerCustomizadoState extends State<DrawerCustomizado> {
                           ),
                           ListTile(
                             onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context, AppRotas.competidores);
+                            },
+                            leading: const Icon(Icons.list_alt_outlined),
+                            title: const Text('Competidores'),
+                          ),
+                          ListTile(
+                            onTap: () {
                               widget.aoMudarPagina(2);
                             },
                             leading: const Icon(Icons.format_list_numbered_outlined),

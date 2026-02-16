@@ -88,7 +88,7 @@ class _CardComprasState extends State<CardCompras> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      height: (item.provas[0].idmodalidade == '4' || item.status == 'Cancelado' || item.parceiros.isEmpty) ? 130 : 170,
+      height: ((item.provas.isNotEmpty && item.provas[0].idmodalidade == '4') || item.status == 'Cancelado' || item.parceiros.isEmpty) ? 130 : 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
@@ -128,7 +128,7 @@ class _CardComprasState extends State<CardCompras> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(5),
-                            bottomLeft: (item.provas[0].idmodalidade == '4') ? Radius.circular(5) : Radius.zero,
+                            bottomLeft: (item.provas.isNotEmpty && item.provas[0].idmodalidade == '4') ? Radius.circular(5) : Radius.zero,
                           ),
                         ),
                         child: VerticalDivider(color: corCompra(item), thickness: 5),
@@ -174,7 +174,7 @@ class _CardComprasState extends State<CardCompras> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Column(
-                            mainAxisAlignment: item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não' ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                            mainAxisAlignment: item.provas.isNotEmpty && item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não' ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
                             children: [
                               IconButton(
                                 onPressed: () {
@@ -186,7 +186,7 @@ class _CardComprasState extends State<CardCompras> {
                                   size: 30,
                                 ),
                               ),
-                              if (item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não') ...[
+                              if (item.provas.isNotEmpty && item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não') ...[
                                 IconButton(
                                   onPressed: () {
                                     // FuncoesGlobais.abrirWhatsapp(item.numeroCelular);
@@ -275,7 +275,7 @@ class _CardComprasState extends State<CardCompras> {
                   ],
                 ),
               ),
-              if (item.provas[0].idmodalidade != '4' && item.status != 'Cancelado' && item.parceiros.isNotEmpty)
+              if (item.provas.isNotEmpty && item.provas[0].idmodalidade != '4' && item.status != 'Cancelado' && item.parceiros.isNotEmpty)
                 Positioned(
                   bottom: -5,
                   left: 0,
@@ -302,11 +302,11 @@ class _CardComprasState extends State<CardCompras> {
                             return;
                           }
 
-                          if (item.provas[0].idmodalidade == '3') {
+                          if (item.provas.isNotEmpty && item.provas[0].idmodalidade == '3') {
                             return;
                           }
 
-                          if (item.provas[0].avulsa == 'Não') {
+                          if (item.provas.isNotEmpty && item.provas[0].avulsa == 'Não') {
                             if (context.mounted) {
                               showDialog(
                                 context: context,
@@ -322,7 +322,7 @@ class _CardComprasState extends State<CardCompras> {
                             return;
                           }
 
-                          if (item.provas[0].permitirEditarParceiros == 'Sim') {
+                          if (item.provas.isNotEmpty && item.provas[0].permitirEditarParceiros == 'Sim') {
                             controller.openView();
                           }
                         },
@@ -332,7 +332,7 @@ class _CardComprasState extends State<CardCompras> {
                               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
                             ),
                           ),
-                          backgroundColor: WidgetStatePropertyAll((item.parceiros.isEmpty || item.provas[0].avulsa == 'Não')
+                          backgroundColor: WidgetStatePropertyAll((item.parceiros.isEmpty || (item.provas.isNotEmpty && item.provas[0].avulsa == 'Não'))
                               ? const Color.fromARGB(255, 237, 237, 237)
                               : (item.parceiros[0].parceiroTemCompra == 'Pendente'
                                   ? Colors.red[200]
@@ -340,12 +340,10 @@ class _CardComprasState extends State<CardCompras> {
                                       ? Colors.green[200]
                                       : const Color.fromARGB(255, 237, 237, 237))),
                           foregroundColor: WidgetStatePropertyAll(
-                            (item.parceiros.isEmpty || item.provas[0].avulsa == 'Não')
-                                ? Colors.black
-                                : (item.parceiros[0].parceiroTemCompra == 'Sem Parceiro' ? Colors.black87 : Colors.white),
+                            (item.parceiros.isEmpty || (item.provas.isNotEmpty && item.provas[0].avulsa == 'Não')) ? Colors.black : (item.parceiros[0].parceiroTemCompra == 'Sem Parceiro' ? Colors.black87 : Colors.white),
                           ),
                         ),
-                        child: item.provas[0].idmodalidade == '3'
+                        child: item.provas.isNotEmpty && item.provas[0].idmodalidade == '3'
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -354,7 +352,7 @@ class _CardComprasState extends State<CardCompras> {
                                   Text(item.provas[0].animalSelecionado?.nomedoanimal ?? '0', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                 ],
                               )
-                            : item.provas[0].avulsa == 'Sim'
+                            : (item.provas.isNotEmpty && item.provas[0].avulsa == 'Sim')
                                 ? Text(
                                     (item.parceiros.isEmpty
                                         ? "Sorteio"
@@ -369,8 +367,7 @@ class _CardComprasState extends State<CardCompras> {
                     suggestionsBuilder: (BuildContext context, SearchController controller) async {
                       final keyword = controller.value.text;
                       var usuarioProvider = context.read<UsuarioProvider>();
-                      List<CompetidoresModelo>? competidores =
-                          await competidoresServico.listarCompetidores(widget.item.idCabeceira, usuarioProvider.usuario, keyword, widget.item.provas[0].id);
+                      List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(widget.item.idCabeceira, usuarioProvider.usuario, keyword, widget.item.provas[0].id);
 
                       Iterable<Widget> widgets = competidores.map((competidor) {
                         return Card(

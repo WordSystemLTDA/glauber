@@ -24,6 +24,7 @@ class AppRotas {
   static const animais = '/animais';
   static const animaisCadastrar = '/animais/cadastrar/';
   static const selecionarInscricoes = '/selecionar_inscricoes/';
+  static const competidores = '/competidores';
 
   static const paginaInicial = splash;
 

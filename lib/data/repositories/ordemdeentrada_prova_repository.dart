@@ -9,9 +9,11 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
   OrdemDeEntradaProvaStore(this._servico) : super();
 
   List<ProvaParceirosModelos> ordemdeentradas = [];
+  List<Map<String, String>> somatoriasDisponiveis = [];
   ProvaParceirosModelos? quemEstaCorrendoAgora;
 
   bool carregando = false;
+  bool carregandoMais = false;
 
   void listar(UsuarioModelo? usuario, String idProva) async {
     carregando = true;
@@ -25,13 +27,33 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa) async {
-    carregando = true;
+  Future<void> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa, {String somatoria = '', int pagina = 0}) async {
+    // printb(idListaCompeticao);
+    if (pagina == 0) {
+      carregando = true;
+    } else {
+      carregandoMais = true;
+    }
     notifyListeners();
 
-    List<ProvaParceirosModelos> lista = await _servico.listarPorListaCompeticao(usuario, idListaCompeticao, idEmpresa, idEvento, pesquisa);
-    ordemdeentradas = lista;
-    carregando = false;
+    var result = await _servico.listarPorListaCompeticao(
+        usuario, idListaCompeticao, idEmpresa, idEvento, pesquisa,
+        somatoria: somatoria, pagina: pagina);
+    
+    List<ProvaParceirosModelos> lista = result.lista;
+    
+    if (pagina == 0) {
+      ordemdeentradas = lista;
+      somatoriasDisponiveis = result.somatoriasDisponiveis;
+    } else {
+      ordemdeentradas.addAll(lista);
+    }
+    
+    if (pagina == 0) {
+      carregando = false;
+    } else {
+      carregandoMais = false;
+    }
     notifyListeners();
   }
 }

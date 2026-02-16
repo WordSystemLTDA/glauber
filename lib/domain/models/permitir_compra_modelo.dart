@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import 'package:provadelaco/domain/models/competidores/competidores.dart';
 
@@ -66,7 +64,7 @@ class PermitirCompraModelo {
       'quantMaximaAvulsa': quantMaximaAvulsa,
       'quantParceiros': quantParceiros,
       'permVincularParceiro': permVincularParceiro,
-      'competidoresJaSelecionados': competidoresJaSelecionados?.map((x) => x?.toMap())?.toList(),
+      'competidoresJaSelecionados': competidoresJaSelecionados?.map((x) => x.toMap()).toList(),
       'idCabeceiraInvalido': idCabeceiraInvalido,
     };
   }

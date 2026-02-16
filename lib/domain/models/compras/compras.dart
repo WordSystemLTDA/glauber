@@ -29,6 +29,8 @@ class ComprasModelo extends Equatable {
   final String dataEvento;
   final String horaInicio;
   final String horaInicioF;
+  final String parcelas;
+  final String tipodevenda;
   final String horaTermino;
   final String numeroCelular;
   final String formaPagamento;
@@ -65,6 +67,8 @@ class ComprasModelo extends Equatable {
     required this.dataEvento,
     required this.horaInicio,
     required this.horaInicioF,
+    required this.parcelas,
+    required this.tipodevenda,
     required this.horaTermino,
     required this.numeroCelular,
     required this.formaPagamento,
@@ -102,6 +106,8 @@ class ComprasModelo extends Equatable {
       'dataEvento': dataEvento,
       'horaInicio': horaInicio,
       'horaInicioF': horaInicioF,
+      'parcelas': parcelas,
+      'tipodevenda': tipodevenda,
       'horaTermino': horaTermino,
       'numeroCelular': numeroCelular,
       'formaPagamento': formaPagamento,
@@ -140,6 +146,8 @@ class ComprasModelo extends Equatable {
       dataEvento: map['dataEvento'] ?? '',
       horaInicio: map['horaInicio'] ?? '',
       horaInicioF: map['horaInicioF'] ?? '',
+      parcelas: map['parcelas'] ?? '',
+      tipodevenda: map['tipodevenda'] ?? '',
       horaTermino: map['horaTermino'] ?? '',
       numeroCelular: map['numeroCelular'] ?? '',
       formaPagamento: map['formaPagamento'] ?? '',
@@ -183,6 +191,8 @@ class ComprasModelo extends Equatable {
       dataEvento,
       horaInicio,
       horaInicioF,
+      parcelas,
+      tipodevenda,
       horaTermino,
       numeroCelular,
       formaPagamento,
@@ -220,6 +230,8 @@ class ComprasModelo extends Equatable {
     String? dataEvento,
     String? horaInicio,
     String? horaInicioF,
+    String? parcelas,
+    String? tipodevenda,
     String? horaTermino,
     String? numeroCelular,
     String? formaPagamento,
@@ -255,6 +267,8 @@ class ComprasModelo extends Equatable {
       dataEvento: dataEvento ?? this.dataEvento,
       horaInicio: horaInicio ?? this.horaInicio,
       horaInicioF: horaInicioF ?? this.horaInicioF,
+      parcelas: parcelas ?? this.parcelas,
+      tipodevenda: tipodevenda ?? this.tipodevenda,
       horaTermino: horaTermino ?? this.horaTermino,
       numeroCelular: numeroCelular ?? this.numeroCelular,
       formaPagamento: formaPagamento ?? this.formaPagamento,
@@ -272,6 +286,6 @@ class ComprasModelo extends Equatable {
 
   @override
   String toString() {
-    return 'ComprasModelo(id: $id, valorIngresso: $valorIngresso, valorTaxa: $valorTaxa, valorDesconto: $valorDesconto, valorTotal: $valorTotal, valorFiliacao: $valorFiliacao, status: $status, codigoQr: $codigoQr, codigoPIX: $codigoPIX, idCliente: $idCliente, dataCompra: $dataCompra, horaCompra: $horaCompra, pago: $pago, nomeProva: $nomeProva, nomeEmpresa: $nomeEmpresa, idEvento: $idEvento, idEmpresa: $idEmpresa, nomeEvento: $nomeEvento, dataEvento: $dataEvento, horaInicio: $horaInicio, horaInicioF: $horaInicioF, horaTermino: $horaTermino, numeroCelular: $numeroCelular, formaPagamento: $formaPagamento, idFormaPagamento: $idFormaPagamento, quandoInscricaoNaoPaga: $quandoInscricaoNaoPaga, mensagemQuandoInscricaoNaoPaga: $mensagemQuandoInscricaoNaoPaga, permVincularParceiro: $permVincularParceiro, pixVencido: $pixVencido, provas: $provas, parceiros: $parceiros, idCabeceira: $idCabeceira, reembolso: $reembolso)';
+    return 'ComprasModelo(id: $id, valorIngresso: $valorIngresso, valorTaxa: $valorTaxa, valorDesconto: $valorDesconto, valorTotal: $valorTotal, valorFiliacao: $valorFiliacao, status: $status, codigoQr: $codigoQr, codigoPIX: $codigoPIX, idCliente: $idCliente, dataCompra: $dataCompra, horaCompra: $horaCompra, pago: $pago, nomeProva: $nomeProva, nomeEmpresa: $nomeEmpresa, idEvento: $idEvento, idEmpresa: $idEmpresa, nomeEvento: $nomeEvento, dataEvento: $dataEvento, horaInicio: $horaInicio, horaInicioF: $horaInicioF, parcelas: $parcelas, tipodevenda: $tipodevenda, horaTermino: $horaTermino, numeroCelular: $numeroCelular, formaPagamento: $formaPagamento, idFormaPagamento: $idFormaPagamento, quandoInscricaoNaoPaga: $quandoInscricaoNaoPaga, mensagemQuandoInscricaoNaoPaga: $mensagemQuandoInscricaoNaoPaga, permVincularParceiro: $permVincularParceiro, pixVencido: $pixVencido, provas: $provas, parceiros: $parceiros, idCabeceira: $idCabeceira, reembolso: $reembolso)';
   }
 }

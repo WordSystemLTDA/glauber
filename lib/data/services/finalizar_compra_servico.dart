@@ -20,7 +20,7 @@ class FinalizarCompraServico {
     var campos = {
       ...dados.toMap(),
       // 'provasAvulsa': dados.provas,
-      'provas': dados.provas,
+      'provas': dados.provas.map((e) => e.toMap()).toList(),
       // 'provasNaoAvulsa': provasNaoAvulsa,
       'usuario': usuario!.toMap(),
     };

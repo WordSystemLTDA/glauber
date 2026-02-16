@@ -1,14 +1,11 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provadelaco/config/config.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
 import 'package:provadelaco/data/services/competidores_servico.dart';
 import 'package:provadelaco/domain/models/competidores/competidores.dart';
 import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/prova/prova.dart';
 import 'package:provadelaco/ui/features/provas/widgets/card_parceiros.dart';
-import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 
 class ModalDetalhesProva extends StatefulWidget {

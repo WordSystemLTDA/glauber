@@ -1,5 +1,7 @@
 import 'dart:io';
 
+// ignore: depend_on_referenced_packages
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
 import 'package:provadelaco/app_widget.dart';
 import 'package:provadelaco/config/dependencies.dart';
@@ -22,6 +24,7 @@ extension EmailValidator on String {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_BR', null);
 
   // if (kIsWeb) {
   //   await Firebase.initializeApp(

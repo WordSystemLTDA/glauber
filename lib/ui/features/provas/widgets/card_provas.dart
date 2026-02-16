@@ -502,9 +502,22 @@ class _CardProvasState extends State<CardProvas> {
                   return Dialog(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "ID da Prova: ${prova.id}",
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "ID da Empresa: ${widget.evento.idEmpresa}",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "ID do Evento: ${widget.evento.id}",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "ID da Prova: ${prova.id}",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   );
