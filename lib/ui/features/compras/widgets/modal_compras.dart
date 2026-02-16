@@ -57,7 +57,6 @@ class _ModalComprasState extends State<ModalCompras> {
     return Dialog(
       insetPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-      surfaceTintColor: Colors.white,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: width * 0.9,

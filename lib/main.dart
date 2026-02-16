@@ -1,8 +1,7 @@
 import 'dart:io';
 
-// ignore: depend_on_referenced_packages
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provadelaco/app_widget.dart';
 import 'package:provadelaco/config/dependencies.dart';
 import 'package:provider/provider.dart';

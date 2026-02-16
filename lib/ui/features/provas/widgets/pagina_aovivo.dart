@@ -1,15 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/data/repositories/ordemdeentrada_prova_repository.dart';
 import 'package:provadelaco/data/repositories/provas_aovivo_repository.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
-import 'package:provadelaco/domain/models/modelo_prova_ao_vivo.dart';
-import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/ordem_de_entrada_card_prova.dart';
-import 'package:provadelaco/ui/features/provas/widgets/card_lista_competicao.dart';
 import 'package:provadelaco/ui/features/provas/widgets/pagina_lista_de_competicao.dart';
 import 'package:provadelaco/ui/features/provas/widgets/pagina_ordem_de_entrada.dart' show PaginaOrdemDeEntrada;
 import 'package:provider/provider.dart';
@@ -39,7 +33,7 @@ class PaginaAoVivo extends StatefulWidget {
 class _PaginaAoVivoState extends State<PaginaAoVivo> {
   String idListaCompeticao = '0';
   String nomeProvaSelecionada = '';
-  
+
   final TextEditingController searchProvaController = TextEditingController();
 
   @override
@@ -77,7 +71,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
           listenable: provasAoVivoStore,
           builder: (context, _) {
             final evento = provasAoVivoStore.evento;
-            final listaCompeticao = provasAoVivoStore.listaCompeticao;
+            // final listaCompeticao = provasAoVivoStore.listaCompeticao;
 
             if (evento == null) return const Center(child: CircularProgressIndicator());
 
@@ -85,7 +79,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
               onRefresh: () async {
                 if (idListaCompeticao == '0') {
                   await provasAoVivoStore.listar(usuarioProvider.usuario, widget.argumentos.idEmpresa, widget.argumentos.idEvento);
-                } 
+                }
                 // If idListaCompeticao != '0', the PaginaOrdemDeEntrada handles its own data/refresh or we can trigger it differently
                 // But since PaginaOrdemDeEntrada has its own RefreshIndicator, we should probably disable this one when inside?
                 // Or maybe this Scaffold RefreshIndicator is fine for the main list only.
@@ -101,11 +95,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
                       boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26, 
-                          blurRadius: 10, 
-                          offset: Offset(0, 4)
-                        ),
+                        BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
                       ],
                     ),
                     child: Stack(
@@ -116,7 +106,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                             child: CachedNetworkImage(
                               imageUrl: evento.foto,
                               fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(color: Colors.grey.shade300), 
+                              placeholder: (context, url) => Container(color: Colors.grey.shade300),
                               errorWidget: (context, url, error) => Container(
                                 color: Colors.grey.shade300,
                                 child: const Icon(Icons.broken_image, color: Colors.grey),
@@ -133,8 +123,8 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  Colors.black.withOpacity(0.1),
-                                  Colors.black.withOpacity(0.7),
+                                  Colors.black.withValues(alpha: 0.1),
+                                  Colors.black.withValues(alpha: 0.7),
                                 ],
                               ),
                             ),
@@ -149,12 +139,11 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                             children: [
                               Text(evento.nomeEvento,
                                   style: const TextStyle(
-                                    color: Colors.white, 
-                                    fontWeight: FontWeight.bold, 
-                                    fontSize: 24, 
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
                                     height: 1.1,
-                                  )
-                              ),
+                                  )),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
@@ -173,7 +162,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                           top: 16,
                           left: 16,
                           child: Material(
-                            color: Colors.white.withOpacity(0.2), 
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(12),
@@ -203,7 +192,7 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
                       ],
                     ),
                   ),
-                  
+
                   Expanded(
                     child: idListaCompeticao == '0'
                         ? PaginaListaDeCompeticao(

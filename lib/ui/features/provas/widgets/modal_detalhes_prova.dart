@@ -55,7 +55,15 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
 
     if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty &&
         widget.permVincularParceiro == 'Sim') {
-      listaCompetidores = List.from(widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.competidores ?? []);
+      if (widget.prova.avulsa == 'Sim') {
+        // Avulsa: cada entrada do carrinho tem 1 competidor, agregar todos
+        for (var entry in widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira)) {
+          listaCompetidores.addAll(entry.competidores ?? []);
+        }
+      } else {
+        listaCompetidores =
+            List.from(widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.competidores ?? []);
+      }
 
       if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio != null) {
         sorteio = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio!;
@@ -184,8 +192,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                     ),
                     const SizedBox(height: 20),
                   ],
-                  if (widget.prova.permitirSorteio == 'Sim' && widget.permVincularParceiro == 'Sim')
-                    _buildSorteioCard(),
+                  if (widget.prova.permitirSorteio == 'Sim' && widget.permVincularParceiro == 'Sim') _buildSorteioCard(),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -256,27 +263,30 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       ),
       suggestionsBuilder: (context, controller) async {
         final competidores = await context.read<CompetidoresServico>().listarBancoCompetidores(
-          widget.prova.idCabeceira,
-          context.read<UsuarioProvider>().usuario,
-          controller.text,
-          widget.prova.id,
-        );
+              widget.prova.idCabeceira,
+              context.read<UsuarioProvider>().usuario,
+              controller.text,
+              widget.prova.id,
+            );
         return competidores.map((c) => ListTile(
-          leading: Text(c.id),
-          title: Text(c.nome),
-          subtitle: Text(c.apelido),
-          onTap: () => controller.closeView(c.nome),
-        ));
+              leading: Text(c.id),
+              title: Text(c.nome),
+              subtitle: Text(c.apelido),
+              onTap: () => controller.closeView(c.nome),
+            ));
       },
     );
   }
 
   Widget _buildSorteioCard() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: sorteio ? Colors.orange.shade50 : Colors.grey.shade50,
+        color: sorteio
+            ? (isDark ? Colors.orange.shade900.withValues(alpha: 0.3) : Colors.orange.shade50)
+            : (isDark ? Theme.of(context).colorScheme.surfaceContainerHighest : Colors.grey.shade50),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: sorteio ? Colors.orange : Colors.grey.shade200),
+        border: Border.all(color: sorteio ? Colors.orange : (isDark ? Colors.grey.shade700 : Colors.grey.shade200)),
       ),
       child: CheckboxListTile(
         title: const Text('HABILITAR SORTEIO', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -301,8 +311,8 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
     return Container(
       padding: EdgeInsets.fromLTRB(20, 15, 20, MediaQuery.of(context).padding.bottom + 15),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 15, offset: const Offset(0, -5))],
+        color: Theme.of(context).cardColor,
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 15, offset: const Offset(0, -5))],
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -331,16 +341,17 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
             width: double.infinity,
             height: 55,
             child: ElevatedButton(
-              onPressed: quantidade == 0 ? null : () {
-                var retorno = widget.adicionarNoCarrinho(quantidade, listaCompetidores, sorteio);
-                if (retorno == false) {
-                  setState(() {
-                    mensagemAlerta = widget.prova.permitirSorteio == 'Sim'
-                        ? 'Selecione todos os parceiros ou habilite o Sorteio.'
-                        : 'Selecione todos os parceiros antes de continuar.';
-                  });
-                }
-              },
+              onPressed: quantidade == 0
+                  ? null
+                  : () {
+                      var retorno = widget.adicionarNoCarrinho(quantidade, listaCompetidores, sorteio);
+                      if (retorno == false) {
+                        setState(() {
+                          mensagemAlerta =
+                              widget.prova.permitirSorteio == 'Sim' ? 'Selecione todos os parceiros ou habilite o Sorteio.' : 'Selecione todos os parceiros antes de continuar.';
+                        });
+                      }
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF71808),
                 foregroundColor: Colors.white,
@@ -360,7 +371,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   Widget _qtyBtn(IconData icon, VoidCallback onTap, {bool isRemoveAction = false}) {
     bool canRemove = (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima)));
     bool isDeleteIcon = !canRemove && widget.provasCarrinho.any((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira);
-    
+
     Color btnColor = isRemoveAction ? Colors.red : Colors.green;
     if (isRemoveAction && !canRemove && !isDeleteIcon) btnColor = Colors.grey;
 
@@ -370,7 +381,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: btnColor.withOpacity(0.1),
+          color: btnColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(

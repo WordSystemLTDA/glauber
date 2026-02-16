@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provadelaco/routing/router.dart';
 import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/core/themes/theme_controller.dart';
 import 'package:provadelaco/ui/core/themes/theme_data.dart';
-import 'package:provadelaco/routing/router.dart';
 import 'package:provider/provider.dart';
 
 class AppWidget extends StatelessWidget {

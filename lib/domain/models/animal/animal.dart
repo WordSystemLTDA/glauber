@@ -1,9 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
-part 'animal.g.dart';
-
 class ModeloAnimal {
   final String id;
   final String nomedoanimal;
@@ -24,7 +21,6 @@ class ModeloAnimal {
     required this.foto,
     required this.soupropietario,
   });
-
 
   ModeloAnimal copyWith({
     String? id,
@@ -86,27 +82,20 @@ class ModeloAnimal {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is ModeloAnimal &&
-      other.id == id &&
-      other.nomedoanimal == nomedoanimal &&
-      other.datanascianimal == datanascianimal &&
-      other.sexo == sexo &&
-      other.padrao == padrao &&
-      other.racadoanimal == racadoanimal &&
-      other.foto == foto &&
-      other.soupropietario == soupropietario;
+        other.id == id &&
+        other.nomedoanimal == nomedoanimal &&
+        other.datanascianimal == datanascianimal &&
+        other.sexo == sexo &&
+        other.padrao == padrao &&
+        other.racadoanimal == racadoanimal &&
+        other.foto == foto &&
+        other.soupropietario == soupropietario;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      nomedoanimal.hashCode ^
-      datanascianimal.hashCode ^
-      sexo.hashCode ^
-      padrao.hashCode ^
-      racadoanimal.hashCode ^
-      foto.hashCode ^
-      soupropietario.hashCode;
+    return id.hashCode ^ nomedoanimal.hashCode ^ datanascianimal.hashCode ^ sexo.hashCode ^ padrao.hashCode ^ racadoanimal.hashCode ^ foto.hashCode ^ soupropietario.hashCode;
   }
 }

@@ -117,7 +117,9 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                     valorIngresso: "0.00",
                     valorTaxa: "0.00",
                     valorDesconto: "0.00",
-                    valorTotal: element.tipodevenda == 'Filiação' ? (num.parse(previousValue.valorTotal) + (num.parse(element.valorFiliacao) / (num.tryParse(element.parcelas) ?? 1))).toString() : ((num.parse(previousValue.valorTotal) + num.parse(element.valorTotal))).toString(),
+                    valorTotal: element.tipodevenda == 'Filiação'
+                        ? (num.parse(previousValue.valorTotal) + (num.parse(element.valorFiliacao) / (num.tryParse(element.parcelas) ?? 1))).toString()
+                        : ((num.parse(previousValue.valorTotal) + num.parse(element.valorTotal))).toString(),
                     status: "Pendente",
                     codigoQr: "MTAwMDAwMDAwMDE4Nw==",
                     codigoPIX: "00020126330014br.gov.bcb.pix0111061528269505204000053039865406150.005802BR5911SAGL84237736011Santo Incio62240520mpqrinter7002336949763044DB5",
@@ -147,9 +149,9 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                 )
                 .valorTotal) -
             ((comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length > 1
-                        ? num.parse(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).first.valorTaxa)
-                        : 0) *
-                    comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length))
+                    ? num.parse(comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).first.valorTaxa)
+                    : 0) *
+                comprasPagamentos.where((element) => num.parse(element.valorTaxa) > 0).length))
         .toString();
 
     return Scaffold(
@@ -232,80 +234,137 @@ class _PaginaSelecionarPagamentosState extends State<PaginaSelecionarPagamentos>
                           itemBuilder: (context, index) {
                             var item = inscricoesValue[index];
 
+                            final bool ehFiliacao = item.tipodevenda == 'Filiação';
+
                             return Padding(
-                              padding: EdgeInsets.only(bottom: inscricoesValue.lastWhere((element) => element.nomeProva == item.nomeProva).id == item.id ? 20 : 0),
+                              padding: EdgeInsets.only(bottom: inscricoesValue.lastWhere((element) => element.nomeEvento == item.nomeEvento).id == item.id ? 20 : 0),
                               child: Stack(
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      if (inscricoesValue.firstWhere((element) => element.nomeProva == item.nomeProva).id == item.id) ...[
+                                      if (inscricoesValue.firstWhere((element) => element.nomeEvento == item.nomeEvento).id == item.id) ...[
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 5, left: 2),
-                                          child: Text(item.nomeProva),
+                                          child: Text(item.nomeEvento),
                                         ),
                                       ],
-                                      CardCompras(
-                                        item: item,
-                                        modoTransferencia: false,
-                                        modoGerarPagamento: true,
-                                        comprasTransferencia: const [],
-                                        comprasPagamentos: comprasPagamentos,
-                                        aparecerNomeProva: true,
-                                        aoClicarParaTransferir: (compra) {},
-                                        aoClicarParaGerarPagamento: (compra) {
-                                          if (comprasPagamentos.isNotEmpty) {
-                                            if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
-                                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                showCloseIcon: true,
-                                                content: Text('Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.'),
-                                              ));
-                                              return;
+                                      if (ehFiliacao) ...[
+                                        IgnorePointer(
+                                          child: Opacity(
+                                            opacity: 0.7,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(color: Colors.orange, width: 2),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: Stack(
+                                                children: [
+                                                  CardCompras(
+                                                    item: item,
+                                                    modoTransferencia: false,
+                                                    modoGerarPagamento: true,
+                                                    comprasTransferencia: const [],
+                                                    comprasPagamentos: comprasPagamentos,
+                                                    aparecerNomeProva: true,
+                                                    aoClicarParaTransferir: (compra) {},
+                                                    aoClicarParaGerarPagamento: (compra) {},
+                                                  ),
+                                                  Positioned(
+                                                    left: 8,
+                                                    top: 4,
+                                                    child: Container(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.orange,
+                                                        borderRadius: BorderRadius.circular(4),
+                                                      ),
+                                                      child: const Text(
+                                                        'Filiação (automático)',
+                                                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ] else ...[
+                                        CardCompras(
+                                          item: item,
+                                          modoTransferencia: false,
+                                          modoGerarPagamento: true,
+                                          comprasTransferencia: const [],
+                                          comprasPagamentos: comprasPagamentos,
+                                          aparecerNomeProva: true,
+                                          aoClicarParaTransferir: (compra) {},
+                                          aoClicarParaGerarPagamento: (compra) {
+                                            if (comprasPagamentos.isNotEmpty) {
+                                              if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  showCloseIcon: true,
+                                                  content: Text('Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.'),
+                                                ));
+                                                return;
+                                              }
+
+                                              if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+                                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  showCloseIcon: true,
+                                                  content: Text('Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.'),
+                                                ));
+                                                return;
+                                              }
                                             }
 
-                                            if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
-                                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                showCloseIcon: true,
-                                                content: Text('Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.'),
-                                              ));
-                                              return;
-                                            }
-                                          }
+                                            // Buscar filiações do mesmo evento
+                                            final filiacoesDoEvento = inscricoesValue
+                                                .where(
+                                                  (e) => e.tipodevenda == 'Filiação' && e.idEvento == compra.idEvento && e.idEmpresa == compra.idEmpresa,
+                                                )
+                                                .toList();
 
-                                          if (comprasPagamentos.contains(compra)) {
-                                            // if (selecionarVariasInscricoes) {
-                                            //   setState(() {
-                                            //     comprasPagamentos.removeWhere((element) => element.nomeProva == compra.nomeProva);
-                                            //   });
-                                            // } else {
-                                            setState(() {
-                                              comprasPagamentos.remove(compra);
-                                            });
-                                            // }
-                                          } else {
-                                            // if (selecionarVariasInscricoes) {
-                                            //   setState(() {
-                                            //     comprasPagamentos.addAll(inscricoesValue.where((element) => element.nomeProva == compra.nomeProva));
-                                            //   });
-                                            // } else {
-                                            setState(() {
-                                              comprasPagamentos.add(compra);
-                                            });
-                                            // }
-                                          }
-                                        },
-                                      ),
+                                            if (comprasPagamentos.contains(compra)) {
+                                              setState(() {
+                                                comprasPagamentos.remove(compra);
+
+                                                // Se não há mais inscrições normais desse evento selecionadas, remover filiações também
+                                                final temOutrasDoEvento = comprasPagamentos.any(
+                                                  (e) => e.tipodevenda != 'Filiação' && e.idEvento == compra.idEvento,
+                                                );
+                                                if (!temOutrasDoEvento) {
+                                                  for (var fil in filiacoesDoEvento) {
+                                                    comprasPagamentos.remove(fil);
+                                                  }
+                                                }
+                                              });
+                                            } else {
+                                              setState(() {
+                                                comprasPagamentos.add(compra);
+
+                                                // Auto-selecionar filiações do mesmo evento
+                                                for (var fil in filiacoesDoEvento) {
+                                                  if (!comprasPagamentos.contains(fil)) {
+                                                    comprasPagamentos.add(fil);
+                                                  }
+                                                }
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ],
                                   ),
                                   if (comprasPagamentos.contains(item)) ...[
                                     Positioned(
                                       right: 0,
-                                      top: inscricoesValue.firstWhere((element) => element.nomeProva == item.nomeProva).id == item.id ? 20 : 0,
-                                      child: const Icon(
+                                      top: inscricoesValue.firstWhere((element) => element.nomeEvento == item.nomeEvento).id == item.id ? 20 : 0,
+                                      child: Icon(
                                         Icons.check,
-                                        color: Colors.green,
+                                        color: ehFiliacao ? Colors.orange : Colors.green,
                                         size: 30,
                                       ),
                                     ),

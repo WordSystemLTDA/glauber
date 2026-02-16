@@ -9,11 +9,25 @@ ThemeData get darkTheme => ThemeData(
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       }),
+      scaffoldBackgroundColor: _darkColorScheme.surface,
       appBarTheme: AppBarTheme(
         centerTitle: true,
-        backgroundColor: _darkColorScheme.primaryContainer,
+        backgroundColor: _darkColorScheme.surface,
+        surfaceTintColor: _darkColorScheme.surface,
       ),
-      cardColor: Colors.white,
+      cardColor: _darkColorScheme.surface,
+      cardTheme: CardThemeData(
+        color: _darkColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: _darkColorScheme.surface,
+        surfaceTintColor: _darkColorScheme.surface,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: _darkColorScheme.primary,
+        foregroundColor: _darkColorScheme.onPrimary,
+      ),
       inputDecorationTheme: _inputDecorationTheme,
       dropdownMenuTheme: DropdownMenuThemeData(
         inputDecorationTheme: _inputDecorationTheme,
@@ -30,6 +44,10 @@ ThemeData get lightTheme => ThemeData(
       }),
       appBarTheme: const AppBarTheme(
         centerTitle: true,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+      ),
+      dialogTheme: const DialogThemeData(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
       ),

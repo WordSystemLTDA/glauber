@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provadelaco/data/repositories/compras_repository.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
 import 'package:provadelaco/data/services/home_servico.dart';
+import 'package:provadelaco/domain/models/competidores/competidores.dart';
 import 'package:provadelaco/domain/models/confirmar_parceiros/confirmar_parceiros.dart';
+import 'package:provadelaco/domain/models/permitir_compra_modelo.dart';
+import 'package:provadelaco/domain/models/prova/prova.dart';
+import 'package:provadelaco/routing/routes.dart';
+import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_finalizar_compra.dart';
 import 'package:provider/provider.dart';
 
 class PaginaConfirmarParceiros extends StatefulWidget {
@@ -162,6 +167,97 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
     if (resultado.sucesso) {
       if (contextDialog.mounted) {
         Navigator.of(contextDialog).pop();
+      }
+
+      // Se precisa criar venda, navega para a página de finalizar compra
+      if (resultado.precisaCriarVenda && resultado.dados != null) {
+        if (mounted) {
+          var dados = resultado.dados!;
+
+          // Pega as informações da prova
+          String avulsa = dados['avulsa']?.toString() ?? 'Não';
+          int quantParceiros = int.tryParse(dados['quant_parceiros']?.toString() ?? '0') ?? 0;
+          int quantMaxima = int.tryParse(dados['quant_maxima']?.toString() ?? '0') ?? 0;
+
+          // Cria o competidor a partir dos dados do parceiro
+          var competidorParceiro = CompetidoresModelo(
+            id: dados['idparceiro'].toString(),
+            nome: dados['nomeparceiro'].toString(),
+            apelido: dados['apelido']?.toString() ?? '',
+            nomeCidade: dados['nomeCidade']?.toString() ?? '',
+            siglaEstado: dados['siglaEstado']?.toString() ?? '',
+            ativo: 'Sim',
+            idProva: dados['idprovas'].toString(),
+            celular: dados['celular']?.toString(),
+            jaExistente: true,
+            idVincularParceiros: dados['idvincularparceiros']?.toString(),
+          );
+
+          // Cria a lista de competidores
+          List<CompetidoresModelo> competidores = [competidorParceiro];
+
+          // Se não for avulsa (pacote fechado), adiciona competidores de sorteio
+          if (avulsa == 'Não' && quantParceiros > 1) {
+            // Adiciona competidores de sorteio para completar quant_parceiros
+            int competidoresParaSorteio = quantParceiros - 1; // -1 porque já temos o parceiro confirmado
+
+            for (int i = 0; i < competidoresParaSorteio; i++) {
+              competidores.add(CompetidoresModelo(
+                id: '0', // ID 0 significa sorteio
+                nome: 'Sorteio',
+                apelido: '',
+                nomeCidade: '',
+                siglaEstado: '',
+                ativo: 'Sim',
+                idProva: dados['idprovas'].toString(),
+                jaExistente: false,
+              ));
+            }
+          }
+
+          // Define o idCabeceira baseado na modalidade
+          // modalidade '1' = vai laçar PÉ, então é CABECEIRA
+          // modalidade '2' = vai laçar CABEÇA, então é PEZEIRO
+          String modalidade = dados['modalidade'].toString();
+          String idCabeceira = modalidade == '1' ? '1' : '2';
+
+          // Cria o modelo de prova a partir dos dados retornados
+          // Os valores reais serão carregados na página de finalizar compra
+          var provaModelo = ProvaModelo(
+            id: dados['idprovas'].toString(),
+            nomeProva: dados['nomeprova'].toString(),
+            valor: dados['valor'].toString(),
+            hcMinimo: '0',
+            hcMaximo: '0',
+            avulsa: avulsa,
+            quantMinima: '0',
+            quantMaxima: quantMaxima.toString(),
+            permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
+            permitirSorteio: 'Não',
+            habilitarAoVivo: 'Não',
+            idListaCompeticao: '0',
+            permitirEditarParceiros: 'Não',
+            competidores: competidores, // Adiciona todos os competidores
+            idCabeceira: idCabeceira, // Define se é cabeceira (1) ou pezeiro (2)
+          );
+
+          Navigator.of(context)
+              .pushNamed(
+            AppRotas.finalizarCompra,
+            arguments: PaginaFinalizarCompraArgumentos(
+              provas: [provaModelo],
+              idEvento: dados['idevento'].toString(),
+              editarVenda: false,
+              idVenda: null,
+              metodoPagamento: null,
+            ),
+          )
+              .then((_) {
+            // Atualiza a lista após voltar da finalização
+            listar();
+          });
+        }
+        return;
       }
 
       if (mounted) {

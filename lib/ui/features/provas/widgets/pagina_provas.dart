@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +53,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
     double valorTotal = provasCarrinho.fold(0, (total, prova) => total + double.parse(prova.valor));
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: _buildCheckoutButton(valorTotal),
       body: ListenableBuilder(
@@ -77,7 +79,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                     leading: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CircleAvatar(
-                        backgroundColor: Colors.black.withOpacity(0.4),
+                        backgroundColor: Colors.black.withValues(alpha: 0.4),
                         child: IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
                           onPressed: () => Navigator.pop(context),
@@ -86,37 +88,49 @@ class _PaginaProvasState extends State<PaginaProvas> {
                     ),
                     flexibleSpace: FlexibleSpaceBar(
                       centerTitle: false,
-                      titlePadding: const EdgeInsets.only(left: 60, bottom: 16, right: 16),
-                      title: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              evento.nomeEvento.toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                      titlePadding: EdgeInsets.zero,
+                      title: LayoutBuilder(builder: (context, constraints) {
+                        // interpolate padding based on current height to make the movement smooth
+                        final expandedHeight = 280.0;
+                        final minHeight = kToolbarHeight;
+                        final currentHeight = constraints.biggest.height;
+                        final t = ((expandedHeight - currentHeight) / (expandedHeight - minHeight)).clamp(0.0, 1.0);
+                        final left = ui.lerpDouble(16.0, 70.0, t) ?? 16.0;
+
+                        return Padding(
+                          padding: EdgeInsets.only(left: left, bottom: 16, right: 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  evento.nomeEvento,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 10,
-                                shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                              Flexible(
+                                child: Text(
+                                  DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 10,
+                                    shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      }),
                       expandedTitleScale: 1.5, // Less scaling to avoid huge jumps
                       background: Stack(
                         fit: StackFit.expand,
@@ -188,9 +202,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.black.withOpacity(0.3),
+            Colors.black.withValues(alpha: 0.3),
             Colors.transparent,
-            Colors.black.withOpacity(0.8),
+            Colors.black.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -219,9 +233,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: ActionChip(
-        avatar: Icon(icon, size: 18, color: color ?? Colors.black87),
+        avatar: Icon(icon, size: 18, color: color ?? Theme.of(context).colorScheme.onSurface),
         label: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).cardColor,
         elevation: 2,
         shadowColor: Colors.black12,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -240,10 +254,11 @@ class _PaginaProvasState extends State<PaginaProvas> {
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: [Color(0xFFF71808), Color(0xFFB31206)]),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))],
+        boxShadow: [BoxShadow(color: Colors.red.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
       ),
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, AppRotas.finalizarCompra, arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento)),
+        onTap: () =>
+            Navigator.pushNamed(context, AppRotas.finalizarCompra, arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -292,8 +307,14 @@ class _PaginaProvasState extends State<PaginaProvas> {
   void adicionarAvulsaNoCarrinho(int quantidade, ProvaModelo prova, EventoModelo evento, String idmodalidade) {
     setState(() {
       provasCarrinho.removeWhere((e) => e.id == prova.id);
+      final competidores = prova.competidores ?? [];
       for (var i = 0; i < quantidade; i++) {
-        provasCarrinho.add(prova.copyWith(idmodalidade: () => idmodalidade));
+        // Para avulsa, cada cópia recebe apenas 1 competidor (1 venda por parceiro)
+        final competidor = i < competidores.length ? [competidores[i]] : null;
+        provasCarrinho.add(prova.copyWith(
+          idmodalidade: () => idmodalidade,
+          competidores: () => competidor,
+        ));
       }
     });
   }
@@ -315,7 +336,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Colors.grey.shade50, // Match default background
+      color: Theme.of(context).scaffoldBackgroundColor, // Match default background
       child: _tabBar,
     );
   }

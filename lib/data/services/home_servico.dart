@@ -79,7 +79,8 @@ class HomeServico {
     );
   }
 
-  Future<({String mensagem, bool sucesso})> confirmarParceiro(ParceirosModelo parceiro, String idprovas, String idcliente, UsuarioModelo? usuario) async {
+  Future<({String mensagem, bool sucesso, bool precisaCriarVenda, Map<String, dynamic>? dados})> confirmarParceiro(
+      ParceirosModelo parceiro, String idprovas, String idcliente, UsuarioModelo? usuario) async {
     var url = 'home/aceitar_parceiro.php';
 
     var campos = {
@@ -97,8 +98,10 @@ class HomeServico {
 
     bool sucesso = jsonData['sucesso'];
     String mensagem = jsonData['mensagem'];
+    bool precisaCriarVenda = jsonData['precisa_criar_venda'] ?? false;
+    Map<String, dynamic>? dados = jsonData['dados'];
 
-    return (sucesso: sucesso, mensagem: mensagem);
+    return (sucesso: sucesso, mensagem: mensagem, precisaCriarVenda: precisaCriarVenda, dados: dados);
   }
 
   Future<({String mensagem, bool sucesso})> recusarParceiro(ParceirosModelo parceiro, String idcliente) async {

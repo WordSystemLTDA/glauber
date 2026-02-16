@@ -29,7 +29,7 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 3)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 3)),
         ],
         border: widget.selecionado ? Border.all(color: Colors.green.shade600, width: 1.5) : null,
       ),
@@ -107,12 +107,12 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('Inscrição', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-                    Text('${itemParceiro.numeroDaInscricao}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                    Text(itemParceiro.numeroDaInscricao, style: const TextStyle(fontWeight: FontWeight.w700)),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary ?? Theme.of(context).colorScheme.primary]),
+                        gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary]),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(

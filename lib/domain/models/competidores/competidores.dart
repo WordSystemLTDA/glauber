@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 
-part 'competidores.g.dart';
-
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore: must_be_immutable
 
@@ -17,6 +15,7 @@ class CompetidoresModelo {
   String idProva;
   bool? jaExistente;
   String? idParceiroTrocado;
+  String? idVincularParceiros;
   String? celular;
   String? hccabeceira;
   String? hcpezeiro;
@@ -31,11 +30,11 @@ class CompetidoresModelo {
     required this.idProva,
     this.jaExistente,
     this.idParceiroTrocado,
+    this.idVincularParceiros,
     this.celular,
     this.hccabeceira,
     this.hcpezeiro,
   });
-
 
   CompetidoresModelo copyWith({
     String? id,
@@ -47,6 +46,7 @@ class CompetidoresModelo {
     String? idProva,
     ValueGetter<bool?>? jaExistente,
     ValueGetter<String?>? idParceiroTrocado,
+    ValueGetter<String?>? idVincularParceiros,
     ValueGetter<String?>? celular,
     ValueGetter<String?>? hccabeceira,
     ValueGetter<String?>? hcpezeiro,
@@ -61,6 +61,7 @@ class CompetidoresModelo {
       idProva: idProva ?? this.idProva,
       jaExistente: jaExistente != null ? jaExistente() : this.jaExistente,
       idParceiroTrocado: idParceiroTrocado != null ? idParceiroTrocado() : this.idParceiroTrocado,
+      idVincularParceiros: idVincularParceiros != null ? idVincularParceiros() : this.idVincularParceiros,
       celular: celular != null ? celular() : this.celular,
       hccabeceira: hccabeceira != null ? hccabeceira() : this.hccabeceira,
       hcpezeiro: hcpezeiro != null ? hcpezeiro() : this.hcpezeiro,
@@ -78,6 +79,7 @@ class CompetidoresModelo {
       'idProva': idProva,
       'jaExistente': jaExistente,
       'idParceiroTrocado': idParceiroTrocado,
+      'idVincularParceiros': idVincularParceiros,
       'celular': celular,
       'hccabeceira': hccabeceira,
       'hcpezeiro': hcpezeiro,
@@ -95,6 +97,7 @@ class CompetidoresModelo {
       idProva: map['idProva'] ?? '',
       jaExistente: map['jaExistente'],
       idParceiroTrocado: map['idParceiroTrocado'],
+      idVincularParceiros: map['idVincularParceiros'],
       celular: map['celular'],
       hccabeceira: map['hccabeceira'],
       hcpezeiro: map['hcpezeiro'],
@@ -107,41 +110,43 @@ class CompetidoresModelo {
 
   @override
   String toString() {
-    return 'CompetidoresModelo(id: $id, nome: $nome, apelido: $apelido, nomeCidade: $nomeCidade, siglaEstado: $siglaEstado, ativo: $ativo, idProva: $idProva, jaExistente: $jaExistente, idParceiroTrocado: $idParceiroTrocado, celular: $celular, hccabeceira: $hccabeceira, hcpezeiro: $hcpezeiro)';
+    return 'CompetidoresModelo(id: $id, nome: $nome, apelido: $apelido, nomeCidade: $nomeCidade, siglaEstado: $siglaEstado, ativo: $ativo, idProva: $idProva, jaExistente: $jaExistente, idParceiroTrocado: $idParceiroTrocado, idVincularParceiros: $idVincularParceiros, celular: $celular, hccabeceira: $hccabeceira, hcpezeiro: $hcpezeiro)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is CompetidoresModelo &&
-      other.id == id &&
-      other.nome == nome &&
-      other.apelido == apelido &&
-      other.nomeCidade == nomeCidade &&
-      other.siglaEstado == siglaEstado &&
-      other.ativo == ativo &&
-      other.idProva == idProva &&
-      other.jaExistente == jaExistente &&
-      other.idParceiroTrocado == idParceiroTrocado &&
-      other.celular == celular &&
-      other.hccabeceira == hccabeceira &&
-      other.hcpezeiro == hcpezeiro;
+        other.id == id &&
+        other.nome == nome &&
+        other.apelido == apelido &&
+        other.nomeCidade == nomeCidade &&
+        other.siglaEstado == siglaEstado &&
+        other.ativo == ativo &&
+        other.idProva == idProva &&
+        other.jaExistente == jaExistente &&
+        other.idParceiroTrocado == idParceiroTrocado &&
+        other.idVincularParceiros == idVincularParceiros &&
+        other.celular == celular &&
+        other.hccabeceira == hccabeceira &&
+        other.hcpezeiro == hcpezeiro;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      nome.hashCode ^
-      apelido.hashCode ^
-      nomeCidade.hashCode ^
-      siglaEstado.hashCode ^
-      ativo.hashCode ^
-      idProva.hashCode ^
-      jaExistente.hashCode ^
-      idParceiroTrocado.hashCode ^
-      celular.hashCode ^
-      hccabeceira.hashCode ^
-      hcpezeiro.hashCode;
+        nome.hashCode ^
+        apelido.hashCode ^
+        nomeCidade.hashCode ^
+        siglaEstado.hashCode ^
+        ativo.hashCode ^
+        idProva.hashCode ^
+        jaExistente.hashCode ^
+        idParceiroTrocado.hashCode ^
+        idVincularParceiros.hashCode ^
+        celular.hashCode ^
+        hccabeceira.hashCode ^
+        hcpezeiro.hashCode;
   }
 }

@@ -106,7 +106,6 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
       return Dialog(
         insetPadding: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-        surfaceTintColor: Colors.white,
         child: ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: width * 0.9,
@@ -132,7 +131,6 @@ class _ModalPagarInscricoesState extends State<ModalPagarInscricoes> {
     return Dialog(
       insetPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-      surfaceTintColor: Colors.white,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: width * 0.9,

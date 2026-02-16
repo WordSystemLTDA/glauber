@@ -1,12 +1,9 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:provadelaco/config/assets.dart';
 import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/modelo_prova_ao_vivo.dart';
 import 'package:provadelaco/domain/models/nomes_cabeceira_modelo.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CardListaCompeticao extends StatefulWidget {
   final ModeloProvaAoVivo item;
@@ -50,9 +47,9 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
   @override
   Widget build(BuildContext context) {
     var item = widget.item;
-    var width = MediaQuery.of(context).size.width;
+    // var width = MediaQuery.of(context).size.width;
 
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -61,7 +58,7 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, 4),
             blurRadius: 10,
             spreadRadius: 2,
@@ -83,7 +80,7 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple.withOpacity(0.1),
+                    color: Colors.deepPurple.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -98,7 +95,7 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                
+
                 // Content
                 Expanded(
                   child: Column(
@@ -137,16 +134,9 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.deepPurple.withOpacity(0.3),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3)
-                      )
-                    ]
-                  ),
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [BoxShadow(color: Colors.deepPurple.withValues(alpha: 0.3), blurRadius: 6, offset: const Offset(0, 3))]),
                   child: const Row(
                     children: [
                       Text(

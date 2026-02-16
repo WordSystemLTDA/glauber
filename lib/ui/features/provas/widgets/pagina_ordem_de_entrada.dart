@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/ordem_de_entrada_card_prova.dart';
 import 'package:provadelaco/data/repositories/ordemdeentrada_prova_repository.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
+import 'package:provadelaco/ui/features/ordem_de_entrada/widgets/ordem_de_entrada_card_prova.dart';
 import 'package:provider/provider.dart';
 
 class PaginaOrdemDeEntrada extends StatefulWidget {
@@ -79,12 +80,12 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
 
   Future<void> _carregarDados({bool resetar = false}) async {
     if (!mounted) return;
-    
+
     if (resetar) {
       setState(() {
         _paginaAtual = 0;
         _carregandoInicial = true;
-        // Se for refresh completo, limpamos a lista local para mostrar carregamento, 
+        // Se for refresh completo, limpamos a lista local para mostrar carregamento,
         // ou mantemos para evitar flicker? Melhor limpar se for mudança de filtro
       });
     }
@@ -114,13 +115,13 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
     );
 
     if (mounted) {
-       setState(() {
-          // Atualiza lista local com o que está na store
-          // Nota: listarPorListaCompeticao na store geralmente substitui a lista se for pagina 0
-          // ou adiciona se for pagina > 0? 
-          // O store parece manter o estado 'ordemdeentradas'.
-          _listaLocal = ordemDeEntradaProvaStore.ordemdeentradas;
-       });
+      setState(() {
+        // Atualiza lista local com o que está na store
+        // Nota: listarPorListaCompeticao na store geralmente substitui a lista se for pagina 0
+        // ou adiciona se for pagina > 0?
+        // O store parece manter o estado 'ordemdeentradas'.
+        _listaLocal = ordemDeEntradaProvaStore.ordemdeentradas;
+      });
     }
   }
 
@@ -158,7 +159,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
                     hintText: 'Pesquisar na lista',
                     prefixIcon: const Icon(Icons.search),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).cardColor,
                     contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -172,7 +173,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
@@ -196,7 +197,7 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
             ],
           ),
         ),
-        
+
         // Lista
         Expanded(
           child: _carregandoInicial && lista.isEmpty
@@ -213,12 +214,12 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
                         itemCount: lista.length + (_carregandoProximaPagina ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index == lista.length) {
-                             return const Center(
-                               child: Padding(
-                                 padding: EdgeInsets.all(8.0),
-                                 child: CircularProgressIndicator(),
-                               ),
-                             );
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
                           }
                           var item = lista[index];
                           return CardOrdemDeEntradaProva(

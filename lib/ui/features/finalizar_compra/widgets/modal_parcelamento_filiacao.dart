@@ -32,8 +32,8 @@ class _ModalParcelamentoFiliacaoState extends State<ModalParcelamentoFiliacao> {
     final valor1x = valorFiliacao;
     final valor2x = valorFiliacao + 50.0;
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         insetPadding: const EdgeInsets.all(16),
@@ -177,13 +177,13 @@ class _ModalParcelamentoFiliacaoState extends State<ModalParcelamentoFiliacao> {
     required VoidCallback onTap,
   }) {
     final valorPorParcela = valor / parcelas;
-    
+
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFFF71808).withOpacity(0.05) : Colors.white,
+          color: selected ? const Color(0xFFF71808).withValues(alpha: 0.05) : Theme.of(context).cardColor,
           border: Border.all(
             color: selected ? const Color(0xFFF71808) : Colors.grey.shade300,
             width: selected ? 2 : 1,
@@ -192,11 +192,13 @@ class _ModalParcelamentoFiliacaoState extends State<ModalParcelamentoFiliacao> {
         ),
         child: Row(
           children: [
-            Radio<int>(
-              value: parcelas,
-              groupValue: parcelas == 1 ? (selected ? 1 : -1) : (selected ? 2 : -1),
+            RadioGroup<int>(
+              groupValue: selected ? parcelas : -1,
               onChanged: (_) => onTap(),
-              activeColor: const Color(0xFFF71808),
+              child: Radio<int>(
+                value: parcelas,
+                activeColor: const Color(0xFFF71808),
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(

@@ -84,15 +84,18 @@ class _CardComprasState extends State<CardCompras> {
     var comprasServico = context.read<ComprasServico>();
     double tamanhoCard = 125;
     var item = widget.item;
-
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final bool ehFiliacao = item.tipodevenda == 'Filiação';
 
     return SizedBox(
       height: ((item.provas.isNotEmpty && item.provas[0].idmodalidade == '4') || item.status == 'Cancelado' || item.parceiros.isEmpty) ? 130 : 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
-          side: widget.comprasTransferencia.contains(item) || widget.comprasPagamentos.contains(item) ? const BorderSide(color: Colors.green, width: 2) : BorderSide.none,
+          side: ehFiliacao
+              ? const BorderSide(color: Colors.orange, width: 2)
+              : widget.comprasTransferencia.contains(item) || widget.comprasPagamentos.contains(item)
+                  ? const BorderSide(color: Colors.green, width: 2)
+                  : BorderSide.none,
         ),
         child: InkWell(
           onTap: (widget.modoTransferencia || widget.modoGerarPagamento) && (item.status == 'Cancelado')
@@ -117,6 +120,23 @@ class _CardComprasState extends State<CardCompras> {
                 },
           child: Stack(
             children: [
+              if (ehFiliacao) ...[
+                Positioned(
+                  right: 65,
+                  top: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'Filiação',
+                      style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
               SizedBox(
                 height: tamanhoCard,
                 child: Row(
@@ -174,7 +194,9 @@ class _CardComprasState extends State<CardCompras> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Column(
-                            mainAxisAlignment: item.provas.isNotEmpty && item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não' ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                            mainAxisAlignment: item.provas.isNotEmpty && item.provas[0].liberarReembolso == 'Sim' && item.reembolso == 'Não'
+                                ? MainAxisAlignment.spaceBetween
+                                : MainAxisAlignment.center,
                             children: [
                               IconButton(
                                 onPressed: () {
@@ -333,14 +355,16 @@ class _CardComprasState extends State<CardCompras> {
                             ),
                           ),
                           backgroundColor: WidgetStatePropertyAll((item.parceiros.isEmpty || (item.provas.isNotEmpty && item.provas[0].avulsa == 'Não'))
-                              ? const Color.fromARGB(255, 237, 237, 237)
+                              ? Theme.of(context).colorScheme.surfaceContainerHighest
                               : (item.parceiros[0].parceiroTemCompra == 'Pendente'
                                   ? Colors.red[200]
                                   : item.parceiros[0].parceiroTemCompra == 'Confirmado'
                                       ? Colors.green[200]
-                                      : const Color.fromARGB(255, 237, 237, 237))),
+                                      : Theme.of(context).colorScheme.surfaceContainerHighest)),
                           foregroundColor: WidgetStatePropertyAll(
-                            (item.parceiros.isEmpty || (item.provas.isNotEmpty && item.provas[0].avulsa == 'Não')) ? Colors.black : (item.parceiros[0].parceiroTemCompra == 'Sem Parceiro' ? Colors.black87 : Colors.white),
+                            (item.parceiros.isEmpty || (item.provas.isNotEmpty && item.provas[0].avulsa == 'Não'))
+                                ? Theme.of(context).colorScheme.onSurface
+                                : (item.parceiros[0].parceiroTemCompra == 'Sem Parceiro' ? Theme.of(context).colorScheme.onSurface : Colors.white),
                           ),
                         ),
                         child: item.provas.isNotEmpty && item.provas[0].idmodalidade == '3'
@@ -367,7 +391,8 @@ class _CardComprasState extends State<CardCompras> {
                     suggestionsBuilder: (BuildContext context, SearchController controller) async {
                       final keyword = controller.value.text;
                       var usuarioProvider = context.read<UsuarioProvider>();
-                      List<CompetidoresModelo>? competidores = await competidoresServico.listarCompetidores(widget.item.idCabeceira, usuarioProvider.usuario, keyword, widget.item.provas[0].id);
+                      List<CompetidoresModelo>? competidores =
+                          await competidoresServico.listarCompetidores(widget.item.idCabeceira, usuarioProvider.usuario, keyword, widget.item.provas[0].id);
 
                       Iterable<Widget> widgets = competidores.map((competidor) {
                         return Card(
@@ -484,11 +509,7 @@ class _CardComprasState extends State<CardCompras> {
                             title: Text(
                               competidor.nome,
                               style: TextStyle(
-                                  color: item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty
-                                      ? Colors.black
-                                      : isDarkMode
-                                          ? Colors.white
-                                          : null),
+                                  color: item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty ? Theme.of(context).colorScheme.onSurface : null),
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

@@ -14,8 +14,8 @@ import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/termos_de_uso.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/card_cartao.dart';
-import 'package:provadelaco/ui/features/finalizar_compra/widgets/modal_selecionar_cartao.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/modal_parcelamento_filiacao.dart';
+import 'package:provadelaco/ui/features/finalizar_compra/widgets/modal_selecionar_cartao.dart';
 import 'package:provadelaco/ui/features/finalizar_compra/widgets/pagina_sucesso_compra.dart';
 import 'package:provider/provider.dart';
 
@@ -95,7 +95,9 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     ).then((confirmado) {
       if (confirmado != true) {
         // Se não confirmou, volta para a tela de inscrição
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       }
     });
   }
@@ -131,7 +133,6 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     if (dados.valorAdicional != null && dados.valorAdicional!.pago == 'Não') {
       double valorAdicional = double.parse(dados.valorAdicional!.valor);
       if (dados.valorAdicional!.tipo == 'soma') {
-        
         if (parcelasFiliacao == 2) {
           // valorTotal += 50.0;
           valorTotal += ((valorAdicional + 50) / 2);
@@ -279,8 +280,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             style: SegmentedButton.styleFrom(
               selectedBackgroundColor: const Color(0xFFF71808),
               selectedForegroundColor: Colors.white,
-              backgroundColor: Colors.grey.shade100,
-              foregroundColor: Colors.black87,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
               side: BorderSide(color: Colors.grey.shade300),
             ),
             segments: dados.pagamentos.map((p) => ButtonSegment(value: p.id, label: Text(p.nome))).toList(),
@@ -300,7 +301,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -363,7 +364,13 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                         children: [
                           Text('Filiação', style: TextStyle(fontWeight: FontWeight.bold, color: dados.valorAdicional!.pago == 'Não' ? Colors.blue : Colors.green)),
                           if (dados.valorAdicional!.titulo.isNotEmpty) Text(dados.valorAdicional!.titulo, style: const TextStyle(fontSize: 12)),
-                          if (parcelasFiliacao != null) ...[const SizedBox(height: 4), Text('${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}', style: const TextStyle(fontSize: 12, color: Colors.grey))],
+                          if (parcelasFiliacao != null) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              '${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}',
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            )
+                          ],
                         ],
                       ),
                     ),
@@ -454,7 +461,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFF71808).withOpacity(0.05) : Colors.white,
+                    color: isSelected ? const Color(0xFFF71808).withValues(alpha: 0.05) : Theme.of(context).cardColor,
                     border: Border.all(color: isSelected ? const Color(0xFFF71808) : Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -476,8 +483,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -2))],
+          color: Theme.of(context).cardColor,
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, -2))],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -485,7 +492,12 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             _linhaPrecoRodape('Subtotal', double.parse(dados.prova.valor).obterReal()),
             if (metodoPagamento == '3') _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
             if (double.parse(dados.prova.taxaProva) > 0) _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
-            if (double.parse(dados.valorDescontoPorProva ?? '0') > 0) _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
+            if (double.parse(dados.valorAdicional?.valor ?? '0') > 0 && dados.valorAdicional?.pago == 'Não')
+              _linhaPrecoRodape('Filiação',
+                  "+ ${'${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}'}",
+                  cor: Colors.blue),
+            if (double.parse(dados.valorDescontoPorProva ?? '0') > 0)
+              _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
             const Divider(height: 16),
             _linhaPrecoRodape('Total', retornarValorTotal(dados).obterReal(), negrito: true, tamanho: 18, cor: const Color(0xFFF71808)),
             const SizedBox(height: 12),
@@ -499,7 +511,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: permitirClickConcluir() ? () => salvar(dados) : null,
-                child: store.carregando ? const CircularProgressIndicator(color: Colors.white) : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                child:
+                    store.carregando ? const CircularProgressIndicator(color: Colors.white) : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
             InkWell(
@@ -511,7 +524,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                     child: RichText(
                       text: TextSpan(
                         text: "Li e aceito os ",
-                        style: const TextStyle(color: Colors.black87, fontSize: 12),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 12),
                         children: [
                           TextSpan(
                             text: "Termos de Uso",

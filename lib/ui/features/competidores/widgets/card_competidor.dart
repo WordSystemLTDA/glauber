@@ -13,13 +13,13 @@ class CardCompetidor extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 6, offset: const Offset(0, 3))],
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 26,
-            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.14),
+            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.14),
             child: Text(
               item.nome.isNotEmpty ? item.nome[0].toUpperCase() : '?',
               style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700),

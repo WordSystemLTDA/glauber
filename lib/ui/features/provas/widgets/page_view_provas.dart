@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provadelaco/data/repositories/provas_repository.dart';
 import 'package:provadelaco/domain/models/animal/animal.dart';
@@ -58,7 +57,7 @@ class _PageViewProvasState extends State<PageViewProvas> {
                 (context, index) {
                   final prova = widget.provas[index];
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 3),
                     child: CardProvas(
                       prova: prova,
                       evento: widget.evento,
@@ -92,10 +91,10 @@ class _PageViewProvasState extends State<PageViewProvas> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-            border: Border.all(color: animal == null ? const Color(0xFFF71808).withOpacity(0.3) : Colors.transparent),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
+            border: Border.all(color: animal == null ? const Color(0xFFF71808).withValues(alpha: 0.3) : Colors.transparent),
           ),
           child: Row(
             children: [
@@ -162,7 +161,8 @@ class _PageViewProvasState extends State<PageViewProvas> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton.icon(onPressed: abrirDenunciar, icon: const Icon(Icons.flag, color: Colors.red), label: const Text('Denunciar Evento', style: TextStyle(color: Colors.red))),
+              TextButton.icon(
+                  onPressed: abrirDenunciar, icon: const Icon(Icons.flag, color: Colors.red), label: const Text('Denunciar Evento', style: TextStyle(color: Colors.red))),
             ],
           )
         ],
@@ -173,7 +173,9 @@ class _PageViewProvasState extends State<PageViewProvas> {
   void selecionarAnimal() async {
     final animal = await Navigator.pushNamed(context, '/animais', arguments: PaginaAnimaisArgumentos(selecionarAnimais: true));
     if (animal != null) {
-      context.read<ProvasProvedor>().animalSelecionado = animal as ModeloAnimal;
+      if (mounted) {
+        context.read<ProvasProvedor>().animalSelecionado = animal as ModeloAnimal;
+      }
     }
   }
 
