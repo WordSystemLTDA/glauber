@@ -83,11 +83,16 @@ class HomeServico {
       ParceirosModelo parceiro, String idprovas, String idcliente, UsuarioModelo? usuario) async {
     var url = 'home/aceitar_parceiro.php';
 
+    final modalidadeParceiro = parceiro.modalidade;
+    final modalidadeAceitante = modalidadeParceiro == '1' ? '2' : '1';
+
     var campos = {
       'idparceiro': parceiro.idparceiro,
       'idvendasparceiro': parceiro.idvendasparceiro,
       'idvincularparceiros': parceiro.id,
-      'modalidade': parceiro.modalidade,
+      'modalidade': modalidadeParceiro,
+      'modalidade_parceiro': modalidadeParceiro,
+      'modalidade_aceitante': modalidadeAceitante,
       'idprovas': idprovas,
       'id_cliente': idcliente,
       'usuario': usuario == null ? {} : usuario.toMap(),
