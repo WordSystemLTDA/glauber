@@ -294,7 +294,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\nif [ \"$CONFIGURATION\" = \"Release\" ] || [ \"$CONFIGURATION\" = \"Profile\" ]; then\n  if [ -n \"${DWARF_DSYM_FOLDER_PATH:-}\" ] && [ -n \"${FRAMEWORKS_FOLDER_PATH:-}\" ]; then\n    OBJ_FRAMEWORK=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/objective_c.framework/objective_c\"\n    if [ -f \"$OBJ_FRAMEWORK\" ]; then\n      OUT_DSYM=\"${DWARF_DSYM_FOLDER_PATH}/objective_c.framework.dSYM\"\n      rm -rf \"$OUT_DSYM\"\n      xcrun dsymutil \"$OBJ_FRAMEWORK\" -o \"$OUT_DSYM\" || true\n    fi\n  fi\nfi";
 		};
 		705E0B0D7D357F2530B817D3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

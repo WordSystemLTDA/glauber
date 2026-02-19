@@ -38,12 +38,14 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController = ScrollController();
-      _scrollController.addListener(() {
-        if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
-          listarCompras();
-        }
-      });
+      if (mounted) {
+        _scrollController = ScrollController();
+        _scrollController.addListener(() {
+          if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
+            listarCompras();
+          }
+        });
+      }
 
       listarCompras();
     });

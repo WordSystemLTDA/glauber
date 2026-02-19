@@ -50,6 +50,8 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   CartaoModelo? cartaoSelecionado;
   List<CartaoModelo> cartaoMemoria = [];
   int? parcelasFiliacao;
+  final GlobalKey _rodapeKey = GlobalKey();
+  double _alturaRodape = 0;
 
   @override
   void initState() {
@@ -213,6 +215,16 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     }
   }
 
+  void _atualizarAlturaRodape() {
+    final contextRodape = _rodapeKey.currentContext;
+    if (contextRodape == null) return;
+
+    final novaAltura = contextRodape.size?.height ?? 0;
+    if ((novaAltura - _alturaRodape).abs() > 1) {
+      setState(() => _alturaRodape = novaAltura);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -223,15 +235,16 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     if (listarStore.dados == null) return const Scaffold(body: Center(child: Text('Erro ao carregar.')));
 
     final dados = listarStore.dados!;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _atualizarAlturaRodape());
 
     return Scaffold(
       appBar: AppBarSombra(titulo: Text(widget.argumentos.editarVenda == true ? 'Editar Venda' : "Finalizar Compra")),
       body: Stack(
         children: [
           Positioned.fill(
-            bottom: 230,
+            bottom: _alturaRodape,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
               child: Column(
                 children: [
                   _buildSelecaoPagamento(dados, width),
@@ -259,11 +272,24 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                       ),
                     ),
                   ],
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
           ),
-          _buildRodapeDetalhado(dados, width, finalizarStore),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SafeArea(
+              top: false,
+              child: Container(
+                key: _rodapeKey,
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                child: _buildRodapeDetalhado(dados, finalizarStore),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -475,52 +501,50 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     );
   }
 
-  Widget _buildRodapeDetalhado(ListarInformacoesModelo dados, double width, FinalizarCompraStore store) {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, -2))],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _linhaPrecoRodape('Subtotal', double.parse(dados.prova.valor).obterReal()),
-            if (metodoPagamento == '3') _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
-            if (double.parse(dados.prova.taxaProva) > 0) _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
-            if (double.parse(dados.valorAdicional?.valor ?? '0') > 0 && dados.valorAdicional?.pago == 'Não')
-              _linhaPrecoRodape('Filiação',
-                  "+ ${'${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}'}",
-                  cor: Colors.blue),
-            if (double.parse(dados.valorDescontoPorProva ?? '0') > 0)
-              _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
-            const Divider(height: 16),
-            _linhaPrecoRodape('Total', retornarValorTotal(dados).obterReal(), negrito: true, tamanho: 18, cor: const Color(0xFFF71808)),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: permitirClickConcluir() ? const Color(0xFFF71808) : Colors.grey.shade300,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-                onPressed: permitirClickConcluir() ? () => salvar(dados) : null,
-                child:
-                    store.carregando ? const CircularProgressIndicator(color: Colors.white) : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+  Widget _buildRodapeDetalhado(ListarInformacoesModelo dados, FinalizarCompraStore store) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _linhaPrecoRodape('Subtotal', double.parse(dados.prova.valor).obterReal()),
+          if (metodoPagamento == '3') _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
+          if (double.parse(dados.prova.taxaProva) > 0) _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
+          if (double.parse(dados.valorAdicional?.valor ?? '0') > 0 && dados.valorAdicional?.pago == 'Não')
+            _linhaPrecoRodape('Filiação',
+                "+ ${'${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}'}",
+                cor: Colors.blue),
+          if (double.parse(dados.valorDescontoPorProva ?? '0') > 0) _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
+          const Divider(height: 16),
+          _linhaPrecoRodape('Total', retornarValorTotal(dados).obterReal(), negrito: true, tamanho: 18, cor: const Color(0xFFF71808)),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: permitirClickConcluir() ? const Color(0xFFF71808) : Colors.grey.shade300,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
+              onPressed: permitirClickConcluir() ? () => salvar(dados) : null,
+              child: store.carregando ? const CircularProgressIndicator(color: Colors.white) : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
-            InkWell(
-              onTap: () => setState(() => concorda = !concorda),
-              child: Row(
-                children: [
-                  Checkbox(value: concorda, activeColor: const Color(0xFFF71808), onChanged: (v) => setState(() => concorda = v!)),
-                  Expanded(
+          ),
+          InkWell(
+            onTap: () => setState(() => concorda = !concorda),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Checkbox(value: concorda, activeColor: const Color(0xFFF71808), onChanged: (v) => setState(() => concorda = v!)),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12),
                     child: RichText(
                       text: TextSpan(
                         text: "Li e aceito os ",
@@ -536,11 +560,11 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -549,10 +573,20 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: tamanho, fontWeight: negrito ? FontWeight.bold : FontWeight.normal)),
-          Text(valor, style: TextStyle(fontSize: tamanho, fontWeight: FontWeight.bold, color: cor)),
+          Expanded(
+            child: Text(label, style: TextStyle(fontSize: tamanho, fontWeight: negrito ? FontWeight.bold : FontWeight.normal)),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              valor,
+              textAlign: TextAlign.end,
+              style: TextStyle(fontSize: tamanho, fontWeight: FontWeight.bold, color: cor),
+            ),
+          ),
         ],
       ),
     );
