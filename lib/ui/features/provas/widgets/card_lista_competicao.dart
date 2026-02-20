@@ -117,7 +117,7 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                           Icon(Icons.people_outline, size: 14, color: Colors.grey.shade600),
                           const SizedBox(width: 4),
                           Text(
-                            "${item.ordemDeEntradas.length} Competidores",
+                            "${item.ordemDeEntradas.length} INSCRIÇÕES",
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.grey.shade600,
