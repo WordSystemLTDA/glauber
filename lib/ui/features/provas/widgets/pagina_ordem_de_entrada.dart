@@ -36,6 +36,8 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
   String? _nomeProvaSelecionada;
   List<dynamic> _listaLocal = [];
 
+  final Set<String> _filtrosSelecionados = {'1'};
+
   @override
   void initState() {
     super.initState();
@@ -196,6 +198,35 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
               ),
             ],
           ),
+        ),
+
+        // SizedBox(
+        //   height: 30,
+        //   child: ElevatedButton(
+        //     onPressed: () {},
+        //     child: Text('SAT'),
+        //   ),
+        // ),
+        SegmentedButton(
+          segments: [
+            ButtonSegment(value: '1', label: Text('SAT')),
+            // ButtonSegment(value: '2', label: Text('2')),
+            // ButtonSegment(value: '3', label: Text('3')),
+          ],
+          selected: _filtrosSelecionados,
+          onSelectionChanged: (value) {
+            if (value.isEmpty) {
+              _filtrosSelecionados.clear();
+              setState(() {});
+            } else {
+              // Only add if not already set
+              if (!_filtrosSelecionados.contains(value.first)) {
+                _filtrosSelecionados.add(value.first);
+                setState(() {});
+              }
+            }
+          },
+          emptySelectionAllowed: true,
         ),
 
         // Lista
