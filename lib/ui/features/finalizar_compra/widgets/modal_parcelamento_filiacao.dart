@@ -23,14 +23,19 @@ class _ModalParcelamentoFiliacaoState extends State<ModalParcelamentoFiliacao> {
   @override
   void initState() {
     super.initState();
-    parcelasFiliacao = widget.parcelasInicial ?? 1;
+    parcelasFiliacao = widget.parcelasInicial ?? (widget.dados.parcelasFiliacaoDisponiveis.isNotEmpty ? widget.dados.parcelasFiliacaoDisponiveis.first : 1);
   }
 
   @override
   Widget build(BuildContext context) {
     final valorFiliacao = double.parse(widget.dados.valorAdicional!.valor);
-    final valor1x = valorFiliacao;
-    final valor2x = valorFiliacao + 50.0;
+
+    double totalParaParcelas(int parcelas) {
+      if (widget.dados.valorAdicionalPorParcela != null && widget.dados.valorAdicionalPorParcela!.containsKey(parcelas.toString())) {
+        return double.parse(widget.dados.valorAdicionalPorParcela![parcelas.toString()]!);
+      }
+      return valorFiliacao;
+    }
 
     return PopScope(
       canPop: false,
@@ -68,22 +73,17 @@ class _ModalParcelamentoFiliacaoState extends State<ModalParcelamentoFiliacao> {
               ),
               const SizedBox(height: 24),
 
-              // Opção 1x
-              _buildOpcaoParcela(
-                selected: parcelasFiliacao == 1,
-                parcelas: 1,
-                valor: valor1x,
-                onTap: () => setState(() => parcelasFiliacao = 1),
-              ),
-              const SizedBox(height: 12),
-
-              // Opção 2x
-              _buildOpcaoParcela(
-                selected: parcelasFiliacao == 2,
-                parcelas: 2,
-                valor: valor2x,
-                onTap: () => setState(() => parcelasFiliacao = 2),
-              ),
+              ...widget.dados.parcelasFiliacaoDisponiveis.map((p) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildOpcaoParcela(
+                    selected: parcelasFiliacao == p,
+                    parcelas: p,
+                    valor: totalParaParcelas(p),
+                    onTap: () => setState(() => parcelasFiliacao = p),
+                  ),
+                );
+              }),
               const SizedBox(height: 24),
 
               // Resumo
@@ -103,18 +103,10 @@ class _ModalParcelamentoFiliacaoState extends State<ModalParcelamentoFiliacao> {
                     ),
                     Row(
                       children: [
-                        if (parcelasFiliacao == 2) ...[
-                          Text(
-                            'R\$ ${(valor2x / 2).toStringAsFixed(2).replaceAll('.', ',')}',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFF71808)),
-                          ),
-                          const SizedBox(width: 8),
-                          const Text('x 2', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ] else
-                          Text(
-                            _formatarReal(valor1x),
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFF71808)),
-                          ),
+                        Text(
+                          parcelasFiliacao > 1 ? '${_formatarReal(totalParaParcelas(parcelasFiliacao) / parcelasFiliacao)} x $parcelasFiliacao' : _formatarReal(totalParaParcelas(parcelasFiliacao)),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFF71808)),
+                        ),
                       ],
                     ),
                   ],

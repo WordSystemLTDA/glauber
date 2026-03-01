@@ -27,7 +27,7 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa, {String somatoria = '', int pagina = 0}) async {
+  Future<void> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa, {String somatoria = '', int pagina = 0, bool satSelecionado = true}) async {
     // printb(idListaCompeticao);
     if (pagina == 0) {
       carregando = true;
@@ -38,7 +38,7 @@ class OrdemDeEntradaProvaStore extends ChangeNotifier {
 
     var result = await _servico.listarPorListaCompeticao(
         usuario, idListaCompeticao, idEmpresa, idEvento, pesquisa,
-        somatoria: somatoria, pagina: pagina);
+      somatoria: somatoria, pagina: pagina, satSelecionado: satSelecionado);
     
     List<ProvaParceirosModelos> lista = result.lista;
     

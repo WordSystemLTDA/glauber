@@ -13,6 +13,8 @@ class ListarInformacoesModelo {
   final String taxaCartao;
   final List<ParcelaDisponiveisModelo> parcelasDisponiveisCartao;
   final List<PagamentosModelo> pagamentos;
+  final List<int> parcelasFiliacaoDisponiveis;
+  final Map<String, String>? valorAdicionalPorParcela;
   final ValorAdicionalModelo? valorAdicional;
   final String? valorDescontoPorProva;
   final String ativoPagamento;
@@ -25,6 +27,8 @@ class ListarInformacoesModelo {
     required this.taxaCartao,
     required this.parcelasDisponiveisCartao,
     required this.pagamentos,
+    required this.parcelasFiliacaoDisponiveis,
+    this.valorAdicionalPorParcela,
     this.valorAdicional,
     this.valorDescontoPorProva,
     required this.ativoPagamento,
@@ -38,6 +42,8 @@ class ListarInformacoesModelo {
       'evento': evento.toMap(),
       'taxaCartao': taxaCartao,
       'parcelasDisponiveisCartao': parcelasDisponiveisCartao.map((x) => x.toMap()).toList(),
+      'parcelasFiliacaoDisponiveis': parcelasFiliacaoDisponiveis,
+      'valorAdicionalPorParcela': valorAdicionalPorParcela,
       'pagamentos': pagamentos.map((x) => x.toMap()).toList(),
       'valorAdicional': valorAdicional?.toMap(),
       'valorDescontoPorProva': valorDescontoPorProva,
@@ -62,6 +68,26 @@ class ListarInformacoesModelo {
           (x) => PagamentosModelo.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      parcelasFiliacaoDisponiveis: map['parcelasFiliacaoDisponiveis'] != null
+          ? List<int>.from((map['parcelasFiliacaoDisponiveis'] as List<dynamic>).map((x) => x as int))
+          : <int>[1],
+      valorAdicionalPorParcela: (() {
+        final value = map['valorAdicionalPorParcela'];
+        if (value == null) return null;
+        if (value is Map) {
+          return Map<String, String>.from(
+            value.map((key, val) => MapEntry(key.toString(), val?.toString() ?? '')),
+          );
+        }
+        if (value is List) {
+          final out = <String, String>{};
+          for (var i = 0; i < value.length; i++) {
+            out[(i + 1).toString()] = value[i]?.toString() ?? '';
+          }
+          return out;
+        }
+        return null;
+      })(),
       valorAdicional: map['valorAdicional'] != null ? ValorAdicionalModelo.fromMap(map['valorAdicional'] as Map<String, dynamic>) : null,
       valorDescontoPorProva: map['valorDescontoPorProva'] != null ? map['valorDescontoPorProva'] as String : null,
       ativoPagamento: map['ativoPagamento'] as String,

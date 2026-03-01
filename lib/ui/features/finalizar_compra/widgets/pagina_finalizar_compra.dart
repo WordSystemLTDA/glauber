@@ -133,16 +133,15 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     }
 
     if (dados.valorAdicional != null && dados.valorAdicional!.pago == 'Não') {
-      double valorAdicional = double.parse(dados.valorAdicional!.valor);
+      double valorAdicionalBase = double.parse(dados.valorAdicional!.valor);
       if (dados.valorAdicional!.tipo == 'soma') {
-        if (parcelasFiliacao == 2) {
-          // valorTotal += 50.0;
-          valorTotal += ((valorAdicional + 50) / 2);
-        } else {
-          valorTotal += valorAdicional;
+        double totalAdicional = valorAdicionalBase;
+        if (dados.valorAdicionalPorParcela != null && parcelasFiliacao != null && dados.valorAdicionalPorParcela!.containsKey(parcelasFiliacao.toString())) {
+          totalAdicional = double.parse(dados.valorAdicionalPorParcela![parcelasFiliacao.toString()]!);
         }
+        valorTotal += totalAdicional;
       } else if (dados.valorAdicional!.tipo == 'diminuir') {
-        valorTotal -= valorAdicional;
+        valorTotal -= valorAdicionalBase;
       }
     }
     return valorTotal - desconto;
@@ -169,7 +168,13 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           valorTaxaCartao: metodoPagamento == '3' ? dados.taxaCartao : '0',
           valorDesconto: dados.valorDescontoPorProva ?? '0',
           valorTotal: retornarValorTotal(dados).toString(),
-          temValorFiliacao: ((double.tryParse(dados.valorAdicional?.valor ?? '0') ?? 0) + ((parcelasFiliacao == 2) ? 50.0 : 0.0)).toStringAsFixed(2),
+          temValorFiliacao: (() {
+            double totalAdicional = double.tryParse(dados.valorAdicional?.valor ?? '0') ?? 0;
+            if (dados.valorAdicionalPorParcela != null && parcelasFiliacao != null && dados.valorAdicionalPorParcela!.containsKey(parcelasFiliacao.toString())) {
+              totalAdicional = double.parse(dados.valorAdicionalPorParcela![parcelasFiliacao.toString()]!);
+            }
+            return totalAdicional.toStringAsFixed(2);
+          })(),
           filiacaoJaPaga: dados.valorAdicional?.pago,
           parcelasFiliacao: parcelasFiliacao,
           cartao: cartaoSelecionado,
@@ -181,7 +186,13 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
       var (:dadosRetorno, :mensagem) = await finalizarCompraStore.inserir(
         usuarioProvider.usuario,
         FormularioCompraModelo(
-          temValorFiliacao: ((double.tryParse(dados.valorAdicional?.valor ?? '0') ?? 0) + ((parcelasFiliacao == 2) ? 50.0 : 0.0)).toStringAsFixed(2),
+          temValorFiliacao: (() {
+            double totalAdicional = double.tryParse(dados.valorAdicional?.valor ?? '0') ?? 0;
+            if (dados.valorAdicionalPorParcela != null && parcelasFiliacao != null && dados.valorAdicionalPorParcela!.containsKey(parcelasFiliacao.toString())) {
+              totalAdicional = double.parse(dados.valorAdicionalPorParcela![parcelasFiliacao.toString()]!);
+            }
+            return totalAdicional.toStringAsFixed(2);
+          })(),
           filiacaoJaPaga: dados.valorAdicional?.pago,
           parcelasFiliacao: parcelasFiliacao,
           provas: widget.argumentos.provas,
@@ -393,7 +404,14 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                           if (parcelasFiliacao != null) ...[
                             const SizedBox(height: 4),
                             Text(
-                              '${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}',
+                              (() {
+                                double totalAd = double.parse(dados.valorAdicional!.valor);
+                                if (dados.valorAdicionalPorParcela != null && dados.valorAdicionalPorParcela!.containsKey(parcelasFiliacao.toString())) {
+                                  totalAd = double.parse(dados.valorAdicionalPorParcela![parcelasFiliacao.toString()]!);
+                                }
+                                final porParcela = totalAd / (parcelasFiliacao ?? 1);
+                                return '${parcelasFiliacao}x de ${porParcela.obterReal()}';
+                              })(),
                               style: const TextStyle(fontSize: 12, color: Colors.grey),
                             )
                           ],
@@ -405,10 +423,15 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${(double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)).obterReal()}',
+                            (() {
+                              double totalAd = double.parse(dados.valorAdicional!.valor);
+                              if (dados.valorAdicionalPorParcela != null && parcelasFiliacao != null && dados.valorAdicionalPorParcela!.containsKey(parcelasFiliacao.toString())) {
+                                totalAd = double.parse(dados.valorAdicionalPorParcela![parcelasFiliacao.toString()]!);
+                              }
+                              return '${dados.valorAdicional!.tipo == 'soma' ? '+' : '-'} ${totalAd.obterReal()}';
+                            })(),
                             style: TextStyle(fontWeight: FontWeight.bold, color: dados.valorAdicional!.pago == 'Não' ? Colors.blue : Colors.green),
                           ),
-                          // if (parcelasFiliacao == 2) ...[const SizedBox(height: 4), Text('+ ${50.obterReal()}', style: TextStyle(fontSize: 11, color: Colors.blue, fontWeight: FontWeight.w500))],
                         ],
                       ),
                       SizedBox(width: 10),
@@ -516,9 +539,18 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
           if (metodoPagamento == '3') _linhaPrecoRodape('Taxa Cartão', "+ ${double.parse(dados.taxaCartao).obterReal()}", cor: Colors.blue),
           if (double.parse(dados.prova.taxaProva) > 0) _linhaPrecoRodape('Taxa Administrativa', "+ ${double.parse(dados.prova.taxaProva).obterReal()}", cor: Colors.blue),
           if (double.parse(dados.valorAdicional?.valor ?? '0') > 0 && dados.valorAdicional?.pago == 'Não')
-            _linhaPrecoRodape('Filiação',
-                "+ ${'${parcelasFiliacao}x de ${((double.parse(dados.valorAdicional!.valor) + (parcelasFiliacao == 2 ? 50 : 0)) / (parcelasFiliacao ?? 1)).obterReal()}'}",
-                cor: Colors.blue),
+            _linhaPrecoRodape(
+              'Filiação',
+              (() {
+                double totalAd = double.parse(dados.valorAdicional!.valor);
+                if (dados.valorAdicionalPorParcela != null && parcelasFiliacao != null && dados.valorAdicionalPorParcela!.containsKey(parcelasFiliacao.toString())) {
+                  totalAd = double.parse(dados.valorAdicionalPorParcela![parcelasFiliacao.toString()]!);
+                }
+                final porParcela = totalAd / (parcelasFiliacao ?? 1);
+                return '+ ${parcelasFiliacao}x de ${porParcela.obterReal()}';
+              })(),
+              cor: Colors.blue,
+            ),
           if (double.parse(dados.valorDescontoPorProva ?? '0') > 0) _linhaPrecoRodape('Desconto', "- ${double.parse(dados.valorDescontoPorProva!).obterReal()}", cor: Colors.green),
           const Divider(height: 16),
           _linhaPrecoRodape('Total', retornarValorTotal(dados).obterReal(), negrito: true, tamanho: 18, cor: const Color(0xFFF71808)),
