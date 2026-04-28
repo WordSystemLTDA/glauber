@@ -82,11 +82,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       'funcao': (BuildContext context) {
         var usuarioProvider = context.read<UsuarioProvider>();
 
-        if (usuarioProvider.usuario != null &&
-            usuarioProvider.usuario!.atualizacaoAndroid != null &&
-            usuarioProvider.usuario!.atualizacaoAndroid!.isNotEmpty &&
-            usuarioProvider.usuario!.atualizacaoIos != null &&
-            usuarioProvider.usuario!.atualizacaoIos!.isNotEmpty) {
+        if (usuarioProvider.usuario != null && usuarioProvider.usuario!.atualizacaoAndroid != null && usuarioProvider.usuario!.atualizacaoAndroid!.isNotEmpty && usuarioProvider.usuario!.atualizacaoIos != null && usuarioProvider.usuario!.atualizacaoIos!.isNotEmpty) {
           Atualizacao.abrirLinkAtualizacao(usuarioProvider.usuario!.atualizacaoAndroid!, usuarioProvider.usuario!.atualizacaoIos!);
         }
       }
@@ -169,7 +165,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
                                   } else {
                                     if (context.mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        backgroundColor: Colors.red,
+                                        backgroundColor: Colors.black87,
                                         content: Text(mensagem),
                                       ));
                                     }
@@ -190,8 +186,8 @@ class _PaginaPerfilState extends State<PaginaPerfil> with AutomaticKeepAliveClie
       }
     },
     {
-      'titulo': const Text('Sair', style: TextStyle(color: Colors.red)),
-      'icone': const Icon(Icons.logout_outlined, color: Colors.red),
+      'titulo': const Text('Sair', style: TextStyle(color: Colors.black87)),
+      'icone': const Icon(Icons.logout_outlined, color: Colors.black87),
       'ativo': true,
       'funcao': (BuildContext context) {
         showDialog<String>(

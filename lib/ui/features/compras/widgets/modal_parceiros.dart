@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provadelaco/config/config.dart';
-import 'package:provadelaco/data/repositories/usuario_repository.dart';
-import 'package:provadelaco/data/services/competidores_servico.dart';
 import 'package:provadelaco/data/services/compras_servico.dart';
 import 'package:provadelaco/domain/models/competidores/competidores.dart';
 import 'package:provadelaco/domain/models/compras/compras.dart';
+import 'package:provadelaco/ui/features/competidores/widgets/pagina_selecionar_competidor.dart';
 import 'package:provadelaco/ui/features/compras/widgets/card_parceiros_compra.dart';
-import 'package:provadelaco/utils/whatsapp.dart';
 import 'package:provider/provider.dart';
 
 class ModalParceiros extends StatefulWidget {
@@ -82,86 +78,21 @@ class _ModalParceirosState extends State<ModalParceiros> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Seus Parceiros', style: TextStyle(fontWeight: FontWeight.w700)),
-                          SearchAnchor(
-                            viewBuilder: (suggestions) {
-                              if (suggestions.isEmpty) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(top: 50.0),
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Text('Nenhum competidor disponível para essa Prova.'),
+                          TextButton(
+                            onPressed: () async {
+                              await Navigator.of(context).push<CompetidoresModelo>(
+                                MaterialPageRoute(
+                                  builder: (_) => PaginaSelecionarCompetidor(
+                                    titulo: 'Competidores disponíveis',
+                                    hintText: 'Pesquisar competidores',
+                                    usarBancoCompetidores: true,
+                                    idCabeceira: item!.idCabeceira,
+                                    idProva: widget.idProva,
                                   ),
-                                );
-                              }
-                              return ListView.builder(
-                                itemCount: suggestions.length,
-                                padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                                itemBuilder: (context, index) {
-                                  var itemN = suggestions.elementAt(index);
-
-                                  return itemN;
-                                },
+                                ),
                               );
                             },
-                            isFullScreen: true,
-                            builder: (BuildContext context, SearchController controller) {
-                              return TextButton(
-                                onPressed: () {
-                                  controller.openView();
-                                },
-                                child: const Text('Competidores disponíveis', style: TextStyle(fontSize: 14)),
-                              );
-                            },
-                            suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                              final keyword = controller.value.text;
-                              var usuarioProvider = context.read<UsuarioProvider>();
-                              bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-                              var competidoresServico = context.read<CompetidoresServico>();
-
-                              List<CompetidoresModelo>? competidores =
-                                  await competidoresServico.listarBancoCompetidores(item!.idCabeceira!, usuarioProvider.usuario, keyword, widget.idProva);
-
-                              Iterable<Widget> widgets = competidores.map((competidor) {
-                                return Card(
-                                  elevation: 3.0,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                  child: ListTile(
-                                    onTap: () {},
-                                    leading: Text(competidor.id),
-                                    title: Text(competidor.nome, style: TextStyle(color: isDarkMode ? Colors.white : null)),
-                                    trailing: competidor.celular == null || (competidor.celular != null && competidor.celular!.isEmpty)
-                                        ? null
-                                        : IconButton(
-                                            onPressed: () {
-                                              if (competidor.celular != null && competidor.celular!.isNotEmpty) {
-                                                Whatsapp.abrir(competidor.celular!);
-                                              }
-                                            },
-                                            icon: const FaIcon(
-                                              FontAwesomeIcons.whatsapp,
-                                              color: Colors.green,
-                                            ),
-                                          ),
-                                    subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(competidor.apelido, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500)),
-                                        if (competidor.hccabeceira != null && competidor.hcpezeiro != null) ...[
-                                          Text("Cabeça: ${competidor.hccabeceira!} - Pé: ${competidor.hcpezeiro}", style: const TextStyle(fontWeight: FontWeight.w500)),
-                                        ],
-                                        if (competidor.nomeCidade.isNotEmpty)
-                                          Text(
-                                            "${competidor.nomeCidade} - ${competidor.siglaEstado}",
-                                            style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromARGB(255, 89, 89, 89)),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
-
-                              return widgets;
-                            },
+                            child: const Text('Competidores disponíveis', style: TextStyle(fontSize: 14)),
                           ),
                         ],
                       ),

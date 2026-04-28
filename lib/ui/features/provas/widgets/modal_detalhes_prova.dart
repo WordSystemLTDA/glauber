@@ -1,12 +1,10 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/data/repositories/usuario_repository.dart';
-import 'package:provadelaco/data/services/competidores_servico.dart';
 import 'package:provadelaco/domain/models/competidores/competidores.dart';
 import 'package:provadelaco/domain/models/evento/evento.dart';
 import 'package:provadelaco/domain/models/prova/prova.dart';
+import 'package:provadelaco/ui/features/competidores/widgets/pagina_selecionar_competidor.dart';
 import 'package:provadelaco/ui/features/provas/widgets/card_parceiros.dart';
-import 'package:provider/provider.dart';
 
 class ModalDetalhesProva extends StatefulWidget {
   final bool Function(int quantidade, List<CompetidoresModelo> listaCompetidores, bool sorteio) adicionarNoCarrinho;
@@ -53,25 +51,21 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
       quantidade = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).length;
     }
 
-    if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty &&
-        widget.permVincularParceiro == 'Sim') {
+    if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).isNotEmpty && widget.permVincularParceiro == 'Sim') {
       if (widget.prova.avulsa == 'Sim') {
         // Avulsa: cada entrada do carrinho tem 1 competidor, agregar todos
         for (var entry in widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira)) {
           listaCompetidores.addAll(entry.competidores ?? []);
         }
       } else {
-        listaCompetidores =
-            List.from(widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.competidores ?? []);
+        listaCompetidores = List.from(widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.competidores ?? []);
       }
 
       if (widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio != null) {
         sorteio = widget.provasCarrinho.where((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira).first.sorteio!;
       }
     } else {
-      if (widget.prova.permitirCompra.competidoresJaSelecionados != null &&
-          widget.prova.permitirCompra.competidoresJaSelecionados!.isNotEmpty &&
-          widget.permVincularParceiro == 'Sim') {
+      if (widget.prova.permitirCompra.competidoresJaSelecionados != null && widget.prova.permitirCompra.competidoresJaSelecionados!.isNotEmpty && widget.permVincularParceiro == 'Sim') {
         if (widget.prova.avulsa == 'Sim') {
           quantidade = widget.prova.permitirCompra.competidoresJaSelecionados!.length;
         } else {
@@ -238,43 +232,39 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
   }
 
   Widget _buildSearchSection() {
-    return SearchAnchor(
-      builder: (context, controller) => InkWell(
-        onTap: () => controller.openView(),
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.blue.shade100),
+    return InkWell(
+      onTap: () async {
+        await Navigator.of(context).push<CompetidoresModelo>(
+          MaterialPageRoute(
+            builder: (_) => PaginaSelecionarCompetidor(
+              titulo: 'Competidores no banco',
+              hintText: 'Pesquisar competidores no banco',
+              usarBancoCompetidores: true,
+              idCabeceira: widget.prova.idCabeceira,
+              idProva: widget.prova.id,
+            ),
           ),
-          child: Row(
-            children: [
-              const Icon(Icons.search, color: Colors.blue),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text('Buscar competidores no banco...', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600)),
-              ),
-              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.blue.shade300),
-            ],
-          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade50,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.blue.shade100),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.search, color: Colors.blue),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text('Buscar competidores no banco...', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600)),
+            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.blue.shade300),
+          ],
         ),
       ),
-      suggestionsBuilder: (context, controller) async {
-        final competidores = await context.read<CompetidoresServico>().listarBancoCompetidores(
-              widget.prova.idCabeceira,
-              context.read<UsuarioProvider>().usuario,
-              controller.text,
-              widget.prova.id,
-            );
-        return competidores.map((c) => ListTile(
-              leading: Text(c.id),
-              title: Text(c.nome),
-              subtitle: Text(c.apelido),
-              onTap: () => controller.closeView(c.nome),
-            ));
-      },
     );
   }
 
@@ -282,9 +272,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: sorteio
-            ? (isDark ? Colors.orange.shade900.withValues(alpha: 0.3) : Colors.orange.shade50)
-            : (isDark ? Theme.of(context).colorScheme.surfaceContainerHighest : Colors.grey.shade50),
+        color: sorteio ? (isDark ? Colors.orange.shade900.withValues(alpha: 0.3) : Colors.orange.shade50) : (isDark ? Theme.of(context).colorScheme.surfaceContainerHighest : Colors.grey.shade50),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: sorteio ? Colors.orange : (isDark ? Colors.grey.shade700 : Colors.grey.shade200)),
       ),
@@ -335,7 +323,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
           if (mensagemAlerta.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Text(mensagemAlerta, style: const TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              child: Text(mensagemAlerta, style: const TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
             ),
           SizedBox(
             width: double.infinity,
@@ -347,13 +335,12 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
                       var retorno = widget.adicionarNoCarrinho(quantidade, listaCompetidores, sorteio);
                       if (retorno == false) {
                         setState(() {
-                          mensagemAlerta =
-                              widget.prova.permitirSorteio == 'Sim' ? 'Selecione todos os parceiros ou habilite o Sorteio.' : 'Selecione todos os parceiros antes de continuar.';
+                          mensagemAlerta = widget.prova.permitirSorteio == 'Sim' ? 'Selecione todos os parceiros ou habilite o Sorteio.' : 'Selecione todos os parceiros antes de continuar.';
                         });
                       }
                     },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF71808),
+                backgroundColor: Colors.black87,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               ),
@@ -372,7 +359,7 @@ class _ModalDetalhesProvaState extends State<ModalDetalhesProva> {
     bool canRemove = (widget.prova.avulsa == 'Sim' && (quantidade > int.parse(widget.prova.quantMinima)));
     bool isDeleteIcon = !canRemove && widget.provasCarrinho.any((element) => element.id == widget.prova.id && element.idCabeceira == widget.prova.idCabeceira);
 
-    Color btnColor = isRemoveAction ? Colors.red : Colors.green;
+    Color btnColor = isRemoveAction ? Colors.black87 : Colors.green;
     if (isRemoveAction && !canRemove && !isDeleteIcon) btnColor = Colors.grey;
 
     return InkWell(

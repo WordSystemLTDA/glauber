@@ -60,7 +60,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         listenable: provasStore,
         builder: (context, _) {
           if (provasStore.carregando) {
-            return const Center(child: CircularProgressIndicator(color: Color(0xFFF71808)));
+            return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
           }
 
           final evento = provasStore.evento;
@@ -74,7 +74,10 @@ class _PaginaProvasState extends State<PaginaProvas> {
                   SliverAppBar(
                     expandedHeight: 280.0,
                     pinned: true,
-                    backgroundColor: const Color(0xFFF71808), // Ensure visible when collapsed
+                    backgroundColor: Colors.transparent,
+                    surfaceTintColor: Colors.transparent,
+                    scrolledUnderElevation: 0,
+                    forceMaterialTransparency: true,
                     automaticallyImplyLeading: false,
                     leading: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -86,71 +89,70 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         ),
                       ),
                     ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: false,
-                      titlePadding: EdgeInsets.zero,
-                      title: LayoutBuilder(builder: (context, constraints) {
-                        // interpolate padding based on current height to make the movement smooth
+                    flexibleSpace: LayoutBuilder(
+                      builder: (context, constraints) {
                         final expandedHeight = 280.0;
                         final minHeight = kToolbarHeight;
                         final currentHeight = constraints.biggest.height;
                         final t = ((expandedHeight - currentHeight) / (expandedHeight - minHeight)).clamp(0.0, 1.0);
                         final left = ui.lerpDouble(16.0, 70.0, t) ?? 16.0;
 
-                        return Padding(
-                          padding: EdgeInsets.only(left: left, bottom: 16, right: 16),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  evento.nomeEvento,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            carousel.CarouselSlider.builder(
+                              carouselController: _carrosselController,
+                              options: carousel.CarouselOptions(
+                                height: 320.0,
+                                viewportFraction: 1.0,
+                                autoPlay: evento.bannersCarrossel.isNotEmpty,
                               ),
-                              Flexible(
-                                child: Text(
-                                  DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
-                                  style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 10,
-                                    shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                      expandedTitleScale: 1.5, // Less scaling to avoid huge jumps
-                      background: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          carousel.CarouselSlider.builder(
-                            carouselController: _carrosselController,
-                            options: carousel.CarouselOptions(
-                              height: 320.0,
-                              viewportFraction: 1.0,
-                              autoPlay: evento.bannersCarrossel.isNotEmpty,
+                              itemCount: evento.bannersCarrossel.length + 1,
+                              itemBuilder: (context, index, _) {
+                                final banner = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? 0 : index - 1];
+                                return CardBannerCarrossel(evento: evento, bannerCarrossel: banner, index: index);
+                              },
                             ),
-                            itemCount: evento.bannersCarrossel.length + 1,
-                            itemBuilder: (context, index, _) {
-                              final banner = evento.bannersCarrossel.isEmpty ? null : evento.bannersCarrossel[index == 0 ? 0 : index - 1];
-                              return CardBannerCarrossel(evento: evento, bannerCarrossel: banner, index: index);
-                            },
-                          ),
-                          _buildGradientOverlay(),
-                        ],
-                      ),
+                            _buildGradientOverlay(),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: left, bottom: 16, right: 16),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        evento.nomeEvento,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 10,
+                                          shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                   SliverToBoxAdapter(child: _buildActionChips(evento)),
@@ -161,9 +163,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         TabBar(
                           isScrollable: true,
                           tabAlignment: TabAlignment.start,
-                          labelColor: const Color(0xFFF71808),
+                          labelColor: Theme.of(context).colorScheme.primary,
                           unselectedLabelColor: Colors.grey,
-                          indicatorColor: const Color(0xFFF71808),
+                          indicatorColor: Theme.of(context).colorScheme.primary,
                           dividerColor: Colors.transparent,
                           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           tabs: provasStore.provas.map((m) => Tab(text: m.nomemodalidade)).toList(),
@@ -222,7 +224,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
           _customActionChip(Icons.location_on, 'Onde é?', () => abrirLocalizacao(evento)),
           _customActionChip(Icons.live_tv, 'Ao Vivo', () {
             Navigator.pushNamed(context, AppRotas.aovivo, arguments: PaginaAoVivoArgumentos(idEvento: widget.argumentos.idEvento, idEmpresa: evento.idEmpresa));
-          }, color: const Color(0xFFF71808)),
+          }, color: Colors.black87),
           _customActionChip(Icons.description, 'Regulamento', abrirTermosDeUso),
         ],
       ),
@@ -252,13 +254,12 @@ class _PaginaProvasState extends State<PaginaProvas> {
       width: MediaQuery.of(context).size.width * 0.9,
       height: 65,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFFF71808), Color(0xFFB31206)]),
+        gradient: const LinearGradient(colors: [ui.Color.fromARGB(255, 0, 0, 0), ui.Color.fromARGB(255, 170, 170, 170)]),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.red.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
+        boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
       ),
       child: InkWell(
-        onTap: () =>
-            Navigator.pushNamed(context, AppRotas.finalizarCompra, arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento)),
+        onTap: () => Navigator.pushNamed(context, AppRotas.finalizarCompra, arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -268,8 +269,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${provasCarrinho.length} ${provasCarrinho.length == 1 ? 'PROVA' : 'PROVAS'} SELECIONADA',
-                      style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+                  Text('${provasCarrinho.length} ${provasCarrinho.length == 1 ? 'PROVA' : 'PROVAS'} SELECIONADA', style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
                   Text(CurrencyFormatter.coverterEmReal.format(valorTotal), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                 ],
               ),

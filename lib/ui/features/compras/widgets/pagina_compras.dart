@@ -1,14 +1,13 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:provadelaco/config/config.dart';
 import 'package:provadelaco/data/repositories/compras_repository.dart';
 import 'package:provadelaco/data/repositories/transferencia_repository.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
-import 'package:provadelaco/data/services/compras_servico.dart';
 import 'package:provadelaco/domain/models/clientes/clientes.dart';
 import 'package:provadelaco/domain/models/compras/compras.dart';
 import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/features/compras/widgets/card_compras.dart';
+import 'package:provadelaco/ui/features/compras/widgets/pagina_selecionar_cliente.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -28,7 +27,6 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   bool gerandoPagamento = false;
   List<ComprasModelo> comprasTransferencia = [];
   List<ComprasModelo> comprasPagamentos = [];
-  SearchController pesquisaClientesController = SearchController();
   TextEditingController textoClientesController = TextEditingController();
   String idClienteSelecionado = '0';
 
@@ -64,6 +62,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   void dispose() {
     _scrollController.dispose();
     _tabController.dispose();
+    textoClientesController.dispose();
     super.dispose();
   }
 
@@ -95,10 +94,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: (comprasStore.compras.atuais.isEmpty ||
-                  comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty)
-              ? null
-              : _buildFloatingActionButton(),
+          floatingActionButton: (comprasStore.compras.atuais.isEmpty || comprasStore.compras.atuais.where((element) => element.compras.where((element2) => element2.pago == 'Não').isNotEmpty).isEmpty) ? null : _buildFloatingActionButton(),
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -147,7 +143,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildLegendaItem(color: Colors.green, label: 'Pago'),
-                    _buildLegendaItem(color: Colors.red, label: 'Não Pago'),
+                    _buildLegendaItem(color: Colors.grey, label: 'Não Pago'),
                     _buildLegendaItem(color: Colors.blue, label: 'Lib. Reemb.'),
                     _buildLegendaItem(color: Colors.yellow, label: 'Canc./Reemb.'),
                   ],
@@ -300,10 +296,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                           ));
                                                           return;
                                                         }
-                                                        if ((compra.idFormaPagamento != '1' &&
-                                                            compra.idFormaPagamento != '4' &&
-                                                            compra.idFormaPagamento != '5' &&
-                                                            compra.idFormaPagamento != '6')) {
+                                                        if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5' && compra.idFormaPagamento != '6')) {
                                                           ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                             showCloseIcon: true,
@@ -364,9 +357,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(vertical: 32),
-                                          child: comprasStore.temMaisParaCarregar
-                                              ? const Center(child: CircularProgressIndicator())
-                                              : const Center(child: Text('Você chegou no fim da lista.')),
+                                          child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                         );
                                       }
                                     },
@@ -484,8 +475,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                         child: Column(
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
-                                                            if (e.tipodevenda == 'Filiação' &&
-                                                                item.compras.where((element) => element.tipodevenda == 'Filiação').firstOrNull?.id == e.id) ...[
+                                                            if (e.tipodevenda == 'Filiação' && item.compras.where((element) => element.tipodevenda == 'Filiação').firstOrNull?.id == e.id) ...[
                                                               Padding(
                                                                 padding: const EdgeInsets.only(top: 15.0, bottom: 15),
                                                                 child: Row(
@@ -547,10 +537,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                                                   ));
                                                                   return;
                                                                 }
-                                                                if ((compra.idFormaPagamento != '1' &&
-                                                                    compra.idFormaPagamento != '4' &&
-                                                                    compra.idFormaPagamento != '5' &&
-                                                                    compra.idFormaPagamento != '6')) {
+                                                                if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5' && compra.idFormaPagamento != '6')) {
                                                                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
                                                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                                                     showCloseIcon: true,
@@ -615,9 +602,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(vertical: 32),
-                                          child: comprasStore.temMaisParaCarregar
-                                              ? const Center(child: CircularProgressIndicator())
-                                              : const Center(child: Text('Você chegou no fim da lista.')),
+                                          child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                         );
                                       }
                                     },
@@ -759,9 +744,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(vertical: 32),
-                                          child: comprasStore.temMaisParaCarregar
-                                              ? const Center(child: CircularProgressIndicator())
-                                              : const Center(child: Text('Você chegou no fim da lista.')),
+                                          child: comprasStore.temMaisParaCarregar ? const Center(child: CircularProgressIndicator()) : const Center(child: Text('Você chegou no fim da lista.')),
                                         );
                                       }
                                     },
@@ -876,64 +859,29 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        SearchAnchor(
-                                          viewBuilder: (suggestions) {
-                                            return ListView.builder(
-                                              itemCount: suggestions.length,
-                                              padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                                              itemBuilder: (context, index) {
-                                                var item = suggestions.elementAt(index);
+                                        TextField(
+                                          onTap: () async {
+                                            FocusScope.of(context).unfocus();
 
-                                                return item;
-                                              },
+                                            final cliente = await Navigator.of(context).push<ClientesModelo>(
+                                              MaterialPageRoute(builder: (_) => const PaginaSelecionarCliente()),
                                             );
-                                          },
-                                          isFullScreen: true,
-                                          searchController: pesquisaClientesController,
-                                          builder: (BuildContext context, SearchController controller) {
-                                            return TextField(
-                                              onTap: () {
-                                                pesquisaClientesController.openView();
-                                              },
-                                              controller: textoClientesController,
-                                              readOnly: true,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                label: Text('Transferir para'),
-                                              ),
-                                            );
-                                          },
-                                          suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                                            final keyword = controller.value.text;
 
-                                            List<ClientesModelo>? clientes = await context.read<ComprasServico>().listarClientesNormal(keyword);
+                                            if (cliente == null || !mounted) {
+                                              return;
+                                            }
 
-                                            Iterable<Widget> widgets = clientes.map((cliente) {
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  controller.closeView('');
-                                                  setState(() {
-                                                    idClienteSelecionado = cliente.id;
-                                                    textoClientesController.text = cliente.nome;
-                                                  });
-                                                  FocusScope.of(context).unfocus();
-                                                },
-                                                child: Card(
-                                                  elevation: 3.0,
-                                                  child: ListTile(
-                                                    leading: Text(cliente.id),
-                                                    title: Text(cliente.nome),
-                                                    subtitle: Text(
-                                                      cliente.apelido,
-                                                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
+                                            setState(() {
+                                              idClienteSelecionado = cliente.id;
+                                              textoClientesController.text = cliente.nome;
                                             });
-
-                                            return widgets;
                                           },
+                                          controller: textoClientesController,
+                                          readOnly: true,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            label: Text('Transferir para'),
+                                          ),
                                         ),
                                         const SizedBox(height: 20),
                                         SizedBox(
@@ -962,7 +910,7 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                               } else {
                                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                                   showCloseIcon: true,
-                                                  backgroundColor: Colors.red,
+                                                  backgroundColor: Colors.black87,
                                                   content: Center(child: Text(resposta.mensagem)),
                                                 ));
                                               }

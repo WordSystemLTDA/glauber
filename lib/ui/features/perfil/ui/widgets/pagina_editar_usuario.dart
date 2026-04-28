@@ -2,9 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:provadelaco/config/config.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
-import 'package:provadelaco/data/services/cidade_servico.dart';
 import 'package:provadelaco/data/services/editar_usuario_servico.dart';
 import 'package:provadelaco/data/services/usuario_servico.dart';
 import 'package:provadelaco/domain/models/cidade/cidade.dart';
@@ -14,6 +12,7 @@ import 'package:provadelaco/domain/models/usuario_modelo.dart';
 import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/handicaps_dialog.dart';
+import 'package:provadelaco/ui/features/autenticacao/widgets/pagina_selecionar_cidade.dart';
 import 'package:provadelaco/ui/features/autenticacao/widgets/pagina_selecionar_modalidades.dart';
 import 'package:provadelaco/utils/rg_formatter.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +52,6 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   TextEditingController chavePix = TextEditingController();
 
   TextEditingController cidadeController = TextEditingController();
-  SearchController pesquisaCidadeController = SearchController();
   bool ocultarSenha = true;
 
   String idHcCabeceira = '0';
@@ -125,7 +123,6 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
     numeroController.dispose();
     complementoController.dispose();
     cidadeController.dispose();
-    pesquisaCidadeController.dispose();
     chavePix.dispose();
     super.dispose();
   }
@@ -136,7 +133,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       if (_dataNascimentoController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Data de Nascimento é Obrigatório!')),
         ));
         return;
@@ -145,7 +142,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       if (_dataNascimentoController.text.isNotEmpty && _dataNascimentoController.text.length < 10) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Data de Nascimento inválida!')),
         ));
         return;
@@ -154,7 +151,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       if (profissional.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Você precisa selecionar se é profissional ou não!')),
         ));
         return;
@@ -166,7 +163,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       if (_hcLacoIndividualController.text.isEmpty || idHcLacoIndividual == '0') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Você precisa selecionar um HandiCap em Laço Individual!')),
         ));
         return;
@@ -178,7 +175,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
       if ((idHcCabeceira.isEmpty || idHcCabeceira == '0') || (idHcPiseiro.isEmpty || idHcPiseiro == '0')) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Você precisa preencher todos os handicaps.')),
         ));
         return;
@@ -298,7 +295,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(mensagem),
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.black87,
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(
               label: 'OK',
@@ -373,8 +370,6 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    var cidadeServico = context.read<CidadeServico>();
-
     return Consumer<UsuarioProvider>(builder: (context, usuario, chil) {
       return GestureDetector(
         onTap: () {
@@ -433,9 +428,7 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, AppRotas.selecionarModalidades,
-                              arguments: PaginaSelecionarModalidadesArgumentos(edicao: true, modalidadesSelecionadas: modalidadesSelecionados))
-                          .then((e) {
+                      Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(edicao: true, modalidadesSelecionadas: modalidadesSelecionados)).then((e) {
                         if (e == null) return;
 
                         var modalidades = List<ModeloModalidadesCadastro>.from(
@@ -837,64 +830,28 @@ class _PaginaEditarUsuarioState extends State<PaginaEditarUsuario> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: SearchAnchor(
-                        viewBuilder: (suggestions) {
-                          return ListView.builder(
-                            itemCount: suggestions.length,
-                            padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                            itemBuilder: (context, index) {
-                              var item = suggestions.elementAt(index);
-
-                              return item;
-                            },
+                      child: TextField(
+                        onTap: () async {
+                          FocusScope.of(context).unfocus();
+                          final cidade = await Navigator.of(context).push<CidadeModelo>(
+                            MaterialPageRoute(builder: (_) => const PaginaSelecionarCidade()),
                           );
-                        },
-                        isFullScreen: true,
-                        searchController: pesquisaCidadeController,
-                        builder: (BuildContext context, SearchController controller) {
-                          return TextField(
-                            onTap: () {
-                              pesquisaCidadeController.openView();
-                            },
-                            controller: cidadeController,
-                            readOnly: true,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              label: Text('Cidade'),
-                            ),
-                          );
-                        },
-                        suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                          final keyword = controller.value.text;
 
-                          List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
+                          if (cidade == null || !mounted) {
+                            return;
+                          }
 
-                          Iterable<Widget> widgets = cidades.map((cidade) {
-                            return GestureDetector(
-                              onTap: () {
-                                controller.closeView('');
-                                setState(() {
-                                  idCidade = cidade.id;
-                                  cidadeController.text = cidade.nome;
-                                });
-                                FocusScope.of(context).unfocus();
-                              },
-                              child: Card(
-                                elevation: 3.0,
-                                child: ListTile(
-                                  leading: const Icon(Icons.copy_all_outlined),
-                                  title: Text(cidade.nome),
-                                  subtitle: Text(
-                                    cidade.nomeUf,
-                                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            );
+                          setState(() {
+                            idCidade = cidade.id;
+                            cidadeController.text = cidade.nome;
                           });
-
-                          return widgets;
                         },
+                        controller: cidadeController,
+                        readOnly: true,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          label: Text('Cidade'),
+                        ),
                       ),
                     ),
                   ],

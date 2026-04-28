@@ -1,16 +1,15 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provadelaco/config/config.dart';
 import 'package:provadelaco/data/repositories/autenticacao_repository.dart';
 import 'package:provadelaco/data/repositories/usuario_repository.dart';
-import 'package:provadelaco/data/services/cidade_servico.dart';
 import 'package:provadelaco/domain/models/cidade/cidade.dart';
 import 'package:provadelaco/domain/models/modelo_modalidades_cadastro.dart';
 import 'package:provadelaco/domain/models/usuario_modelo.dart';
 import 'package:provadelaco/routing/routes.dart';
 import 'package:provadelaco/ui/core/ui/app_bar_sombra.dart';
 import 'package:provadelaco/ui/core/ui/handicaps_dialog.dart';
+import 'package:provadelaco/ui/features/autenticacao/widgets/pagina_selecionar_cidade.dart';
 import 'package:provider/provider.dart';
 
 class PaginaCadastroArgumentos {
@@ -40,7 +39,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   final _dataNascimentoController = TextEditingController();
   final _celularController = TextEditingController();
   final _cidadeController = TextEditingController(text: 'Sem cidade');
-  final _pesquisaCidadeController = SearchController();
 
   String idHcCabeceira = '0';
   String idHcPiseiro = '0';
@@ -94,7 +92,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     _dataNascimentoController.dispose();
     _celularController.dispose();
     _cidadeController.dispose();
-    _pesquisaCidadeController.dispose();
     super.dispose();
   }
 
@@ -117,7 +114,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (_dataNascimentoController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Data de Nascimento é Obrigatório!')),
         ));
         return;
@@ -126,7 +123,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (_dataNascimentoController.text.isNotEmpty && _dataNascimentoController.text.length < 10) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Data de Nascimento inválida!')),
         ));
         return;
@@ -135,7 +132,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (profissional.isEmpty || (profissional != 'Não' && profissional != 'Sim')) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Você precisa selecionar se é profissional ou não!')),
         ));
         return;
@@ -147,7 +144,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (_hcLacoIndividualController.text.isEmpty || idHcLacoIndividual == '0') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Você precisa selecionar um HandiCap em Laço Individual!')),
         ));
         return;
@@ -156,11 +153,10 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
 
     // Laço em Dupla
     if (widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
-      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) &&
-          widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
+      if (((hcCabeceira.isEmpty || hcCabeceira == '0') || (hcPiseiro.isEmpty || hcPiseiro == '0')) && widget.argumentos.modalidades.where((element) => element.id == '3').isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Você precisa preencher todos os handicaps.')),
         ));
         return;
@@ -171,7 +167,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (nome.isEmpty || email.isEmpty || senha.isEmpty || confirmar.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Preencha todos os campos!')),
         ));
         return;
@@ -180,7 +176,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
       if (senha != confirmar) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           showCloseIcon: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
           content: Center(child: Text('Campos de senha precisam ser iguais!')),
         ));
         return;
@@ -188,9 +184,7 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
     }
 
     var dataNascimentoF = _dataNascimentoController.text.split('/');
-    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty))
-        ? '0000-00-00'
-        : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
+    var dataNascimento = (dataNascimentoF.isEmpty || (dataNascimentoF.isNotEmpty && dataNascimentoF[0].isEmpty)) ? '0000-00-00' : "${dataNascimentoF[2]}-${dataNascimentoF[1]}-${dataNascimentoF[0]}";
 
     var resposta = await autenticacaoStore.cadastrar(
       idcliente: widget.argumentos.jaEstaCadastrado ? usuarioProvider.usuario?.id : '0',
@@ -251,7 +245,6 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
   @override
   Widget build(BuildContext context) {
     var autenticacaoStore = context.read<AutenticacaoStore>();
-    var cidadeServico = context.read<CidadeServico>();
 
     return GestureDetector(
       onTap: () {
@@ -316,63 +309,27 @@ class _PaginaCadastroState extends State<PaginaCadastro> {
                     const SizedBox(height: 10),
                     const Text('Cidade'),
                     const SizedBox(height: 5),
-                    SearchAnchor(
-                      viewBuilder: (suggestions) {
-                        return ListView.builder(
-                          itemCount: suggestions.length,
-                          padding: EdgeInsets.only(bottom: ConstantesGlobal.alturaTeclado),
-                          itemBuilder: (context, index) {
-                            var item = suggestions.elementAt(index);
-
-                            return item;
-                          },
+                    TextField(
+                      onTap: () async {
+                        FocusScope.of(context).unfocus();
+                        final cidade = await Navigator.of(context).push<CidadeModelo>(
+                          MaterialPageRoute(builder: (_) => const PaginaSelecionarCidade()),
                         );
-                      },
-                      isFullScreen: true,
-                      searchController: _pesquisaCidadeController,
-                      builder: (BuildContext context, SearchController controller) {
-                        return TextField(
-                          onTap: () {
-                            _pesquisaCidadeController.openView();
-                          },
-                          controller: _cidadeController,
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                        );
-                      },
-                      suggestionsBuilder: (BuildContext context, SearchController controller) async {
-                        final keyword = controller.value.text;
 
-                        List<CidadeModelo>? cidades = await cidadeServico.listar(keyword);
+                        if (cidade == null || !mounted) {
+                          return;
+                        }
 
-                        Iterable<Widget> widgets = cidades.map((cidade) {
-                          return GestureDetector(
-                            onTap: () {
-                              controller.closeView('');
-                              setState(() {
-                                idCidade = cidade.id;
-                                _cidadeController.text = cidade.nome;
-                              });
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: Card(
-                              elevation: 3.0,
-                              child: ListTile(
-                                leading: const Icon(Icons.copy_all_outlined),
-                                title: Text(cidade.nome),
-                                subtitle: Text(
-                                  cidade.nomeUf,
-                                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ),
-                          );
+                        setState(() {
+                          idCidade = cidade.id;
+                          _cidadeController.text = cidade.nome;
                         });
-
-                        return widgets;
                       },
+                      controller: _cidadeController,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Row(

@@ -223,7 +223,7 @@ class _ModalComprasState extends State<ModalCompras> {
                 //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //     children: [
                 //       const Text('Seus Parceiros', style: TextStyle(fontWeight: FontWeight.w700)),
-                //       SearchAnchor(
+                //       (busca antiga removida)
                 //         viewBuilder: (suggestions) {
                 //           if (suggestions.isEmpty) {
                 //             return const Padding(
