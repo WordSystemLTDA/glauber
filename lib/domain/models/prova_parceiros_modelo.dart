@@ -3,7 +3,9 @@ import 'dart:convert';
 
 class ProvaParceirosModelos {
   final String id;
+  final String nomeProva;
   final String somatoria;
+  final String prev;
   final String numeroDaInscricao;
   final String sorteio;
   final String sorteiocabeceira;
@@ -23,7 +25,9 @@ class ProvaParceirosModelos {
 
   ProvaParceirosModelos({
     required this.id,
+    required this.nomeProva,
     required this.somatoria,
+    required this.prev,
     required this.numeroDaInscricao,
     required this.sorteio,
     required this.sorteiocabeceira,
@@ -45,7 +49,9 @@ class ProvaParceirosModelos {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'nomeProva': nomeProva,
       'somatoria': somatoria,
+      'prev': prev,
       'numeroDaInscricao': numeroDaInscricao,
       'sorteio': sorteio,
       'sorteiocabeceira': sorteiocabeceira,
@@ -68,7 +74,9 @@ class ProvaParceirosModelos {
   factory ProvaParceirosModelos.fromMap(Map<String, dynamic> map) {
     return ProvaParceirosModelos(
       id: map['id'] ?? '',
+      nomeProva: map['nomeProva'] ?? '',
       somatoria: map['somatoria'] ?? '',
+      prev: map['prev'] ?? '',
       numeroDaInscricao: map['numeroDaInscricao'] ?? '',
       sorteio: map['sorteio'] ?? '',
       sorteiocabeceira: map['sorteiocabeceira'] ?? '',
@@ -94,7 +102,9 @@ class ProvaParceirosModelos {
 
   ProvaParceirosModelos copyWith({
     String? id,
+    String? nomeProva,
     String? somatoria,
+    String? prev,
     String? numeroDaInscricao,
     String? sorteio,
     String? sorteiocabeceira,
@@ -114,7 +124,9 @@ class ProvaParceirosModelos {
   }) {
     return ProvaParceirosModelos(
       id: id ?? this.id,
+      nomeProva: nomeProva ?? this.nomeProva,
       somatoria: somatoria ?? this.somatoria,
+      prev: prev ?? this.prev,
       numeroDaInscricao: numeroDaInscricao ?? this.numeroDaInscricao,
       sorteio: sorteio ?? this.sorteio,
       sorteiocabeceira: sorteiocabeceira ?? this.sorteiocabeceira,
@@ -136,7 +148,7 @@ class ProvaParceirosModelos {
 
   @override
   String toString() {
-    return 'ProvaParceirosModelos(id: $id, somatoria: $somatoria, numeroDaInscricao: $numeroDaInscricao, sorteio: $sorteio, sorteiocabeceira: $sorteiocabeceira, sorteiopezeiro: $sorteiopezeiro, boi1: $boi1, boi2: $boi2, boi3: $boi3, boi4: $boi4, finalT: $finalT, medio: $medio, ranking: $ranking, classificacao: $classificacao, idClienteCabeceira: $idClienteCabeceira, idClientePezeiro: $idClientePezeiro, nomeClienteCabeceira: $nomeClienteCabeceira, nomeClientePezeiro: $nomeClientePezeiro)';
+    return 'ProvaParceirosModelos(id: $id, nomeProva: $nomeProva, somatoria: $somatoria, prev: $prev, numeroDaInscricao: $numeroDaInscricao, sorteio: $sorteio, sorteiocabeceira: $sorteiocabeceira, sorteiopezeiro: $sorteiopezeiro, boi1: $boi1, boi2: $boi2, boi3: $boi3, boi4: $boi4, finalT: $finalT, medio: $medio, ranking: $ranking, classificacao: $classificacao, idClienteCabeceira: $idClienteCabeceira, idClientePezeiro: $idClientePezeiro, nomeClienteCabeceira: $nomeClienteCabeceira, nomeClientePezeiro: $nomeClientePezeiro)';
   }
 
   @override
@@ -145,7 +157,9 @@ class ProvaParceirosModelos {
 
     return other is ProvaParceirosModelos &&
         other.id == id &&
+        other.nomeProva == nomeProva &&
         other.somatoria == somatoria &&
+        other.prev == prev &&
         other.numeroDaInscricao == numeroDaInscricao &&
         other.sorteio == sorteio &&
         other.sorteiocabeceira == sorteiocabeceira &&
@@ -167,7 +181,9 @@ class ProvaParceirosModelos {
   @override
   int get hashCode {
     return id.hashCode ^
+        nomeProva.hashCode ^
         somatoria.hashCode ^
+        prev.hashCode ^
         numeroDaInscricao.hashCode ^
         sorteio.hashCode ^
         sorteiocabeceira.hashCode ^

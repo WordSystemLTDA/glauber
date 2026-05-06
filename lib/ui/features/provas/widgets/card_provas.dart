@@ -56,15 +56,7 @@ class _CardProvasState extends State<CardProvas> {
 
     // Caso o usuário não esteja logado
     if (usuarioProvider.usuario == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Você precisa estar logado para fazer compras.')),
-          showCloseIcon: true,
-        ));
-
-        Navigator.pushNamed(context, AppRotas.login);
-      }
+      await _mostrarModalLoginObrigatorio();
       return;
     }
 
@@ -78,8 +70,7 @@ class _CardProvasState extends State<CardProvas> {
 
     var jaExisteCarrinho = existeNoCarrinho(prova, item: item);
     var quantidadeCarrinho = widget.provasCarrinho.where((element) => element.id == prova.id).length.toString();
-    var state = await verificarPermitirCompraProvedor.verificarPermitirCompra(
-        prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item?.id, jaExisteCarrinho, quantidadeCarrinho);
+    var state = await verificarPermitirCompraProvedor.verificarPermitirCompra(prova, widget.evento, widget.idEvento, widget.prova.id, usuarioProvider.usuario!, item?.id, jaExisteCarrinho, quantidadeCarrinho);
 
     if (state.permitirCompra.mensagem == 'Você já comprou essa modalidade.' || state.permitirCompra.mensagem == 'Você já comprou essa prova.') {
       if (mounted) {
@@ -211,9 +202,7 @@ class _CardProvasState extends State<CardProvas> {
                     return true;
                   }
 
-                  if ((state.permitirCompra.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
-                      ? false
-                      : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                  if ((state.permitirCompra.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true)) ? false : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                     return false;
                   }
 
@@ -228,8 +217,7 @@ class _CardProvasState extends State<CardProvas> {
           );
         }
       } else {
-        if (state.permitirCompra.permVincularParceiro == 'Não' ||
-            (int.tryParse(state.permitirCompra.quantParceiros!) != null ? int.parse(state.permitirCompra.quantParceiros!) == 0 : false)) {
+        if (state.permitirCompra.permVincularParceiro == 'Não' || (int.tryParse(state.permitirCompra.quantParceiros!) != null ? int.parse(state.permitirCompra.quantParceiros!) == 0 : false)) {
           var novaProva = ProvaModelo(
             id: provaModelo.id,
             nomeProva: provaModelo.nomeProva,
@@ -293,9 +281,7 @@ class _CardProvasState extends State<CardProvas> {
                       return true;
                     }
 
-                    if ((state.permitirCompra.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true))
-                        ? false
-                        : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
+                    if ((state.permitirCompra.permVincularParceiro == 'Não' || ((provaModelo.permitirSorteio == 'Sim' && sorteio == true)) ? false : listaCompetidores.where((element) => element.id == '' || element.id == '0').isNotEmpty)) {
                       return false;
                     }
 
@@ -351,6 +337,55 @@ class _CardProvasState extends State<CardProvas> {
     });
   }
 
+  bool _ladoEstaBloqueado(ProvaModelo prova, NomesCabeceiraModelo item) {
+    if (item.id == '1') {
+      if (prova.permitirCompra.podeFazerCabeca != null) {
+        return prova.permitirCompra.podeFazerCabeca == false;
+      }
+
+      return prova.permitirCompra.idCabeceiraInvalido == item.id;
+    }
+
+    if (item.id == '2') {
+      if (prova.permitirCompra.podeFazerPezeiro != null) {
+        return prova.permitirCompra.podeFazerPezeiro == false;
+      }
+
+      return prova.permitirCompra.idCabeceiraInvalido == item.id;
+    }
+
+    return prova.permitirCompra.liberado == false;
+  }
+
+  String _motivoBloqueioLado(ProvaModelo prova, NomesCabeceiraModelo item) {
+    if (item.id == '1' && (prova.permitirCompra.motivoCabeca?.isNotEmpty ?? false)) {
+      return prova.permitirCompra.motivoCabeca!;
+    }
+
+    if (item.id == '2' && (prova.permitirCompra.motivoPezeiro?.isNotEmpty ?? false)) {
+      return prova.permitirCompra.motivoPezeiro!;
+    }
+
+    return prova.permitirCompra.mensagem;
+  }
+
+  void _aoTocarLado(ProvaModelo prova, NomesCabeceiraModelo item) {
+    if (_ladoEstaBloqueado(prova, item)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(child: Text(_motivoBloqueioLado(prova, item))),
+          showCloseIcon: true,
+          backgroundColor: Colors.red,
+        ));
+      }
+
+      return;
+    }
+
+    aoClicarNaCabeceira(prova, true, item: item);
+  }
+
   Color? coresAction(ProvaModelo prova, {NomesCabeceiraModelo? item}) {
     if (existeNoCarrinho(prova, item: item)) {
       if (Theme.of(context).brightness == Brightness.light) {
@@ -358,6 +393,8 @@ class _CardProvasState extends State<CardProvas> {
       } else {
         return Colors.green;
       }
+    } else if (item != null && _ladoEstaBloqueado(prova, item)) {
+      return Theme.of(context).brightness == Brightness.light ? Colors.grey.shade200 : Colors.white10;
     } else if (Theme.of(context).brightness == Brightness.light) {
       return Colors.white;
     } else {
@@ -407,19 +444,11 @@ class _CardProvasState extends State<CardProvas> {
     }
   }
 
-  void aoClicarNoCard(ProvaModelo prova) {
+  Future<void> aoClicarNoCard(ProvaModelo prova) async {
     var usuarioProvider = context.read<UsuarioProvider>();
 
     if (usuarioProvider.usuario == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Você precisa estar logado para fazer compras.')),
-          showCloseIcon: true,
-        ));
-
-        Navigator.pushNamed(context, AppRotas.login);
-      }
+      await _mostrarModalLoginObrigatorio();
       return;
     }
 
@@ -612,8 +641,7 @@ class _CardProvasState extends State<CardProvas> {
                                             CurrencyFormatter.coverterEmReal.format(double.parse(prova.valor)),
                                             style: const TextStyle(fontSize: 18, color: Colors.green),
                                           ),
-                                          if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) &&
-                                              (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
+                                          if ((prova.hcMinimo.isNotEmpty && prova.hcMaximo.isNotEmpty) && (double.parse(prova.hcMinimo) > 0 && double.parse(prova.hcMaximo) > 0)) ...[
                                             Align(
                                               alignment: Alignment.bottomRight,
                                               child: Text("HC: ${prova.hcMinimo} á ${prova.hcMaximo}", style: const TextStyle(fontSize: 12)),
@@ -665,17 +693,15 @@ class _CardProvasState extends State<CardProvas> {
                                       child: Material(
                                         color: coresAction(prova, item: item),
                                         child: InkWell(
-                                          borderRadius:
-                                              index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
+                                          borderRadius: index == 0 ? const BorderRadius.only(topRight: Radius.circular(5)) : const BorderRadius.only(bottomRight: Radius.circular(5)),
                                           onTap: () {
-                                            aoClicarNaCabeceira(prova, true, item: item);
+                                            _aoTocarLado(prova, item);
                                           },
                                           child: Center(
                                             child: Text(
                                               item.nome,
                                               style: TextStyle(
-                                                color: prova.permitirCompra.liberado == false ||
-                                                        (prova.permitirCompra.idCabeceiraInvalido != null && prova.permitirCompra.idCabeceiraInvalido! == item.id)
+                                                color: prova.permitirCompra.liberado == false || _ladoEstaBloqueado(prova, item)
                                                     ? Colors.grey
                                                     : existeNoCarrinho(prova, item: item)
                                                         ? Colors.white
@@ -702,5 +728,36 @@ class _CardProvasState extends State<CardProvas> {
         ),
       ),
     );
+  }
+
+  Future<void> _mostrarModalLoginObrigatorio() async {
+    if (!mounted) return;
+
+    final irParaLogin = await showDialog<bool>(
+      context: context,
+      builder: (contextDialog) {
+        return AlertDialog(
+          title: const Text('Login necessário para selecionar'),
+          content: const Text(
+            'Você não pode selecionar essa prova agora porque está deslogado. '
+            'Precisamos da sua conta para vincular a inscrição e liberar a compra com segurança.\n\n'
+            'Deseja fazer login agora?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(contextDialog).pop(false),
+              child: const Text('Depois'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(contextDialog).pop(true),
+              child: const Text('Fazer login agora'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted || irParaLogin != true) return;
+    Navigator.pushNamed(context, AppRotas.login);
   }
 }

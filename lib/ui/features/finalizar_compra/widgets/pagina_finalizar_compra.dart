@@ -69,9 +69,13 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
         widget.argumentos.idVenda ?? '',
       )
           .then((response) {
-        if (metodoPagamento == '0' && (response.pagamentos.firstOrNull?.id ?? '0') != '0') {
+        final primeiroMetodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
+
+        if (!mounted) return;
+        if (metodoPagamento != primeiroMetodoPagamento) {
           setState(() {
-            metodoPagamento = response.pagamentos.firstOrNull?.id ?? '0';
+            metodoPagamento = primeiroMetodoPagamento;
+            parcela = (metodoPagamento == '3') ? 1 : -1;
           });
         }
 
@@ -118,9 +122,48 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
   }
 
   void abrirTermosDeUso() {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => const Dialog(child: TermosDeUso()),
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        final height = MediaQuery.of(context).size.height * 0.9;
+        return SizedBox(
+          height: height,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Termos de Uso e Contrato',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: TermosDeUso(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -258,8 +301,10 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
               child: Column(
                 children: [
-                  _buildSelecaoPagamento(dados, width),
-                  const SizedBox(height: 20),
+                  if (_deveMostrarSelecaoPagamento(dados)) ...[
+                    _buildSelecaoPagamento(dados, width),
+                    const SizedBox(height: 20),
+                  ],
                   _buildResumoGeral(dados),
                   if (metodoPagamento == '3') ...[
                     const SizedBox(height: 20),
@@ -306,6 +351,11 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
     );
   }
 
+  bool _deveMostrarSelecaoPagamento(ListarInformacoesModelo dados) {
+    final valor = dados.ativoPagamento.trim().toLowerCase();
+    return valor == '1' || valor == 'sim' || valor == 's' || valor == 'true';
+  }
+
   Widget _buildSelecaoPagamento(ListarInformacoesModelo dados, double width) {
     return Column(
       children: [
@@ -349,7 +399,7 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
             children: [
               Icon(Icons.receipt_long, color: Color(0xFFF71808)),
               SizedBox(width: 10),
-              Text('Resumo do Pedido', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('Resumo da Compra', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ],
           ),
           const Divider(height: 20),
@@ -565,35 +615,67 @@ class _PaginaFinalizarCompraState extends State<PaginaFinalizarCompra> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
               onPressed: permitirClickConcluir() ? () => salvar(dados) : null,
-              child: store.carregando ? const CircularProgressIndicator(color: Colors.white) : const Text('CONCLUIR', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              child: store.carregando
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text(
+                      'CLIQUE AQUI PARA FINALIZAR A COMPRA',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
             ),
           ),
+          const SizedBox(height: 10),
           InkWell(
+            borderRadius: BorderRadius.circular(10),
             onTap: () => setState(() => concorda = !concorda),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Checkbox(value: concorda, activeColor: const Color(0xFFF71808), onChanged: (v) => setState(() => concorda = v!)),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Li e aceito os ",
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 12),
-                        children: [
-                          TextSpan(
-                            text: "Termos de Uso",
-                            style: const TextStyle(color: Color(0xFFF71808), fontWeight: FontWeight.bold),
-                            recognizer: TapGestureRecognizer()..onTap = abrirTermosDeUso,
-                          ),
-                          const TextSpan(text: " e Contrato."),
-                        ],
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: concorda ? const Color(0xFFF71808).withValues(alpha: 0.06) : Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: concorda ? const Color(0xFFF71808) : Colors.grey.shade300,
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Checkbox(
+                    value: concorda,
+                    activeColor: const Color(0xFFF71808),
+                    onChanged: (v) => setState(() => concorda = v ?? false),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, height: 1.35),
+                          children: [
+                            const TextSpan(text: 'Li e aceito os '),
+                            TextSpan(
+                              text: 'Termos de Uso e Contrato',
+                              style: const TextStyle(
+                                color: Color(0xFFF71808),
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: TapGestureRecognizer()..onTap = abrirTermosDeUso,
+                            ),
+                            const TextSpan(text: '.'),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  IconButton(
+                    tooltip: 'Abrir Termos',
+                    onPressed: abrirTermosDeUso,
+                    icon: const Icon(Icons.open_in_new, size: 18, color: Color(0xFFF71808)),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

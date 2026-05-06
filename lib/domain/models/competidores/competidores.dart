@@ -19,6 +19,13 @@ class CompetidoresModelo {
   String? celular;
   String? hccabeceira;
   String? hcpezeiro;
+  String? hccabeceiraParceiro;
+  String? hcpezeiroParceiro;
+  String? somaDupla;
+  String? somatoriProva;
+  bool? podeCorrer;
+  String? mensagemValidacao;
+  List<String>? motivosBloqueio;
 
   CompetidoresModelo({
     required this.id,
@@ -34,6 +41,13 @@ class CompetidoresModelo {
     this.celular,
     this.hccabeceira,
     this.hcpezeiro,
+    this.hccabeceiraParceiro,
+    this.hcpezeiroParceiro,
+    this.somaDupla,
+    this.somatoriProva,
+    this.podeCorrer,
+    this.mensagemValidacao,
+    this.motivosBloqueio,
   });
 
   CompetidoresModelo copyWith({
@@ -50,6 +64,13 @@ class CompetidoresModelo {
     ValueGetter<String?>? celular,
     ValueGetter<String?>? hccabeceira,
     ValueGetter<String?>? hcpezeiro,
+    ValueGetter<String?>? hccabeceiraParceiro,
+    ValueGetter<String?>? hcpezeiroParceiro,
+    ValueGetter<String?>? somaDupla,
+    ValueGetter<String?>? somatoriProva,
+    ValueGetter<bool?>? podeCorrer,
+    ValueGetter<String?>? mensagemValidacao,
+    ValueGetter<List<String>?>? motivosBloqueio,
   }) {
     return CompetidoresModelo(
       id: id ?? this.id,
@@ -65,6 +86,13 @@ class CompetidoresModelo {
       celular: celular != null ? celular() : this.celular,
       hccabeceira: hccabeceira != null ? hccabeceira() : this.hccabeceira,
       hcpezeiro: hcpezeiro != null ? hcpezeiro() : this.hcpezeiro,
+      hccabeceiraParceiro: hccabeceiraParceiro != null ? hccabeceiraParceiro() : this.hccabeceiraParceiro,
+      hcpezeiroParceiro: hcpezeiroParceiro != null ? hcpezeiroParceiro() : this.hcpezeiroParceiro,
+      somaDupla: somaDupla != null ? somaDupla() : this.somaDupla,
+      somatoriProva: somatoriProva != null ? somatoriProva() : this.somatoriProva,
+      podeCorrer: podeCorrer != null ? podeCorrer() : this.podeCorrer,
+      mensagemValidacao: mensagemValidacao != null ? mensagemValidacao() : this.mensagemValidacao,
+      motivosBloqueio: motivosBloqueio != null ? motivosBloqueio() : this.motivosBloqueio,
     );
   }
 
@@ -83,6 +111,13 @@ class CompetidoresModelo {
       'celular': celular,
       'hccabeceira': hccabeceira,
       'hcpezeiro': hcpezeiro,
+      'hccabeceiraParceiro': hccabeceiraParceiro,
+      'hcpezeiroParceiro': hcpezeiroParceiro,
+      'somaDupla': somaDupla,
+      'somatoriProva': somatoriProva,
+      'podeCorrer': podeCorrer,
+      'mensagemValidacao': mensagemValidacao,
+      'motivosBloqueio': motivosBloqueio,
     };
   }
 
@@ -101,6 +136,13 @@ class CompetidoresModelo {
       celular: map['celular'],
       hccabeceira: map['hccabeceira'],
       hcpezeiro: map['hcpezeiro'],
+      hccabeceiraParceiro: map['hccabeceiraParceiro'],
+      hcpezeiroParceiro: map['hcpezeiroParceiro'],
+      somaDupla: map['somaDupla'],
+      somatoriProva: map['somatoriProva'],
+      podeCorrer: map['podeCorrer'],
+      mensagemValidacao: map['mensagemValidacao'],
+      motivosBloqueio: map['motivosBloqueio'] != null ? List<String>.from(map['motivosBloqueio']) : null,
     );
   }
 
@@ -110,7 +152,7 @@ class CompetidoresModelo {
 
   @override
   String toString() {
-    return 'CompetidoresModelo(id: $id, nome: $nome, apelido: $apelido, nomeCidade: $nomeCidade, siglaEstado: $siglaEstado, ativo: $ativo, idProva: $idProva, jaExistente: $jaExistente, idParceiroTrocado: $idParceiroTrocado, idVincularParceiros: $idVincularParceiros, celular: $celular, hccabeceira: $hccabeceira, hcpezeiro: $hcpezeiro)';
+    return 'CompetidoresModelo(id: $id, nome: $nome, apelido: $apelido, nomeCidade: $nomeCidade, siglaEstado: $siglaEstado, ativo: $ativo, idProva: $idProva, jaExistente: $jaExistente, idParceiroTrocado: $idParceiroTrocado, idVincularParceiros: $idVincularParceiros, celular: $celular, hccabeceira: $hccabeceira, hcpezeiro: $hcpezeiro, hccabeceiraParceiro: $hccabeceiraParceiro, hcpezeiroParceiro: $hcpezeiroParceiro, somaDupla: $somaDupla, somatoriProva: $somatoriProva, podeCorrer: $podeCorrer, mensagemValidacao: $mensagemValidacao, motivosBloqueio: $motivosBloqueio)';
   }
 
   @override
@@ -130,7 +172,14 @@ class CompetidoresModelo {
         other.idVincularParceiros == idVincularParceiros &&
         other.celular == celular &&
         other.hccabeceira == hccabeceira &&
-        other.hcpezeiro == hcpezeiro;
+        other.hcpezeiro == hcpezeiro &&
+        other.hccabeceiraParceiro == hccabeceiraParceiro &&
+        other.hcpezeiroParceiro == hcpezeiroParceiro &&
+        other.somaDupla == somaDupla &&
+        other.somatoriProva == somatoriProva &&
+        other.podeCorrer == podeCorrer &&
+        other.mensagemValidacao == mensagemValidacao &&
+        other.motivosBloqueio == motivosBloqueio;
   }
 
   @override
@@ -147,6 +196,13 @@ class CompetidoresModelo {
         idVincularParceiros.hashCode ^
         celular.hashCode ^
         hccabeceira.hashCode ^
-        hcpezeiro.hashCode;
+        hcpezeiro.hashCode ^
+        hccabeceiraParceiro.hashCode ^
+        hcpezeiroParceiro.hashCode ^
+        somaDupla.hashCode ^
+        somatoriProva.hashCode ^
+        podeCorrer.hashCode ^
+        mensagemValidacao.hashCode ^
+        motivosBloqueio.hashCode;
   }
 }

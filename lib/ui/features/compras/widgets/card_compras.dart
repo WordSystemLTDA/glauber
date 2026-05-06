@@ -45,6 +45,26 @@ class CardCompras extends StatefulWidget {
 }
 
 class _CardComprasState extends State<CardCompras> {
+  bool _competidorEstaBloqueado(ComprasModelo item, CompetidoresModelo competidor) {
+    if ((competidor.motivosBloqueio ?? []).isNotEmpty) {
+      return true;
+    }
+
+    if (competidor.podeCorrer == false) {
+      return true;
+    }
+
+    if (item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty && competidor.id != '0') {
+      return true;
+    }
+
+    if (competidor.ativo == 'Não' || competidor.ativo == 'Somatoria' || competidor.ativo == 'HCMinMax') {
+      return true;
+    }
+
+    return false;
+  }
+
   Color corCompra(ComprasModelo item) {
     if (item.status == 'Cancelado') {
       return Colors.yellow;
@@ -76,6 +96,14 @@ class _CardComprasState extends State<CardCompras> {
   }
 
   String _mensagemBloqueioCompetidor(ComprasModelo item, CompetidoresModelo competidor) {
+    if ((competidor.motivosBloqueio ?? []).isNotEmpty) {
+      return competidor.motivosBloqueio!.join('\n');
+    }
+
+    if (competidor.podeCorrer == false && competidor.mensagemValidacao != null && competidor.mensagemValidacao!.isNotEmpty) {
+      return competidor.mensagemValidacao!;
+    }
+
     if (item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty && competidor.id != '0') {
       return 'Esse competidor já foi selecionado.';
     }
@@ -102,9 +130,18 @@ class _CardComprasState extends State<CardCompras> {
           idCabeceira: widget.item.idCabeceira,
           idProva: widget.item.provas[0].id,
           destacarCardsStatus: true,
+          idsJaSelecionados: item.parceiros.map((e) => e.idParceiro).toList(),
           jaSelecionado: (competidor) => item.parceiros.where((element) => element.idParceiro == competidor.id).isNotEmpty,
           podeSelecionar: (competidor) {
-            return ((competidor.ativo == 'Sim' && (item.parceiros.where((element) => element.idParceiro == competidor.id).isEmpty)) || competidor.id == '0');
+            if (competidor.id == '0') {
+              return true;
+            }
+
+            if (_competidorEstaBloqueado(item, competidor)) {
+              return false;
+            }
+
+            return competidor.ativo == 'Sim';
           },
           mensagemBloqueio: (competidor) => _mensagemBloqueioCompetidor(item, competidor),
         ),
@@ -115,17 +152,33 @@ class _CardComprasState extends State<CardCompras> {
       return;
     }
 
+    if (_competidorEstaBloqueado(item, competidor)) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_mensagemBloqueioCompetidor(item, competidor)),
+          showCloseIcon: true,
+        ),
+      );
+      return;
+    }
+
     final comprasServico = context.read<ComprasServico>();
 
     showDialog<String>(
       context: context,
       builder: (BuildContext contextDialog) {
+        final parceiroAtualNome = item.parceiros.isNotEmpty ? item.parceiros[0].nomeParceiro : 'Parceiro atual';
+        final novoParceiroNome = competidor.apelido.isNotEmpty ? competidor.apelido : competidor.nome;
+
         return AlertDialog(
           title: const Text('Substituir'),
-          content: const SingleChildScrollView(
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Deseja realmente substituir esse parceiro?'),
+                Text('Você vai substituir "$parceiroAtualNome" por "$novoParceiroNome".'),
+                const SizedBox(height: 6),
+                const Text('Deseja realmente confirmar essa troca?'),
               ],
             ),
           ),

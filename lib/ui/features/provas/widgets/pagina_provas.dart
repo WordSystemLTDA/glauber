@@ -96,6 +96,9 @@ class _PaginaProvasState extends State<PaginaProvas> {
                         final currentHeight = constraints.biggest.height;
                         final t = ((expandedHeight - currentHeight) / (expandedHeight - minHeight)).clamp(0.0, 1.0);
                         final left = ui.lerpDouble(16.0, 70.0, t) ?? 16.0;
+                        final nameFontSize = ui.lerpDouble(20.0, 13.0, t) ?? 13.0;
+                        final dateFontSize = ui.lerpDouble(14.0, 10.0, t) ?? 10.0;
+                        final dateOpacity = (1.0 - t * 1.5).clamp(0.0, 1.0);
 
                         return Stack(
                           fit: StackFit.expand,
@@ -126,26 +129,30 @@ class _PaginaProvasState extends State<PaginaProvas> {
                                     Flexible(
                                       child: Text(
                                         evento.nomeEvento,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                                          fontSize: nameFontSize,
+                                          shadows: const [Shadow(color: Colors.black45, blurRadius: 2)],
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    Flexible(
-                                      child: Text(
-                                        DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 10,
-                                          shadows: [Shadow(color: Colors.black45, blurRadius: 2)],
+                                    if (dateOpacity > 0)
+                                      Flexible(
+                                        child: Opacity(
+                                          opacity: dateOpacity,
+                                          child: Text(
+                                            DateFormat('dd/MM/yyyy').format(DateTime.parse(evento.dataEvento)),
+                                            style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: dateFontSize,
+                                              shadows: const [Shadow(color: Colors.black45, blurRadius: 2)],
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -259,7 +266,7 @@ class _PaginaProvasState extends State<PaginaProvas> {
         boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 8))],
       ),
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, AppRotas.finalizarCompra, arguments: PaginaFinalizarCompraArgumentos(provas: provasCarrinho, idEvento: widget.argumentos.idEvento)),
+        onTap: _aoTentarFinalizarCompra,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -269,8 +276,14 @@ class _PaginaProvasState extends State<PaginaProvas> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${provasCarrinho.length} ${provasCarrinho.length == 1 ? 'PROVA' : 'PROVAS'} SELECIONADA', style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
-                  Text(CurrencyFormatter.coverterEmReal.format(valorTotal), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(
+                    '${provasCarrinho.length} ${provasCarrinho.length == 1 ? 'PROVA' : 'PROVAS'} SELECIONADA',
+                    style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    CurrencyFormatter.coverterEmReal.format(valorTotal),
+                    style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               const Row(
@@ -285,6 +298,54 @@ class _PaginaProvasState extends State<PaginaProvas> {
         ),
       ),
     );
+  }
+
+  Future<void> _aoTentarFinalizarCompra() async {
+    final usuarioProvider = context.read<UsuarioProvider>();
+
+    if (usuarioProvider.usuario == null) {
+      await _mostrarModalLoginObrigatorio();
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.pushNamed(
+      context,
+      AppRotas.finalizarCompra,
+      arguments: PaginaFinalizarCompraArgumentos(
+        provas: provasCarrinho,
+        idEvento: widget.argumentos.idEvento,
+      ),
+    );
+  }
+
+  Future<void> _mostrarModalLoginObrigatorio() async {
+    final irParaLogin = await showDialog<bool>(
+      context: context,
+      builder: (contextDialog) {
+        return AlertDialog(
+          title: const Text('Login necessário para comprar'),
+          content: const Text(
+            'Você não pode finalizar a compra agora porque está deslogado. '
+            'Precisamos da sua conta para vincular o pedido, confirmar seus dados e liberar o pagamento com segurança.\n\n'
+            'Deseja fazer login agora?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(contextDialog).pop(false),
+              child: const Text('Depois'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(contextDialog).pop(true),
+              child: const Text('Fazer login agora'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted || irParaLogin != true) return;
+    Navigator.pushNamed(context, AppRotas.login);
   }
 
   void adicionarNoCarrinho(ProvaModelo prova, EventoModelo evento, String quantParceiros, String idmodalidade) {

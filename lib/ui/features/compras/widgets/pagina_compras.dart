@@ -34,15 +34,16 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
+        listarCompras();
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _scrollController = ScrollController();
-        _scrollController.addListener(() {
-          if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
-            listarCompras();
-          }
-        });
+      if (!mounted) {
+        return;
       }
 
       listarCompras();
@@ -75,7 +76,6 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
     var comprasStore = context.read<ComprasProvedor>();
     var usuarioProvider = context.read<UsuarioProvider>();
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
 
     if (usuarioProvider.usuario == null) {
       return Center(
@@ -188,171 +188,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                       if (index < comprasStore.compras.anteriores.length) {
                                         var item = comprasStore.compras.anteriores[index];
 
-                                        return Container(
-                                          margin: const EdgeInsets.only(bottom: 12),
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context).cardColor,
-                                            borderRadius: BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withValues(alpha: 0.5),
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Theme(
-                                            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                                            child: ExpansionTile(
-                                              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                              childrenPadding: const EdgeInsets.only(bottom: 8),
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                              collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                              title: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    item.nomeProva,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: 16,
-                                                      color: Theme.of(context).textTheme.bodyLarge?.color,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Text(
-                                                    item.nomeEvento,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.grey[600],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.blue.withValues(alpha: 0.1),
-                                                          borderRadius: BorderRadius.circular(12),
-                                                        ),
-                                                        child: Text(
-                                                          '${item.compras.length} inscrições',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight.w600,
-                                                            color: Colors.blue[700],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
-                                                        style: TextStyle(
-                                                          color: Colors.green[700],
-                                                          fontWeight: FontWeight.w700,
-                                                          fontSize: 16,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                                                  child: Divider(height: 1, color: Colors.grey[200]),
-                                                ),
-                                                const SizedBox(height: 8),
-                                                ...item.compras.map((e) {
-                                                  return Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                                    child: CardCompras(
-                                                      item: e,
-                                                      comprasTransferencia: comprasTransferencia,
-                                                      aoClicarParaTransferir: (compra) {
-                                                        if (comprasTransferencia.contains(compra)) {
-                                                          setState(() {
-                                                            comprasTransferencia.remove(compra);
-                                                          });
-                                                        } else {
-                                                          setState(() {
-                                                            comprasTransferencia.add(compra);
-                                                          });
-                                                        }
-                                                      },
-                                                      aoClicarParaGerarPagamento: (compra) {
-                                                        if (compra.pago == 'Sim') {
-                                                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                            showCloseIcon: true,
-                                                            content: Text(
-                                                              'Você só pode selecionar inscrições que não foram pagas.',
-                                                            ),
-                                                          ));
-                                                          return;
-                                                        }
-                                                        if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5' && compra.idFormaPagamento != '6')) {
-                                                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                            showCloseIcon: true,
-                                                            content: Text(
-                                                              'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
-                                                            ),
-                                                          ));
-                                                          return;
-                                                        }
-
-                                                        if (comprasPagamentos.isNotEmpty) {
-                                                          if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
-                                                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                              showCloseIcon: true,
-                                                              content: Text(
-                                                                'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
-                                                              ),
-                                                            ));
-                                                            return;
-                                                          }
-
-                                                          if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
-                                                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                              showCloseIcon: true,
-                                                              content: Text(
-                                                                'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
-                                                              ),
-                                                            ));
-                                                            return;
-                                                          }
-                                                        }
-
-                                                        if (comprasPagamentos.contains(compra)) {
-                                                          setState(() {
-                                                            comprasPagamentos.remove(compra);
-                                                          });
-                                                        } else {
-                                                          setState(() {
-                                                            comprasPagamentos.add(compra);
-                                                          });
-                                                        }
-                                                      },
-                                                      comprasPagamentos: comprasPagamentos,
-                                                      modoGerarPagamento: modoGerarPagamento,
-                                                      modoTransferencia: modoTransferencia,
-                                                      atualizarLista: () {
-                                                        listarCompras(resetar: true);
-                                                      },
-                                                    ),
-                                                  );
-                                                }),
-                                              ],
-                                            ),
-                                          ),
+                                        return _buildGrupoComprasCard(
+                                          item: item,
+                                          exibirCabecalhosInternos: false,
+                                          permitirGerarPagamento: true,
                                         );
                                       } else {
                                         return Padding(
@@ -398,206 +237,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                       if (index < comprasStore.compras.atuais.length) {
                                         var item = comprasStore.compras.atuais[index];
 
-                                        return SizedBox(
-                                          width: width,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  left: 0,
-                                                  top: 0,
-                                                  child: Container(
-                                                    width: 5,
-                                                    height: 90,
-                                                    clipBehavior: Clip.hardEdge,
-                                                    decoration: const BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                        topLeft: Radius.circular(5),
-                                                        bottomLeft: Radius.circular(5),
-                                                      ),
-                                                    ),
-                                                    child: const VerticalDivider(color: Colors.grey, thickness: 5),
-                                                  ),
-                                                ),
-                                                ExpansionTile(
-                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                  collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                  tilePadding: const EdgeInsets.only(right: 20),
-                                                  title: Padding(
-                                                    padding: const EdgeInsets.only(left: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          item.nomeProva,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: const TextStyle(fontWeight: FontWeight.bold),
-                                                        ),
-                                                        Text(
-                                                          item.nomeEvento,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: const TextStyle(fontSize: 13),
-                                                        ),
-                                                        const SizedBox(height: 5),
-                                                        Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Text('Inscrições: ${item.compras.length}'),
-                                                            if (item.compras[0].parcelas != '0') ...[
-                                                              Text(
-                                                                "${item.compras[0].parcelas} x de ${((double.tryParse(item.somaTotal) ?? 0) / num.tryParse(item.compras[0].parcelas)!).obterReal()}",
-                                                                style: const TextStyle(fontWeight: FontWeight.w500),
-                                                              ),
-                                                            ] else ...[
-                                                              Text(
-                                                                double.tryParse(item.somaTotal) != null ? ((double.tryParse(item.somaTotal) ?? 0)).obterReal() : '',
-                                                                style: const TextStyle(fontWeight: FontWeight.w500),
-                                                              ),
-                                                            ],
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  children: [
-                                                    const Padding(
-                                                      padding: EdgeInsets.only(bottom: 10, top: 0),
-                                                      child: Divider(
-                                                        height: 1,
-                                                      ),
-                                                    ),
-                                                    ...item.compras.map((e) {
-                                                      return Padding(
-                                                        padding: EdgeInsets.only(left: 7, right: 7),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            if (e.tipodevenda == 'Filiação' && item.compras.where((element) => element.tipodevenda == 'Filiação').firstOrNull?.id == e.id) ...[
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-                                                                child: Row(
-                                                                  children: [
-                                                                    Container(
-                                                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                                                      decoration: BoxDecoration(
-                                                                        color: Colors.orange,
-                                                                        borderRadius: BorderRadius.circular(4),
-                                                                      ),
-                                                                      child: const Text(
-                                                                        'Filiação',
-                                                                        style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ] else if ((item.compras.where((element) => element.idCabeceira == '1').firstOrNull?.id == e.id)) ...[
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-                                                                child: Text(
-                                                                  item.compras.where((element) => element.idCabeceira == '1').firstOrNull?.nomeProva ?? '',
-                                                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                ),
-                                                              ),
-                                                            ] else if ((item.compras.where((element) => element.idCabeceira == '2').firstOrNull?.id == e.id)) ...[
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-                                                                child: Text(
-                                                                  item.compras.where((element) => element.idCabeceira == '2').firstOrNull?.nomeProva ?? '',
-                                                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                            CardCompras(
-                                                              item: e,
-                                                              comprasTransferencia: comprasTransferencia,
-                                                              aoClicarParaTransferir: (compra) {
-                                                                if (comprasTransferencia.contains(compra)) {
-                                                                  setState(() {
-                                                                    comprasTransferencia.remove(compra);
-                                                                  });
-                                                                } else {
-                                                                  setState(() {
-                                                                    comprasTransferencia.add(compra);
-                                                                  });
-                                                                }
-                                                              },
-                                                              modoTransferencia: modoTransferencia,
-                                                              aoClicarParaGerarPagamento: (compra) {
-                                                                if (compra.pago == 'Sim') {
-                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                    showCloseIcon: true,
-                                                                    content: Text(
-                                                                      'Você só pode selecionar inscrições que não foram pagas.',
-                                                                    ),
-                                                                  ));
-                                                                  return;
-                                                                }
-                                                                if ((compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5' && compra.idFormaPagamento != '6')) {
-                                                                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                    showCloseIcon: true,
-                                                                    content: Text(
-                                                                      'Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.',
-                                                                    ),
-                                                                  ));
-                                                                  return;
-                                                                }
-
-                                                                if (comprasPagamentos.isNotEmpty) {
-                                                                  if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
-                                                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                      showCloseIcon: true,
-                                                                      content: Text(
-                                                                        'Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.',
-                                                                      ),
-                                                                    ));
-                                                                    return;
-                                                                  }
-
-                                                                  if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
-                                                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                                                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                      showCloseIcon: true,
-                                                                      content: Text(
-                                                                        'Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.',
-                                                                      ),
-                                                                    ));
-                                                                    return;
-                                                                  }
-                                                                }
-
-                                                                if (comprasPagamentos.contains(compra)) {
-                                                                  setState(() {
-                                                                    comprasPagamentos.remove(compra);
-                                                                  });
-                                                                } else {
-                                                                  setState(() {
-                                                                    comprasPagamentos.add(compra);
-                                                                  });
-                                                                }
-                                                              },
-                                                              comprasPagamentos: comprasPagamentos,
-                                                              modoGerarPagamento: modoGerarPagamento,
-                                                              atualizarLista: () {
-                                                                listarCompras(resetar: true);
-                                                              },
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    }),
-                                                    const SizedBox(height: 7),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                        return _buildGrupoComprasCard(
+                                          item: item,
+                                          exibirCabecalhosInternos: true,
+                                          permitirGerarPagamento: true,
                                         );
                                       } else {
                                         return Padding(
@@ -643,103 +286,10 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
                                       if (index < comprasStore.compras.canceladas.length) {
                                         var item = comprasStore.compras.canceladas[index];
 
-                                        return SizedBox(
-                                          width: width,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  left: 0,
-                                                  top: 0,
-                                                  child: Container(
-                                                    width: 5,
-                                                    height: 90,
-                                                    clipBehavior: Clip.hardEdge,
-                                                    decoration: const BoxDecoration(
-                                                      borderRadius: BorderRadius.only(
-                                                        topLeft: Radius.circular(5),
-                                                        bottomLeft: Radius.circular(5),
-                                                      ),
-                                                    ),
-                                                    child: const VerticalDivider(color: Colors.grey, thickness: 5),
-                                                  ),
-                                                ),
-                                                ExpansionTile(
-                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                  collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                                                  tilePadding: const EdgeInsets.only(right: 20),
-                                                  title: Padding(
-                                                    padding: const EdgeInsets.only(left: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          item.nomeProva,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: const TextStyle(fontWeight: FontWeight.bold),
-                                                        ),
-                                                        Text(
-                                                          item.nomeEvento,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: const TextStyle(fontSize: 13),
-                                                        ),
-                                                        const SizedBox(height: 5),
-                                                        Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Text('Inscrições: ${item.compras.length}'),
-                                                            Text(
-                                                              double.tryParse(item.somaTotal) != null ? double.tryParse(item.somaTotal)!.obterReal() : '',
-                                                              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  children: [
-                                                    const Padding(
-                                                      padding: EdgeInsets.only(bottom: 10, top: 0),
-                                                      child: Divider(
-                                                        height: 1,
-                                                      ),
-                                                    ),
-                                                    ...item.compras.map((e) {
-                                                      return Padding(
-                                                        padding: const EdgeInsets.only(left: 7, right: 7),
-                                                        child: CardCompras(
-                                                          item: e,
-                                                          comprasTransferencia: comprasTransferencia,
-                                                          aoClicarParaTransferir: (compra) {
-                                                            if (comprasTransferencia.contains(compra)) {
-                                                              setState(() {
-                                                                comprasTransferencia.remove(compra);
-                                                              });
-                                                            } else {
-                                                              setState(() {
-                                                                comprasTransferencia.add(compra);
-                                                              });
-                                                            }
-                                                          },
-                                                          aoClicarParaGerarPagamento: (compra) {},
-                                                          comprasPagamentos: comprasPagamentos,
-                                                          modoGerarPagamento: modoGerarPagamento,
-                                                          modoTransferencia: modoTransferencia,
-                                                          atualizarLista: () {
-                                                            listarCompras(resetar: true);
-                                                          },
-                                                        ),
-                                                      );
-                                                    }),
-                                                    const SizedBox(height: 7),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                        return _buildGrupoComprasCard(
+                                          item: item,
+                                          exibirCabecalhosInternos: false,
+                                          permitirGerarPagamento: false,
                                         );
                                       } else {
                                         return Padding(
@@ -758,6 +308,249 @@ class _PaginaComprasState extends State<PaginaCompras> with AutomaticKeepAliveCl
           ),
         );
       },
+    );
+  }
+
+  void _alternarTransferencia(ComprasModelo compra) {
+    setState(() {
+      if (comprasTransferencia.contains(compra)) {
+        comprasTransferencia.remove(compra);
+      } else {
+        comprasTransferencia.add(compra);
+      }
+    });
+  }
+
+  void _mostrarSnackBar(String mensagem) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      showCloseIcon: true,
+      content: Text(mensagem),
+    ));
+  }
+
+  void _alternarPagamento(ComprasModelo compra) {
+    if (compra.pago == 'Sim') {
+      _mostrarSnackBar('Você só pode selecionar inscrições que não foram pagas.');
+      return;
+    }
+
+    if (compra.idFormaPagamento != '1' && compra.idFormaPagamento != '4' && compra.idFormaPagamento != '5' && compra.idFormaPagamento != '6') {
+      _mostrarSnackBar('Você só pode selecionar inscrições que foram geradas pela forma de pagamento PIX.');
+      return;
+    }
+
+    if (comprasPagamentos.isNotEmpty) {
+      if (compra.idEmpresa != comprasPagamentos.first.idEmpresa) {
+        _mostrarSnackBar('Essa inscrição não pertence a mesma empresa da primeira inscrição que você selecionou.');
+        return;
+      }
+
+      if (compra.idFormaPagamento != comprasPagamentos.first.idFormaPagamento) {
+        _mostrarSnackBar('Essa inscrição não é da mesma forma de pagamento da primeira inscrição que você selecionou.');
+        return;
+      }
+    }
+
+    setState(() {
+      if (comprasPagamentos.contains(compra)) {
+        comprasPagamentos.remove(compra);
+      } else {
+        comprasPagamentos.add(compra);
+      }
+    });
+  }
+
+  Widget? _buildCabecalhoInternoCompra(dynamic item, ComprasModelo compra) {
+    final ComprasModelo? primeiraFiliacao = _firstWhereOrNull<ComprasModelo>(
+      item.compras,
+      (element) => element.tipodevenda == 'Filiação',
+    );
+    final ComprasModelo? cabecalho1 = _firstWhereOrNull<ComprasModelo>(
+      item.compras,
+      (element) => element.idCabeceira == '1',
+    );
+    final ComprasModelo? cabecalho2 = _firstWhereOrNull<ComprasModelo>(
+      item.compras,
+      (element) => element.idCabeceira == '2',
+    );
+
+    if (compra.tipodevenda == 'Filiação' && primeiraFiliacao?.id == compra.id) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: Colors.orange,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                'Filiação',
+                style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (cabecalho1?.id == compra.id) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 12),
+        child: Text(
+          cabecalho1?.nomeProva ?? '',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      );
+    }
+
+    if (cabecalho2?.id == compra.id) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 12),
+        child: Text(
+          cabecalho2?.nomeProva ?? '',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      );
+    }
+
+    return null;
+  }
+
+  T? _firstWhereOrNull<T>(Iterable<T> itens, bool Function(T item) test) {
+    for (final item in itens) {
+      if (test(item)) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  Widget _buildGrupoComprasCard({
+    required dynamic item,
+    required bool exibirCabecalhosInternos,
+    required bool permitirGerarPagamento,
+  }) {
+    final total = double.tryParse(item.somaTotal);
+    final parcelasTexto = item.compras.isNotEmpty ? item.compras.first.parcelas : '0';
+    final parcelas = num.tryParse(parcelasTexto ?? '0');
+
+    String valorResumo;
+    if (parcelas != null && parcelas > 0) {
+      valorResumo = '$parcelasTexto x de ${((total ?? 0) / parcelas).obterReal()}';
+    } else {
+      valorResumo = total != null ? total.obterReal() : '';
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding: const EdgeInsets.only(bottom: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.nomeProva,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                item.nomeEvento,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${item.compras.length} inscrições',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                  ),
+                  Text(
+                    valorResumo,
+                    style: TextStyle(
+                      color: Colors.green[700],
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Divider(height: 1, color: Colors.grey[200]),
+            ),
+            const SizedBox(height: 8),
+            ...item.compras.map<Widget>((e) {
+              final cabecalho = exibirCabecalhosInternos ? _buildCabecalhoInternoCompra(item, e) : null;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (cabecalho != null) cabecalho,
+                    CardCompras(
+                      item: e,
+                      comprasTransferencia: comprasTransferencia,
+                      aoClicarParaTransferir: _alternarTransferencia,
+                      aoClicarParaGerarPagamento: permitirGerarPagamento ? _alternarPagamento : (_) {},
+                      comprasPagamentos: comprasPagamentos,
+                      modoGerarPagamento: modoGerarPagamento,
+                      modoTransferencia: modoTransferencia,
+                      atualizarLista: () {
+                        listarCompras(resetar: true);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 

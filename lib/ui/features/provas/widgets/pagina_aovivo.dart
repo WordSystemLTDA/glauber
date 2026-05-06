@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provadelaco/data/repositories/provas_aovivo_repository.dart';
@@ -36,6 +35,19 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
 
   final TextEditingController searchProvaController = TextEditingController();
 
+  int _totalCompetidores(List<dynamic> listaCompeticao) {
+    return listaCompeticao.where((item) => !(item.id.toString().startsWith('-'))).fold<int>(0, (acc, item) => acc + (item.ordemDeEntradas as List).length);
+  }
+
+  dynamic _listaSelecionada(List<dynamic> listaCompeticao) {
+    for (final item in listaCompeticao) {
+      if (item.id.toString() == idListaCompeticao) {
+        return item;
+      }
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,8 +75,8 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
         backgroundColor: const Color(0xFFF7F7FA),
         appBar: AppBar(
           title: const Text('Provas ao Vivo', style: TextStyle(fontWeight: FontWeight.bold)),
-          backgroundColor: Colors.deepPurple,
-          foregroundColor: Colors.white,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor ?? Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).appBarTheme.foregroundColor ?? Theme.of(context).colorScheme.onSurface,
           elevation: 0,
         ),
         body: ListenableBuilder(
@@ -89,110 +101,71 @@ class _PaginaAoVivoState extends State<PaginaAoVivo> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // header image
-                  Container(
-                    height: 180,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
-                            child: CachedNetworkImage(
-                              imageUrl: evento.foto,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(color: Colors.grey.shade300),
-                              errorWidget: (context, url, error) => Container(
-                                color: Colors.grey.shade300,
-                                child: const Icon(Icons.broken_image, color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Gradient Overlay
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black.withValues(alpha: 0.1),
-                                  Colors.black.withValues(alpha: 0.7),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Content
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.45)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Text(evento.nomeEvento,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    height: 1.1,
-                                  )),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Icon(Icons.calendar_today, color: Colors.white70, size: 14),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    DateFormat('dd ' 'MMM' ' yyyy', 'pt_BR').format(DateTime.parse(evento.dataEvento)).toUpperCase(),
-                                    style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 0.5),
-                                  ),
-                                ],
+                              FilledButton.tonalIcon(
+                                onPressed: () {
+                                  if (idListaCompeticao == '0') {
+                                    Navigator.pop(context);
+                                  } else {
+                                    setState(() => idListaCompeticao = '0');
+                                  }
+                                },
+                                icon: const Icon(Icons.arrow_back_ios_new, size: 14),
+                                label: Text(idListaCompeticao == '0' ? 'Voltar' : 'Ver listas'),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  evento.nomeEvento,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        Positioned(
-                          top: 16,
-                          left: 16,
-                          child: Material(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12),
-                              onTap: () {
-                                if (idListaCompeticao == '0') {
-                                  Navigator.pop(context);
-                                } else {
-                                  setState(() => idListaCompeticao = '0');
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.arrow_back_ios_new, size: 16, color: Colors.white),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      idListaCompeticao == '0' ? 'Voltar' : 'Ver Listas',
-                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-                                    ),
-                                  ],
-                                ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              Chip(
+                                avatar: const Icon(Icons.calendar_today, size: 16),
+                                label: Text(DateFormat('dd/MM/yyyy', 'pt_BR').format(DateTime.parse(evento.dataEvento))),
                               ),
-                            ),
+                              Chip(
+                                avatar: const Icon(Icons.groups_2_outlined, size: 16),
+                                label: Text('${_totalCompetidores(provasAoVivoStore.listaCompeticao)} competidores'),
+                              ),
+                              if (idListaCompeticao != '0' && _listaSelecionada(provasAoVivoStore.listaCompeticao) != null)
+                                Chip(
+                                  avatar: const Icon(Icons.flag_outlined, size: 16),
+                                  label: Text(_listaSelecionada(provasAoVivoStore.listaCompeticao)!.nome),
+                                ),
+                              if (idListaCompeticao != '0' && _listaSelecionada(provasAoVivoStore.listaCompeticao) != null)
+                                Chip(
+                                  avatar: const Icon(Icons.format_list_numbered, size: 16),
+                                  label: Text('${_listaSelecionada(provasAoVivoStore.listaCompeticao)!.ordemDeEntradas.length} na lista'),
+                                ),
+                            ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-
                   Expanded(
                     child: idListaCompeticao == '0'
                         ? PaginaListaDeCompeticao(

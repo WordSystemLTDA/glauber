@@ -80,15 +80,15 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple.withValues(alpha: 0.1),
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Text(
                       item.ordemDeEntradas.length.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                         fontSize: 18,
                       ),
                     ),
@@ -133,10 +133,13 @@ class _CardListaCompeticaoState extends State<CardListaCompeticao> {
                 // Trailing Action
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                      color: Colors.deepPurple,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [BoxShadow(color: Colors.deepPurple.withValues(alpha: 0.3), blurRadius: 6, offset: const Offset(0, 3))]),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(20), boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.25),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    )
+                  ]),
                   child: const Row(
                     children: [
                       Text(

@@ -40,6 +40,8 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
 
   final Set<String> _filtrosSelecionados = <String>{};
 
+  bool get _temFiltrosAtivos => _searchController.text.isNotEmpty || _filtroSelecionado.isNotEmpty || _filtrosSelecionados.isNotEmpty;
+
   @override
   void initState() {
     super.initState();
@@ -160,6 +162,15 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
     _carregarDados(resetar: true);
   }
 
+  void _limparFiltros() {
+    setState(() {
+      _searchController.clear();
+      _filtroSelecionado = '';
+      _filtrosSelecionados.clear();
+    });
+    _carregarDados(resetar: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ordemDeEntradaProvaStore = Provider.of<OrdemDeEntradaProvaStore>(context);
@@ -177,9 +188,23 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: theme.cardColor,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.surfaceContainer,
+                          theme.colorScheme.surface,
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: theme.dividerColor.withValues(alpha: 0.5)),
+                      border: Border.all(color: theme.dividerColor.withValues(alpha: 0.45)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.shadow.withValues(alpha: 0.04),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [
@@ -191,98 +216,101 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
                               'Filtros',
                               style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
                             ),
+                            const Spacer(),
+                            if (_temFiltrosAtivos)
+                              TextButton.icon(
+                                onPressed: _limparFiltros,
+                                icon: const Icon(Icons.restart_alt_rounded, size: 18),
+                                label: const Text('Limpar'),
+                              ),
                           ],
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Pesquisar na lista',
+                            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: _searchController.text.isEmpty
+                                ? null
+                                : IconButton(
+                                    onPressed: () {
+                                      _searchController.clear();
+                                      _carregarDados(resetar: true);
+                                      setState(() {});
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  ),
+                            filled: true,
+                            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.7)),
+                            ),
+                          ),
+                          textInputAction: TextInputAction.search,
+                          onSubmitted: (_) => _carregarDados(resetar: true),
+                          onChanged: (value) {
+                            _onSearchChanged(value);
+                            setState(() {});
+                          },
                         ),
                         const SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(
-                              child: TextField(
-                                controller: _searchController,
+                              child: DropdownButtonFormField<String>(
+                                initialValue: _filtroSelecionado.isEmpty ? '' : _filtroSelecionado,
+                                icon: const Icon(Icons.expand_more_rounded),
+                                borderRadius: BorderRadius.circular(12),
                                 decoration: InputDecoration(
-                                  hintText: 'Pesquisar na lista',
-                                  prefixIcon: const Icon(Icons.search),
-                                  suffixIcon: _searchController.text.isEmpty
-                                      ? null
-                                      : IconButton(
-                                          onPressed: () {
-                                            _searchController.clear();
-                                            _carregarDados(resetar: true);
-                                            setState(() {});
-                                          },
-                                          icon: const Icon(Icons.close),
-                                        ),
+                                  labelText: 'Somatória',
                                   filled: true,
                                   fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-                                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
-                                onChanged: (value) {
-                                  _onSearchChanged(value);
-                                  setState(() {});
-                                },
+                                items: [
+                                  const DropdownMenuItem(value: '', child: Text('Todas')),
+                                  ...ordemDeEntradaProvaStore.somatoriasDisponiveis.map((somatoria) {
+                                    return DropdownMenuItem(
+                                      value: somatoria['valor'],
+                                      child: Text(somatoria['label']!),
+                                    );
+                                  }),
+                                ],
+                                onChanged: _onFilterChanged,
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: theme.dividerColor.withValues(alpha: 0.5)),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: _filtroSelecionado.isEmpty ? null : _filtroSelecionado,
-                                  hint: const Text('Somatória'),
-                                  items: [
-                                    const DropdownMenuItem(value: '', child: Text('Todas')),
-                                    ...ordemDeEntradaProvaStore.somatoriasDisponiveis.map((somatoria) {
-                                      return DropdownMenuItem(
-                                        value: somatoria['valor'],
-                                        child: Text(somatoria['label']!),
-                                      );
-                                    }),
-                                  ],
-                                  onChanged: _onFilterChanged,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: SegmentedButton<String>(
-                            style: SegmentedButton.styleFrom(
-                              selectedBackgroundColor: theme.colorScheme.primary,
-                              selectedForegroundColor: theme.colorScheme.onPrimary,
-                              backgroundColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-                              foregroundColor: theme.colorScheme.onSurface,
+                            FilterChip(
+                              avatar: const Icon(Icons.verified_rounded, size: 18),
+                              label: const Text('SAT'),
+                              selected: _filtrosSelecionados.contains('1'),
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    _filtrosSelecionados.add('1');
+                                  } else {
+                                    _filtrosSelecionados.remove('1');
+                                  }
+                                });
+                                _carregarDados(resetar: true);
+                              },
+                              selectedColor: theme.colorScheme.primaryContainer,
+                              checkmarkColor: theme.colorScheme.onPrimaryContainer,
                               side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.5)),
                             ),
-                            segments: const [
-                              ButtonSegment(value: '1', label: Text('SAT')),
-                            ],
-                            selected: _filtrosSelecionados,
-                            onSelectionChanged: (value) {
-                              final novo = Set<String>.from(value);
-                              final mudou = _filtrosSelecionados.length != novo.length || !_filtrosSelecionados.containsAll(novo);
-                              if (!mudou) return;
-
-                              setState(() {
-                                _filtrosSelecionados
-                                  ..clear()
-                                  ..addAll(novo);
-                              });
-
-                              _carregarDados(resetar: true);
-                            },
-                            emptySelectionAllowed: true,
-                          ),
+                          ],
                         ),
                       ],
                     ),
@@ -290,59 +318,77 @@ class _PaginaOrdemDeEntradaState extends State<PaginaOrdemDeEntrada> {
                 )
               : const SizedBox.shrink(),
         ),
-
         Expanded(
-          child: _carregandoInicial && lista.isEmpty
-              ? const Center(child: CircularProgressIndicator())
-              : lista.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.search_off_rounded, size: 44, color: theme.hintColor),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Nenhum resultado encontrado',
-                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              'Ajuste a pesquisa ou filtros para tentar novamente.',
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
-                            ),
-                          ],
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            child: _carregandoInicial && lista.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : lista.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 64,
+                                height: 64,
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.surfaceContainerHighest,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.search_off_rounded, size: 34, color: theme.hintColor),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Nenhum resultado encontrado',
+                                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Ajuste a pesquisa ou filtros para tentar novamente.',
+                                textAlign: TextAlign.center,
+                                style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+                              ),
+                              const SizedBox(height: 14),
+                              if (_temFiltrosAtivos)
+                                FilledButton.tonalIcon(
+                                  onPressed: _limparFiltros,
+                                  icon: const Icon(Icons.filter_alt_off_rounded),
+                                  label: const Text('Limpar filtros'),
+                                ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async => _carregarDados(resetar: true),
+                        child: ListView.separated(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
+                          itemCount: lista.length + (_carregandoProximaPagina ? 1 : 0),
+                          separatorBuilder: (_, __) => const SizedBox(height: 6),
+                          itemBuilder: (context, index) {
+                            if (index == lista.length) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+                            var item = lista[index];
+                            return CardOrdemDeEntradaProva(
+                              item: item,
+                              nomeprova: _nomeProvaSelecionada ?? '',
+                              mostrarOpcoes: true,
+                              selecionado: false,
+                            );
+                          },
                         ),
                       ),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: () async => _carregarDados(resetar: true),
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
-                        itemCount: lista.length + (_carregandoProximaPagina ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index == lista.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-                          var item = lista[index];
-                          return CardOrdemDeEntradaProva(
-                            item: item,
-                            nomeprova: _nomeProvaSelecionada ?? '',
-                            mostrarOpcoes: true,
-                            selecionado: false,
-                          );
-                        },
-                      ),
-                    ),
+          ),
         ),
       ],
     );

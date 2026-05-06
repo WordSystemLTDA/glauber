@@ -23,6 +23,8 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
   @override
   Widget build(BuildContext context) {
     var itemParceiro = widget.item;
+    final estiloNomeDupla = const TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12, left: 16, right: 16),
       decoration: BoxDecoration(
@@ -71,7 +73,7 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                           Expanded(
                             child: Text(
                               "${itemParceiro.nomeClienteCabeceira.toUpperCase()}${itemParceiro.sorteiocabeceira.contains('Sim') ? ' (SORTEIO)' : ''}",
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                              style: estiloNomeDupla,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -81,7 +83,7 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                       const SizedBox(height: 4),
                       Text(
                         "${itemParceiro.nomeClientePezeiro.toUpperCase()}${itemParceiro.sorteiopezeiro.contains('Sim') ? ' (SORTEIO)' : ''}",
-                        style: TextStyle(fontSize: 13, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
+                        style: estiloNomeDupla,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -90,6 +92,7 @@ class _CardOrdemDeEntradaProvaState extends State<CardOrdemDeEntradaProva> {
                         spacing: 10,
                         runSpacing: 6,
                         children: [
+                          if (itemParceiro.prev.isNotEmpty) Chip(label: Text('PREV: ${itemParceiro.prev}')),
                           if (itemParceiro.boi1 != '') Chip(label: Text('1: ${itemParceiro.boi1}')),
                           if (itemParceiro.boi2 != '') Chip(label: Text('2: ${itemParceiro.boi2}')),
                           if (itemParceiro.boi3 != '') Chip(label: Text('3: ${itemParceiro.boi3}')),

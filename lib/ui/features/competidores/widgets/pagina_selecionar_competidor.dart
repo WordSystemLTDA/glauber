@@ -16,6 +16,8 @@ class PaginaSelecionarCompetidor extends StatefulWidget {
   final String Function(CompetidoresModelo competidor)? mensagemBloqueio;
   final bool destacarCardsStatus;
   final bool Function(CompetidoresModelo competidor)? jaSelecionado;
+  final bool bloquearCliqueIncompativel;
+  final List<String> idsJaSelecionados;
 
   const PaginaSelecionarCompetidor({
     super.key,
@@ -28,6 +30,8 @@ class PaginaSelecionarCompetidor extends StatefulWidget {
     this.mensagemBloqueio,
     this.destacarCardsStatus = false,
     this.jaSelecionado,
+    this.bloquearCliqueIncompativel = false,
+    this.idsJaSelecionados = const [],
   });
 
   @override
@@ -35,17 +39,28 @@ class PaginaSelecionarCompetidor extends StatefulWidget {
 }
 
 class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor> {
+  static const int _tamanhoPagina = 20;
+
   final TextEditingController _controllerBusca = TextEditingController();
   final FocusNode _focusBusca = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+  final Set<String> _competidoresExpandidos = <String>{};
 
   Timer? _debounce;
   bool _carregando = false;
   bool _carregouInicial = false;
+  bool _carregandoMais = false;
+  int _paginaAtual = 1;
+  bool _temMaisPaginas = true;
+  String _termoBuscaAtual = '';
+  int _totalResultados = 0;
   List<CompetidoresModelo> _competidores = [];
+  _FiltroCompetidor _filtroSelecionado = _FiltroCompetidor.todos;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_aoRolarLista);
     _buscarCompetidores();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -60,7 +75,21 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
     _debounce?.cancel();
     _controllerBusca.dispose();
     _focusBusca.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _aoRolarLista() {
+    if (!_scrollController.hasClients) {
+      return;
+    }
+
+    final posicao = _scrollController.position;
+    final chegouPertoDoFim = posicao.pixels >= (posicao.maxScrollExtent - 180);
+
+    if (chegouPertoDoFim) {
+      _buscarCompetidores(carregarMais: true);
+    }
   }
 
   void _onChangedBusca(String value) {
@@ -70,30 +99,70 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
     });
   }
 
-  Future<void> _buscarCompetidores({String? pesquisa}) async {
+  Future<void> _buscarCompetidores({String? pesquisa, bool carregarMais = false}) async {
     final termo = (pesquisa ?? _controllerBusca.text).trim();
 
-    setState(() {
-      _carregando = true;
-    });
+    if (carregarMais) {
+      if (_carregandoMais || !_temMaisPaginas || _carregando) {
+        return;
+      }
+      setState(() {
+        _carregandoMais = true;
+      });
+    } else {
+      setState(() {
+        _carregando = true;
+      });
+      _termoBuscaAtual = termo;
+    }
+
+    final paginaSolicitada = carregarMais ? _paginaAtual + 1 : 1;
+    final filtroApi = _filtroParaApi(_filtroSelecionado);
 
     try {
       final usuarioProvider = context.read<UsuarioProvider>();
       final competidoresServico = context.read<CompetidoresServico>();
 
-      final dados = widget.usarBancoCompetidores ? await competidoresServico.listarBancoCompetidores(widget.idCabeceira, usuarioProvider.usuario, termo, widget.idProva) : await competidoresServico.listarCompetidores(widget.idCabeceira, usuarioProvider.usuario, termo, widget.idProva);
+      final dados = widget.usarBancoCompetidores
+          ? await competidoresServico.listarBancoCompetidoresPaginado(
+              widget.idCabeceira,
+              usuarioProvider.usuario,
+              termo,
+              widget.idProva,
+              page: paginaSolicitada,
+              limit: _tamanhoPagina,
+              filtro: filtroApi,
+              idsJaSelecionados: widget.idsJaSelecionados,
+            )
+          : await competidoresServico.listarCompetidoresPaginado(
+              widget.idCabeceira,
+              usuarioProvider.usuario,
+              termo,
+              widget.idProva,
+              page: paginaSolicitada,
+              limit: _tamanhoPagina,
+              filtro: filtroApi,
+              idsJaSelecionados: widget.idsJaSelecionados,
+            );
 
       if (!mounted) {
         return;
       }
 
       setState(() {
-        _competidores = dados;
+        _competidores = carregarMais ? [..._competidores, ...dados.itens] : dados.itens;
         _carregando = false;
+        _carregandoMais = false;
         _carregouInicial = true;
+        _paginaAtual = dados.page;
+        _temMaisPaginas = dados.hasMore;
+        _totalResultados = dados.total;
+        if (!carregarMais) {
+          _competidoresExpandidos.clear();
+        }
       });
 
-      if (dados.isEmpty && termo.isNotEmpty) {
+      if (!carregarMais && dados.itens.isEmpty && termo.isNotEmpty) {
         _mostrarSnackBarTopo('Nenhum competidor encontrado para "$termo".');
       }
     } catch (_) {
@@ -103,6 +172,7 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
 
       setState(() {
         _carregando = false;
+        _carregandoMais = false;
         _carregouInicial = true;
       });
 
@@ -126,12 +196,59 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
     return widget.jaSelecionado?.call(competidor) ?? false;
   }
 
+  bool _podeSelecionarCompetidor(CompetidoresModelo competidor) {
+    return widget.podeSelecionar?.call(competidor) ?? true;
+  }
+
+  String _filtroParaApi(_FiltroCompetidor filtro) {
+    switch (filtro) {
+      case _FiltroCompetidor.compativeis:
+        return 'compativeis';
+      case _FiltroCompetidor.naoCompativeis:
+        return 'nao_compativeis';
+      case _FiltroCompetidor.jaSelecionados:
+        return 'ja_selecionados';
+      case _FiltroCompetidor.todos:
+        return 'todos';
+    }
+  }
+
+  void _alternarExpansao(CompetidoresModelo competidor) {
+    setState(() {
+      if (_competidoresExpandidos.contains(competidor.id)) {
+        _competidoresExpandidos.remove(competidor.id);
+      } else {
+        _competidoresExpandidos.add(competidor.id);
+      }
+    });
+  }
+
+  void _aoTocarCompetidor(CompetidoresModelo competidor) {
+    if (_podeSelecionarCompetidor(competidor)) {
+      _selecionarCompetidor(competidor);
+      return;
+    }
+
+    if (widget.bloquearCliqueIncompativel) {
+      final mensagem = widget.mensagemBloqueio?.call(competidor) ?? 'Este competidor não pode ser selecionado.';
+      _mostrarSnackBarTopo(mensagem);
+      return;
+    }
+
+    _alternarExpansao(competidor);
+  }
+
   Color? _corCard(CompetidoresModelo competidor, bool isDarkMode) {
     if (!widget.destacarCardsStatus) {
       return null;
     }
 
     final jaSelecionado = _estaSelecionado(competidor);
+
+    // Verificar somatória inválida
+    if (competidor.podeCorrer == false) {
+      return const Color(0xFFfbe5ea);
+    }
 
     if ((competidor.ativo == 'Não' || jaSelecionado) && competidor.id != '0') {
       return const Color(0xFFfbe5ea);
@@ -151,6 +268,14 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
 
     final jaSelecionado = _estaSelecionado(competidor);
 
+    // Verificar somatória inválida
+    if (competidor.podeCorrer == false) {
+      return RoundedRectangleBorder(
+        side: const BorderSide(width: 1, color: Colors.red),
+        borderRadius: BorderRadius.circular(8),
+      );
+    }
+
     if ((competidor.ativo == 'Não' || jaSelecionado) && competidor.id != '0') {
       return RoundedRectangleBorder(
         side: const BorderSide(width: 1, color: Colors.red),
@@ -168,45 +293,51 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
     return RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
   }
 
-  Widget? _trailingStatus(CompetidoresModelo competidor) {
-    if (!widget.destacarCardsStatus) {
-      return null;
+  List<String> _motivosBloqueioUnicos(CompetidoresModelo competidor, {bool removerMensagemPrincipal = false}) {
+    final vistos = <String>{};
+    final mensagemPrincipal = removerMensagemPrincipal ? (competidor.mensagemValidacao ?? '').trim() : '';
+
+    final motivosBase = (competidor.motivosBloqueio ?? []).isNotEmpty ? (competidor.motivosBloqueio ?? []) : ((competidor.mensagemValidacao?.trim().isNotEmpty ?? false) ? [competidor.mensagemValidacao!.trim()] : <String>[]);
+
+    return motivosBase.map((motivo) => motivo.trim()).where((motivo) => motivo.isNotEmpty).where((motivo) => !removerMensagemPrincipal || motivo != mensagemPrincipal).where((motivo) => vistos.add(motivo)).toList();
+  }
+
+  Widget _buildMotivosBloqueio(CompetidoresModelo competidor) {
+    final motivos = _motivosBloqueioUnicos(competidor);
+    if (motivos.isEmpty) {
+      return const SizedBox.shrink();
     }
 
-    if (competidor.ativo == 'Não') {
-      return const Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Competidor já'),
-          Text('Fez todas as inscrições'),
-        ],
-      );
-    }
-
-    if (competidor.ativo == 'Somatoria') {
-      return const Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('HandiCap do Competidor'),
-          Text('Estoura a somatória'),
-        ],
-      );
-    }
-
-    if (competidor.ativo == 'HCMinMax') {
-      return const Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('HandiCap do Competidor'),
-          Text('Não é compatível com a prova'),
-        ],
-      );
-    }
-
-    return null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: motivos
+          .map(
+            (motivo) => Padding(
+              padding: const EdgeInsets.only(top: 3),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Icon(Icons.block, size: 12, color: Colors.red),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      motivo,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 
   void _mostrarSnackBarTopo(String mensagem) {
@@ -232,6 +363,8 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final competidoresVisiveis = _competidores;
+    final possuiMaisItens = _temMaisPaginas;
 
     return Scaffold(
       appBar: AppBar(
@@ -245,8 +378,11 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
               controller: _controllerBusca,
               focusNode: _focusBusca,
               textInputAction: TextInputAction.search,
-              onChanged: _onChangedBusca,
-              onSubmitted: (_) => _buscarCompetidores(),
+              onChanged: (value) {
+                _onChangedBusca(value);
+                setState(() {});
+              },
+              onSubmitted: (_) => _buscarCompetidores(pesquisa: _controllerBusca.text),
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 prefixIcon: const Icon(Icons.search),
@@ -264,12 +400,13 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
               ),
             ),
           ),
+          _buildBarraFiltros(),
           if (_carregando && _carregouInicial) const LinearProgressIndicator(minHeight: 2),
           Expanded(
             child: !_carregouInicial && _carregando
                 ? const Center(child: CircularProgressIndicator())
                 : RefreshIndicator(
-                    onRefresh: () => _buscarCompetidores(),
+                    onRefresh: () => _buscarCompetidores(pesquisa: _termoBuscaAtual),
                     child: _competidores.isEmpty
                         ? ListView(
                             children: const [
@@ -280,48 +417,280 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
                             ],
                           )
                         : ListView.builder(
+                            controller: _scrollController,
                             padding: const EdgeInsets.only(bottom: 16),
-                            itemCount: _competidores.length,
+                            itemCount: competidoresVisiveis.length + 1,
                             itemBuilder: (context, index) {
-                              final competidor = _competidores[index];
+                              if (index >= competidoresVisiveis.length) {
+                                if (_carregandoMais) {
+                                  return const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                  );
+                                }
+
+                                if (possuiMaisItens) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    child: Center(
+                                      child: Text(
+                                        'Role para carregar mais',
+                                        style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Center(
+                                    child: Text(
+                                      '$_totalResultados ${_totalResultados == 1 ? 'resultado' : 'resultados'} encontrados',
+                                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              final competidor = competidoresVisiveis[index];
+                              final expandido = _competidoresExpandidos.contains(competidor.id);
+                              final podeSelecionar = _podeSelecionarCompetidor(competidor);
+                              final jaSelecionado = _estaSelecionado(competidor);
+                              final statusColor = jaSelecionado ? Colors.orange : (competidor.podeCorrer == false ? Colors.red : Colors.green);
+                              final statusTexto = jaSelecionado ? 'Já selecionado' : (competidor.podeCorrer == false ? 'Não compatível' : 'Compatível');
 
                               return Card(
                                 elevation: 2,
                                 color: _corCard(competidor, isDarkMode),
                                 margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                                 shape: _shapeCard(competidor),
-                                child: ListTile(
-                                  onTap: () => _selecionarCompetidor(competidor),
-                                  leading: Text(competidor.id),
-                                  trailing: _trailingStatus(competidor),
-                                  title: Text(
-                                    competidor.nome,
-                                    style: TextStyle(
-                                      color: _estaSelecionado(competidor) ? Theme.of(context).colorScheme.onSurface : (isDarkMode ? Colors.white : null),
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        competidor.apelido,
-                                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                                child: Column(
+                                  children: [
+                                    InkWell(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(8), bottom: Radius.circular(8)),
+                                      onTap: () => _aoTocarCompetidor(competidor),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: 56,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(top: 2),
+                                                child: Text(
+                                                  competidor.id,
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    competidor.nome,
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
+                                                      color: jaSelecionado ? Theme.of(context).colorScheme.onSurface : (isDarkMode ? Colors.white : null),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    competidor.apelido,
+                                                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500, fontSize: 13),
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  if (competidor.hccabeceira != null && competidor.hccabeceira!.isNotEmpty && competidor.hcpezeiro != null && competidor.hcpezeiro!.isNotEmpty)
+                                                    Text(
+                                                      'HC C: ${competidor.hccabeceira!} | HC P: ${competidor.hcpezeiro!}',
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: isDarkMode ? Colors.white70 : Colors.black87,
+                                                      ),
+                                                    ),
+                                                  if (competidor.nomeCidade.isNotEmpty)
+                                                    Text(
+                                                      '${competidor.nomeCidade} - ${competidor.siglaEstado}',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 12,
+                                                        color: isDarkMode ? Colors.white70 : const Color.fromARGB(255, 89, 89, 89),
+                                                      ),
+                                                    ),
+                                                  const SizedBox(height: 8),
+                                                  Wrap(
+                                                    spacing: 8,
+                                                    runSpacing: 6,
+                                                    children: [
+                                                      if (competidor.somaDupla != null && competidor.somaDupla!.isNotEmpty)
+                                                        Container(
+                                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                          decoration: BoxDecoration(
+                                                            color: statusColor.withValues(alpha: 0.12),
+                                                            borderRadius: BorderRadius.circular(999),
+                                                          ),
+                                                          child: Text(
+                                                            'Soma ${competidor.somaDupla}',
+                                                            style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.w700),
+                                                          ),
+                                                        ),
+                                                      Container(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                        decoration: BoxDecoration(
+                                                          color: statusColor.withValues(alpha: 0.12),
+                                                          borderRadius: BorderRadius.circular(999),
+                                                        ),
+                                                        child: Text(
+                                                          statusTexto,
+                                                          style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.w700),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Icon(
+                                              podeSelecionar ? Icons.check_circle_outline : (expandido ? Icons.expand_less : Icons.expand_more),
+                                              color: podeSelecionar ? Colors.green : Colors.grey.shade600,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      if (competidor.hccabeceira != null && competidor.hccabeceira!.isNotEmpty && competidor.hcpezeiro != null && competidor.hcpezeiro!.isNotEmpty)
-                                        Text(
-                                          'Cabeça: ${competidor.hccabeceira!} - Pé: ${competidor.hcpezeiro!}',
-                                          style: const TextStyle(fontWeight: FontWeight.w500),
+                                    ),
+                                    AnimatedCrossFade(
+                                      firstChild: const SizedBox.shrink(),
+                                      secondChild: Padding(
+                                        padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            if (competidor.hccabeceira != null && competidor.hccabeceira!.isNotEmpty && competidor.hcpezeiro != null && competidor.hcpezeiro!.isNotEmpty)
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                                decoration: BoxDecoration(
+                                                  color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade100,
+                                                  borderRadius: BorderRadius.circular(6),
+                                                ),
+                                                child: Text(
+                                                  'HC competidor: ${competidor.hccabeceira!} (cab) - ${competidor.hcpezeiro!} (pé)',
+                                                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                                                ),
+                                              ),
+                                            if (competidor.hccabeceiraParceiro != null && competidor.hcpezeiroParceiro != null && competidor.somaDupla != null && competidor.somatoriProva != null) ...[
+                                              const SizedBox(height: 8),
+                                              Container(
+                                                width: double.infinity,
+                                                padding: const EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  color: competidor.podeCorrer == true ? (isDarkMode ? Colors.green.shade900.withValues(alpha: 0.3) : Colors.green.shade50) : (isDarkMode ? Colors.red.shade900.withValues(alpha: 0.3) : Colors.red.shade50),
+                                                  border: Border.all(
+                                                    color: competidor.podeCorrer == true ? Colors.green : Colors.red,
+                                                    width: 1.5,
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Seu HC: ${competidor.hccabeceiraParceiro!} (cab) - ${competidor.hcpezeiroParceiro!} (pé)',
+                                                      style: const TextStyle(fontSize: 11.5),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Wrap(
+                                                      spacing: 10,
+                                                      runSpacing: 4,
+                                                      children: [
+                                                        Text(
+                                                          'Soma: ${competidor.somaDupla!}',
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w700,
+                                                            fontSize: 14,
+                                                            color: competidor.podeCorrer == true ? Colors.green.shade700 : Colors.red.shade700,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          'Limite: ${competidor.somatoriProva!}',
+                                                          style: const TextStyle(
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 12,
+                                                            color: Colors.blue,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    if (competidor.podeCorrer == true)
+                                                      const Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.check_circle,
+                                                            size: 13,
+                                                            color: Colors.green,
+                                                          ),
+                                                          SizedBox(width: 4),
+                                                          Expanded(
+                                                            child: Text(
+                                                              'Dupla compatível',
+                                                              style: TextStyle(
+                                                                color: Colors.green,
+                                                                fontSize: 11,
+                                                                fontWeight: FontWeight.w600,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (competidor.podeCorrer != true) ...[
+                                                      const SizedBox(height: 2),
+                                                      const Text(
+                                                        'Motivos do bloqueio',
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 11,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      _buildMotivosBloqueio(competidor),
+                                                    ],
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                            if (competidor.nomeCidade.isNotEmpty) ...[
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                '${competidor.nomeCidade} - ${competidor.siglaEstado}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 12,
+                                                  color: isDarkMode ? Colors.white : const Color.fromARGB(255, 89, 89, 89),
+                                                ),
+                                              ),
+                                            ],
+                                            if (podeSelecionar) ...[
+                                              const SizedBox(height: 12),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton.icon(
+                                                  onPressed: () => _selecionarCompetidor(competidor),
+                                                  icon: const Icon(Icons.check),
+                                                  label: const Text('Selecionar competidor'),
+                                                ),
+                                              ),
+                                            ],
+                                          ],
                                         ),
-                                      if (competidor.nomeCidade.isNotEmpty)
-                                        Text(
-                                          '${competidor.nomeCidade} - ${competidor.siglaEstado}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: isDarkMode ? Colors.white : const Color.fromARGB(255, 89, 89, 89),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
+                                      ),
+                                      crossFadeState: !podeSelecionar && expandido ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                      duration: const Duration(milliseconds: 180),
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -332,4 +701,54 @@ class _PaginaSelecionarCompetidorState extends State<PaginaSelecionarCompetidor>
       ),
     );
   }
+
+  Widget _buildBarraFiltros() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildChipFiltro('Todos', _FiltroCompetidor.todos),
+                const SizedBox(width: 8),
+                _buildChipFiltro('Compatíveis', _FiltroCompetidor.compativeis),
+                const SizedBox(width: 8),
+                _buildChipFiltro('Não compatíveis', _FiltroCompetidor.naoCompativeis),
+                const SizedBox(width: 8),
+                _buildChipFiltro('Já selecionados', _FiltroCompetidor.jaSelecionados),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '$_totalResultados ${_totalResultados == 1 ? 'resultado encontrado' : 'resultados encontrados'}',
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChipFiltro(String titulo, _FiltroCompetidor filtro) {
+    return ChoiceChip(
+      label: Text(titulo),
+      selected: _filtroSelecionado == filtro,
+      onSelected: (_) {
+        setState(() {
+          _filtroSelecionado = filtro;
+        });
+        _buscarCompetidores(pesquisa: _controllerBusca.text);
+      },
+    );
+  }
+}
+
+enum _FiltroCompetidor {
+  todos,
+  compativeis,
+  naoCompativeis,
+  jaSelecionados,
 }
