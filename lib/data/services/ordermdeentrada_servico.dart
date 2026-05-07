@@ -45,7 +45,7 @@ class OrdemDeEntradaServico {
       var lista = List<ProvaParceirosModelos>.from(jsonData['dados'].map((elemento) {
         return ProvaParceirosModelos.fromMap(elemento);
       }));
-      var quemEstaCorrendoAgora = ProvaParceirosModelos.fromMap(jsonData['quemEstaCorrendoAgora']);
+      var quemEstaCorrendoAgora = jsonData['quemEstaCorrendoAgora'] != null ? ProvaParceirosModelos.fromMap(jsonData['quemEstaCorrendoAgora']) : null;
 
       return (lista: lista, quemEstaCorrendoAgora: quemEstaCorrendoAgora);
     } else {
@@ -53,12 +53,9 @@ class OrdemDeEntradaServico {
     }
   }
 
-  Future<({List<ProvaParceirosModelos> lista, List<Map<String, String>> somatoriasDisponiveis})> listarPorListaCompeticao(
-      UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa,
-      {String somatoria = '', int pagina = 0, bool satSelecionado = true}) async {
-
+  Future<({List<ProvaParceirosModelos> lista, List<Map<String, String>> somatoriasDisponiveis})> listarPorListaCompeticao(UsuarioModelo? usuario, String idListaCompeticao, String idEmpresa, String idEvento, String pesquisa, {String somatoria = '', int pagina = 0, bool satSelecionado = true}) async {
     var url = "ordem_de_entrada/listar_por_lista_competicao.php?id_empresa=$idEmpresa&id_evento=$idEvento&id_lista_competicao=$idListaCompeticao&pesquisa=$pesquisa&pagina=$pagina&filtro_sat=${satSelecionado ? 1 : 0}";
-    
+
     if (somatoria.isNotEmpty) {
       url += "&somatoria=$somatoria";
     }
