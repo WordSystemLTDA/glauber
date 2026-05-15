@@ -14,7 +14,13 @@ class AutenticacaoStore extends ChangeNotifier {
 
   AutenticacaoStore(this._autenticacaoServico) : super();
 
-  bool entrando = false;
+  bool _entrando = false;
+  bool get entrando => _entrando;
+  set entrando(bool value) {
+    _entrando = value;
+    notifyListeners();
+  }
+
   bool cadastrando = false;
 
   Future<({bool sucesso, String mensagem})> entrar(BuildContext context, String email, String senha, TiposLogin tiposLogin, String? tokenNotificacao) async {

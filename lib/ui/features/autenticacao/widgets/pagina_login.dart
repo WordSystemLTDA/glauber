@@ -53,6 +53,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
     if (mounted) {
       var resposta = await autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, TiposLogin.email, '');
 
+      autenticacaoStore.entrando = false;
+
       if (!mounted) return;
 
       if (resposta.sucesso) {
@@ -77,6 +79,8 @@ class _PaginaLoginState extends State<PaginaLogin> {
 
     if (mounted) {
       var resposta = await autenticacaoStore.entrar(context, _emailController.text, _senhaController.text, tipoLogin, '');
+
+      autenticacaoStore.entrando = false;
 
       if (!mounted) return;
 
@@ -328,8 +332,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
                                             onPressed: () {
                                               Navigator.of(contextDialog).pop();
                                               // Navigator.pushNamed(context, '/autenticacao/cadastrar');
-                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades,
-                                                  arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
+                                              Navigator.pushNamed(context, AppRotas.selecionarModalidades, arguments: PaginaSelecionarModalidadesArgumentos(jaEstaCadastrado: false));
                                             },
                                           ),
                                           TextButton(
