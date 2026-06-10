@@ -176,8 +176,9 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
 
           // Pega as informações da prova
           String avulsa = dados['avulsa']?.toString() ?? 'Não';
-          int quantParceiros = int.tryParse(dados['quant_parceiros']?.toString() ?? '0') ?? 0;
-          int quantMaxima = int.tryParse(dados['quant_maxima']?.toString() ?? '0') ?? 0;
+          int quantMinima = _parseIntegerField(dados, snakeCaseKey: 'quant_minima', camelCaseKey: 'quantMinima');
+          int quantMaxima = _parseIntegerField(dados, snakeCaseKey: 'quant_maxima', camelCaseKey: 'quantMaxima');
+          int quantParceiros = _parseIntegerField(dados, snakeCaseKey: 'quant_parceiros', camelCaseKey: 'quantParceiros');
 
           // Cria o competidor a partir dos dados do parceiro
           var competidorParceiro = CompetidoresModelo(
@@ -230,7 +231,7 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
             hcMinimo: '0',
             hcMaximo: '0',
             avulsa: avulsa,
-            quantMinima: '0',
+            quantMinima: quantMinima.toString(),
             quantMaxima: quantMaxima.toString(),
             permitirCompra: const PermitirCompraModelo(liberado: true, mensagem: ''),
             permitirSorteio: 'Não',
@@ -290,6 +291,14 @@ class _PaginaConfirmarParceirosState extends State<PaginaConfirmarParceiros> wit
         listar();
       }
     }
+  }
+
+  int _parseIntegerField(
+    Map<String, dynamic> data, {
+    required String snakeCaseKey,
+    required String camelCaseKey,
+  }) {
+    return int.tryParse((data[snakeCaseKey] ?? data[camelCaseKey] ?? '0').toString()) ?? 0;
   }
 
   void confirmarInscricao(ParceirosModelo parceiro, ConfirmarParceirosModelo prova) {

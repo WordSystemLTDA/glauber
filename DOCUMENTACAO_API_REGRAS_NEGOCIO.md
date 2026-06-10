@@ -40,8 +40,8 @@ Regras ativas:
 - Pode exigir celular/cidade preenchidos conforme `permissoes_empresa`.
 - Handicap do cliente deve respeitar faixa mínima/máxima da prova e regra de somatória.
 - Limites por prova:
-  - Avulsa: usa `quant_maxima`.
-  - Não avulsa: usa `quant_parceiros`.
+  - Avulsa: usa `quant_minima` e `quant_maxima`.
+  - Não avulsa: usa exatamente `quant_parceiros`.
 - Limites por papel/modalidade:
   - `quant_max_inscricoes_cabeceira`
   - `quant_max_inscricoes_pezeiro`
@@ -80,8 +80,14 @@ Implementação:
 
 Regra geral de limite:
 
-- Avulsa (`avulsa = 'Sim'`) usa `quant_maxima`.
-- Não avulsa (`avulsa = 'Não'`) usa `quant_parceiros`.
+- Avulsa (`avulsa = 'Sim'`) precisa ficar entre `quant_minima` e `quant_maxima`.
+- Não avulsa (`avulsa = 'Não'`) precisa ter exatamente `quant_parceiros`.
+
+Contagem correta por cliente/prova:
+
+- Quando o cliente é cabeceira, conte somente vínculos com `id_vendas_cabeceira <> '0'` para o mesmo `id_vendas_cabeceira`, `id_cabeceira`, `id_provas` e `empresa`.
+- Quando o cliente é pezeiro, conte somente vínculos com `id_vendas_pezeiro <> '0'` para o mesmo `id_vendas_pezeiro`, `id_pezeiro`, `id_provas` e `empresa`.
+- Não conte o lado oposto quando o ID da venda desse lado estiver zerado, mesmo que o competidor apareça no par.
 
 Proteções implementadas:
 
@@ -89,6 +95,56 @@ Proteções implementadas:
 - Não criar vínculos acima do limite da prova para a venda.
 - Em edição de parceiro, impedir vínculo já ativo (`status != 'Sem Parceiro'`) com o mesmo par.
 - Limpeza recíproca ao trocar/cancelar parceiro zera também IDs de venda do lado oposto quando aplicável.
+
+Consulta de auditoria para localizar estouro/falta de vínculos:
+
+```sql
+SELECT
+  origem,
+  empresa,
+  id_provas,
+  id_venda,
+  id_cliente,
+  avulsa,
+  quantidade_vinculos,
+  limite_minimo,
+  limite_maximo
+FROM (
+  SELECT
+    'cabeceira' AS origem,
+    vp.empresa,
+    vp.id_provas,
+    vp.id_vendas_cabeceira AS id_venda,
+    vp.id_cabeceira AS id_cliente,
+    p.avulsa,
+    COUNT(*) AS quantidade_vinculos,
+    CASE WHEN p.avulsa = 'Sim' THEN COALESCE(p.quant_minima, 1) ELSE COALESCE(p.quant_parceiros, 0) END AS limite_minimo,
+    CASE WHEN p.avulsa = 'Sim' THEN COALESCE(p.quant_maxima, 0) ELSE COALESCE(p.quant_parceiros, 0) END AS limite_maximo
+  FROM vincular_parceiros vp
+  INNER JOIN provas p ON p.id = vp.id_provas
+  WHERE vp.id_vendas_cabeceira <> '0'
+  GROUP BY vp.empresa, vp.id_provas, vp.id_vendas_cabeceira, vp.id_cabeceira, p.avulsa, p.quant_minima, p.quant_maxima, p.quant_parceiros
+
+  UNION ALL
+
+  SELECT
+    'pezeiro' AS origem,
+    vp.empresa,
+    vp.id_provas,
+    vp.id_vendas_pezeiro AS id_venda,
+    vp.id_pezeiro AS id_cliente,
+    p.avulsa,
+    COUNT(*) AS quantidade_vinculos,
+    CASE WHEN p.avulsa = 'Sim' THEN COALESCE(p.quant_minima, 1) ELSE COALESCE(p.quant_parceiros, 0) END AS limite_minimo,
+    CASE WHEN p.avulsa = 'Sim' THEN COALESCE(p.quant_maxima, 0) ELSE COALESCE(p.quant_parceiros, 0) END AS limite_maximo
+  FROM vincular_parceiros vp
+  INNER JOIN provas p ON p.id = vp.id_provas
+  WHERE vp.id_vendas_pezeiro <> '0'
+  GROUP BY vp.empresa, vp.id_provas, vp.id_vendas_pezeiro, vp.id_pezeiro, p.avulsa, p.quant_minima, p.quant_maxima, p.quant_parceiros
+) vinculos
+WHERE quantidade_vinculos < limite_minimo
+   OR (limite_maximo > 0 AND quantidade_vinculos > limite_maximo);
+```
 
 Arquivos-chave:
 
